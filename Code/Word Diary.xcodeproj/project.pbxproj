@@ -18,6 +18,11 @@
 		5BB6B31816DBE13900394113 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BB6B31716DBE13900394113 /* Default@2x.png */; };
 		5BB6B31A16DBE13900394113 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BB6B31916DBE13900394113 /* Default-568h@2x.png */; };
 		5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */; };
+		5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840E116DCB9470005AF21 /* WDWordDiary.m */; };
+		5BB840E816DCC0850005AF21 /* WDColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840E716DCC0850005AF21 /* WDColor.m */; };
+		5BB840EB16DCC0860005AF21 /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840EA16DCC0860005AF21 /* WDWord.m */; };
+		5BB840EE16DCC0860005AF21 /* WDFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840ED16DCC0860005AF21 /* WDFont.m */; };
+		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +41,17 @@
 		5BB6B31716DBE13900394113 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		5BB6B31916DBE13900394113 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5BB6B31C16DBE13900394113 /* Word_Diary.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Word_Diary.xcdatamodel; sourceTree = "<group>"; };
+		5BB840E016DCB9470005AF21 /* WDWordDiary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordDiary.h; sourceTree = "<group>"; };
+		5BB840E116DCB9470005AF21 /* WDWordDiary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWordDiary.m; sourceTree = "<group>"; };
+		5BB840E616DCC0850005AF21 /* WDColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDColor.h; sourceTree = "<group>"; };
+		5BB840E716DCC0850005AF21 /* WDColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDColor.m; sourceTree = "<group>"; };
+		5BB840E916DCC0860005AF21 /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
+		5BB840EA16DCC0860005AF21 /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
+		5BB840EC16DCC0860005AF21 /* WDFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFont.h; sourceTree = "<group>"; };
+		5BB840ED16DCC0860005AF21 /* WDFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFont.m; sourceTree = "<group>"; };
+		5BB840F816DCC80E0005AF21 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5BB840FA16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = file; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +102,9 @@
 			children = (
 				5BB6B31216DBE13900394113 /* WDAppDelegate.h */,
 				5BB6B31316DBE13900394113 /* WDAppDelegate.m */,
-				5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */,
+				5BB840EF16DCC6C20005AF21 /* Localization */,
+				5BB840D316DCB6210005AF21 /* Model */,
+				5BB840DE16DCB6D60005AF21 /* View - Controller */,
 				5BB6B30A16DBE13900394113 /* Supporting Files */,
 			);
 			path = "Word Diary";
@@ -104,6 +122,46 @@
 				5BB6B31916DBE13900394113 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5BB840D316DCB6210005AF21 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5BB840DF16DCB9250005AF21 /* Core Data */,
+				5BB840E016DCB9470005AF21 /* WDWordDiary.h */,
+				5BB840E116DCB9470005AF21 /* WDWordDiary.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		5BB840DE16DCB6D60005AF21 /* View - Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "View - Controller";
+			sourceTree = "<group>";
+		};
+		5BB840DF16DCB9250005AF21 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */,
+				5BB840EC16DCC0860005AF21 /* WDFont.h */,
+				5BB840ED16DCC0860005AF21 /* WDFont.m */,
+				5BB840E916DCC0860005AF21 /* WDWord.h */,
+				5BB840EA16DCC0860005AF21 /* WDWord.m */,
+				5BB840E616DCC0850005AF21 /* WDColor.h */,
+				5BB840E716DCC0850005AF21 /* WDColor.m */,
+			);
+			name = "Core Data";
+			sourceTree = "<group>";
+		};
+		5BB840EF16DCC6C20005AF21 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				5BB840F916DCC80E0005AF21 /* Localizable.strings */,
+			);
+			name = Localization;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,6 +200,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				es,
 			);
 			mainGroup = 5BB6B2F516DBE13900394113;
 			productRefGroup = 5BB6B2FF16DBE13900394113 /* Products */;
@@ -162,6 +221,7 @@
 				5BB6B31616DBE13900394113 /* Default.png in Resources */,
 				5BB6B31816DBE13900394113 /* Default@2x.png in Resources */,
 				5BB6B31A16DBE13900394113 /* Default-568h@2x.png in Resources */,
+				5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +235,10 @@
 				5BB6B31016DBE13900394113 /* main.m in Sources */,
 				5BB6B31416DBE13900394113 /* WDAppDelegate.m in Sources */,
 				5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */,
+				5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */,
+				5BB840E816DCC0850005AF21 /* WDColor.m in Sources */,
+				5BB840EB16DCC0860005AF21 /* WDWord.m in Sources */,
+				5BB840EE16DCC0860005AF21 /* WDFont.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,8 +249,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				5BB6B30D16DBE13900394113 /* en */,
+				5BB840FB16DCC83E0005AF21 /* es */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		5BB840F916DCC80E0005AF21 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5BB840F816DCC80E0005AF21 /* en */,
+				5BB840FA16DCC83E0005AF21 /* es */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -289,6 +363,7 @@
 				5BB6B32216DBE13900394113 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
