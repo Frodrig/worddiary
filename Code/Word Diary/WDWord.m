@@ -10,6 +10,10 @@
 #import "WDColor.h"
 #import "WDFont.h"
 
+@interface WDWord ()
+
+@end
+
 
 @implementation WDWord
 
@@ -18,5 +22,29 @@
 @dynamic font;
 @dynamic wordColor;
 @dynamic backgroundColor;
+@synthesize dateComponents = dateComponents_;
+
+#pragma mark - Init
+
+- (NSDateComponents *)dateComponents
+{
+    if (nil == dateComponents_) {
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        dateComponents_ = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
+    }
+    
+    return dateComponents_;
+}
+
+#pragma mark - Compare
+
+- (NSComparisonResult)compare:(WDWord *)otherWord
+{
+    NSNumber *selfValue = [NSNumber numberWithDouble:self.timeInterval];
+    NSNumber *otherValue = [NSNumber numberWithDouble:otherWord.timeInterval];
+    
+    return [selfValue compare:otherValue];
+}
 
 @end

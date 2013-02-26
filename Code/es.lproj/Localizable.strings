@@ -8,4 +8,7 @@
 
 "TAG_OPENDB_FAILED" = "Fallo abriendo DB";
 "TAG_OPENDBFAILED_REASON" = "Razón %@"; 
-
+"TAG_FETCHFAILED" = "Fallo haciendo fetch";
+"TAG_FETCHFAILED_REASON" = "Razón %@";
+"TAG_ERRORSAVING" = "Fallo grabando";
+"TAG_ERRORSAVING_REASON" = "Razón %@";

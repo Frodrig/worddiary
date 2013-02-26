@@ -20,9 +20,9 @@
 		5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */; };
 		5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840E116DCB9470005AF21 /* WDWordDiary.m */; };
 		5BB840E816DCC0850005AF21 /* WDColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840E716DCC0850005AF21 /* WDColor.m */; };
-		5BB840EB16DCC0860005AF21 /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840EA16DCC0860005AF21 /* WDWord.m */; };
 		5BB840EE16DCC0860005AF21 /* WDFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840ED16DCC0860005AF21 /* WDFont.m */; };
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
+		5BB840FE16DCE96D0005AF21 /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840FD16DCE96D0005AF21 /* WDWord.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,13 +45,13 @@
 		5BB840E116DCB9470005AF21 /* WDWordDiary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWordDiary.m; sourceTree = "<group>"; };
 		5BB840E616DCC0850005AF21 /* WDColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDColor.h; sourceTree = "<group>"; };
 		5BB840E716DCC0850005AF21 /* WDColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDColor.m; sourceTree = "<group>"; };
-		5BB840E916DCC0860005AF21 /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
-		5BB840EA16DCC0860005AF21 /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
 		5BB840EC16DCC0860005AF21 /* WDFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFont.h; sourceTree = "<group>"; };
 		5BB840ED16DCC0860005AF21 /* WDFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFont.m; sourceTree = "<group>"; };
 		5BB840F816DCC80E0005AF21 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FA16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = file; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5BB840FC16DCE96D0005AF21 /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
+		5BB840FD16DCE96D0005AF21 /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,10 +145,10 @@
 			isa = PBXGroup;
 			children = (
 				5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */,
+				5BB840FC16DCE96D0005AF21 /* WDWord.h */,
+				5BB840FD16DCE96D0005AF21 /* WDWord.m */,
 				5BB840EC16DCC0860005AF21 /* WDFont.h */,
 				5BB840ED16DCC0860005AF21 /* WDFont.m */,
-				5BB840E916DCC0860005AF21 /* WDWord.h */,
-				5BB840EA16DCC0860005AF21 /* WDWord.m */,
 				5BB840E616DCC0850005AF21 /* WDColor.h */,
 				5BB840E716DCC0850005AF21 /* WDColor.m */,
 			);
@@ -237,8 +237,8 @@
 				5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */,
 				5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */,
 				5BB840E816DCC0850005AF21 /* WDColor.m in Sources */,
-				5BB840EB16DCC0860005AF21 /* WDWord.m in Sources */,
 				5BB840EE16DCC0860005AF21 /* WDFont.m in Sources */,
+				5BB840FE16DCE96D0005AF21 /* WDWord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

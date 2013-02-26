@@ -19,4 +19,9 @@
 @property (nonatomic, retain) WDColor *wordColor;
 @property (nonatomic, retain) WDColor *backgroundColor;
 
+@property (nonatomic, strong, readonly) NSDateComponents *dateComponents;
+
+- (NSComparisonResult) compare:(WDWord *)otherWord;
+
+
 @end
