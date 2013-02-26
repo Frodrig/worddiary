@@ -37,6 +37,18 @@
     return dateComponents_;
 }
 
+- (void)awakeFromFetch
+{
+    [self addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
+}
+
+#pragma mark - End
+
+- (void)dealloc
+{
+    [self removeObserver:self forKeyPath:@"timeInterval"];
+}
+
 #pragma mark - Compare
 
 - (NSComparisonResult)compare:(WDWord *)otherWord
@@ -45,6 +57,15 @@
     NSNumber *otherValue = [NSNumber numberWithDouble:otherWord.timeInterval];
     
     return [selfValue compare:otherValue];
+}
+
+#pragma mark - Key-Value Observing
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath compare:@"timeInterval"] == NSOrderedSame) {
+        dateComponents_ = nil;
+    }
 }
 
 @end
