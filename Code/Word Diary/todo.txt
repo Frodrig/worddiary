@@ -1,3 +1,10 @@
+27/02/2013
+- Conseguido que salga la celda en la tableview. Ademas de registrar el identificador de la clase a reutilizar tenia que registrar el nib para ese mismo identificador.
+- Pendiente:
+-- Seguir hacia adelante con el esqueleto de la pantalla de palabra seleccionada arreglando minimamente el diseño. Vamso a hacer una primera version logica operativa.
+
+26/02/2013
+Pendiente:
 En el arranque codigo para elegir la palabra actual
 - Obtenemos la ultima palabra creada
 - Si es de hoy, no hacemos nada, trabajamos con esa palabra

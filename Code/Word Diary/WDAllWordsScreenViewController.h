@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WDAllWordsScreenViewController : UIViewController
+@interface WDAllWordsScreenViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
 @end

@@ -14,7 +14,8 @@
 
 @interface WDAppDelegate()
 
-- (void)prepareWordDiaryAtLaunch;
+- (void) prepareWordDiaryAtLaunch;
+- (void) prepareRootViewController;
 
 @end
 
@@ -32,6 +33,7 @@
   
     // Override point for customization after application launch
     [self prepareWordDiaryAtLaunch];
+    [self prepareRootViewController];
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
@@ -57,8 +59,15 @@
     }
     
     if (nil == lastCreatedWord) {
-        lastCreatedWord = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[todayDate timeIntervalSince1970]];
+        lastCreatedWord = [[WDWordDiary sharedWordDiary] createWord:@"Working" inTimeInterval:[todayDate timeIntervalSince1970]];
     }
+}
+
+- (void)prepareRootViewController
+{
+    WDAllWordsScreenViewController *allWordsScreenViewController = [[WDAllWordsScreenViewController alloc] initWithNibName:nil bundle:nil];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:allWordsScreenViewController];
+    self.window.rootViewController = navigationController;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B80893A16DE0A8A002CD179 /* WDTodayWordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80893916DE0A8A002CD179 /* WDTodayWordCell.m */; };
+		5B80893C16DE0A9E002CD179 /* WDTodayWordCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B80893B16DE0A9E002CD179 /* WDTodayWordCell.xib */; };
+		5B80893F16DE0AAF002CD179 /* WDPreviousDayWordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80893E16DE0AAF002CD179 /* WDPreviousDayWordCell.m */; };
+		5B80894116DE0ABA002CD179 /* WDPreviousDayWordCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B80894016DE0ABA002CD179 /* WDPreviousDayWordCell.xib */; };
+		5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80894716DE3CE2002CD179 /* WDUtils.m */; };
 		5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30116DBE13900394113 /* UIKit.framework */; };
 		5BB6B30416DBE13900394113 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30316DBE13900394113 /* Foundation.framework */; };
 		5BB6B30616DBE13900394113 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30516DBE13900394113 /* CoreGraphics.framework */; };
@@ -31,6 +36,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B80893816DE0A8A002CD179 /* WDTodayWordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDTodayWordCell.h; sourceTree = "<group>"; };
+		5B80893916DE0A8A002CD179 /* WDTodayWordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDTodayWordCell.m; sourceTree = "<group>"; };
+		5B80893B16DE0A9E002CD179 /* WDTodayWordCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTodayWordCell.xib; sourceTree = "<group>"; };
+		5B80893D16DE0AAF002CD179 /* WDPreviousDayWordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDPreviousDayWordCell.h; sourceTree = "<group>"; };
+		5B80893E16DE0AAF002CD179 /* WDPreviousDayWordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDPreviousDayWordCell.m; sourceTree = "<group>"; };
+		5B80894016DE0ABA002CD179 /* WDPreviousDayWordCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDPreviousDayWordCell.xib; sourceTree = "<group>"; };
+		5B80894616DE3CE2002CD179 /* WDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDUtils.h; sourceTree = "<group>"; };
+		5B80894716DE3CE2002CD179 /* WDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDUtils.m; sourceTree = "<group>"; };
 		5BB6B2FE16DBE13900394113 /* Word Diary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Word Diary.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB6B30116DBE13900394113 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5BB6B30316DBE13900394113 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -52,8 +65,8 @@
 		5BB840E716DCC0850005AF21 /* WDColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDColor.m; sourceTree = "<group>"; };
 		5BB840EC16DCC0860005AF21 /* WDFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFont.h; sourceTree = "<group>"; };
 		5BB840ED16DCC0860005AF21 /* WDFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFont.m; sourceTree = "<group>"; };
-		5BB840F816DCC80E0005AF21 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		5BB840FA16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = file; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5BB840F816DCC80E0005AF21 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5BB840FA16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5BB840FC16DCE96D0005AF21 /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
 		5BB840FD16DCE96D0005AF21 /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
@@ -81,6 +94,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B80893716DE0A76002CD179 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				5B80894416DE0ADA002CD179 /* Today Word Cell */,
+				5B80894216DE0AC2002CD179 /* Previous Day Word Cell */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		5B80894216DE0AC2002CD179 /* Previous Day Word Cell */ = {
+			isa = PBXGroup;
+			children = (
+				5B80893D16DE0AAF002CD179 /* WDPreviousDayWordCell.h */,
+				5B80893E16DE0AAF002CD179 /* WDPreviousDayWordCell.m */,
+				5B80894016DE0ABA002CD179 /* WDPreviousDayWordCell.xib */,
+			);
+			name = "Previous Day Word Cell";
+			sourceTree = "<group>";
+		};
+		5B80894416DE0ADA002CD179 /* Today Word Cell */ = {
+			isa = PBXGroup;
+			children = (
+				5B80893816DE0A8A002CD179 /* WDTodayWordCell.h */,
+				5B80893916DE0A8A002CD179 /* WDTodayWordCell.m */,
+				5B80893B16DE0A9E002CD179 /* WDTodayWordCell.xib */,
+			);
+			name = "Today Word Cell";
+			sourceTree = "<group>";
+		};
+		5B80894516DE3CCA002CD179 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				5B80894616DE3CE2002CD179 /* WDUtils.h */,
+				5B80894716DE3CE2002CD179 /* WDUtils.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		5BB6B2F516DBE13900394113 = {
 			isa = PBXGroup;
 			children = (
@@ -112,10 +163,11 @@
 		5BB6B30916DBE13900394113 /* Word Diary */ = {
 			isa = PBXGroup;
 			children = (
-				5BB8410B16DD32BD0005AF21 /* Pending */,
 				5BB6B31216DBE13900394113 /* WDAppDelegate.h */,
 				5BB6B31316DBE13900394113 /* WDAppDelegate.m */,
+				5BB8410B16DD32BD0005AF21 /* Pending */,
 				5BB840EF16DCC6C20005AF21 /* Localization */,
+				5B80894516DE3CCA002CD179 /* Utils */,
 				5BB840D316DCB6210005AF21 /* Model */,
 				5BB840DE16DCB6D60005AF21 /* View - Controller */,
 				5BB6B30A16DBE13900394113 /* Supporting Files */,
@@ -182,6 +234,7 @@
 		5BB8410416DD12B90005AF21 /* All Words Screen */ = {
 			isa = PBXGroup;
 			children = (
+				5B80893716DE0A76002CD179 /* Cells */,
 				5BB840FF16DD12AE0005AF21 /* WDAllWordsScreenViewController.h */,
 				5BB8410016DD12AE0005AF21 /* WDAllWordsScreenViewController.m */,
 				5BB8410116DD12AE0005AF21 /* WDAllWordsScreenViewController.xib */,
@@ -268,6 +321,8 @@
 				5BB8410316DD12AE0005AF21 /* WDAllWordsScreenViewController.xib in Resources */,
 				5BB8410916DD12D50005AF21 /* WDSelectedWordScreenViewController.xib in Resources */,
 				5BB8410D16DD32D90005AF21 /* todo.txt in Resources */,
+				5B80893C16DE0A9E002CD179 /* WDTodayWordCell.xib in Resources */,
+				5B80894116DE0ABA002CD179 /* WDPreviousDayWordCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +342,9 @@
 				5BB840FE16DCE96D0005AF21 /* WDWord.m in Sources */,
 				5BB8410216DD12AE0005AF21 /* WDAllWordsScreenViewController.m in Sources */,
 				5BB8410816DD12D50005AF21 /* WDSelectedWordScreenViewController.m in Sources */,
+				5B80893A16DE0A8A002CD179 /* WDTodayWordCell.m in Sources */,
+				5B80893F16DE0AAF002CD179 /* WDPreviousDayWordCell.m in Sources */,
+				5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
