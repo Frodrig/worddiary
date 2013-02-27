@@ -20,11 +20,17 @@
 @property (nonatomic, strong)           NSArray                *colors;
 @property (nonatomic, strong)           NSArray                *fonts;
 
-+ (WDWordDiary *)sharedWordDiary;
++ (WDWordDiary *) sharedWordDiary;
 
-- (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval withFont:(WDFont *)font andBackgroundColor:(WDColor *)backgroundColor andWordColor:(WDColor *)wordColor;
-- (void)removeWord:(WDWord *)word;
+- (WDWord *)      createWord:(NSString *)word inTimeInterval:(double)timeInterval;
+- (void)          removeWord:(WDWord *)word;
 
-- (void)saveAll;
+- (void)          saveAll;
+
+- (WDWord *)      findTodayWord;
+- (WDWord *)      findLastCreatedWord;
+
+- (WDColor *)     defaultColor;
+- (WDFont *)      defaultFont;
 
 @end

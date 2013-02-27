@@ -1,0 +1,6 @@
+En el arranque codigo para elegir la palabra actual
+- Obtenemos la ultima palabra creada
+- Si es de hoy, no hacemos nada, trabajamos con esa palabra
+- Si no es de hoy:
+-- Si está vacía cambiamos el timelapse a hoy y seteamos de nuevo a vacia y trabajamos con esa palabra
+-- Si no está vacía, creamos una palabra para el día de hoy y trabajamos con esa palabra creada para el dia de hoy

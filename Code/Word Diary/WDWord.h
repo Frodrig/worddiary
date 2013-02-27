@@ -21,6 +21,8 @@
 
 @property (nonatomic, strong, readonly) NSDateComponents *dateComponents;
 
+- (BOOL)               isEmpty;
+
 - (NSComparisonResult) compare:(WDWord *)otherWord;
 
 

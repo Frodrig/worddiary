@@ -19,6 +19,8 @@
 @property (nonatomic) float alpha;
 @property (nonatomic, retain) NSSet *wordColor;
 @property (nonatomic, retain) NSSet *backgroundColor;
+
+@property (nonatomic, strong) UIColor *colorObject;
 @end
 
 @interface WDColor (CoreDataGeneratedAccessors)

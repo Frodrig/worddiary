@@ -23,6 +23,11 @@
 		5BB840EE16DCC0860005AF21 /* WDFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840ED16DCC0860005AF21 /* WDFont.m */; };
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
 		5BB840FE16DCE96D0005AF21 /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840FD16DCE96D0005AF21 /* WDWord.m */; };
+		5BB8410216DD12AE0005AF21 /* WDAllWordsScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB8410016DD12AE0005AF21 /* WDAllWordsScreenViewController.m */; };
+		5BB8410316DD12AE0005AF21 /* WDAllWordsScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BB8410116DD12AE0005AF21 /* WDAllWordsScreenViewController.xib */; };
+		5BB8410816DD12D50005AF21 /* WDSelectedWordScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB8410616DD12D50005AF21 /* WDSelectedWordScreenViewController.m */; };
+		5BB8410916DD12D50005AF21 /* WDSelectedWordScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BB8410716DD12D50005AF21 /* WDSelectedWordScreenViewController.xib */; };
+		5BB8410D16DD32D90005AF21 /* todo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5BB8410C16DD32D90005AF21 /* todo.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +57,13 @@
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5BB840FC16DCE96D0005AF21 /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
 		5BB840FD16DCE96D0005AF21 /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
+		5BB840FF16DD12AE0005AF21 /* WDAllWordsScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAllWordsScreenViewController.h; sourceTree = "<group>"; };
+		5BB8410016DD12AE0005AF21 /* WDAllWordsScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAllWordsScreenViewController.m; sourceTree = "<group>"; };
+		5BB8410116DD12AE0005AF21 /* WDAllWordsScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAllWordsScreenViewController.xib; sourceTree = "<group>"; };
+		5BB8410516DD12D50005AF21 /* WDSelectedWordScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSelectedWordScreenViewController.h; sourceTree = "<group>"; };
+		5BB8410616DD12D50005AF21 /* WDSelectedWordScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSelectedWordScreenViewController.m; sourceTree = "<group>"; };
+		5BB8410716DD12D50005AF21 /* WDSelectedWordScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDSelectedWordScreenViewController.xib; sourceTree = "<group>"; };
+		5BB8410C16DD32D90005AF21 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +112,7 @@
 		5BB6B30916DBE13900394113 /* Word Diary */ = {
 			isa = PBXGroup;
 			children = (
+				5BB8410B16DD32BD0005AF21 /* Pending */,
 				5BB6B31216DBE13900394113 /* WDAppDelegate.h */,
 				5BB6B31316DBE13900394113 /* WDAppDelegate.m */,
 				5BB840EF16DCC6C20005AF21 /* Localization */,
@@ -137,6 +150,8 @@
 		5BB840DE16DCB6D60005AF21 /* View - Controller */ = {
 			isa = PBXGroup;
 			children = (
+				5BB8410416DD12B90005AF21 /* All Words Screen */,
+				5BB8410A16DD12DE0005AF21 /* Selected Word Screen */,
 			);
 			name = "View - Controller";
 			sourceTree = "<group>";
@@ -162,6 +177,34 @@
 			);
 			name = Localization;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		5BB8410416DD12B90005AF21 /* All Words Screen */ = {
+			isa = PBXGroup;
+			children = (
+				5BB840FF16DD12AE0005AF21 /* WDAllWordsScreenViewController.h */,
+				5BB8410016DD12AE0005AF21 /* WDAllWordsScreenViewController.m */,
+				5BB8410116DD12AE0005AF21 /* WDAllWordsScreenViewController.xib */,
+			);
+			name = "All Words Screen";
+			sourceTree = "<group>";
+		};
+		5BB8410A16DD12DE0005AF21 /* Selected Word Screen */ = {
+			isa = PBXGroup;
+			children = (
+				5BB8410516DD12D50005AF21 /* WDSelectedWordScreenViewController.h */,
+				5BB8410616DD12D50005AF21 /* WDSelectedWordScreenViewController.m */,
+				5BB8410716DD12D50005AF21 /* WDSelectedWordScreenViewController.xib */,
+			);
+			name = "Selected Word Screen";
+			sourceTree = "<group>";
+		};
+		5BB8410B16DD32BD0005AF21 /* Pending */ = {
+			isa = PBXGroup;
+			children = (
+				5BB8410C16DD32D90005AF21 /* todo.txt */,
+			);
+			name = Pending;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,6 +265,9 @@
 				5BB6B31816DBE13900394113 /* Default@2x.png in Resources */,
 				5BB6B31A16DBE13900394113 /* Default-568h@2x.png in Resources */,
 				5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */,
+				5BB8410316DD12AE0005AF21 /* WDAllWordsScreenViewController.xib in Resources */,
+				5BB8410916DD12D50005AF21 /* WDSelectedWordScreenViewController.xib in Resources */,
+				5BB8410D16DD32D90005AF21 /* todo.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,6 +285,8 @@
 				5BB840E816DCC0850005AF21 /* WDColor.m in Sources */,
 				5BB840EE16DCC0860005AF21 /* WDFont.m in Sources */,
 				5BB840FE16DCE96D0005AF21 /* WDWord.m in Sources */,
+				5BB8410216DD12AE0005AF21 /* WDAllWordsScreenViewController.m in Sources */,
+				5BB8410816DD12D50005AF21 /* WDSelectedWordScreenViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -86,7 +86,7 @@
     
     NSString *documentDirectory = [documentDirectories objectAtIndex:0];
     
-    NSURL* retURL = [NSURL fileURLWithPath:[documentDirectory stringByAppendingPathComponent:@"incomeandexpenses.data"]];
+    NSURL* retURL = [NSURL fileURLWithPath:[documentDirectory stringByAppendingPathComponent:@"worddiary.data"]];
     
     return retURL;
 }
@@ -114,7 +114,7 @@
     } else {
         NSMutableArray *colorInstances = [[NSMutableArray alloc] init];
         
-        NSArray *colors = [NSArray arrayWithObjects:[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor whiteColor], nil];
+        NSArray *colors = [NSArray arrayWithObjects:[UIColor redColor], [UIColor greenColor], [UIColor blueColor], [UIColor whiteColor], [UIColor blackColor], nil];
         for (UIColor *colorByComponents in colors) {
             CGFloat redComponent;
             CGFloat greenComponent;
@@ -165,15 +165,15 @@
 
 #pragma mark - Actions
 
-- (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval withFont:(WDFont *)font andBackgroundColor:(WDColor *)backgroundColor andWordColor:(WDColor *)wordColor
+- (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval
 {
     WDWord *wordObject = [NSEntityDescription insertNewObjectForEntityForName:@"WDWord" inManagedObjectContext:self.context];
     
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
-    wordObject.font = font;
-    wordObject.wordColor = wordColor;
-    wordObject.backgroundColor = backgroundColor;
+    wordObject.font = [self defaultFont];
+    wordObject.wordColor = [self defaultColor];
+    wordObject.backgroundColor = [self defaultColor];
     
     [words_ addObject:wordObject];
     [words_ sortedArrayUsingSelector:@selector(compare:)];
@@ -209,9 +209,61 @@
 - (void)saveAll
 {
     NSError *error;
-    if (![self.context save:&error]) {
+    if ([self.context hasChanges] && ![self.context save:&error]) {
         [NSException raise:NSLocalizedString(@"TAG_ERRORSAVING", @"") format:NSLocalizedString(@"TAG_ERRORSAVING_REASON", @"")];
     }
+}
+
+#pragma mark - Find
+
+- (WDWord *)findTodayWord
+{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *todayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    
+    WDWord *result = nil;
+    for (WDWord *word in self.words) {
+        if ([todayDateComponents.date compare:word.dateComponents.date] == NSOrderedSame) {
+            result = word;
+            break;
+        }
+    }
+    
+    return result;
+}
+
+- (WDWord *)findLastCreatedWord
+{
+    WDWord *result = nil;
+    if (self.words.count > 0) {
+        result = [self.words objectAtIndex:self.words.count - 1];
+    }
+
+    return result;
+}
+
+#pragma mark - Default
+
+- (WDColor *)defaultColor
+{
+    NSUInteger indexOfObject = [self.colors indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        WDColor *color = obj;
+        *stop = CGColorEqualToColor(color.colorObject.CGColor, [UIColor whiteColor].CGColor);
+        return *stop;
+    }];
+    
+    return [self.colors objectAtIndex:indexOfObject];
+}
+
+- (WDFont *)defaultFont
+{
+    NSUInteger indexOfObject = [self.fonts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        WDFont *font = obj;
+        *stop = [font.family compare:@"AppleColorEmoji"] == NSOrderedSame;
+        return *stop;
+    }];
+        
+    return [self.fonts objectAtIndex:indexOfObject];
 }
 
 #pragma mark - Key Value Observing
@@ -219,6 +271,10 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     [self saveAll];
+    
+    if ([keyPath compare:@"timeInterval"] == NSOrderedSame) {
+        [words_ sortedArrayUsingSelector:@selector(compare:)];
+    }
 }
 
 @end

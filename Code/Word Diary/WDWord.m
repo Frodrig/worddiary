@@ -59,6 +59,15 @@
     return [selfValue compare:otherValue];
 }
 
+#pragma mark - Comprobacion
+
+- (BOOL)isEmpty
+{
+    NSString *wordTrimming = [self.word stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    return wordTrimming.length == 0;
+}
+
 #pragma mark - Key-Value Observing
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
