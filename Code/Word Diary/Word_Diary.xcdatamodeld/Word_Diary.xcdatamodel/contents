@@ -20,8 +20,8 @@
         <relationship name="wordColor" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Color" inverseName="wordColor" inverseEntity="Color" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Word" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Font" positionX="160" positionY="192" width="128" height="75"/>
         <element name="Color" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="Font" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="Word" positionX="160" positionY="192" width="128" height="120"/>
     </elements>
 </model>

@@ -16,10 +16,12 @@
 - (void)configureModelAndContextOfDB;
 - (NSURL *)storeFileURLWithPath;
 
-- (NSArray *)fetchAllEntitiesOfType:(NSString *)entity;
-- (void)prepareColors;
-- (void)prepareFonts;
-- (void)prepareWords;
+- (NSArray *) fetchAllEntitiesOfType:(NSString *)entity;
+- (void)      prepareColors;
+- (void)      prepareFonts;
+- (void)      prepareWords;
+
+- (void)      addObserverToWord:(WDWord *)word;
 
 @end
 
@@ -149,7 +151,7 @@
     } else {
         NSMutableArray *fontInstances = [[NSMutableArray alloc] init];
         
-        NSArray *fontFamilies = [NSArray arrayWithObjects:@"AppleColorEmoji", @"Baskervile", @"BrandleyHandITCTT-Bold", @"Zapfino", @"HelveticaNue", nil];
+        NSArray *fontFamilies = [NSArray arrayWithObjects:@"AppleColorEmoji", @"Baskerville", @"BrandleyHandITCTT-Bold", @"Zapfino", @"HelveticaNue", nil];
         for (NSString *fontFamily in fontFamilies) {
             WDFont *font = [NSEntityDescription insertNewObjectForEntityForName:@"Font" inManagedObjectContext:self.context];
             font.family = fontFamily;
@@ -168,6 +170,10 @@
     
     words_ = result.count > 0 ? [NSMutableArray arrayWithArray:result] : [NSMutableArray array];
     [words_ sortedArrayUsingSelector:@selector(compare:)];
+    
+    for (WDWord *word in words_) {
+        [self addObserverToWord:word];
+    }
 }
 
 #pragma mark - Actions
@@ -185,10 +191,7 @@
     [words_ addObject:wordObject];
     [words_ sortedArrayUsingSelector:@selector(compare:)];
     
-    [wordObject addObserver:self forKeyPath:@"word" options:0 context:NULL];
-    [wordObject addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
-    [wordObject addObserver:self forKeyPath:@"wordColor" options:0 context:NULL];
-    [wordObject addObserver:self forKeyPath:@"backgroundColor" options:0 context:NULL];
+    [self addObserverToWord:wordObject];
     
     [self saveAll];
     
@@ -249,6 +252,17 @@
     return result;
 }
 
+#pragma mark - Auxiliary
+
+- (void) addObserverToWord:(WDWord *)word
+{
+    [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"wordColor" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"backgroundColor" options:0 context:NULL];
+}
+
+
 #pragma mark - Default
 
 - (WDColor *)defaultColor
@@ -268,7 +282,7 @@
 {
     NSUInteger indexOfObject = [self.fonts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         WDFont *font = obj;
-        *stop = [font.family compare:@"AppleColorEmoji"] == NSOrderedSame;
+        *stop = [font.family compare:@"Baskerville"] == NSOrderedSame;
         return *stop;
     }];
     

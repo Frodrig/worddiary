@@ -7,20 +7,27 @@
 //
 
 #import "WDAllWordsScreenViewController.h"
+#import "WDSelectedWordScreenViewController.h"
 #import "WDTodayWordCell.h"
 #import "WDPreviousDayWordCell.h"
 #import "WDWordDiary.h"
 #import "WDWord.h"
+#import "WDFont.h"
+#import "WDColor.h"
 #import "WDUtils.h"
 
 @interface WDAllWordsScreenViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView   *allWordsTableView;
 @property (strong, nonatomic) NSMutableDictionary  *words;
+@property (strong, nonatomic) NSString             *wordValueOfActualWordBeforeEditing;
 
 - (NSArray *) findWordsOfSection:(NSInteger)section;
 - (BOOL)      haveTodayYearPreviousWords;
 - (WDWord *)  findWordForIndexPath:(NSIndexPath *)indexPath;
+- (WDWord *)  findTodayWord;
+
+- (CGFloat)   sizeInWordSelectedCellOfFamilyFont:(NSString *)familyFont;
 
 @end
 
@@ -28,8 +35,9 @@
 
 #pragma mark - Synthesize
 
-@synthesize allWordsTableView = allWordsTableView_;
-@synthesize words = words_;
+@synthesize allWordsTableView                  = allWordsTableView_;
+@synthesize words                              = words_;
+@synthesize wordValueOfActualWordBeforeEditing = wordValueOfActualWordBeforeEditing_;
 
 #pragma mark - Init
 
@@ -73,6 +81,22 @@
     [self.allWordsTableView registerNib:[UINib nibWithNibName:@"WDPreviousDayWordCell" bundle:nil] forCellReuseIdentifier:@"WDPreviousDayWordCell"];
     
     self.navigationItem.title = NSLocalizedString(@"TAG_ALLWORDSSCREENVIEWCONTROLLER_TITLE", @"");
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // En arranque guardamos valor de la palabra de hoy y en caso de retorno actualizamos si procede
+    WDWord *todayWord = [self findTodayWord];
+    if (nil == self.wordValueOfActualWordBeforeEditing) {
+        self.wordValueOfActualWordBeforeEditing = [NSString stringWithString:todayWord.word];
+    } else {
+        if ([todayWord.word compare:self.wordValueOfActualWordBeforeEditing] != NSOrderedSame) {
+            [self.allWordsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+            self.wordValueOfActualWordBeforeEditing = todayWord.word;
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -125,18 +149,49 @@
     return word;
 }
 
+- (WDWord *)findTodayWord
+{
+    WDWord *todayWord = [self findWordForIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    
+    return todayWord;
+}
+
+- (CGFloat) sizeInWordSelectedCellOfFamilyFont:(NSString *)familyFont
+{
+    CGFloat sizeReturn = 0.0;
+    if ([familyFont compare:@"AppleColorEmoji"] == NSOrderedSame) {
+        sizeReturn = 82.0;
+    } else if ([familyFont compare:@"Baskerville"] == NSOrderedSame) {
+        sizeReturn = 82.0;
+    } else if ([familyFont compare:@"BrandleyHandITCTT-Bold"] == NSOrderedSame) {
+        sizeReturn = 82.0;
+    } else if ([familyFont compare:@"Zapfino"] == NSOrderedSame) {
+        sizeReturn = 82.0;
+    } else if ([familyFont compare:@"HelveticaNue"] == NSOrderedSame) {
+        sizeReturn = 82.0;
+    }
+
+    return sizeReturn;
+}
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat height = 70.0;
     if (indexPath.section == 0) {
-        height = 66;
+        height = 138;
     }
     
     return height;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    WDWord *selectedWord = [self findWordForIndexPath:indexPath];
+    WDSelectedWordScreenViewController *selectedWordScreenViewController = [[WDSelectedWordScreenViewController alloc] initWithSelectedWord:selectedWord];
+    [self.navigationController pushViewController:selectedWordScreenViewController animated:YES];
+}
 
 #pragma mark - UITableViewDataSource
 
@@ -150,6 +205,7 @@
         WDTodayWordCell *cell = [self.allWordsTableView dequeueReusableCellWithIdentifier:todayCellIdentifier];
         
         cell.wordLabel.text = word.word;
+        cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[self sizeInWordSelectedCellOfFamilyFont:word.font.family]];
         retCell = cell;
     } else {
         static NSString *previousDaysCellIdentifier = @"WDPreviousDayWordCell";

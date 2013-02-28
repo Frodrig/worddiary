@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDEditingWordMenuDelegate.h"
 
-@interface WDSelectedWordScreenViewController : UIViewController
+@class WDWord;
+
+@interface WDSelectedWordScreenViewController : UIViewController<WDEditingWordMenuDelegate, UITextFieldDelegate>
+
+- (id)initWithSelectedWord:(WDWord *)selectedWord;
 
 @end

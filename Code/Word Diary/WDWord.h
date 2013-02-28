@@ -13,15 +13,16 @@
 
 @interface WDWord : NSManagedObject
 
-@property (nonatomic) double timeInterval;
-@property (nonatomic, retain) NSString * word;
-@property (nonatomic, retain) WDFont *font;
-@property (nonatomic, retain) WDColor *wordColor;
-@property (nonatomic, retain) WDColor *backgroundColor;
+@property (nonatomic) double            timeInterval;
+@property (nonatomic, retain) NSString  *word;
+@property (nonatomic, retain) WDFont    *font;
+@property (nonatomic, retain) WDColor   *wordColor;
+@property (nonatomic, retain) WDColor   *backgroundColor;
 
 @property (nonatomic, strong, readonly) NSDateComponents *dateComponents;
 
 - (BOOL)               isEmpty;
+- (BOOL)               isTodayWord;
 
 - (NSComparisonResult) compare:(WDWord *)otherWord;
 
