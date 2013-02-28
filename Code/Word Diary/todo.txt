@@ -1,3 +1,7 @@
+28/02/2013
+- Seguir con el menu de eleccion de fuentes y dejarlo lo mas parametrizado posible para que no haya valores hardcodeados luego difíciles de seguir. Usar funciones que retornen el tamaño de la fuente
+- Luegoo hay que atacar al menu de colores pero hay que pensar bien cómo nos imaginamos los colores ¿fondo? ¿texto? Lo normal parece que sea fondo.  
+
 27/02/2013
 - Conseguido que salga la celda en la tableview. Ademas de registrar el identificador de la clase a reutilizar tenia que registrar el nib para ese mismo identificador.
 - Pendiente:

@@ -22,6 +22,8 @@
 		5B6F315816DF6026007E4DBA /* 218-trash2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F315616DF6026007E4DBA /* 218-trash2.png */; };
 		5B6F315916DF6026007E4DBA /* 218-trash2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F315716DF6026007E4DBA /* 218-trash2@2x.png */; };
 		5B6F316116DFBCF8007E4DBA /* WDFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F316016DFBCF8007E4DBA /* WDFont.m */; };
+		5B6F316616DFC64C007E4DBA /* WDFontMenuSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */; };
+		5B6F316716DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */; };
 		5B80893A16DE0A8A002CD179 /* WDTodayWordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80893916DE0A8A002CD179 /* WDTodayWordCell.m */; };
 		5B80893C16DE0A9E002CD179 /* WDTodayWordCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B80893B16DE0A9E002CD179 /* WDTodayWordCell.xib */; };
 		5B80893F16DE0AAF002CD179 /* WDPreviousDayWordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80893E16DE0AAF002CD179 /* WDPreviousDayWordCell.m */; };
@@ -69,6 +71,10 @@
 		5B6F315A16DF853C007E4DBA /* WDEditingWordMenuDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDEditingWordMenuDelegate.h; sourceTree = "<group>"; };
 		5B6F315F16DFBCF8007E4DBA /* WDFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFont.h; sourceTree = "<group>"; };
 		5B6F316016DFBCF8007E4DBA /* WDFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFont.m; sourceTree = "<group>"; };
+		5B6F316316DFC64C007E4DBA /* WDFontMenuSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFontMenuSelectorViewController.h; sourceTree = "<group>"; };
+		5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFontMenuSelectorViewController.m; sourceTree = "<group>"; };
+		5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDFontMenuSelectorViewController.xib; sourceTree = "<group>"; };
+		5B6F316816DFC8FC007E4DBA /* WDFontMenuSelectorDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFontMenuSelectorDelegate.h; sourceTree = "<group>"; };
 		5B80893816DE0A8A002CD179 /* WDTodayWordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDTodayWordCell.h; sourceTree = "<group>"; };
 		5B80893916DE0A8A002CD179 /* WDTodayWordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDTodayWordCell.m; sourceTree = "<group>"; };
 		5B80893B16DE0A9E002CD179 /* WDTodayWordCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTodayWordCell.xib; sourceTree = "<group>"; };
@@ -128,6 +134,7 @@
 		5B6F313216DF5A0A007E4DBA /* Menus */ = {
 			isa = PBXGroup;
 			children = (
+				5B6F316216DFC615007E4DBA /* Font Menu */,
 				5B6F313816DF5A44007E4DBA /* Editing Menu */,
 			);
 			name = Menus;
@@ -186,6 +193,17 @@
 				5B6F315A16DF853C007E4DBA /* WDEditingWordMenuDelegate.h */,
 			);
 			name = Delegate;
+			sourceTree = "<group>";
+		};
+		5B6F316216DFC615007E4DBA /* Font Menu */ = {
+			isa = PBXGroup;
+			children = (
+				5B6F316316DFC64C007E4DBA /* WDFontMenuSelectorViewController.h */,
+				5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */,
+				5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */,
+				5B6F316816DFC8FC007E4DBA /* WDFontMenuSelectorDelegate.h */,
+			);
+			name = "Font Menu";
 			sourceTree = "<group>";
 		};
 		5B80893716DE0A76002CD179 /* Cells */ = {
@@ -431,6 +449,7 @@
 				5B6F315316DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.xib in Resources */,
 				5B6F315816DF6026007E4DBA /* 218-trash2.png in Resources */,
 				5B6F315916DF6026007E4DBA /* 218-trash2@2x.png in Resources */,
+				5B6F316716DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +474,7 @@
 				5B6F314D16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.m in Sources */,
 				5B6F315216DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.m in Sources */,
 				5B6F316116DFBCF8007E4DBA /* WDFont.m in Sources */,
+				5B6F316616DFC64C007E4DBA /* WDFontMenuSelectorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
