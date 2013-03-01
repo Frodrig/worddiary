@@ -8,8 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+    UI_ALLWORDSSCREEN_TODAYWORD,
+    UI_ALLWORDSSCREEN_PREVIOUSWORD,
+    UI_SELECTEDWORDSCREEN_WORD,
+    UI_SELECTEDWORDSCREEN_FONTMENU,
+} UIWithFontType;
+
+@class WDFont;
+
 @interface WDUtils : NSObject
 
-+ (NSString *)abreviateMonthString:(NSInteger)monthIndex;
++ (NSString *) abreviateMonthString:(NSInteger)monthIndex;
++ (CGFloat)    sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDFont *)font;
 
 @end

@@ -16,18 +16,18 @@
 #import "WDColor.h"
 #import "WDUtils.h"
 
+static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
+
 @interface WDAllWordsScreenViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView   *allWordsTableView;
 @property (strong, nonatomic) NSMutableDictionary  *words;
-@property (strong, nonatomic) NSString             *wordValueOfActualWordBeforeEditing;
+@property (strong, nonatomic) NSMutableArray       *headerViewsOfSections;
 
 - (NSArray *) findWordsOfSection:(NSInteger)section;
 - (BOOL)      haveTodayYearPreviousWords;
 - (WDWord *)  findWordForIndexPath:(NSIndexPath *)indexPath;
 - (WDWord *)  findTodayWord;
-
-- (CGFloat)   sizeInWordSelectedCellOfFamilyFont:(NSString *)familyFont;
 
 @end
 
@@ -35,9 +35,19 @@
 
 #pragma mark - Synthesize
 
-@synthesize allWordsTableView                  = allWordsTableView_;
-@synthesize words                              = words_;
-@synthesize wordValueOfActualWordBeforeEditing = wordValueOfActualWordBeforeEditing_;
+@synthesize allWordsTableView      = allWordsTableView_;
+@synthesize words                  = words_;
+@synthesize headerViewsOfSections  = headerViewsOfSections_;
+
+#pragma mark - Getters & Setters
+- (NSMutableArray *)headerViewsOfSections
+{
+    if (nil == headerViewsOfSections_) {
+        headerViewsOfSections_ = [NSMutableArray array];
+    }
+    
+    return headerViewsOfSections_;
+}
 
 #pragma mark - Init
 
@@ -45,7 +55,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
         [self prepareWordsContainer];
     }
     return self;
@@ -80,23 +89,17 @@
     [self.allWordsTableView registerNib:[UINib nibWithNibName:@"WDTodayWordCell" bundle:nil] forCellReuseIdentifier:@"WDTodayWordCell"];
     [self.allWordsTableView registerNib:[UINib nibWithNibName:@"WDPreviousDayWordCell" bundle:nil] forCellReuseIdentifier:@"WDPreviousDayWordCell"];
     
-    self.navigationItem.title = NSLocalizedString(@"TAG_ALLWORDSSCREENVIEWCONTROLLER_TITLE", @"");
+    self.allWordsTableView.backgroundColor = [UIColor blackColor];
+    self.allWordsTableView.backgroundView = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    // En arranque guardamos valor de la palabra de hoy y en caso de retorno actualizamos si procede
-    WDWord *todayWord = [self findTodayWord];
-    if (nil == self.wordValueOfActualWordBeforeEditing) {
-        self.wordValueOfActualWordBeforeEditing = [NSString stringWithString:todayWord.word];
-    } else {
-        if ([todayWord.word compare:self.wordValueOfActualWordBeforeEditing] != NSOrderedSame) {
-            [self.allWordsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-            self.wordValueOfActualWordBeforeEditing = todayWord.word;
-        }
-    }
+
+    // TODO: Para asegurarnos de que a la vuelta de la pantalla de seleccion esta todo reflejado, recargamos
+    //       Esto hay que hacerlo de otra forma: usar notificaciones o similar para notificar y que en esta pantalla se produzca recarga
+    [self.allWordsTableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -156,31 +159,13 @@
     return todayWord;
 }
 
-- (CGFloat) sizeInWordSelectedCellOfFamilyFont:(NSString *)familyFont
-{
-    CGFloat sizeReturn = 0.0;
-    if ([familyFont compare:@"AppleColorEmoji"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"Baskerville"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"BrandleyHandITCTT-Bold"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"Zapfino"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"HelveticaNue"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    }
-
-    return sizeReturn;
-}
-
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat height = 70.0;
     if (indexPath.section == 0) {
-        height = 138;
+        height = 200.0;
     }
     
     return height;
@@ -190,7 +175,43 @@
 {
     WDWord *selectedWord = [self findWordForIndexPath:indexPath];
     WDSelectedWordScreenViewController *selectedWordScreenViewController = [[WDSelectedWordScreenViewController alloc] initWithSelectedWord:selectedWord];
-    [self.navigationController pushViewController:selectedWordScreenViewController animated:YES];
+    selectedWordScreenViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    [self presentViewController:selectedWordScreenViewController animated:YES completion:nil];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = nil;
+    if (section < self.headerViewsOfSections.count) {
+        headerView = [self.headerViewsOfSections objectAtIndex:section];
+    } else {
+        NSArray *wordsOfSection = [self findWordsOfSection:section];
+        WDWord *referenceWord = [wordsOfSection objectAtIndex:0];
+        
+        NSCalendar *todayCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDate *todayDate = [NSDate date];
+        NSDateComponents *todayDateComponents = [todayCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:todayDate];
+        
+        BOOL todaySection = [referenceWord.dateComponents.date compare:todayDateComponents.date] == NSOrderedSame;
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed: todaySection ? @"WDTodayWordSectionHeader" : @"WDPreviousDaysWordSectionHeader" owner:self options:nil];
+        headerView = [nib objectAtIndex:0];
+        UILabel *label = (UILabel *)[headerView viewWithTag:TAG_HEADERSECTION_LABEL];
+        label.text = todaySection ? NSLocalizedString(@"TAG_TODAYSECTION", @"") : @"ToDo";
+        
+        [self.headerViewsOfSections addObject:headerView];
+    }
+    
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 44.0;
+    /*
+    UIView *headerView = [self.headerViewsOfSections objectAtIndex:section];
+  
+    return headerView.frame.size.height;
+     */
 }
 
 #pragma mark - UITableViewDataSource
@@ -205,7 +226,8 @@
         WDTodayWordCell *cell = [self.allWordsTableView dequeueReusableCellWithIdentifier:todayCellIdentifier];
         
         cell.wordLabel.text = word.word;
-        cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[self sizeInWordSelectedCellOfFamilyFont:word.font.family]];
+        cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:word.font]];
+        cell.backgroundColor = word.backgroundColor.colorObject;
         retCell = cell;
     } else {
         static NSString *previousDaysCellIdentifier = @"WDPreviousDayWordCell";
@@ -214,6 +236,7 @@
         cell.wordLabel.text = word.word;
         cell.dayLabel.text = [NSString stringWithFormat:@"%d", word.dateComponents.day];
         cell.monthLabel.text = [WDUtils abreviateMonthString:word.dateComponents.year];
+        cell.backgroundColor = word.backgroundColor.colorObject;
         retCell = cell;
     }
     
@@ -234,25 +257,6 @@
     NSArray *wordsOfSection = [self findWordsOfSection:section];
     
     return wordsOfSection.count;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    NSArray *wordsOfSection = [self findWordsOfSection:section];
-    WDWord *referenceWord = [wordsOfSection objectAtIndex:0];
-    
-    NSCalendar *todayCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDate *todayDate = [NSDate date];
-    NSDateComponents *todayDateComponents = [todayCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:todayDate];
-    
-    NSString *result = nil;
-    if ([referenceWord.dateComponents.date compare:todayDateComponents.date] == NSOrderedSame) {
-        result = NSLocalizedString(@"TAG_TODAYSECTION", @"");
-    } else {
-        result = [NSString stringWithFormat:@"%d", referenceWord.dateComponents.year];
-    }
-    
-    return result;
 }
 
 @end

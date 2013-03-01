@@ -115,11 +115,11 @@
         colors_ = [NSArray arrayWithArray:result];
     } else {
         NSMutableArray *colorInstances = [[NSMutableArray alloc] init];
-        NSArray *colors = [NSArray arrayWithObjects:[UIColor redColor],
-                                                    [UIColor greenColor],
-                                                    [UIColor blueColor],
-                                                    [UIColor colorWithRed:0 green:0 blue:0 alpha:1],
-                                                    [UIColor colorWithRed:1 green:1 blue:1 alpha:1], nil];
+        NSArray *colors = [NSArray arrayWithObjects:[UIColor colorWithRed:0.0 green:162.0/255.0 blue:210/255.0 alpha:1.0],
+                                                    [UIColor colorWithRed:244.0/255.0 green:44.0/255.0 blue:34.0/255.0 alpha:1.0],
+                                                    [UIColor colorWithRed:1.0 green:133.0/255.0 blue:0.0 alpha:1.0],
+                                                    [UIColor colorWithRed:75.0/255.0 green:75.0/255.0 blue:75.0/255.0 alpha:1.0],
+                                                    nil];
         for (UIColor *colorByComponents in colors) {
             CGFloat redComponent;
             CGFloat greenComponent;
@@ -137,6 +137,7 @@
         }
         
         colors_ = [NSArray arrayWithArray:colorInstances];
+        colors_ = [colors_ sortedArrayUsingSelector:@selector(compare:)];
         
         [self saveAll];
     }
@@ -151,7 +152,7 @@
     } else {
         NSMutableArray *fontInstances = [[NSMutableArray alloc] init];
         
-        NSArray *fontFamilies = [NSArray arrayWithObjects:@"AppleColorEmoji", @"Baskerville", @"BrandleyHandITCTT-Bold", @"Zapfino", @"HelveticaNue", nil];
+        NSArray *fontFamilies = [NSArray arrayWithObjects:@"AppleColorEmoji", @"Baskerville", @"SnellRoundhand", @"Zapfino", nil];
         for (NSString *fontFamily in fontFamilies) {
             WDFont *font = [NSEntityDescription insertNewObjectForEntityForName:@"Font" inManagedObjectContext:self.context];
             font.family = fontFamily;
@@ -162,6 +163,8 @@
         
         [self saveAll];
     }
+    
+    fonts_ = [fonts_ sortedArrayUsingSelector:@selector(compare:)];
 }
 
 - (void)prepareWords
@@ -204,6 +207,7 @@
     [word removeObserver:self forKeyPath:@"timeInterval"];
     [word removeObserver:self forKeyPath:@"wordColor"];
     [word removeObserver:self forKeyPath:@"backgroundColor"];
+    [word removeObserver:self forKeyPath:@"font"];
     
     [self.context refreshObject:word.backgroundColor mergeChanges:NO];
     [self.context refreshObject:word.wordColor mergeChanges:NO];
@@ -260,6 +264,7 @@
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"wordColor" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"backgroundColor" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"font" options:0 context:NULL];
 }
 
 
@@ -267,15 +272,7 @@
 
 - (WDColor *)defaultColor
 {
-    UIColor *defaultColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
-    NSUInteger indexOfObject = [self.colors indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        WDColor *color = obj;
-        *stop = CGColorEqualToColor(color.colorObject.CGColor, defaultColor.CGColor);
-        return *stop;
-    }];
-    
-    NSAssert(indexOfObject != NSNotFound, @"Object index of default color not found");
-    return [self.colors objectAtIndex:indexOfObject];
+    return [self.colors objectAtIndex:0];
 }
 
 - (WDFont *)defaultFont

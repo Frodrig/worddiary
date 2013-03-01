@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "WDEditingWordMenuDelegate.h"
+#import "WDFontMenuSelectorDelegate.h"
+#import "WDColorMenuSelectorDelegate.h"
 
 @class WDWord;
 
-@interface WDSelectedWordScreenViewController : UIViewController<WDEditingWordMenuDelegate, UITextFieldDelegate>
+@interface WDSelectedWordScreenViewController : UIViewController<WDEditingWordMenuDelegate, WDFontMenuSelectorDelegate, WDColorMenuSelectorDelegate, UITextFieldDelegate>
 
 - (id)initWithSelectedWord:(WDWord *)selectedWord;
 

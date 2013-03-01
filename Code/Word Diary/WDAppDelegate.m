@@ -35,7 +35,7 @@
     [self prepareWordDiaryAtLaunch];
     [self prepareRootViewController];
     
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -46,9 +46,7 @@
 
     WDWord *lastCreatedWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
     if (lastCreatedWord != nil) {
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        NSDateComponents *todayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:todayDate];
-        if ([todayDateComponents.date compare:lastCreatedWord.dateComponents.date] != NSOrderedSame) {
+        if (![lastCreatedWord isTodayWord]) {
             if ([lastCreatedWord isEmpty]) {
                 lastCreatedWord.timeInterval = [todayDate timeIntervalSince1970];
                 lastCreatedWord.word = @"";
@@ -66,8 +64,7 @@
 - (void)prepareRootViewController
 {
     WDAllWordsScreenViewController *allWordsScreenViewController = [[WDAllWordsScreenViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:allWordsScreenViewController];
-    self.window.rootViewController = navigationController;
+    self.window.rootViewController = allWordsScreenViewController;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

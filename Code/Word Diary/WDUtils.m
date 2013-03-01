@@ -10,6 +10,33 @@
 
 @implementation WDUtils
 
+#pragma mark - Sizes
+
++ (CGFloat) sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDFont *)font
+{
+    CGFloat result = 0.0;
+    switch (uiType) {
+        case UI_ALLWORDSSCREEN_TODAYWORD:
+            result = 62.0;
+            break;
+        case UI_ALLWORDSSCREEN_PREVIOUSWORD:
+            result = 32.0;
+            break;
+        case UI_SELECTEDWORDSCREEN_WORD:
+            result = 82.0;
+            break;
+        case UI_SELECTEDWORDSCREEN_FONTMENU:
+            result = 52.0;
+            break;
+        default:
+            break;
+    }
+
+    return result;
+}
+
+#pragma mark - Text
+
 + (NSString *)abreviateMonthString:(NSInteger)monthIndex
 {
     NSString *result = nil;

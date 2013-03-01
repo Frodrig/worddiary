@@ -10,9 +10,10 @@
 
 @protocol WDEditingWordMenuDelegate <NSObject>
 
-- (void)keyboardOptionSelectedFromMenu:(id)menu;
-- (void)changeFontOptionSelectedFromMenu:(id)menu;
-- (void)changeColorOptionSelectedFromMenu:(id)menu;
-- (void)removeWordSOptionelectedFromMenu:(id)menu;
+- (void) keyboardOptionSelectedFromMenu:(id)menu;
+- (void) changeFontOptionSelectedFromMenu:(id)menu;
+- (void) changeColorOptionSelectedFromMenu:(id)menu;
+- (void) removeWordsOptionSelectedFromMenu:(id)menu;
+- (void) exitToAllWordsScreenOptionSelected:(id)menu;
 
 @end

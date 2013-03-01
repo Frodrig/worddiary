@@ -32,4 +32,21 @@
     return colorObject_;
 }
 
+#pragma mark - Compare
+
+- (CGFloat)colorComponentsSum
+{
+    CGFloat sum = self.red + self.green + self.blue + self.alpha;
+    return sum;
+}
+
+- (NSComparisonResult)compare:(WDColor *)otherColor
+{
+    CGFloat sum = [self colorComponentsSum];
+    CGFloat otherColorSum = [otherColor colorComponentsSum];
+    
+    return [[NSNumber numberWithFloat:sum] compare:[NSNumber numberWithFloat:otherColorSum]];
+}
+
+
 @end

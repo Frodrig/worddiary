@@ -19,6 +19,8 @@
 
 @interface WDFont (CoreDataGeneratedAccessors)
 
+- (NSComparisonResult)compare:(WDFont *)otherFont;
+
 - (void)addWordObject:(WDWord *)value;
 - (void)removeWordObject:(WDWord *)value;
 - (void)addWord:(NSSet *)values;

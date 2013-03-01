@@ -8,25 +8,34 @@
 
 #import "WDSelectedWordScreenViewController.h"
 #import "WDEditingActualWordMenuViewController.h"
+#import "WDFontMenuSelectorViewController.h"
+#import "WDColorMenuSelectorViewController.h"
+#import "WDReturnToAllWordsScreenMenuViewController.h"
 #import "WDWord.h"
 #import "WDFont.h"
 #import "WDColor.h"
 #import "WDWordDiary.h"
+#import "WDUtils.h"
 
 @interface WDSelectedWordScreenViewController ()
 
-@property (nonatomic, weak) WDWord                                  *selectedWord;
-@property (weak, nonatomic) IBOutlet UITextField                    *selectedWordTextField;
-@property (nonatomic, strong) WDEditingActualWordMenuViewController *editingActualWordViewController;
-@property (nonatomic, strong) UITapGestureRecognizer                *tapGestureRecognizer;
-@property (nonatomic) CGPoint                                       originalCenterPositionOfSelectedWord;
+@property (nonatomic, weak) WDWord                                       *selectedWord;
+@property (weak, nonatomic) IBOutlet UITextField                         *selectedWordTextField;
+@property (nonatomic, strong) WDEditingActualWordMenuViewController      *editingActualWordViewController;
+@property (nonatomic, strong) WDFontMenuSelectorViewController           *fontMenuSelectorViewController;
+@property (nonatomic, strong) WDColorMenuSelectorViewController          *colorMenuSelectorViewController;
+@property (nonatomic, strong) WDReturnToAllWordsScreenMenuViewController *returnMenuViewController;
+@property (nonatomic, strong) UITapGestureRecognizer                     *tapGestureRecognizer;
+@property (nonatomic) CGPoint                                            originalCenterPositionOfSelectedWord;
 
-- (void)    tapHandle:(UIGestureRecognizer *)gestureRecognizer;
+- (void)      tapHandle:(UIGestureRecognizer *)gestureRecognizer;
 
-- (void)    keyboardWillShowNotification:(NSNotification *)notification;
-- (void)    keyboardWillHideNotification:(NSNotification *)notification;
+- (void)      keyboardWillShowNotification:(NSNotification *)notification;
+- (void)      keyboardWillHideNotification:(NSNotification *)notification;
 
-- (CGFloat) sizeInWordSelectedCellOfFamilyFont:(NSString *)familyFont;
+- (NSArray *) actualVisiblesViewMenus;
+
+- (NSArray *) allBottomMenuViews;
 
 @end
 
@@ -37,7 +46,10 @@
 @synthesize selectedWord                    = selectedWord_;
 @synthesize selectedWordTextField           = selectedWordTextField_;
 @synthesize editingActualWordViewController = editingActualWordViewController_;
+@synthesize fontMenuSelectorViewController  = fontMenuSelectorViewController_;
+@synthesize colorMenuSelectorViewController = colorMenuSelectorViewController_;
 @synthesize tapGestureRecognizer            = tapGestureRecognizer_;
+@synthesize returnMenuViewController        = returnMenuViewController_;
 
 #pragma mark Init
 
@@ -50,6 +62,9 @@
         
         // Otros controllers
         editingActualWordViewController_ = [[WDEditingActualWordMenuViewController alloc] initWithNibName:nil bundle:nil];
+        fontMenuSelectorViewController_ = [[WDFontMenuSelectorViewController alloc] initWithNibName:nil bundle:nil];
+        colorMenuSelectorViewController_ = [[WDColorMenuSelectorViewController alloc] initWithNibName:nil bundle:nil];
+        returnMenuViewController_ = [[WDReturnToAllWordsScreenMenuViewController alloc] initWithNibName:nil bundle:nil];
         
         // Gesture Recognizer
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
@@ -84,10 +99,14 @@
     
     // Palabra seleccionada
     self.selectedWordTextField.text = self.selectedWord.word;
-    self.selectedWordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:[self sizeInWordSelectedCellOfFamilyFont:self.selectedWord.font.family]];
+    self.selectedWordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:self.selectedWord.font]];
+    self.view.backgroundColor = self.selectedWord.backgroundColor.colorObject;
     
     // Vinculacion delegados
     self.editingActualWordViewController.delegate = self;
+    self.fontMenuSelectorViewController.delegate = self;
+    self.colorMenuSelectorViewController.delegate = self;
+    self.returnMenuViewController.delegate = self;
     self.selectedWordTextField.delegate = self;
 }
 
@@ -97,12 +116,19 @@
     
     // Colocacion otros controllers
     // Nota: Esto no funciona en viewDidLoad hay que ponerlo aqui, en viewWillAppear
-    [self.view addSubview:self.editingActualWordViewController.view];
-    self.editingActualWordViewController.view.frame = CGRectMake(0,
-                                                                 self.view.frame.origin.y + self.view.frame.size.height - self.editingActualWordViewController.view.frame.size.height - 0,
-                                                                 self.editingActualWordViewController.view.frame.size.width,
-                                                                 self.editingActualWordViewController.view.frame.size.height);
-    self.editingActualWordViewController.view.hidden = YES;
+    NSArray *viewsOfControllers = [self allBottomMenuViews];
+    for (UIView *viewIt in viewsOfControllers) {
+        [self.view addSubview:viewIt];
+        viewIt.frame = CGRectMake(0,
+                                  self.view.frame.origin.y + self.view.frame.size.height - viewIt.frame.size.height,
+                                  viewIt.frame.size.width,
+                                  viewIt.frame.size.height);
+        viewIt.hidden = YES;
+    }
+    
+    [self.view addSubview:self.returnMenuViewController.view];
+    self.returnMenuViewController.view.frame = CGRectMake(0.0, 0.0, self.returnMenuViewController.view.frame.size.width, self.returnMenuViewController.view.frame.size.height);
+    self.returnMenuViewController.view.hidden = YES;
     
     // Otros
     self.originalCenterPositionOfSelectedWord = self.selectedWordTextField.center;
@@ -121,31 +147,42 @@
 
 #pragma mark - Auxiliary
 
-- (CGFloat)sizeInWordSelectedCellOfFamilyFont:(NSString *)familyFont
+- (NSArray *)allBottomMenuViews
 {
-    CGFloat sizeReturn = 0.0;
-    if ([familyFont compare:@"AppleColorEmoji"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"Baskerville"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"BrandleyHandITCTT-Bold"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"Zapfino"] == NSOrderedSame) {
-        sizeReturn = 82.0;
-    } else if ([familyFont compare:@"HelveticaNue"] == NSOrderedSame) {
-        sizeReturn = 82.0;
+    NSArray *allViews = [NSArray arrayWithObjects:self.editingActualWordViewController.view, self.fontMenuSelectorViewController.view, self.colorMenuSelectorViewController.view, nil];
+    
+    return allViews;
+}
+
+- (NSArray *)actualVisiblesViewMenus
+{
+    NSMutableArray *actualVisiblesMenus = [NSMutableArray arrayWithCapacity:2];
+    
+    NSArray *allViews = [self allBottomMenuViews];
+    for (UIView *viewIt in allViews) {
+        if (!viewIt.hidden) {
+            [actualVisiblesMenus addObject:viewIt];
+        }
     }
     
-    return sizeReturn;
+    return actualVisiblesMenus.count > 0 ? [NSArray arrayWithArray:actualVisiblesMenus] : nil;
 }
 
 #pragma mark - Tap Gesture Recognizer
 
 - (void)tapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
-    // ¿Palabra asociada al dia actual?
-    if ([self.selectedWord isTodayWord]) {
-        self.editingActualWordViewController.view.hidden = !self.editingActualWordViewController.view.hidden;
+    NSArray *actualVisiblesMenus = [self actualVisiblesViewMenus];
+    if (actualVisiblesMenus) {
+        [actualVisiblesMenus enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            UIView *viewIt = obj;
+            viewIt.hidden = YES;
+        }];
+    } else {
+        if ([self.selectedWord isTodayWord]) {
+            self.editingActualWordViewController.view.hidden = !self.editingActualWordViewController.view.hidden;
+            self.returnMenuViewController.view.hidden = self.editingActualWordViewController.view.hidden;
+        }
     }
 }
 
@@ -226,21 +263,64 @@
     [self.selectedWordTextField becomeFirstResponder];
     
     self.editingActualWordViewController.view.hidden = YES;
+    self.returnMenuViewController.view.hidden = YES;
 }
 
 - (void)changeFontOptionSelectedFromMenu:(id)menu
 {
+    self.fontMenuSelectorViewController.view.hidden = NO;
+    
     self.editingActualWordViewController.view.hidden = YES;
+    self.returnMenuViewController.view.hidden = YES;
 }
 
 - (void)changeColorOptionSelectedFromMenu:(id)menu
 {
+    self.colorMenuSelectorViewController.view.hidden = NO;
+    
     self.editingActualWordViewController.view.hidden = YES;
+    self.returnMenuViewController.view.hidden = YES;
 }
 
-- (void)removeWordSOptionelectedFromMenu:(id)menu
+- (void)removeWordsOptionSelectedFromMenu:(id)menu
 {
-    self.editingActualWordViewController.view.hidden = YES;    
+    self.editingActualWordViewController.view.hidden = YES;
+    self.returnMenuViewController.view.hidden = YES;
+    
+    if ([self.selectedWord isTodayWord]) {
+        self.selectedWord.word = @"";
+        self.selectedWordTextField.text = self.selectedWord.word;
+    } else {
+        self.selectedWordTextField.text = @"";
+        [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
+
+- (void) exitToAllWordsScreenOptionSelected:(id)menu
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - WDFontMenuSelectorViewController
+
+- (void)fontMenuSelector:(id)fontMenuObject selectedFont:(WDFont *)font
+{
+    self.selectedWord.font = font;
+    self.selectedWordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:[WDUtils sizeOfWordForUI:UI_SELECTEDWORDSCREEN_WORD andFont:font]];
+    
+    self.fontMenuSelectorViewController.view.hidden = YES;
+}
+
+#pragma mark - WDColorMenuSelectorViewController
+
+- (void)colorMenuSelector:(id)colorMenuObject selectedColor:(WDColor *)color
+{
+    self.selectedWord.backgroundColor = color;
+    self.view.backgroundColor = color.colorObject;
+    
+    self.colorMenuSelectorViewController.view.hidden = YES;
+}
+
 
 @end

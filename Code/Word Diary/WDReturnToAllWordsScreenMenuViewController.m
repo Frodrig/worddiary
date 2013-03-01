@@ -1,25 +1,22 @@
 //
-//  WDEditingPreviousWordMenuViewController.m
+//  WDReturnToAllWordsScreenMenuViewController.m
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 28/02/13.
+//  Created by Fernando Rodríguez Martínez on 01/03/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
-#import "WDEditingPreviousWordMenuViewController.h"
+#import "WDReturnToAllWordsScreenMenuViewController.h"
 
-@interface WDEditingPreviousWordMenuViewController ()
+@interface WDReturnToAllWordsScreenMenuViewController ()
 
 @end
 
-#pragma mark - Init
-
-@implementation WDEditingPreviousWordMenuViewController
+@implementation WDReturnToAllWordsScreenMenuViewController
 
 #pragma mark - Synthesize
 
-@synthesize selectedWord = selectedWord_;
-@synthesize delegate     = delegate_;
+@synthesize delegate = delegate_;
 
 #pragma mark - Init
 
@@ -44,13 +41,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - UI Events
+#pragma mark - UIControls Events
 
-- (IBAction)deleteButtonPressed:(id)sender
+- (IBAction)returnButtonPressed:(id)sender
 {
-    if ([self.delegate performSelector:@selector(removeWordsOptionSelectedFromMenu:) withObject:self]) {
-        [self.delegate removeWordsOptionSelectedFromMenu:self];
-    }
+    [self.delegate exitToAllWordsScreenOptionSelected:self];
 }
 
 @end

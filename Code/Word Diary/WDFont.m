@@ -15,4 +15,11 @@
 @dynamic family;
 @dynamic word;
 
+#pragma mark - Compare
+
+- (NSComparisonResult)compare:(WDFont *)otherFont
+{
+    return [self.family compare:otherFont.family];
+}
+
 @end

@@ -25,6 +25,9 @@
 
 @interface WDColor (CoreDataGeneratedAccessors)
 
+- (NSComparisonResult) compare:(WDColor *)otherColor;
+- (CGFloat)            colorComponentsSum;
+
 - (void)addWordColorObject:(WDWord *)value;
 - (void)removeWordColorObject:(WDWord *)value;
 - (void)addWordColor:(NSSet *)values;

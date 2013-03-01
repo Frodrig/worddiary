@@ -68,8 +68,8 @@
 
 - (IBAction)clearWordPressed:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(removeWordSOptionelectedFromMenu:)]) {
-        [self.delegate removeWordSOptionelectedFromMenu:self];
+    if ([self.delegate respondsToSelector:@selector(removeWordsOptionSelectedFromMenu:)]) {
+        [self.delegate removeWordsOptionSelectedFromMenu:self];
     }
 }
 
