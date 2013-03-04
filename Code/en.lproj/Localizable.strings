@@ -6,6 +6,8 @@
   Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 */
 
+"TAG_LANG" = "en";
+
 "TAG_OPENDB_FAILED" = "Failed opening DB";
 "TAG_OPENDBFAILED_REASON" = "Reason %@";
 "TAG_FETCHFAILED" = "Fetch Failed";

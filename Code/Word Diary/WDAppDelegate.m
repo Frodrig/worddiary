@@ -16,6 +16,7 @@
 
 - (void) prepareWordDiaryAtLaunch;
 - (void) prepareRootViewController;
+- (void) createDebugWords;
 
 @end
 
@@ -32,6 +33,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   
     // Override point for customization after application launch
+    //[self createDebugWords];
     [self prepareWordDiaryAtLaunch];
     [self prepareRootViewController];
     
@@ -57,7 +59,7 @@
     }
     
     if (nil == lastCreatedWord) {
-        lastCreatedWord = [[WDWordDiary sharedWordDiary] createWord:@"Working" inTimeInterval:[todayDate timeIntervalSince1970]];
+        lastCreatedWord = [[WDWordDiary sharedWordDiary] createWord:@"New Word..." inTimeInterval:[todayDate timeIntervalSince1970]];
     }
 }
 
@@ -65,6 +67,26 @@
 {
     WDAllWordsScreenViewController *allWordsScreenViewController = [[WDAllWordsScreenViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = allWordsScreenViewController;
+}
+
+- (void)createDebugWords
+{
+    NSArray *words = [NSArray arrayWithObjects:@"Triste", @"Aburrido", @"Vacaciones", @"Exámen", @"Papás", @"Lluvia", @"Catarro", @"Feliz", nil];
+    NSArray *timeIntervalSince1970 = [NSArray arrayWithObjects:[NSNumber numberWithDouble:31104000 * 1],
+                                                               [NSNumber numberWithDouble:31104000 * 1],
+                                                               [NSNumber numberWithDouble:31104000 * 5],
+                                                               [NSNumber numberWithDouble:31104000 * 5],
+                                                               [NSNumber numberWithDouble:31104000 * 8],
+                                                               [NSNumber numberWithDouble:31104000 * 9],
+                                                               [NSNumber numberWithDouble:31104000 * 10],
+                                                               [NSNumber numberWithDouble:31104000 * 1],
+                                                               nil];
+    for (NSUInteger index = 0; index < words.count; ++index) {
+        NSString *wordIt = [words objectAtIndex:index];
+        NSTimeInterval timeInterval = ((NSNumber *)[timeIntervalSince1970 objectAtIndex:index]).doubleValue;
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+        [[WDWordDiary sharedWordDiary] createWord:wordIt inTimeInterval:date.timeIntervalSince1970];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

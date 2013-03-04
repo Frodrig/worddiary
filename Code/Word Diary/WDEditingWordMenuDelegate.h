@@ -14,6 +14,5 @@
 - (void) changeFontOptionSelectedFromMenu:(id)menu;
 - (void) changeColorOptionSelectedFromMenu:(id)menu;
 - (void) removeWordsOptionSelectedFromMenu:(id)menu;
-- (void) exitToAllWordsScreenOptionSelected:(id)menu;
 
 @end

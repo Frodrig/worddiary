@@ -11,7 +11,8 @@
 @interface WDPreviousDayWordCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *wordLabel;
-@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
-@property (weak, nonatomic) IBOutlet UILabel *monthLabel;
+@property (weak, nonatomic) IBOutlet UILabel *oneDateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *twoDateLabel;
+@property (weak, nonatomic) IBOutlet UIView *dateViewContainer;
 
 @end

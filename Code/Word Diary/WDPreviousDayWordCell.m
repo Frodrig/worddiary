@@ -8,7 +8,20 @@
 
 #import "WDPreviousDayWordCell.h"
 
+@interface WDPreviousDayWordCell()
+
+@end
+
 @implementation WDPreviousDayWordCell
+
+#pragma mark - Synthesize
+
+@synthesize wordLabel         = wordLabel_;
+@synthesize oneDateLabel      = oneDateLabel_;
+@synthesize twoDateLabel      = twoDateLabel_;
+@synthesize dateViewContainer = dateViewContainer_;
+
+#pragma mark - Init
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

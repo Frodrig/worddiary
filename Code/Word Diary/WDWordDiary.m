@@ -152,7 +152,7 @@
     } else {
         NSMutableArray *fontInstances = [[NSMutableArray alloc] init];
         
-        NSArray *fontFamilies = [NSArray arrayWithObjects:@"AppleColorEmoji", @"Baskerville", @"SnellRoundhand", @"Zapfino", nil];
+        NSArray *fontFamilies = [NSArray arrayWithObjects:@"ArialMT", @"CourierNewPSMT", @"SnellRoundhand", @"Palatino-Roman", nil];
         for (NSString *fontFamily in fontFamilies) {
             WDFont *font = [NSEntityDescription insertNewObjectForEntityForName:@"Font" inManagedObjectContext:self.context];
             font.family = fontFamily;
@@ -192,7 +192,7 @@
     wordObject.backgroundColor = [self defaultColor];
     
     [words_ addObject:wordObject];
-    [words_ sortedArrayUsingSelector:@selector(compare:)];
+    words_ = [NSMutableArray arrayWithArray:[words_ sortedArrayUsingSelector:@selector(compare:)]];
     
     [self addObserverToWord:wordObject];
     
@@ -279,7 +279,7 @@
 {
     NSUInteger indexOfObject = [self.fonts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         WDFont *font = obj;
-        *stop = [font.family compare:@"Baskerville"] == NSOrderedSame;
+        *stop = [font.family compare:@"SnellRoundhand"] == NSOrderedSame;
         return *stop;
     }];
     

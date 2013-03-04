@@ -22,4 +22,7 @@ typedef enum {
 + (NSString *) abreviateMonthString:(NSInteger)monthIndex;
 + (CGFloat)    sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDFont *)font;
 
++ (BOOL)       englishIsTheCurrentAppLanguage;
++ (BOOL)       spanishIsTheCurrentAppLanguage;
+
 @end

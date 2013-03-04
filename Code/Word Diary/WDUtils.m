@@ -17,10 +17,10 @@
     CGFloat result = 0.0;
     switch (uiType) {
         case UI_ALLWORDSSCREEN_TODAYWORD:
-            result = 62.0;
+            result = 92.0;
             break;
         case UI_ALLWORDSSCREEN_PREVIOUSWORD:
-            result = 32.0;
+            result = 42.0;
             break;
         case UI_SELECTEDWORDSCREEN_WORD:
             result = 82.0;
@@ -84,6 +84,16 @@
     }
     
     return result;
+}
+
++ (BOOL) englishIsTheCurrentAppLanguage
+{
+    return [NSLocalizedString(@"TAG_LANG", @"") caseInsensitiveCompare:@"en"] == NSOrderedSame;
+}
+
++ (BOOL) spanishIsTheCurrentAppLanguage
+{
+    return ![self englishIsTheCurrentAppLanguage];
 }
 
 @end
