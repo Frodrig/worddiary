@@ -132,6 +132,7 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
         if (0 == wordsKeyIndex) {
             // Estamos en el año de la palabra actual que ocupa ademas la primera posicion, la descartamos
             result = [wordsOfSection subarrayWithRange:NSMakeRange(1, wordsOfSection.count - 1)];
+            NSAssert(result.count < wordsOfSection.count, @"Se ha generado el subarray mal");
         } else {
             result = [NSArray arrayWithArray:wordsOfSection];
         }

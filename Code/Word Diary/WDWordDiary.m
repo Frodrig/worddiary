@@ -23,6 +23,8 @@
 
 - (void)      addObserverToWord:(WDWord *)word;
 
+- (void)      sortWords;
+
 @end
 
 @implementation WDWordDiary
@@ -138,7 +140,7 @@
         
         colors_ = [NSArray arrayWithArray:colorInstances];
         colors_ = [colors_ sortedArrayUsingSelector:@selector(compare:)];
-        
+    
         [self saveAll];
     }
 }
@@ -172,7 +174,7 @@
     NSArray *result = [self fetchAllEntitiesOfType:@"Word"];
     
     words_ = result.count > 0 ? [NSMutableArray arrayWithArray:result] : [NSMutableArray array];
-    [words_ sortedArrayUsingSelector:@selector(compare:)];
+    [self sortWords];
     
     for (WDWord *word in words_) {
         [self addObserverToWord:word];
@@ -192,7 +194,7 @@
     wordObject.backgroundColor = [self defaultColor];
     
     [words_ addObject:wordObject];
-    words_ = [NSMutableArray arrayWithArray:[words_ sortedArrayUsingSelector:@selector(compare:)]];
+    [self sortWords];
     
     [self addObserverToWord:wordObject];
     
@@ -232,15 +234,9 @@
 
 - (WDWord *)findTodayWord
 {
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *todayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
-    
-    WDWord *result = nil;
-    for (WDWord *word in self.words) {
-        if ([todayDateComponents.date compare:word.dateComponents.date] == NSOrderedSame) {
-            result = word;
-            break;
-        }
+    WDWord *result = [self findLastCreatedWord];
+    if (result && ![result isTodayWord]) {
+        result = nil;
     }
     
     return result;
@@ -250,7 +246,7 @@
 {
     WDWord *result = nil;
     if (self.words.count > 0) {
-        result = [self.words objectAtIndex:self.words.count - 1];
+        result = [self.words objectAtIndex:0];
     }
 
     return result;
@@ -267,6 +263,16 @@
     [word addObserver:self forKeyPath:@"font" options:0 context:NULL];
 }
 
+- (void)sortWords
+{
+    // Se ordena de forma descendente, de palabras mas nueva a mas antigua
+    NSArray *sortedWords = [words_ sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        WDWord *wordObj1 = obj1;
+        WDWord *wordObj2 = obj2;
+        return [wordObj2 compare:wordObj1];
+    }];
+    words_ = [NSMutableArray arrayWithArray:sortedWords];
+}
 
 #pragma mark - Default
 
@@ -294,7 +300,7 @@
     [self saveAll];
     
     if ([keyPath compare:@"timeInterval"] == NSOrderedSame) {
-        [words_ sortedArrayUsingSelector:@selector(compare:)];
+        [self sortWords];
     }
 }
 
