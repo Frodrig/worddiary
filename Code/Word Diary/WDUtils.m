@@ -96,4 +96,11 @@
     return ![self englishIsTheCurrentAppLanguage];
 }
 
++ (BOOL)is:(CGFloat)floatOne equalsTo:(CGFloat)floatTwo
+{
+    static const CGFloat EPSILON = 0.00001;
+    return (fabs(floatOne - floatTwo) < EPSILON);
+}
+
+
 @end

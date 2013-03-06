@@ -13,8 +13,9 @@
 #import "WDWordDiary.h"
 #import "WDWord.h"
 #import "WDFont.h"
-#import "WDColor.h"
 #import "WDUtils.h"
+#import "WDBackgroundStore.h"
+//#include <QuartzCore/QuartzCore.h>
 
 static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
 
@@ -89,7 +90,7 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
     [self.allWordsTableView registerNib:[UINib nibWithNibName:@"WDTodayWordCell" bundle:nil] forCellReuseIdentifier:@"WDTodayWordCell"];
     [self.allWordsTableView registerNib:[UINib nibWithNibName:@"WDPreviousDayWordCell" bundle:nil] forCellReuseIdentifier:@"WDPreviousDayWordCell"];
     
-    self.allWordsTableView.backgroundColor = [UIColor blackColor];
+    //self.allWordsTableView.backgroundColor = [UIColor blackColor];
     self.allWordsTableView.backgroundView = nil;
 }
 
@@ -227,16 +228,19 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
     if (indexPath.section == 0) {
         static NSString *todayCellIdentifier = @"WDTodayWordCell";
         WDTodayWordCell *cell = [self.allWordsTableView dequeueReusableCellWithIdentifier:todayCellIdentifier];
+        [[WDBackgroundStore sharedStore] releaseBackgroundWithID:cell.idBackground];
         cell.wordLabel.text = word.word;
         cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:word.font]];
-        cell.backgroundColor = word.backgroundColor.colorObject;
+        cell.backgroundView = [[UIView alloc] initWithFrame:cell.contentView.frame];
+        cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_GRADIENT forView:cell.backgroundView];
+        
         retCell = cell;
     } else {
         static NSString *previousDaysCellIdentifier = @"WDPreviousDayWordCell";
         WDPreviousDayWordCell *cell = [self.allWordsTableView dequeueReusableCellWithIdentifier:previousDaysCellIdentifier];
+        [[WDBackgroundStore sharedStore] releaseBackgroundWithID:cell.idBackground];
         cell.wordLabel.text = word.word;
         cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_PREVIOUSWORD andFont:word.font]];
-        cell.backgroundColor = word.backgroundColor.colorObject;
         cell.dateViewContainer.alpha = 0.3;
         if ([WDUtils englishIsTheCurrentAppLanguage]) {
             cell.oneDateLabel.text = [NSString stringWithFormat:@"%@,",[WDUtils abreviateMonthString:word.dateComponents.month]];
@@ -245,6 +249,7 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
             cell.oneDateLabel.text = [NSString stringWithFormat:@"%d,",word.dateComponents.day];
             cell.twoDateLabel.text = [WDUtils abreviateMonthString:word.dateComponents.month];
         }
+                
         retCell = cell;
     }
     

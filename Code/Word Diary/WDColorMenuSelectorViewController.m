@@ -7,7 +7,6 @@
 //
 
 #import "WDColorMenuSelectorViewController.h"
-#import "WDColor.h"
 #import "WDWordDiary.h"
 
 @interface WDColorMenuSelectorViewController ()
@@ -54,8 +53,6 @@
     NSArray *colors = [WDWordDiary sharedWordDiary].colors;
     for (NSUInteger colorIt = 0; colorIt < colors.count; ++colorIt) {
         UIButton *button = (UIButton *)[self.view viewWithTag:200+colorIt];
-        WDColor *color = [colors objectAtIndex:colorIt];
-        button.backgroundColor = color.colorObject;
         [button addTarget:self action:@selector(colorSelected:) forControlEvents:UIControlEventTouchUpInside];
     }
 }

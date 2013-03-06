@@ -25,4 +25,6 @@ typedef enum {
 + (BOOL)       englishIsTheCurrentAppLanguage;
 + (BOOL)       spanishIsTheCurrentAppLanguage;
 
++ (BOOL)       is:(CGFloat)floatOne equalsTo:(CGFloat)floatTwo;
+
 @end

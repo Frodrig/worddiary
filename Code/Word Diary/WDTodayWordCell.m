@@ -10,6 +10,13 @@
 
 @implementation WDTodayWordCell
 
+#pragma mark - Synthesize
+
+@synthesize wordLabel    = wordLabel_;
+@synthesize idBackground = idBackground_;
+
+#pragma mark - Init
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];

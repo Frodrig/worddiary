@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *wordLabel;
 @property (weak, nonatomic) IBOutlet UILabel *oneDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *twoDateLabel;
-@property (weak, nonatomic) IBOutlet UIView *dateViewContainer;
+@property (weak, nonatomic) IBOutlet UIView  *dateViewContainer;
+@property (nonatomic, strong) NSNumber       *idBackground;
 
 @end

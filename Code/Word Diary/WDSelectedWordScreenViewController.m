@@ -7,14 +7,15 @@
 //
 
 #import "WDSelectedWordScreenViewController.h"
+#import <QuartzCore/QuartzCore.h>
 #import "WDEditingActualWordMenuViewController.h"
 #import "WDFontMenuSelectorViewController.h"
 #import "WDColorMenuSelectorViewController.h"
 #import "WDWord.h"
 #import "WDFont.h"
-#import "WDColor.h"
 #import "WDWordDiary.h"
 #import "WDUtils.h"
+#import "WDBackgroundStore.h"
 
 @interface WDSelectedWordScreenViewController ()
 
@@ -26,6 +27,7 @@
 @property (nonatomic, strong)        UITapGestureRecognizer                     *tapGestureRecognizer;
 @property (nonatomic, strong)        UISwipeGestureRecognizer                   *swipeGestureRecognizer;
 @property (nonatomic)                CGPoint                                    originalCenterPositionOfSelectedWord;
+@property (nonatomic, strong)        NSTimer                                    *animateStartEndPointOfGradientTimer;
 
 - (void)      tapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)      swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
@@ -37,19 +39,23 @@
 
 - (NSArray *) allBottomMenuViews;
 
+- (void)      animateStartEndPointOfGradient:(NSTimer *)timer;
+- (CGPoint)   incGradientLayerPoint:(CGPoint)point;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
 
 #pragma mark Synthesize
 
-@synthesize selectedWord                    = selectedWord_;
-@synthesize selectedWordTextField           = selectedWordTextField_;
-@synthesize editingActualWordViewController = editingActualWordViewController_;
-@synthesize fontMenuSelectorViewController  = fontMenuSelectorViewController_;
-@synthesize colorMenuSelectorViewController = colorMenuSelectorViewController_;
-@synthesize tapGestureRecognizer            = tapGestureRecognizer_;
-@synthesize swipeGestureRecognizer          = swipeGestureRecognizer_;
+@synthesize selectedWord                         = selectedWord_;
+@synthesize selectedWordTextField                = selectedWordTextField_;
+@synthesize editingActualWordViewController      = editingActualWordViewController_;
+@synthesize fontMenuSelectorViewController       = fontMenuSelectorViewController_;
+@synthesize colorMenuSelectorViewController      = colorMenuSelectorViewController_;
+@synthesize tapGestureRecognizer                 = tapGestureRecognizer_;
+@synthesize swipeGestureRecognizer               = swipeGestureRecognizer_;
+@synthesize animateStartEndPointOfGradientTimer  = animateStartEndPointOfGradientTimer_;
 
 #pragma mark Init
 
@@ -104,7 +110,52 @@
     // Palabra seleccionada
     self.selectedWordTextField.text = self.selectedWord.word;
     self.selectedWordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:self.selectedWord.font]];
-    self.view.backgroundColor = self.selectedWord.backgroundColor.colorObject;
+    
+    // Gradiente
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = self.view.frame;
+    UIColor *colorOne = [UIColor colorWithRed:1.0 green:1.0 blue:0.05 alpha:1.0];
+    UIColor *colorTwo = [UIColor colorWithRed:0.0 green:102.0/255.0 blue:1.0 alpha:1.0];
+    gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
+    gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
+    gradient.startPoint = CGPointMake(0.5, 0.0);
+    gradient.endPoint = CGPointMake(0.0, 1.0);
+    [self.view.layer insertSublayer:gradient atIndex:0];
+    
+    
+    /*
+    CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
+    NSArray *animateGradientColors = [NSArray arrayWithObjects:(id)[UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.0].CGColor, (id)[UIColor colorWithRed:0.3 green:0.5 blue:0.2 alpha:1.0].CGColor, nil];
+    gradientAnimation.fromValue = gradient.colors;
+    gradientAnimation.toValue = animateGradientColors;
+    gradientAnimation.duration = 10.0;
+    gradientAnimation.removedOnCompletion = NO;
+    gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    [gradient addAnimation:gradientAnimation forKey:@"animateGradient"];
+    gradient.colors = animateGradientColors;
+    */
+    
+    CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
+    gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
+    gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
+    gradientAnimationStartPoint.duration = 30.0;
+    gradientAnimationStartPoint.removedOnCompletion = NO;
+    gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    gradientAnimationStartPoint.repeatCount = HUGE_VALF;
+    gradientAnimationStartPoint.autoreverses = YES;
+    [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
+//    gradient.startPoint = CGPointMake(1.0, 0.0);
+    
+    /*
+    CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
+    gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
+    gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)];
+    gradientAnimationEndPoint.duration = 20.0;
+    gradientAnimationEndPoint.removedOnCompletion = NO;
+    gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
+    gradient.endPoint = CGPointMake(0.0, 0.0);
+    */
     
     // Vinculacion delegados
     self.editingActualWordViewController.delegate = self;
@@ -133,6 +184,11 @@
     self.originalCenterPositionOfSelectedWord = self.selectedWordTextField.center;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+   // self.animateStartEndPointOfGradientTimer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(animateStartEndPointOfGradient:) userInfo:nil repeats:YES];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -145,6 +201,45 @@
 }
 
 #pragma mark - Auxiliary
+
+- (CGPoint)incGradientLayerPoint:(CGPoint)point
+{
+    // Nos desplazamos por los margenes del rectangulo de valores
+    const CGFloat incValue = 0.05;
+    CGPoint retPoint = point;
+    if ([WDUtils is:retPoint.y equalsTo:0.0]) {
+        if ([WDUtils is:retPoint.x equalsTo:1.0]) {
+            retPoint.y += incValue;
+        } else {
+            retPoint.x += incValue;
+        }
+    } else if ([WDUtils is:retPoint.y equalsTo:1.0]) {
+        if (retPoint.x == 1.0) {
+            retPoint.x -= incValue;
+        } else if ([WDUtils is:retPoint.x equalsTo:0.0]) {
+            retPoint.y -= incValue;
+        } else {
+            retPoint.x -= incValue;
+        }
+    } else {
+        if ([WDUtils is:retPoint.x equalsTo:0.0]) {
+            retPoint.y -= incValue;
+        } else if ([WDUtils is:retPoint.x equalsTo:1.0]) {
+            retPoint.y += incValue;
+        }
+    }
+    
+    return retPoint;
+}
+
+- (void)animateStartEndPointOfGradient:(NSTimer *)timer
+{
+    CAGradientLayer *layer = [self.view.layer.sublayers objectAtIndex:0];
+    layer.startPoint = [self incGradientLayerPoint:layer.startPoint];
+   // NSLog(@"point %f, %f", layer.startPoint.x, layer.startPoint.y);
+    layer.endPoint = [self incGradientLayerPoint:layer.endPoint];
+}
+
 
 - (NSArray *)allBottomMenuViews
 {
@@ -312,8 +407,6 @@
 
 - (void)colorMenuSelector:(id)colorMenuObject selectedColor:(WDColor *)color
 {
-    self.selectedWord.backgroundColor = color;
-    self.view.backgroundColor = color.colorObject;
     
     self.colorMenuSelectorViewController.view.hidden = YES;
 }

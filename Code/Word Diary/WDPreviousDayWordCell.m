@@ -20,6 +20,7 @@
 @synthesize oneDateLabel      = oneDateLabel_;
 @synthesize twoDateLabel      = twoDateLabel_;
 @synthesize dateViewContainer = dateViewContainer_;
+@synthesize idBackground      = idBackground_;
 
 #pragma mark - Init
 

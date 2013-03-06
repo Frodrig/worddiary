@@ -8,8 +8,8 @@
 
 #import "WDWordDiary.h"
 #import "WDWord.h"
-#import "WDColor.h"
 #import "WDFont.h"
+#import "WDBackgroundDefs.h"
 
 @interface WDWordDiary()
 
@@ -17,7 +17,6 @@
 - (NSURL *)storeFileURLWithPath;
 
 - (NSArray *) fetchAllEntitiesOfType:(NSString *)entity;
-- (void)      prepareColors;
 - (void)      prepareFonts;
 - (void)      prepareWords;
 
@@ -62,7 +61,6 @@
     if (self) {
         [self configureModelAndContextOfDB];
         [self prepareFonts];
-        [self prepareColors];
         [self prepareWords];
     }
     
@@ -107,42 +105,6 @@
     }
     
     return result;
-}
-
-- (void)prepareColors
-{
-    NSArray *result = [self fetchAllEntitiesOfType:@"Color"];
-    
-    if (result.count > 0) {
-        colors_ = [NSArray arrayWithArray:result];
-    } else {
-        NSMutableArray *colorInstances = [[NSMutableArray alloc] init];
-        NSArray *colors = [NSArray arrayWithObjects:[UIColor colorWithRed:0.0 green:162.0/255.0 blue:210/255.0 alpha:1.0],
-                                                    [UIColor colorWithRed:244.0/255.0 green:44.0/255.0 blue:34.0/255.0 alpha:1.0],
-                                                    [UIColor colorWithRed:1.0 green:133.0/255.0 blue:0.0 alpha:1.0],
-                                                    [UIColor colorWithRed:75.0/255.0 green:75.0/255.0 blue:75.0/255.0 alpha:1.0],
-                                                    nil];
-        for (UIColor *colorByComponents in colors) {
-            CGFloat redComponent;
-            CGFloat greenComponent;
-            CGFloat blueComponent;
-            CGFloat alphaComponent;
-            [colorByComponents getRed:&redComponent green:&greenComponent blue:&blueComponent alpha:&alphaComponent];
-           
-            WDColor *color = [NSEntityDescription insertNewObjectForEntityForName:@"Color" inManagedObjectContext:self.context];
-            color.red = redComponent;
-            color.green = greenComponent;
-            color.blue = blueComponent;
-            color.alpha = alphaComponent;
-            
-            [colorInstances addObject:color];
-        }
-        
-        colors_ = [NSArray arrayWithArray:colorInstances];
-        colors_ = [colors_ sortedArrayUsingSelector:@selector(compare:)];
-    
-        [self saveAll];
-    }
 }
 
 - (void)prepareFonts
@@ -190,9 +152,8 @@
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
     wordObject.font = [self defaultFont];
-    wordObject.wordColor = [self defaultColor];
-    wordObject.backgroundColor = [self defaultColor];
-    
+    wordObject.backgroundCategory = BC_GRADIENT;
+
     [words_ addObject:wordObject];
     [self sortWords];
     
@@ -207,12 +168,9 @@
 {
     [word removeObserver:self forKeyPath:@"word"];
     [word removeObserver:self forKeyPath:@"timeInterval"];
-    [word removeObserver:self forKeyPath:@"wordColor"];
-    [word removeObserver:self forKeyPath:@"backgroundColor"];
+    [word removeObserver:self forKeyPath:@"backgroundCategory"];
     [word removeObserver:self forKeyPath:@"font"];
     
-    [self.context refreshObject:word.backgroundColor mergeChanges:NO];
-    [self.context refreshObject:word.wordColor mergeChanges:NO];
     [self.context refreshObject:word.font mergeChanges:NO];
     [self.context refreshObject:word mergeChanges:NO];
     
@@ -258,9 +216,8 @@
 {
     [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
-    [word addObserver:self forKeyPath:@"wordColor" options:0 context:NULL];
-    [word addObserver:self forKeyPath:@"backgroundColor" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"font" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"backgroundCategory" options:0 context:NULL];
 }
 
 - (void)sortWords
