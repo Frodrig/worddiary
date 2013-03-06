@@ -70,9 +70,9 @@
             gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
             gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
             gradient.startPoint = CGPointMake(0.5, 0.1);
-            gradient.endPoint = CGPointMake(0.0, 0.9);
-            //gradient.cornerRadius = 10.0;
-            //gradient.masksToBounds = YES;
+            gradient.endPoint = CGPointMake(0.0, 1.0);
+            gradient.cornerRadius = 10.0;
+            gradient.masksToBounds = YES;
             [view.layer insertSublayer:gradient atIndex:0];
             
             CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];

@@ -100,7 +100,12 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
 
     // TODO: Para asegurarnos de que a la vuelta de la pantalla de seleccion esta todo reflejado, recargamos
     //       Esto hay que hacerlo de otra forma: usar notificaciones o similar para notificar y que en esta pantalla se produzca recarga
-    [self.allWordsTableView reloadData];
+    //[self.allWordsTableView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    //[self.allWordsTableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -231,7 +236,10 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
         [[WDBackgroundStore sharedStore] releaseBackgroundWithID:cell.idBackground];
         cell.wordLabel.text = word.word;
         cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:word.font]];
-        cell.backgroundView = [[UIView alloc] initWithFrame:cell.contentView.frame];
+        cell.backgroundView = [[UIView alloc] initWithFrame:cell.contentView.bounds];
+        cell.backgroundView.contentMode = UIViewContentModeScaleToFill;
+        
+        NSLog(@"%@", NSStringFromCGRect(cell.contentView.frame));
         cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_GRADIENT forView:cell.backgroundView];
         
         retCell = cell;

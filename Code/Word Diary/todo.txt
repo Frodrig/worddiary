@@ -1,3 +1,6 @@
+6/3/2013
+- El gran problema: Al crear una celda y vincular al backgroundview el gradiente, el backgroundview NO se ajsuta en anchura una vez retornada la celda y el tamaño del mismo es superior al deseado. Sin embargo, al recargar la tabla justo cuando la view que contienen la tabla es visualizada SI sale correctamente. Por lo tanto, backgroundview si tiene bien configurado el tema del ajuste de la anchura correcto pero por algún motivo no se crea bien.
+
 28/02/2013
 - Seguir con el menu de eleccion de fuentes y dejarlo lo mas parametrizado posible para que no haya valores hardcodeados luego difíciles de seguir. Usar funciones que retornen el tamaño de la fuente
 - Luegoo hay que atacar al menu de colores pero hay que pensar bien cómo nos imaginamos los colores ¿fondo? ¿texto? Lo normal parece que sea fondo.  
