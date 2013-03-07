@@ -29,6 +29,12 @@
 		5B6F316116DFBCF8007E4DBA /* WDFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F316016DFBCF8007E4DBA /* WDFont.m */; };
 		5B6F316616DFC64C007E4DBA /* WDFontMenuSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */; };
 		5B6F316716DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */; };
+		5B767E8A16E90CDF00C589FC /* testcell-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8416E90CDF00C589FC /* testcell-568h@2x.png */; };
+		5B767E8B16E90CDF00C589FC /* testcell.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8516E90CDF00C589FC /* testcell.png */; };
+		5B767E8C16E90CDF00C589FC /* testcell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8616E90CDF00C589FC /* testcell@2x.png */; };
+		5B767E8D16E90CDF00C589FC /* testscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8716E90CDF00C589FC /* testscreen.png */; };
+		5B767E8E16E90CDF00C589FC /* testscreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8816E90CDF00C589FC /* testscreen@2x.png */; };
+		5B767E9216E9112F00C589FC /* testscreen-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E9116E9112F00C589FC /* testscreen-568h@2x.png */; };
 		5B80893A16DE0A8A002CD179 /* WDTodayWordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80893916DE0A8A002CD179 /* WDTodayWordCell.m */; };
 		5B80893C16DE0A9E002CD179 /* WDTodayWordCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B80893B16DE0A9E002CD179 /* WDTodayWordCell.xib */; };
 		5B80893F16DE0AAF002CD179 /* WDPreviousDayWordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80893E16DE0AAF002CD179 /* WDPreviousDayWordCell.m */; };
@@ -90,6 +96,12 @@
 		5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFontMenuSelectorViewController.m; sourceTree = "<group>"; };
 		5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDFontMenuSelectorViewController.xib; sourceTree = "<group>"; };
 		5B6F316816DFC8FC007E4DBA /* WDFontMenuSelectorDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFontMenuSelectorDelegate.h; sourceTree = "<group>"; };
+		5B767E8416E90CDF00C589FC /* testcell-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testcell-568h@2x.png"; sourceTree = "<group>"; };
+		5B767E8516E90CDF00C589FC /* testcell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testcell.png; sourceTree = "<group>"; };
+		5B767E8616E90CDF00C589FC /* testcell@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testcell@2x.png"; sourceTree = "<group>"; };
+		5B767E8716E90CDF00C589FC /* testscreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testscreen.png; sourceTree = "<group>"; };
+		5B767E8816E90CDF00C589FC /* testscreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testscreen@2x.png"; sourceTree = "<group>"; };
+		5B767E9116E9112F00C589FC /* testscreen-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testscreen-568h@2x.png"; sourceTree = "<group>"; };
 		5B80893816DE0A8A002CD179 /* WDTodayWordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDTodayWordCell.h; sourceTree = "<group>"; };
 		5B80893916DE0A8A002CD179 /* WDTodayWordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDTodayWordCell.m; sourceTree = "<group>"; };
 		5B80893B16DE0A9E002CD179 /* WDTodayWordCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTodayWordCell.xib; sourceTree = "<group>"; };
@@ -256,6 +268,36 @@
 			name = "Font Menu";
 			sourceTree = "<group>";
 		};
+		5B767E6C16E8FA9400C589FC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5B767E6D16E8FA9C00C589FC /* Backgrounds */,
+				5B6F313916DF5AB9007E4DBA /* Icons */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		5B767E6D16E8FA9C00C589FC /* Backgrounds */ = {
+			isa = PBXGroup;
+			children = (
+				5B767E7A16E8FB0700C589FC /* Test */,
+			);
+			name = Backgrounds;
+			sourceTree = "<group>";
+		};
+		5B767E7A16E8FB0700C589FC /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				5B767E8416E90CDF00C589FC /* testcell-568h@2x.png */,
+				5B767E8516E90CDF00C589FC /* testcell.png */,
+				5B767E8616E90CDF00C589FC /* testcell@2x.png */,
+				5B767E9116E9112F00C589FC /* testscreen-568h@2x.png */,
+				5B767E8716E90CDF00C589FC /* testscreen.png */,
+				5B767E8816E90CDF00C589FC /* testscreen@2x.png */,
+			);
+			name = Test;
+			sourceTree = "<group>";
+		};
 		5B80893716DE0A76002CD179 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -329,7 +371,7 @@
 				5BB6B31216DBE13900394113 /* WDAppDelegate.h */,
 				5BB6B31316DBE13900394113 /* WDAppDelegate.m */,
 				5BB8410B16DD32BD0005AF21 /* Pending */,
-				5B6F313916DF5AB9007E4DBA /* Icons */,
+				5B767E6C16E8FA9400C589FC /* Resources */,
 				5BB840EF16DCC6C20005AF21 /* Localization */,
 				5B80894516DE3CCA002CD179 /* Utils */,
 				5BB840D316DCB6210005AF21 /* Model */,
@@ -525,6 +567,12 @@
 				5B3BBD0F16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib in Resources */,
 				5B3BBD1316E10489003FB9EC /* WDTodayWordSectionHeader.xib in Resources */,
 				5B3BBD1516E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib in Resources */,
+				5B767E8A16E90CDF00C589FC /* testcell-568h@2x.png in Resources */,
+				5B767E8B16E90CDF00C589FC /* testcell.png in Resources */,
+				5B767E8C16E90CDF00C589FC /* testcell@2x.png in Resources */,
+				5B767E8D16E90CDF00C589FC /* testscreen.png in Resources */,
+				5B767E8E16E90CDF00C589FC /* testscreen@2x.png in Resources */,
+				5B767E9216E9112F00C589FC /* testscreen-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

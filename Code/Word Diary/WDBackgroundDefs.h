@@ -12,6 +12,8 @@
 typedef enum
 {
     BC_GRADIENT,
+    BC_BACKGROUNDIMAGE_TESTCELL,
+    BC_BACKGROUNDIMAGE_TESTCREEN,
     
 } WDBackgroundCategory;
 

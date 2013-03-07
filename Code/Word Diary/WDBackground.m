@@ -17,5 +17,6 @@
 @synthesize idBackground  = idBackground_;
 @synthesize view          = view_;
 @synthesize gradientLayer = gradientLayer_;
+@synthesize imageView     = imageView_;
 
 @end

@@ -28,6 +28,7 @@
 @property (nonatomic, strong)        UISwipeGestureRecognizer                   *swipeGestureRecognizer;
 @property (nonatomic)                CGPoint                                    originalCenterPositionOfSelectedWord;
 @property (nonatomic, strong)        NSTimer                                    *animateStartEndPointOfGradientTimer;
+@property (nonatomic, weak)          NSNumber                                   *idBackground;
 
 - (void)      tapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)      swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
@@ -56,6 +57,7 @@
 @synthesize tapGestureRecognizer                 = tapGestureRecognizer_;
 @synthesize swipeGestureRecognizer               = swipeGestureRecognizer_;
 @synthesize animateStartEndPointOfGradientTimer  = animateStartEndPointOfGradientTimer_;
+@synthesize idBackground                         = idBackground_;
 
 #pragma mark Init
 
@@ -111,7 +113,14 @@
     self.selectedWordTextField.text = self.selectedWord.word;
     self.selectedWordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:self.selectedWord.font]];
     
+    self.view.contentMode = UIViewContentModeCenter;
+    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_BACKGROUNDIMAGE_TESTCREEN forView:self.view];
+
+    
+    
+    
     // Gradiente
+    /*
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.view.frame;
     UIColor *colorOne = [UIColor colorWithRed:1.0 green:1.0 blue:0.05 alpha:1.0];
@@ -121,9 +130,9 @@
     gradient.startPoint = CGPointMake(0.5, 0.0);
     gradient.endPoint = CGPointMake(0.0, 1.0);
     [self.view.layer insertSublayer:gradient atIndex:0];
+    */
     
-    
-    /*
+    /*+++
     CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
     NSArray *animateGradientColors = [NSArray arrayWithObjects:(id)[UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.0].CGColor, (id)[UIColor colorWithRed:0.3 green:0.5 blue:0.2 alpha:1.0].CGColor, nil];
     gradientAnimation.fromValue = gradient.colors;
@@ -135,6 +144,7 @@
     gradient.colors = animateGradientColors;
     */
     
+    /*
     CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
     gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
     gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
@@ -145,8 +155,9 @@
     gradientAnimationStartPoint.autoreverses = YES;
     [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
 //    gradient.startPoint = CGPointMake(1.0, 0.0);
+    */
     
-    /*
+    /*++++
     CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
     gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
     gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)];

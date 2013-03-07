@@ -102,5 +102,11 @@
     return (fabs(floatOne - floatTwo) < EPSILON);
 }
 
++ (BOOL)is568Screen
+{
+    return [UIScreen mainScreen].bounds.size.height == 568;
+}
+
+
 
 @end

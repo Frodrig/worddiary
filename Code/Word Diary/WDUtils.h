@@ -27,4 +27,6 @@ typedef enum {
 
 + (BOOL)       is:(CGFloat)floatOne equalsTo:(CGFloat)floatTwo;
 
++ (BOOL)       is568Screen;
+
 @end

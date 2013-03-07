@@ -11,6 +11,6 @@
 @interface WDTodayWordCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *wordLabel;
-@property (nonatomic, strong) NSNumber       *idBackground;
+@property (nonatomic, weak) NSNumber         *idBackground;
 
 @end

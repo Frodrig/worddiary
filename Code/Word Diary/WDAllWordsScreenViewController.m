@@ -238,7 +238,7 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
         cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:word.font]];
         cell.backgroundView = [[WDBackgroundView alloc] initWithFrame:cell.contentView.bounds];        
         cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_GRADIENT forView:cell.backgroundView];
-        
+        //cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_BACKGROUNDIMAGE_TESTCELL forView:cell.backgroundView];
         retCell = cell;
     } else {
         static NSString *previousDaysCellIdentifier = @"WDPreviousDayWordCell";

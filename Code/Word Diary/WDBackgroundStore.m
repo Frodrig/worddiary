@@ -9,13 +9,17 @@
 #import "WDBackgroundStore.h"
 #import <QuartzCore/QuartzCore.h>
 #import "WDBackground.h"
+#import "WDUtils.h"
 
 @interface WDBackgroundStore()
 
 @property NSUInteger           idCounter;
 @property NSMutableDictionary *backgrounds;
 
-- (CAGradientLayer *) createGradientLayerOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
+- (CAGradientLayer *)    createGradientLayerOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
+- (UIImageView *)        createImageBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
+
+- (NSString *)           makeFilenameChecking568ScreenSizeUsingFilename:(NSString *)filename;
 
 @end
 
@@ -84,7 +88,6 @@
             gradientAnimationStartPoint.repeatCount = HUGE_VALF;
             gradientAnimationStartPoint.autoreverses = YES;
             [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
-             
         } break;
             
         default:
@@ -92,6 +95,41 @@
     };
     
     return gradient;
+}
+
+- (UIImageView *)createImageBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view
+{
+    UIImageView *imageView = nil;
+    
+    switch (category) {
+        case BC_BACKGROUNDIMAGE_TESTCELL: {
+            imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self makeFilenameChecking568ScreenSizeUsingFilename:@"testcell"]]];
+        } break;
+            
+        case BC_BACKGROUNDIMAGE_TESTCREEN: {
+            imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self makeFilenameChecking568ScreenSizeUsingFilename:@"testscreen"]]];
+            NSLog(@"%@", NSStringFromCGSize(imageView.image.size));
+        } break;
+            
+        default:
+            break;
+    };
+    
+    [view addSubview:imageView];
+    
+    return imageView;
+}
+
+- (NSString *)makeFilenameChecking568ScreenSizeUsingFilename:(NSString *)filename
+{
+    NSString *retFilename = nil;
+    if ([WDUtils is568Screen]) {
+        retFilename = [filename stringByAppendingString:@"-568h@2x"];
+    } else {
+        retFilename = [NSString stringWithString:filename];
+    }
+    
+    return retFilename;
 }
 
 
@@ -107,6 +145,11 @@
     switch (category) {
         case BC_GRADIENT:
             background.gradientLayer = [self createGradientLayerOfCategory:category forView:view];
+            break;
+            
+        case BC_BACKGROUNDIMAGE_TESTCELL:
+        case BC_BACKGROUNDIMAGE_TESTCREEN:
+            background.imageView = [self createImageBackgroundOfCategory:category forView:view];
             break;
             
         default:
@@ -139,6 +182,11 @@
             case BC_GRADIENT:
                 [background.gradientLayer removeFromSuperlayer];
                 break;
+                
+            case BC_BACKGROUNDIMAGE_TESTCELL:
+            case BC_BACKGROUNDIMAGE_TESTCREEN: {
+                [background.imageView removeFromSuperview];
+            } break;
                 
             default:
                 break;

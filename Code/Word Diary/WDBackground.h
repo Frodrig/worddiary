@@ -17,5 +17,6 @@
 @property (nonatomic, strong) NSNumber             *idBackground;
 @property (nonatomic, strong) UIView               *view;
 @property (nonatomic, strong) CAGradientLayer      *gradientLayer;
+@property (nonatomic, strong) UIImageView          *imageView;
 
 @end
