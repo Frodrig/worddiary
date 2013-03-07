@@ -108,7 +108,7 @@
             
         case BC_BACKGROUNDIMAGE_TESTCREEN: {
             imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self makeFilenameChecking568ScreenSizeUsingFilename:@"testscreen"]]];
-            NSLog(@"%@", NSStringFromCGSize(imageView.image.size));
+            NSLog(@"%@", NSStringFromCGSize(CGSizeMake(imageView.image.size.width * imageView.image.scale, imageView.image.size.height * imageView.image.scale)));
         } break;
             
         default:
