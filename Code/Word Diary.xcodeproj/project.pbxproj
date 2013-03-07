@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */; };
 		5B3BBD0E16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3BBD0C16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m */; };
 		5B3BBD0F16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3BBD0D16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib */; };
 		5B3BBD1316E10489003FB9EC /* WDTodayWordSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3BBD1216E10489003FB9EC /* WDTodayWordSectionHeader.xib */; };
@@ -58,6 +59,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundView.h; sourceTree = "<group>"; };
+		5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundView.m; sourceTree = "<group>"; };
 		5B3BBD0B16E0D87B003FB9EC /* WDColorMenuSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDColorMenuSelectorViewController.h; sourceTree = "<group>"; };
 		5B3BBD0C16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDColorMenuSelectorViewController.m; sourceTree = "<group>"; };
 		5B3BBD0D16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDColorMenuSelectorViewController.xib; sourceTree = "<group>"; };
@@ -148,6 +151,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B1A712F16E8A24C00355F59 /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */,
+				5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */,
+			);
+			name = "Custom Views";
+			sourceTree = "<group>";
+		};
 		5B3BBD0A16E0D85E003FB9EC /* Color Menu */ = {
 			isa = PBXGroup;
 			children = (
@@ -354,6 +366,7 @@
 		5BB840DE16DCB6D60005AF21 /* View - Controller */ = {
 			isa = PBXGroup;
 			children = (
+				5B1A712F16E8A24C00355F59 /* Custom Views */,
 				5BB8410416DD12B90005AF21 /* All Words Screen */,
 				5BB8410A16DD12DE0005AF21 /* Selected Word Screen */,
 			);
@@ -539,6 +552,7 @@
 				5BD34CA016E799F2007B46A2 /* WDBackgroundStore.m in Sources */,
 				5BD34CA416E7A08E007B46A2 /* WDBackground.m in Sources */,
 				5BD34CA916E7B025007B46A2 /* WDWord.m in Sources */,
+				5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,7 +15,7 @@
 #import "WDFont.h"
 #import "WDUtils.h"
 #import "WDBackgroundStore.h"
-//#include <QuartzCore/QuartzCore.h>
+#import "WDBackgroundView.h"
 
 static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
 
@@ -236,10 +236,7 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
         [[WDBackgroundStore sharedStore] releaseBackgroundWithID:cell.idBackground];
         cell.wordLabel.text = word.word;
         cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:word.font]];
-        cell.backgroundView = [[UIView alloc] initWithFrame:cell.contentView.bounds];
-        cell.backgroundView.contentMode = UIViewContentModeScaleToFill;
-        
-        NSLog(@"%@", NSStringFromCGRect(cell.contentView.frame));
+        cell.backgroundView = [[WDBackgroundView alloc] initWithFrame:cell.contentView.bounds];        
         cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_GRADIENT forView:cell.backgroundView];
         
         retCell = cell;
