@@ -121,7 +121,9 @@
     
     
     // Gradiente
-    
+    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_GRADIENT forView:self.view];
+
+    /*
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = self.view.frame;
     UIColor *colorOne = [UIColor colorWithRed:1.0 green:1.0 blue:0.05 alpha:1.0];
@@ -131,7 +133,7 @@
     gradient.startPoint = CGPointMake(0.5, 0.0);
     gradient.endPoint = CGPointMake(0.0, 1.0);
     [self.view.layer insertSublayer:gradient atIndex:0];
-    
+    */
     
     /*+++
     CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
@@ -145,7 +147,7 @@
     gradient.colors = animateGradientColors;
     */
     
-    
+    /*
     CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
     gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
     gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
@@ -156,7 +158,7 @@
     gradientAnimationStartPoint.autoreverses = YES;
     [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
 //    gradient.startPoint = CGPointMake(1.0, 0.0);
-    
+    */
     
     /*++++
     CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
@@ -195,6 +197,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
 }
 
 #pragma mark - Auxiliary

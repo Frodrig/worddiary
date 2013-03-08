@@ -69,25 +69,37 @@
             // Gradiente
             gradient = [CAGradientLayer layer];
             gradient.frame = view.bounds;
-            UIColor *colorOne = [UIColor colorWithRed:0.9 green:0.9 blue:0.05 alpha:1.0];
-            UIColor *colorTwo = [UIColor colorWithRed:0.0 green:102.0/255.0 blue:1.0 alpha:1.0];
+            UIColor *colorOne = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:255.0/255.0 alpha:1.0];
+            UIColor *colorTwo = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:204.0/255.0 alpha:1.0];
             gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
             gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
-            gradient.startPoint = CGPointMake(0.5, 0.1);
-            gradient.endPoint = CGPointMake(0.0, 1.0);
-            gradient.cornerRadius = 10.0;
+            gradient.startPoint = CGPointMake(0.0, 0.0);
+            gradient.endPoint = CGPointMake(1.0, 1.0);
+            gradient.cornerRadius = 4.0;
             gradient.masksToBounds = YES;
             [view.layer insertSublayer:gradient atIndex:0];
             
-            CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
-            gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
-            gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
-            gradientAnimationStartPoint.duration = 8.0;
+            CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"startPoint"];
+            gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
+            gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 0.2)];
+            gradientAnimationStartPoint.duration = 4.0;
             gradientAnimationStartPoint.removedOnCompletion = NO;
-            gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+            gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
             gradientAnimationStartPoint.repeatCount = HUGE_VALF;
             gradientAnimationStartPoint.autoreverses = YES;
-            [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
+            [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientStartPoint"];
+            
+            
+            CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
+            gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
+            gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.8)];
+            gradientAnimationEndPoint.duration = 4.0;
+            gradientAnimationEndPoint.removedOnCompletion = NO;
+            gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+            gradientAnimationEndPoint.repeatCount = HUGE_VALF;
+            gradientAnimationEndPoint.autoreverses = YES;
+            [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
+             
         } break;
             
         default:

@@ -60,7 +60,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     [super viewDidLoad];
     
     // Fondo
-    self.view.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.3];
+    self.view.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.2];
     self.view.layer.cornerRadius = VIEWS_CORNER_RADIUS;
     
     // Menu principal para la palabra del dia de hoy
