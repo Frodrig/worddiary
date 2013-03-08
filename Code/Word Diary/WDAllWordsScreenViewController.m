@@ -24,6 +24,9 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
 @property (weak, nonatomic) IBOutlet UITableView   *allWordsTableView;
 @property (strong, nonatomic) NSMutableDictionary  *words;
 @property (strong, nonatomic) NSMutableArray       *headerViewsOfSections;
+@property (weak, nonatomic)   UITableViewCell      *lastSelectedWordCell;
+@property (nonatomic)         BOOL                 lastSelectWordCellMustBeReloaded;
+@property (nonatomic)         BOOL                 lastSelectedWordCellMustBeRemoved;
 
 - (NSArray *) findWordsOfSection:(NSInteger)section;
 - (BOOL)      haveTodayYearPreviousWords;
@@ -36,15 +39,19 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
 
 #pragma mark - Synthesize
 
-@synthesize allWordsTableView      = allWordsTableView_;
-@synthesize words                  = words_;
-@synthesize headerViewsOfSections  = headerViewsOfSections_;
+@synthesize allWordsTableView                 = allWordsTableView_;
+@synthesize words                             = words_;
+@synthesize headerViewsOfSections             = headerViewsOfSections_;
+@synthesize lastSelectedWordCell              = lastSelectedWordCell_;
+@synthesize lastSelectWordCellMustBeReloaded  = lastSelectWordCellMustBeReloaded_;
+@synthesize lastSelectedWordCellMustBeRemoved = lastSelectedWordCellMustBeRemoved_;
 
 #pragma mark - Getters & Setters
 - (NSMutableArray *)headerViewsOfSections
 {
     if (nil == headerViewsOfSections_) {
         headerViewsOfSections_ = [NSMutableArray array];
+        lastSelectedWordCell_ = nil;
     }
     
     return headerViewsOfSections_;
@@ -94,18 +101,36 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
     self.allWordsTableView.backgroundView = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-
-    // TODO: Para asegurarnos de que a la vuelta de la pantalla de seleccion esta todo reflejado, recargamos
-    //       Esto hay que hacerlo de otra forma: usar notificaciones o similar para notificar y que en esta pantalla se produzca recarga
-    //[self.allWordsTableView reloadData];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
-    //[self.allWordsTableView reloadData];
+    [super viewDidAppear:animated];
+    
+    if (self.lastSelectedWordCell) {
+        if (self.lastSelectWordCellMustBeReloaded) {
+            self.lastSelectWordCellMustBeReloaded = YES;
+            NSIndexPath *lastSelectedWordCellIndexPath = [self.allWordsTableView indexPathForCell:self.lastSelectedWordCell];
+            [self.allWordsTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:lastSelectedWordCellIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+        } else if (self.lastSelectedWordCellMustBeRemoved) {
+            self.lastSelectedWordCellMustBeRemoved = YES;
+            NSIndexPath *lastSelectedWordCellIndexPath = [self.allWordsTableView indexPathForCell:self.lastSelectedWordCell];
+            WDWord *word = [self findWordForIndexPath:lastSelectedWordCellIndexPath];
+            NSNumber *year = [NSNumber numberWithInteger:word.dateComponents.year];
+            NSMutableArray *wordsOfYear = [self.words objectForKey:year];
+            NSAssert([wordsOfYear indexOfObject:word] != NSNotFound, @"No se ha encontrado la Word en el array");
+            [wordsOfYear removeObject:word];
+            if (wordsOfYear.count == 0) {
+                [self.words removeObjectForKey:year];
+                [self.allWordsTableView deleteSections:[NSIndexSet indexSetWithIndex:lastSelectedWordCellIndexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+            } else {
+                [self.allWordsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:lastSelectedWordCellIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }
+            
+            [[WDWordDiary sharedWordDiary] removeWord:word];
+        }
+    }
+    
+    self.lastSelectedWordCell = nil;
+    self.lastSelectedWordCellMustBeRemoved = self.lastSelectWordCellMustBeReloaded = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -187,9 +212,12 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    self.lastSelectedWordCell = (WDTodayWordCell *)[self.allWordsTableView cellForRowAtIndexPath:indexPath];
     WDWord *selectedWord = [self findWordForIndexPath:indexPath];
     WDSelectedWordScreenViewController *selectedWordScreenViewController = [[WDSelectedWordScreenViewController alloc] initWithSelectedWord:selectedWord];
     selectedWordScreenViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    selectedWordScreenViewController.delegate = self;
+    
     [self presentViewController:selectedWordScreenViewController animated:YES completion:nil];
 }
 
@@ -275,6 +303,18 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
     NSArray *wordsOfSection = [self findWordsOfSection:section];
     
     return wordsOfSection.count;
+}
+
+#pragma mark - WDSelectedWordScreenDelegate
+
+- (void) selectedWordChanged
+{
+    self.lastSelectWordCellMustBeReloaded = YES;
+}
+
+- (void)selectedWordWillBeRemoved
+{
+    self.lastSelectedWordCellMustBeRemoved = YES;
 }
 
 @end

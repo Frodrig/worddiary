@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDSelectedWordScreenDelegate.h"
 
-@interface WDAllWordsScreenViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface WDAllWordsScreenViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, WDSelectedWordScreenDelegate>
 
 @end

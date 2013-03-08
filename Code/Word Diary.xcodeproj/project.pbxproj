@@ -8,8 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */; };
-		5B3BBD0E16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3BBD0C16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m */; };
-		5B3BBD0F16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3BBD0D16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib */; };
+		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
+		5B1AC4BC16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */; };
+		5B1AC4BD16EA0A9A00950206 /* WDSelectedWordScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4BB16EA0A9A00950206 /* WDSelectedWordScreenViewController.m */; };
+		5B1AC4C016EA0AAE00950206 /* WDSelectedWordEditMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4BE16EA0AAE00950206 /* WDSelectedWordEditMenuViewController.xib */; };
+		5B1AC4C116EA0AAE00950206 /* WDSelectedWordEditMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4BF16EA0AAE00950206 /* WDSelectedWordEditMenuViewController.m */; };
+		5B1AC4C716EA0AC700950206 /* WDTodayWordMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4C516EA0AC700950206 /* WDTodayWordMenuView.xib */; };
+		5B1AC4C816EA0AC700950206 /* WDTodayWordMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4C616EA0AC700950206 /* WDTodayWordMenuView.m */; };
+		5B1AC4CC16EA1FDE00950206 /* WDPreviousWordMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4CB16EA1FDE00950206 /* WDPreviousWordMenuView.m */; };
+		5B1AC4CE16EA1FF400950206 /* WDPreviousWordMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4CD16EA1FF400950206 /* WDPreviousWordMenuView.xib */; };
+		5B1AC4D516EA3C8D00950206 /* WDConfirmWordActionMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4D416EA3C8D00950206 /* WDConfirmWordActionMenuView.m */; };
+		5B1AC4D716EA3C9B00950206 /* WDConfirmWordActionMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4D616EA3C9B00950206 /* WDConfirmWordActionMenuView.xib */; };
 		5B3BBD1316E10489003FB9EC /* WDTodayWordSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3BBD1216E10489003FB9EC /* WDTodayWordSectionHeader.xib */; };
 		5B3BBD1516E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3BBD1416E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib */; };
 		5B6F313C16DF5CEB007E4DBA /* 341-keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */; };
@@ -20,15 +29,9 @@
 		5B6F314516DF5D0F007E4DBA /* 344-paintbrush@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F314316DF5D0F007E4DBA /* 344-paintbrush@2x.png */; };
 		5B6F314816DF5D1B007E4DBA /* 433-x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F314616DF5D1B007E4DBA /* 433-x.png */; };
 		5B6F314916DF5D1B007E4DBA /* 433-x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F314716DF5D1B007E4DBA /* 433-x@2x.png */; };
-		5B6F314D16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F314B16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.m */; };
-		5B6F314E16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F314C16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.xib */; };
-		5B6F315216DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F315016DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.m */; };
-		5B6F315316DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F315116DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.xib */; };
 		5B6F315816DF6026007E4DBA /* 218-trash2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F315616DF6026007E4DBA /* 218-trash2.png */; };
 		5B6F315916DF6026007E4DBA /* 218-trash2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F315716DF6026007E4DBA /* 218-trash2@2x.png */; };
 		5B6F316116DFBCF8007E4DBA /* WDFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F316016DFBCF8007E4DBA /* WDFont.m */; };
-		5B6F316616DFC64C007E4DBA /* WDFontMenuSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */; };
-		5B6F316716DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */; };
 		5B767E8A16E90CDF00C589FC /* testcell-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8416E90CDF00C589FC /* testcell-568h@2x.png */; };
 		5B767E8B16E90CDF00C589FC /* testcell.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8516E90CDF00C589FC /* testcell.png */; };
 		5B767E8C16E90CDF00C589FC /* testcell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8616E90CDF00C589FC /* testcell@2x.png */; };
@@ -55,8 +58,6 @@
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
 		5BB8410216DD12AE0005AF21 /* WDAllWordsScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB8410016DD12AE0005AF21 /* WDAllWordsScreenViewController.m */; };
 		5BB8410316DD12AE0005AF21 /* WDAllWordsScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BB8410116DD12AE0005AF21 /* WDAllWordsScreenViewController.xib */; };
-		5BB8410816DD12D50005AF21 /* WDSelectedWordScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB8410616DD12D50005AF21 /* WDSelectedWordScreenViewController.m */; };
-		5BB8410916DD12D50005AF21 /* WDSelectedWordScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BB8410716DD12D50005AF21 /* WDSelectedWordScreenViewController.xib */; };
 		5BB8410D16DD32D90005AF21 /* todo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5BB8410C16DD32D90005AF21 /* todo.txt */; };
 		5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */; };
 		5BD34CA016E799F2007B46A2 /* WDBackgroundStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD34C9F16E799F2007B46A2 /* WDBackgroundStore.m */; };
@@ -67,10 +68,25 @@
 /* Begin PBXFileReference section */
 		5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundView.h; sourceTree = "<group>"; };
 		5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundView.m; sourceTree = "<group>"; };
-		5B3BBD0B16E0D87B003FB9EC /* WDColorMenuSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDColorMenuSelectorViewController.h; sourceTree = "<group>"; };
-		5B3BBD0C16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDColorMenuSelectorViewController.m; sourceTree = "<group>"; };
-		5B3BBD0D16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDColorMenuSelectorViewController.xib; sourceTree = "<group>"; };
-		5B3BBD1016E0F347003FB9EC /* WDColorMenuSelectorDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDColorMenuSelectorDelegate.h; sourceTree = "<group>"; };
+		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
+		5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIViewNibLoad.m"; sourceTree = "<group>"; };
+		5B1AC4B916EA0A9200950206 /* WDSelectedWordScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSelectedWordScreenViewController.h; sourceTree = "<group>"; };
+		5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDSelectedWordScreenViewController.xib; sourceTree = "<group>"; };
+		5B1AC4BB16EA0A9A00950206 /* WDSelectedWordScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSelectedWordScreenViewController.m; sourceTree = "<group>"; };
+		5B1AC4BE16EA0AAE00950206 /* WDSelectedWordEditMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDSelectedWordEditMenuViewController.xib; sourceTree = "<group>"; };
+		5B1AC4BF16EA0AAE00950206 /* WDSelectedWordEditMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSelectedWordEditMenuViewController.m; sourceTree = "<group>"; };
+		5B1AC4C216EA0AB600950206 /* WDSelectedWordEditMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSelectedWordEditMenuViewController.h; sourceTree = "<group>"; };
+		5B1AC4C416EA0AC700950206 /* WDTodayWordMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDTodayWordMenuView.h; sourceTree = "<group>"; };
+		5B1AC4C516EA0AC700950206 /* WDTodayWordMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTodayWordMenuView.xib; sourceTree = "<group>"; };
+		5B1AC4C616EA0AC700950206 /* WDTodayWordMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDTodayWordMenuView.m; sourceTree = "<group>"; };
+		5B1AC4CA16EA1FDE00950206 /* WDPreviousWordMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDPreviousWordMenuView.h; sourceTree = "<group>"; };
+		5B1AC4CB16EA1FDE00950206 /* WDPreviousWordMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDPreviousWordMenuView.m; sourceTree = "<group>"; };
+		5B1AC4CD16EA1FF400950206 /* WDPreviousWordMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDPreviousWordMenuView.xib; sourceTree = "<group>"; };
+		5B1AC4D016EA296E00950206 /* WDSelectedWordEditMenuDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSelectedWordEditMenuDelegate.h; sourceTree = "<group>"; };
+		5B1AC4D116EA397D00950206 /* WDSelectedWordScreenDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSelectedWordScreenDelegate.h; sourceTree = "<group>"; };
+		5B1AC4D316EA3C8D00950206 /* WDConfirmWordActionMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDConfirmWordActionMenuView.h; sourceTree = "<group>"; };
+		5B1AC4D416EA3C8D00950206 /* WDConfirmWordActionMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDConfirmWordActionMenuView.m; sourceTree = "<group>"; };
+		5B1AC4D616EA3C9B00950206 /* WDConfirmWordActionMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDConfirmWordActionMenuView.xib; sourceTree = "<group>"; };
 		5B3BBD1216E10489003FB9EC /* WDTodayWordSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTodayWordSectionHeader.xib; sourceTree = "<group>"; };
 		5B3BBD1416E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDPreviousDaysWordSectionHeader.xib; sourceTree = "<group>"; };
 		5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "341-keyboard.png"; sourceTree = "<group>"; };
@@ -81,21 +97,10 @@
 		5B6F314316DF5D0F007E4DBA /* 344-paintbrush@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "344-paintbrush@2x.png"; sourceTree = "<group>"; };
 		5B6F314616DF5D1B007E4DBA /* 433-x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "433-x.png"; sourceTree = "<group>"; };
 		5B6F314716DF5D1B007E4DBA /* 433-x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "433-x@2x.png"; sourceTree = "<group>"; };
-		5B6F314A16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDEditingActualWordMenuViewController.h; sourceTree = "<group>"; };
-		5B6F314B16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDEditingActualWordMenuViewController.m; sourceTree = "<group>"; };
-		5B6F314C16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDEditingActualWordMenuViewController.xib; sourceTree = "<group>"; };
-		5B6F314F16DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDEditingPreviousWordMenuViewController.h; sourceTree = "<group>"; };
-		5B6F315016DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDEditingPreviousWordMenuViewController.m; sourceTree = "<group>"; };
-		5B6F315116DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDEditingPreviousWordMenuViewController.xib; sourceTree = "<group>"; };
 		5B6F315616DF6026007E4DBA /* 218-trash2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "218-trash2.png"; sourceTree = "<group>"; };
 		5B6F315716DF6026007E4DBA /* 218-trash2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "218-trash2@2x.png"; sourceTree = "<group>"; };
-		5B6F315A16DF853C007E4DBA /* WDEditingWordMenuDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDEditingWordMenuDelegate.h; sourceTree = "<group>"; };
 		5B6F315F16DFBCF8007E4DBA /* WDFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFont.h; sourceTree = "<group>"; };
 		5B6F316016DFBCF8007E4DBA /* WDFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFont.m; sourceTree = "<group>"; };
-		5B6F316316DFC64C007E4DBA /* WDFontMenuSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFontMenuSelectorViewController.h; sourceTree = "<group>"; };
-		5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFontMenuSelectorViewController.m; sourceTree = "<group>"; };
-		5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDFontMenuSelectorViewController.xib; sourceTree = "<group>"; };
-		5B6F316816DFC8FC007E4DBA /* WDFontMenuSelectorDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFontMenuSelectorDelegate.h; sourceTree = "<group>"; };
 		5B767E8416E90CDF00C589FC /* testcell-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testcell-568h@2x.png"; sourceTree = "<group>"; };
 		5B767E8516E90CDF00C589FC /* testcell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testcell.png; sourceTree = "<group>"; };
 		5B767E8616E90CDF00C589FC /* testcell@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testcell@2x.png"; sourceTree = "<group>"; };
@@ -133,9 +138,6 @@
 		5BB840FF16DD12AE0005AF21 /* WDAllWordsScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAllWordsScreenViewController.h; sourceTree = "<group>"; };
 		5BB8410016DD12AE0005AF21 /* WDAllWordsScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAllWordsScreenViewController.m; sourceTree = "<group>"; };
 		5BB8410116DD12AE0005AF21 /* WDAllWordsScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAllWordsScreenViewController.xib; sourceTree = "<group>"; };
-		5BB8410516DD12D50005AF21 /* WDSelectedWordScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSelectedWordScreenViewController.h; sourceTree = "<group>"; };
-		5BB8410616DD12D50005AF21 /* WDSelectedWordScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSelectedWordScreenViewController.m; sourceTree = "<group>"; };
-		5BB8410716DD12D50005AF21 /* WDSelectedWordScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDSelectedWordScreenViewController.xib; sourceTree = "<group>"; };
 		5BB8410C16DD32D90005AF21 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5BD34C9E16E799F2007B46A2 /* WDBackgroundStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundStore.h; sourceTree = "<group>"; };
@@ -172,15 +174,54 @@
 			name = "Custom Views";
 			sourceTree = "<group>";
 		};
-		5B3BBD0A16E0D85E003FB9EC /* Color Menu */ = {
+		5B1AC4B516EA0A4100950206 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				5B3BBD0B16E0D87B003FB9EC /* WDColorMenuSelectorViewController.h */,
-				5B3BBD0C16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m */,
-				5B3BBD0D16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib */,
-				5B3BBD1016E0F347003FB9EC /* WDColorMenuSelectorDelegate.h */,
+				5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */,
+				5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */,
 			);
-			name = "Color Menu";
+			name = Categories;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		5B1AC4C316EA0ABA00950206 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5B1AC4D216EA3C6A00950206 /* Confirm Word Menu */,
+				5B1AC4C916EA1F9400950206 /* Today Word Menu */,
+				5B1AC4CF16EA1FFF00950206 /* Previous Word Menu */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		5B1AC4C916EA1F9400950206 /* Today Word Menu */ = {
+			isa = PBXGroup;
+			children = (
+				5B1AC4C416EA0AC700950206 /* WDTodayWordMenuView.h */,
+				5B1AC4C516EA0AC700950206 /* WDTodayWordMenuView.xib */,
+				5B1AC4C616EA0AC700950206 /* WDTodayWordMenuView.m */,
+			);
+			name = "Today Word Menu";
+			sourceTree = "<group>";
+		};
+		5B1AC4CF16EA1FFF00950206 /* Previous Word Menu */ = {
+			isa = PBXGroup;
+			children = (
+				5B1AC4CA16EA1FDE00950206 /* WDPreviousWordMenuView.h */,
+				5B1AC4CB16EA1FDE00950206 /* WDPreviousWordMenuView.m */,
+				5B1AC4CD16EA1FF400950206 /* WDPreviousWordMenuView.xib */,
+			);
+			name = "Previous Word Menu";
+			sourceTree = "<group>";
+		};
+		5B1AC4D216EA3C6A00950206 /* Confirm Word Menu */ = {
+			isa = PBXGroup;
+			children = (
+				5B1AC4D316EA3C8D00950206 /* WDConfirmWordActionMenuView.h */,
+				5B1AC4D416EA3C8D00950206 /* WDConfirmWordActionMenuView.m */,
+				5B1AC4D616EA3C9B00950206 /* WDConfirmWordActionMenuView.xib */,
+			);
+			name = "Confirm Word Menu";
 			sourceTree = "<group>";
 		};
 		5B3BBD1116E10414003FB9EC /* Headers */ = {
@@ -195,21 +236,13 @@
 		5B6F313216DF5A0A007E4DBA /* Menus */ = {
 			isa = PBXGroup;
 			children = (
-				5B3BBD0A16E0D85E003FB9EC /* Color Menu */,
-				5B6F316216DFC615007E4DBA /* Font Menu */,
-				5B6F313816DF5A44007E4DBA /* Editing Menu */,
+				5B1AC4C316EA0ABA00950206 /* Views */,
+				5B1AC4C216EA0AB600950206 /* WDSelectedWordEditMenuViewController.h */,
+				5B1AC4BE16EA0AAE00950206 /* WDSelectedWordEditMenuViewController.xib */,
+				5B1AC4BF16EA0AAE00950206 /* WDSelectedWordEditMenuViewController.m */,
+				5B1AC4D016EA296E00950206 /* WDSelectedWordEditMenuDelegate.h */,
 			);
 			name = Menus;
-			sourceTree = "<group>";
-		};
-		5B6F313816DF5A44007E4DBA /* Editing Menu */ = {
-			isa = PBXGroup;
-			children = (
-				5B6F315B16DF8548007E4DBA /* Delegate */,
-				5B6F315416DF5DFD007E4DBA /* Actual Word */,
-				5B6F315516DF5E09007E4DBA /* Previous Word */,
-			);
-			name = "Editing Menu";
 			sourceTree = "<group>";
 		};
 		5B6F313916DF5AB9007E4DBA /* Icons */ = {
@@ -227,45 +260,6 @@
 				5B6F313B16DF5CEB007E4DBA /* 341-keyboard@2x.png */,
 			);
 			name = Icons;
-			sourceTree = "<group>";
-		};
-		5B6F315416DF5DFD007E4DBA /* Actual Word */ = {
-			isa = PBXGroup;
-			children = (
-				5B6F314A16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.h */,
-				5B6F314B16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.m */,
-				5B6F314C16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.xib */,
-			);
-			name = "Actual Word";
-			sourceTree = "<group>";
-		};
-		5B6F315516DF5E09007E4DBA /* Previous Word */ = {
-			isa = PBXGroup;
-			children = (
-				5B6F314F16DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.h */,
-				5B6F315016DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.m */,
-				5B6F315116DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.xib */,
-			);
-			name = "Previous Word";
-			sourceTree = "<group>";
-		};
-		5B6F315B16DF8548007E4DBA /* Delegate */ = {
-			isa = PBXGroup;
-			children = (
-				5B6F315A16DF853C007E4DBA /* WDEditingWordMenuDelegate.h */,
-			);
-			name = Delegate;
-			sourceTree = "<group>";
-		};
-		5B6F316216DFC615007E4DBA /* Font Menu */ = {
-			isa = PBXGroup;
-			children = (
-				5B6F316316DFC64C007E4DBA /* WDFontMenuSelectorViewController.h */,
-				5B6F316416DFC64C007E4DBA /* WDFontMenuSelectorViewController.m */,
-				5B6F316516DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib */,
-				5B6F316816DFC8FC007E4DBA /* WDFontMenuSelectorDelegate.h */,
-			);
-			name = "Font Menu";
 			sourceTree = "<group>";
 		};
 		5B767E6C16E8FA9400C589FC /* Resources */ = {
@@ -374,6 +368,7 @@
 				5B767E6C16E8FA9400C589FC /* Resources */,
 				5BB840EF16DCC6C20005AF21 /* Localization */,
 				5B80894516DE3CCA002CD179 /* Utils */,
+				5B1AC4B516EA0A4100950206 /* Categories */,
 				5BB840D316DCB6210005AF21 /* Model */,
 				5BB840DE16DCB6D60005AF21 /* View - Controller */,
 				5BB6B30A16DBE13900394113 /* Supporting Files */,
@@ -452,9 +447,10 @@
 			isa = PBXGroup;
 			children = (
 				5B6F313216DF5A0A007E4DBA /* Menus */,
-				5BB8410516DD12D50005AF21 /* WDSelectedWordScreenViewController.h */,
-				5BB8410616DD12D50005AF21 /* WDSelectedWordScreenViewController.m */,
-				5BB8410716DD12D50005AF21 /* WDSelectedWordScreenViewController.xib */,
+				5B1AC4D116EA397D00950206 /* WDSelectedWordScreenDelegate.h */,
+				5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */,
+				5B1AC4BB16EA0A9A00950206 /* WDSelectedWordScreenViewController.m */,
+				5B1AC4B916EA0A9200950206 /* WDSelectedWordScreenViewController.h */,
 			);
 			name = "Selected Word Screen";
 			sourceTree = "<group>";
@@ -547,7 +543,6 @@
 				5BB6B31A16DBE13900394113 /* Default-568h@2x.png in Resources */,
 				5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */,
 				5BB8410316DD12AE0005AF21 /* WDAllWordsScreenViewController.xib in Resources */,
-				5BB8410916DD12D50005AF21 /* WDSelectedWordScreenViewController.xib in Resources */,
 				5BB8410D16DD32D90005AF21 /* todo.txt in Resources */,
 				5B80893C16DE0A9E002CD179 /* WDTodayWordCell.xib in Resources */,
 				5B80894116DE0ABA002CD179 /* WDPreviousDayWordCell.xib in Resources */,
@@ -559,12 +554,8 @@
 				5B6F314516DF5D0F007E4DBA /* 344-paintbrush@2x.png in Resources */,
 				5B6F314816DF5D1B007E4DBA /* 433-x.png in Resources */,
 				5B6F314916DF5D1B007E4DBA /* 433-x@2x.png in Resources */,
-				5B6F314E16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.xib in Resources */,
-				5B6F315316DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.xib in Resources */,
 				5B6F315816DF6026007E4DBA /* 218-trash2.png in Resources */,
 				5B6F315916DF6026007E4DBA /* 218-trash2@2x.png in Resources */,
-				5B6F316716DFC64C007E4DBA /* WDFontMenuSelectorViewController.xib in Resources */,
-				5B3BBD0F16E0D87B003FB9EC /* WDColorMenuSelectorViewController.xib in Resources */,
 				5B3BBD1316E10489003FB9EC /* WDTodayWordSectionHeader.xib in Resources */,
 				5B3BBD1516E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib in Resources */,
 				5B767E8A16E90CDF00C589FC /* testcell-568h@2x.png in Resources */,
@@ -573,6 +564,11 @@
 				5B767E8D16E90CDF00C589FC /* testscreen.png in Resources */,
 				5B767E8E16E90CDF00C589FC /* testscreen@2x.png in Resources */,
 				5B767E9216E9112F00C589FC /* testscreen-568h@2x.png in Resources */,
+				5B1AC4BC16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib in Resources */,
+				5B1AC4C016EA0AAE00950206 /* WDSelectedWordEditMenuViewController.xib in Resources */,
+				5B1AC4C716EA0AC700950206 /* WDTodayWordMenuView.xib in Resources */,
+				5B1AC4CE16EA1FF400950206 /* WDPreviousWordMenuView.xib in Resources */,
+				5B1AC4D716EA3C9B00950206 /* WDConfirmWordActionMenuView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,19 +584,20 @@
 				5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */,
 				5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */,
 				5BB8410216DD12AE0005AF21 /* WDAllWordsScreenViewController.m in Sources */,
-				5BB8410816DD12D50005AF21 /* WDSelectedWordScreenViewController.m in Sources */,
 				5B80893A16DE0A8A002CD179 /* WDTodayWordCell.m in Sources */,
 				5B80893F16DE0AAF002CD179 /* WDPreviousDayWordCell.m in Sources */,
 				5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */,
-				5B6F314D16DF5DDF007E4DBA /* WDEditingActualWordMenuViewController.m in Sources */,
-				5B6F315216DF5DF1007E4DBA /* WDEditingPreviousWordMenuViewController.m in Sources */,
 				5B6F316116DFBCF8007E4DBA /* WDFont.m in Sources */,
-				5B6F316616DFC64C007E4DBA /* WDFontMenuSelectorViewController.m in Sources */,
-				5B3BBD0E16E0D87B003FB9EC /* WDColorMenuSelectorViewController.m in Sources */,
 				5BD34CA016E799F2007B46A2 /* WDBackgroundStore.m in Sources */,
 				5BD34CA416E7A08E007B46A2 /* WDBackground.m in Sources */,
 				5BD34CA916E7B025007B46A2 /* WDWord.m in Sources */,
 				5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */,
+				5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */,
+				5B1AC4BD16EA0A9A00950206 /* WDSelectedWordScreenViewController.m in Sources */,
+				5B1AC4C116EA0AAE00950206 /* WDSelectedWordEditMenuViewController.m in Sources */,
+				5B1AC4C816EA0AC700950206 /* WDTodayWordMenuView.m in Sources */,
+				5B1AC4CC16EA1FDE00950206 /* WDPreviousWordMenuView.m in Sources */,
+				5B1AC4D516EA3C8D00950206 /* WDConfirmWordActionMenuView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

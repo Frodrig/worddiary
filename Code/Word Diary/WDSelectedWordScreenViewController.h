@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WDEditingWordMenuDelegate.h"
-#import "WDFontMenuSelectorDelegate.h"
-#import "WDColorMenuSelectorDelegate.h"
+#import "WDSelectedWordEditMenuDelegate.h"
+#import "WDSelectedWordScreenDelegate.h"
 
 @class WDWord;
 
-@interface WDSelectedWordScreenViewController : UIViewController<WDEditingWordMenuDelegate, WDFontMenuSelectorDelegate, WDColorMenuSelectorDelegate, UITextFieldDelegate>
+@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate, UITextFieldDelegate>
+
+@property (nonatomic, weak) id<WDSelectedWordScreenDelegate> delegate;
 
 - (id)initWithSelectedWord:(WDWord *)selectedWord;
 
