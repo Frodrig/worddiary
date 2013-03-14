@@ -13,8 +13,8 @@
 
 @interface WDFont : NSManagedObject
 
-@property (nonatomic, retain) NSString * family;
-@property (nonatomic, retain) NSSet *word;
+@property (nonatomic, retain) NSString *family;
+@property (nonatomic, retain) NSSet    *word;
 @end
 
 @interface WDFont (CoreDataGeneratedAccessors)

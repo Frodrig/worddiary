@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "WDBackgroundDefs.h"
 
 typedef enum {
     UI_ALLWORDSSCREEN_TODAYWORD,
@@ -19,14 +20,27 @@ typedef enum {
 
 @interface WDUtils : NSObject
 
-+ (NSString *) abreviateMonthString:(NSInteger)monthIndex;
-+ (CGFloat)    sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDFont *)font;
++ (NSString *)           abreviateMonthString:(NSInteger)monthIndex;
++ (CGFloat)              sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDFont *)font;
 
-+ (BOOL)       englishIsTheCurrentAppLanguage;
-+ (BOOL)       spanishIsTheCurrentAppLanguage;
++ (BOOL)                 englishIsTheCurrentAppLanguage;
++ (BOOL)                 spanishIsTheCurrentAppLanguage;
 
-+ (BOOL)       is:(CGFloat)floatOne equalsTo:(CGFloat)floatTwo;
++ (BOOL)                 is:(CGFloat)floatOne equalsTo:(CGFloat)floatTwo;
 
-+ (BOOL)       is568Screen;
++ (BOOL)                 is568Screen;
+
++ (CGFloat)              viewsCornerRadius;
+
++ (UIColor *)            darkSchemeBackgroundColor;
++ (UIColor *)            darkSchemeTextColor;
++ (UIColor *)            lightSchemeBackgroundColor;
++ (UIColor *)            lightSchemeTextColor;
++ (UIColor *)            schemeBackgroundColor:(WDColorScheme)scheme;
++ (UIColor *)            schemeTextColor:(WDColorScheme)scheme;
+
++ (NSArray *)            pickerColorArray;
++ (WDBackgroundCategory) convertPickerColorIndexToBackgroundCategory:(NSUInteger)index;
++ (NSUInteger)           convertGradientBackgroundCategoryToPickerColorIndex:(WDBackgroundCategory)backgroundCategory;
 
 @end

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "WDBackgroundDefs.h"
 
+@class WDBackground;
+
 @interface WDBackgroundStore : NSObject
 
 + (WDBackgroundStore *) sharedStore;
@@ -16,5 +18,7 @@
 - (NSNumber *)          createBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
 - (NSNumber *)          createBackgroundCopyOfBackgroundWithID:(NSNumber *)idBackground forView:(UIView *)view;
 - (void)                releaseBackgroundWithID:(NSNumber *)idBackground;
+
+- (WDBackground *)      findBackgroundWithID:(NSNumber *)idBackground;
 
 @end

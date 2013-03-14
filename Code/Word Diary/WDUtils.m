@@ -23,7 +23,7 @@
             result = 42.0;
             break;
         case UI_SELECTEDWORDSCREEN_WORD:
-            result = 82.0;
+            result = 180.0;
             break;
         case UI_SELECTEDWORDSCREEN_FONTMENU:
             result = 52.0;
@@ -106,6 +106,144 @@
 {
     return [UIScreen mainScreen].bounds.size.height == 568;
 }
+
++ (CGFloat)viewsCornerRadius
+{
+    return 10.0;
+}
+
++ (UIColor *)darkSchemeBackgroundColor
+{
+    return [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.2];
+}
+
++ (UIColor *)darkSchemeTextColor
+{
+    return [UIColor blackColor];
+}
+
++ (UIColor *)lightSchemeBackgroundColor
+{
+    return [UIColor colorWithWhite:0.25 alpha:0.2];
+}
+
++ (UIColor *)lightSchemeTextColor
+{
+    return [UIColor whiteColor];
+}
+
++ (UIColor *)schemeBackgroundColor:(WDColorScheme)scheme
+{
+    UIColor *color = nil;
+    
+    switch (scheme) {
+        case CS_DARK:
+            color = [self darkSchemeBackgroundColor];
+            break;
+            
+        default:
+            color = [self lightSchemeBackgroundColor];
+            break;
+    }
+    
+    return color;
+}
+
++ (UIColor *)schemeTextColor:(WDColorScheme)scheme
+{
+    UIColor *color = nil;
+    
+    switch (scheme) {
+        case CS_DARK:
+            color = [self darkSchemeTextColor];
+            break;
+            
+        case CS_LIGHT:
+            color = [self lightSchemeTextColor];
+        default:
+            break;
+    }
+    
+    return color;
+}
+
++ (NSArray *)pickerColorArray
+{
+    NSArray *pickerColorArray = [NSArray arrayWithObjects:[UIColor colorWithRed:251.0/255.0 green:235.0/255.0 blue:0 alpha:1.0],
+                                                          [UIColor colorWithRed:222.0/255.0 green:255.0/255.0 blue:0 alpha:1.0],
+                                                          [UIColor colorWithRed:21/255.0 green:249.0/255.0 blue:2.0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:0/255.0 green:160.0/255.0 blue:140.0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:0/255.0 green:74.0/255.0 blue:255.0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:132.0/255.0 green:8.0/255.0 blue:255.0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:148.0/255.0 green:0/255.0 blue:156.0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:191.0/255.0 green:2.0/255.0 blue:96.0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:255.0/255.0 green:16.0/255.0 blue:0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:255.0/255.0 green:90.0/255.0 blue:4.0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:255.0/255.0 green:156.0/255.0 blue:0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:255.0/255.0 green:198.0/255.0 blue:0/255.0 alpha:1.0],
+                                 nil];
+    
+    return pickerColorArray;
+}
+
++ (WDBackgroundCategory) convertPickerColorIndexToBackgroundCategory:(NSUInteger)index
+{
+    WDBackgroundCategory backgroundCategory = index;
+    
+    return backgroundCategory;
+    
+    /*
+    switch (index) {
+        case 0:
+            backgroundCategory = BC_GRADIENT_0;
+            break;
+        case 1:
+            backgroundCategory = BC_GRADIENT_1;
+            break;
+        case 2:
+            backgroundCategory = BC_GRADIENT_2;
+            break;
+        case 3:
+            backgroundCategory = BC_GRADIENT_3;
+            break;
+        case 4:
+            backgroundCategory = BC_GRADIENT_4;
+            break;
+        case 5:
+            backgroundCategory = BC_GRADIENT_5;
+            break;
+        case 6:
+            backgroundCategory = BC_GRADIENT_6;
+            break;
+        case 7:
+            backgroundCategory = BC_GRADIENT_7;
+            break;
+        case 8:
+            backgroundCategory = BC_GRADIENT_8;
+            break;
+        case 9:
+            backgroundCategory = BC_GRADIENT_9;
+            break;
+        case 10:
+            backgroundCategory = BC_GRADIENT_10;
+            break;
+        case 11:
+            backgroundCategory = BC_GRADIENT_11;
+            break;
+        default:
+            break;
+    };
+    */
+}
+
++ (NSUInteger)convertGradientBackgroundCategoryToPickerColorIndex:(WDBackgroundCategory)backgroundCategory
+{
+    NSUInteger colorIndex = backgroundCategory;
+    NSAssert(colorIndex < [self pickerColorArray].count, @"Categoria recibida invalida");
+    
+    return colorIndex;
+}
+
 
 
 

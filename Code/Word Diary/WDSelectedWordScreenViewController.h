@@ -12,7 +12,7 @@
 
 @class WDWord;
 
-@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate, UITextFieldDelegate>
+@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) id<WDSelectedWordScreenDelegate> delegate;
 

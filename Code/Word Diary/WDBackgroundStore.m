@@ -21,6 +21,8 @@
 
 - (NSString *)           makeFilenameChecking568ScreenSizeUsingFilename:(NSString *)filename;
 
+- (WDColorScheme)        colorSchemeForBackgroundCategory:(WDBackgroundCategory)category;
+
 @end
 
 @implementation WDBackgroundStore
@@ -64,47 +66,52 @@
 {
     CAGradientLayer* gradient = nil;
     
-    switch (category) {
-        case BC_GRADIENT: {
-            // Gradiente
-            gradient = [CAGradientLayer layer];
-            gradient.frame = view.bounds;
-            UIColor *colorOne = [UIColor colorWithRed:255.0/255.0 green:102.0/255.0 blue:255.0/255.0 alpha:1.0];
-            UIColor *colorTwo = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:204.0/255.0 alpha:1.0];
-            gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
-            gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
-            gradient.startPoint = CGPointMake(0.0, 0.0);
-            gradient.endPoint = CGPointMake(1.0, 1.0);
-            gradient.cornerRadius = 4.0;
-            gradient.masksToBounds = YES;
-            [view.layer insertSublayer:gradient atIndex:0];
+    gradient = [CAGradientLayer layer];
+    gradient.frame = view.bounds;
+    NSArray *pickerColorArray = [WDUtils pickerColorArray];
+    UIColor *colorOne = [pickerColorArray objectAtIndex:[WDUtils convertGradientBackgroundCategoryToPickerColorIndex:category]];
+    UIColor *colorTwo = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
+    gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
+    gradient.startPoint = CGPointMake(0.0, 0.0);
+    gradient.endPoint = CGPointMake(1.0, 1.0);
+    gradient.cornerRadius = 10.0;
+    gradient.masksToBounds = YES;
             
-            CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"startPoint"];
-            gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
-            gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 0.2)];
-            gradientAnimationStartPoint.duration = 4.0;
-            gradientAnimationStartPoint.removedOnCompletion = NO;
-            gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-            gradientAnimationStartPoint.repeatCount = HUGE_VALF;
-            gradientAnimationStartPoint.autoreverses = YES;
-            [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientStartPoint"];
-            
-            
-            CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
-            gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
-            gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.8)];
-            gradientAnimationEndPoint.duration = 4.0;
-            gradientAnimationEndPoint.removedOnCompletion = NO;
-            gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-            gradientAnimationEndPoint.repeatCount = HUGE_VALF;
-            gradientAnimationEndPoint.autoreverses = YES;
-            [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
-             
-        } break;
-            
-        default:
-            break;
-    };
+    [view.layer insertSublayer:gradient atIndex:0];
+    
+    CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"colors"];
+    gradientAnimationStartPoint.fromValue = gradient.colors;//[NSValue valueWithCGPoint:gradient.startPoint];
+    gradientAnimationStartPoint.toValue = [NSArray arrayWithObjects:(id)colorTwo.CGColor, (id)colorOne.CGColor, nil];
+    gradientAnimationStartPoint.duration = 4.0;
+    gradientAnimationStartPoint.removedOnCompletion = NO;
+    gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    gradientAnimationStartPoint.repeatCount = HUGE_VALF;
+    gradientAnimationStartPoint.autoreverses = YES;
+    [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientChangeColors"];
+    
+    /*
+     CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"startPoint"];
+     gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
+     gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 0.2)];
+     gradientAnimationStartPoint.duration = 4.0;
+     gradientAnimationStartPoint.removedOnCompletion = NO;
+     gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+     gradientAnimationStartPoint.repeatCount = HUGE_VALF;
+     gradientAnimationStartPoint.autoreverses = YES;
+     [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientStartPoint"];
+     
+     CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
+     gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
+     gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.8)];
+     gradientAnimationEndPoint.duration = 4.0;
+     gradientAnimationEndPoint.removedOnCompletion = NO;
+     gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+     gradientAnimationEndPoint.repeatCount = HUGE_VALF;
+     gradientAnimationEndPoint.autoreverses = YES;
+     [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
+     */
+
     
     return gradient;
 }
@@ -120,7 +127,6 @@
             
         case BC_BACKGROUNDIMAGE_TESTCREEN: {
             imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[self makeFilenameChecking568ScreenSizeUsingFilename:@"testscreen"]]];
-            NSLog(@"%@", NSStringFromCGSize(CGSizeMake(imageView.image.size.width * imageView.image.scale, imageView.image.size.height * imageView.image.scale)));
         } break;
             
         default:
@@ -145,6 +151,15 @@
 }
 
 
+- (WDColorScheme)colorSchemeForBackgroundCategory:(WDBackgroundCategory)category
+{
+    WDColorScheme scheme = CS_LIGHT;
+    if (category < BC_GRADIENT_4 || category > BC_GRADIENT_8) {
+        scheme = CS_DARK;
+    }
+    return scheme;
+}
+
 #pragma mark - Creation & Destruction
 
 - (NSNumber *)createBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view
@@ -155,8 +170,20 @@
     background.view = view;
     
     switch (category) {
-        case BC_GRADIENT:
+        case BC_GRADIENT_0:
+        case BC_GRADIENT_1:
+        case BC_GRADIENT_2:
+        case BC_GRADIENT_3:
+        case BC_GRADIENT_4:
+        case BC_GRADIENT_5:
+        case BC_GRADIENT_6:
+        case BC_GRADIENT_7:
+        case BC_GRADIENT_8:
+        case BC_GRADIENT_9:
+        case BC_GRADIENT_10:
+        case BC_GRADIENT_11:
             background.gradientLayer = [self createGradientLayerOfCategory:category forView:view];
+            background.uiOverlayColorScheme = [self colorSchemeForBackgroundCategory:category];
             break;
             
         case BC_BACKGROUNDIMAGE_TESTCELL:
@@ -191,7 +218,18 @@
     WDBackground *background = [self.backgrounds objectForKey:idBackground];
     if (background) {
         switch (background.category) {
-            case BC_GRADIENT:
+            case BC_GRADIENT_0:
+            case BC_GRADIENT_1:
+            case BC_GRADIENT_2:
+            case BC_GRADIENT_3:
+            case BC_GRADIENT_4:
+            case BC_GRADIENT_5:
+            case BC_GRADIENT_6:
+            case BC_GRADIENT_7:
+            case BC_GRADIENT_8:
+            case BC_GRADIENT_9:
+            case BC_GRADIENT_10:
+            case BC_GRADIENT_11:
                 [background.gradientLayer removeFromSuperlayer];
                 break;
                 
@@ -207,6 +245,15 @@
         [self.backgrounds removeObjectForKey:idBackground];
     }
 }
+
+#pragma mark - Obtencion
+
+- (WDBackground *)findBackgroundWithID:(NSNumber *)idBackground
+{
+    return [self.backgrounds objectForKey:idBackground];
+}
+
+
 
 
 

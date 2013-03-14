@@ -265,8 +265,8 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
         cell.wordLabel.text = word.word;
         cell.wordLabel.font = [UIFont fontWithName:word.font.family size:[WDUtils sizeOfWordForUI:UI_ALLWORDSSCREEN_TODAYWORD andFont:word.font]];
         cell.backgroundView = [[WDBackgroundView alloc] initWithFrame:cell.contentView.bounds];        
-        cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_GRADIENT forView:cell.backgroundView];
-        //cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_BACKGROUNDIMAGE_TESTCELL forView:cell.backgroundView];
+        cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:word.backgroundCategory forView:cell.backgroundView];
+        
         retCell = cell;
     } else {
         static NSString *previousDaysCellIdentifier = @"WDPreviousDayWordCell";
@@ -282,7 +282,9 @@ static const NSUInteger TAG_HEADERSECTION_LABEL = 50;
             cell.oneDateLabel.text = [NSString stringWithFormat:@"%d,",word.dateComponents.day];
             cell.twoDateLabel.text = [WDUtils abreviateMonthString:word.dateComponents.month];
         }
-                
+        cell.backgroundView = [[WDBackgroundView alloc] initWithFrame:cell.contentView.bounds];
+        cell.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:word.backgroundCategory forView:cell.backgroundView];
+        
         retCell = cell;
     }
     

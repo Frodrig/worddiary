@@ -36,7 +36,6 @@
 				<array class="NSMutableArray" key="NSSubviews"/>
 				<string key="NSFrameSize">{300, 135}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MCAwAA</bytes>

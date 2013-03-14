@@ -8,13 +8,20 @@
 
 #import <UIKit/UIKit.h>
 #import "WDSelectedWordEditMenuDelegate.h"
+#import "WDCollectionOptionsWordMenuViewDelegate.h"
+#import "WDBackgroundDefs.h"
 
-@interface WDSelectedWordEditMenuViewController : UIViewController
+@class WDWord;
+
+@interface WDSelectedWordEditMenuViewController : UIViewController<WDCollectionOptionsWordMenuViewDelegate>
 
 @property (nonatomic, strong) id<WDSelectedWordEditMenuDelegate> delegate;
 
+- (id)initWithSelectedWord:(WDWord *)word andBackgroundColorScheme:(WDColorScheme)scheme;
+
 - (void) showTodayWordMenuWithClearButtonEnabled:(BOOL)enabled;
 - (void) showPreviousWordMenu;
-- (void) showDeletePreviousWordConfirmationMenu;
+
+- (void) updateColorScheme:(WDColorScheme)newScheme;
 
 @end

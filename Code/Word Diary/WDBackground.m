@@ -13,10 +13,11 @@
 
 #pragma mark - Synthesize
 
-@synthesize category      = category_;
-@synthesize idBackground  = idBackground_;
-@synthesize view          = view_;
-@synthesize gradientLayer = gradientLayer_;
-@synthesize imageView     = imageView_;
+@synthesize category               = category_;
+@synthesize idBackground           = idBackground_;
+@synthesize view                   = view_;
+@synthesize gradientLayer          = gradientLayer_;
+@synthesize imageView              = imageView_;
+@synthesize uiOverlayColorScheme   = uiOverlayColorScheme_;
 
 @end

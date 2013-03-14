@@ -43,6 +43,9 @@
 		5B80893F16DE0AAF002CD179 /* WDPreviousDayWordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80893E16DE0AAF002CD179 /* WDPreviousDayWordCell.m */; };
 		5B80894116DE0ABA002CD179 /* WDPreviousDayWordCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B80894016DE0ABA002CD179 /* WDPreviousDayWordCell.xib */; };
 		5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80894716DE3CE2002CD179 /* WDUtils.m */; };
+		5B916CF616F07112009C40D6 /* WDWordRepresentationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B916CF516F07112009C40D6 /* WDWordRepresentationView.m */; };
+		5B916CF816F0711D009C40D6 /* WDWordRepresentationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B916CF716F0711D009C40D6 /* WDWordRepresentationView.xib */; };
+		5BADFCE816EDD07100E21A3B /* WDCollectionOptionsWordMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BADFCE716EDD07100E21A3B /* WDCollectionOptionsWordMenuView.m */; };
 		5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30116DBE13900394113 /* UIKit.framework */; };
 		5BB6B30416DBE13900394113 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30316DBE13900394113 /* Foundation.framework */; };
 		5BB6B30616DBE13900394113 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30516DBE13900394113 /* CoreGraphics.framework */; };
@@ -63,6 +66,14 @@
 		5BD34CA016E799F2007B46A2 /* WDBackgroundStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD34C9F16E799F2007B46A2 /* WDBackgroundStore.m */; };
 		5BD34CA416E7A08E007B46A2 /* WDBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD34CA316E7A08E007B46A2 /* WDBackground.m */; };
 		5BD34CA916E7B025007B46A2 /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD34CA816E7B025007B46A2 /* WDWord.m */; };
+		5BF834CF16EE01740080FCDF /* WDTopInfoNavigationWordMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BF834CE16EE01740080FCDF /* WDTopInfoNavigationWordMenuView.m */; };
+		5BF834D116EE01880080FCDF /* WDTopInfoNavigationWordMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834D016EE01880080FCDF /* WDTopInfoNavigationWordMenuView.xib */; };
+		5BF834D416EE02950080FCDF /* 39-back-light.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834D216EE02950080FCDF /* 39-back-light.png */; };
+		5BF834D516EE02950080FCDF /* 39-back-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834D316EE02950080FCDF /* 39-back-light@2x.png */; };
+		5BF834D816EE4E260080FCDF /* 39-back-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834D616EE4E260080FCDF /* 39-back-dark.png */; };
+		5BF834D916EE4E260080FCDF /* 39-back-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834D716EE4E260080FCDF /* 39-back-dark@2x.png */; };
+		5BF834DC16EE503D0080FCDF /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834DA16EE503C0080FCDF /* 19-gear.png */; };
+		5BF834DD16EE503D0080FCDF /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834DB16EE503D0080FCDF /* 19-gear@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -115,6 +126,12 @@
 		5B80894016DE0ABA002CD179 /* WDPreviousDayWordCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDPreviousDayWordCell.xib; sourceTree = "<group>"; };
 		5B80894616DE3CE2002CD179 /* WDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDUtils.h; sourceTree = "<group>"; };
 		5B80894716DE3CE2002CD179 /* WDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDUtils.m; sourceTree = "<group>"; };
+		5B916CF416F07112009C40D6 /* WDWordRepresentationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationView.h; sourceTree = "<group>"; };
+		5B916CF516F07112009C40D6 /* WDWordRepresentationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWordRepresentationView.m; sourceTree = "<group>"; };
+		5B916CF716F0711D009C40D6 /* WDWordRepresentationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDWordRepresentationView.xib; sourceTree = "<group>"; };
+		5BADFCE616EDD07100E21A3B /* WDCollectionOptionsWordMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDCollectionOptionsWordMenuView.h; sourceTree = "<group>"; };
+		5BADFCE716EDD07100E21A3B /* WDCollectionOptionsWordMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDCollectionOptionsWordMenuView.m; sourceTree = "<group>"; };
+		5BADFCEB16EDD09C00E21A3B /* WDCollectionOptionsWordMenuViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDCollectionOptionsWordMenuViewDelegate.h; sourceTree = "<group>"; };
 		5BB6B2FE16DBE13900394113 /* Word Diary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Word Diary.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BB6B30116DBE13900394113 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5BB6B30316DBE13900394113 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -147,6 +164,15 @@
 		5BD34CA616E7A166007B46A2 /* WDBackgroundDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundDefs.h; sourceTree = "<group>"; };
 		5BD34CA716E7B025007B46A2 /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
 		5BD34CA816E7B025007B46A2 /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
+		5BF834CD16EE01740080FCDF /* WDTopInfoNavigationWordMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDTopInfoNavigationWordMenuView.h; sourceTree = "<group>"; };
+		5BF834CE16EE01740080FCDF /* WDTopInfoNavigationWordMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDTopInfoNavigationWordMenuView.m; sourceTree = "<group>"; };
+		5BF834D016EE01880080FCDF /* WDTopInfoNavigationWordMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTopInfoNavigationWordMenuView.xib; sourceTree = "<group>"; };
+		5BF834D216EE02950080FCDF /* 39-back-light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-light.png"; sourceTree = "<group>"; };
+		5BF834D316EE02950080FCDF /* 39-back-light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-light@2x.png"; sourceTree = "<group>"; };
+		5BF834D616EE4E260080FCDF /* 39-back-dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-dark.png"; sourceTree = "<group>"; };
+		5BF834D716EE4E260080FCDF /* 39-back-dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-dark@2x.png"; sourceTree = "<group>"; };
+		5BF834DA16EE503C0080FCDF /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
+		5BF834DB16EE503D0080FCDF /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +213,8 @@
 		5B1AC4C316EA0ABA00950206 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5BF834CC16EE01010080FCDF /* Top Info Navigation Menu */,
+				5BADFCE516EDD04600E21A3B /* Collection Options Word Menu */,
 				5B1AC4D216EA3C6A00950206 /* Confirm Word Menu */,
 				5B1AC4C916EA1F9400950206 /* Today Word Menu */,
 				5B1AC4CF16EA1FFF00950206 /* Previous Word Menu */,
@@ -248,11 +276,17 @@
 		5B6F313916DF5AB9007E4DBA /* Icons */ = {
 			isa = PBXGroup;
 			children = (
+				5BF834D616EE4E260080FCDF /* 39-back-dark.png */,
+				5BF834D716EE4E260080FCDF /* 39-back-dark@2x.png */,
+				5BF834D216EE02950080FCDF /* 39-back-light.png */,
+				5BF834D316EE02950080FCDF /* 39-back-light@2x.png */,
 				5B6F315616DF6026007E4DBA /* 218-trash2.png */,
 				5B6F315716DF6026007E4DBA /* 218-trash2@2x.png */,
 				5B6F314616DF5D1B007E4DBA /* 433-x.png */,
 				5B6F314716DF5D1B007E4DBA /* 433-x@2x.png */,
 				5B6F314216DF5D0F007E4DBA /* 344-paintbrush.png */,
+				5BF834DA16EE503C0080FCDF /* 19-gear.png */,
+				5BF834DB16EE503D0080FCDF /* 19-gear@2x.png */,
 				5B6F314316DF5D0F007E4DBA /* 344-paintbrush@2x.png */,
 				5B6F313E16DF5D00007E4DBA /* 350-text.png */,
 				5B6F313F16DF5D00007E4DBA /* 350-text@2x.png */,
@@ -328,6 +362,26 @@
 				5B80894716DE3CE2002CD179 /* WDUtils.m */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		5B916CF316F0709D009C40D6 /* WDWordRepresentationView */ = {
+			isa = PBXGroup;
+			children = (
+				5B916CF416F07112009C40D6 /* WDWordRepresentationView.h */,
+				5B916CF516F07112009C40D6 /* WDWordRepresentationView.m */,
+				5B916CF716F0711D009C40D6 /* WDWordRepresentationView.xib */,
+			);
+			name = WDWordRepresentationView;
+			sourceTree = "<group>";
+		};
+		5BADFCE516EDD04600E21A3B /* Collection Options Word Menu */ = {
+			isa = PBXGroup;
+			children = (
+				5BADFCE616EDD07100E21A3B /* WDCollectionOptionsWordMenuView.h */,
+				5BADFCE716EDD07100E21A3B /* WDCollectionOptionsWordMenuView.m */,
+				5BADFCEB16EDD09C00E21A3B /* WDCollectionOptionsWordMenuViewDelegate.h */,
+			);
+			name = "Collection Options Word Menu";
 			sourceTree = "<group>";
 		};
 		5BB6B2F516DBE13900394113 = {
@@ -446,6 +500,7 @@
 		5BB8410A16DD12DE0005AF21 /* Selected Word Screen */ = {
 			isa = PBXGroup;
 			children = (
+				5B916CF316F0709D009C40D6 /* WDWordRepresentationView */,
 				5B6F313216DF5A0A007E4DBA /* Menus */,
 				5B1AC4D116EA397D00950206 /* WDSelectedWordScreenDelegate.h */,
 				5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */,
@@ -482,6 +537,16 @@
 				5BD34CA616E7A166007B46A2 /* WDBackgroundDefs.h */,
 			);
 			name = "Background Store";
+			sourceTree = "<group>";
+		};
+		5BF834CC16EE01010080FCDF /* Top Info Navigation Menu */ = {
+			isa = PBXGroup;
+			children = (
+				5BF834CD16EE01740080FCDF /* WDTopInfoNavigationWordMenuView.h */,
+				5BF834CE16EE01740080FCDF /* WDTopInfoNavigationWordMenuView.m */,
+				5BF834D016EE01880080FCDF /* WDTopInfoNavigationWordMenuView.xib */,
+			);
+			name = "Top Info Navigation Menu";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -569,6 +634,14 @@
 				5B1AC4C716EA0AC700950206 /* WDTodayWordMenuView.xib in Resources */,
 				5B1AC4CE16EA1FF400950206 /* WDPreviousWordMenuView.xib in Resources */,
 				5B1AC4D716EA3C9B00950206 /* WDConfirmWordActionMenuView.xib in Resources */,
+				5BF834D116EE01880080FCDF /* WDTopInfoNavigationWordMenuView.xib in Resources */,
+				5BF834D416EE02950080FCDF /* 39-back-light.png in Resources */,
+				5BF834D516EE02950080FCDF /* 39-back-light@2x.png in Resources */,
+				5BF834D816EE4E260080FCDF /* 39-back-dark.png in Resources */,
+				5BF834D916EE4E260080FCDF /* 39-back-dark@2x.png in Resources */,
+				5BF834DC16EE503D0080FCDF /* 19-gear.png in Resources */,
+				5BF834DD16EE503D0080FCDF /* 19-gear@2x.png in Resources */,
+				5B916CF816F0711D009C40D6 /* WDWordRepresentationView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,6 +671,9 @@
 				5B1AC4C816EA0AC700950206 /* WDTodayWordMenuView.m in Sources */,
 				5B1AC4CC16EA1FDE00950206 /* WDPreviousWordMenuView.m in Sources */,
 				5B1AC4D516EA3C8D00950206 /* WDConfirmWordActionMenuView.m in Sources */,
+				5BADFCE816EDD07100E21A3B /* WDCollectionOptionsWordMenuView.m in Sources */,
+				5BF834CF16EE01740080FCDF /* WDTopInfoNavigationWordMenuView.m in Sources */,
+				5B916CF616F07112009C40D6 /* WDWordRepresentationView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

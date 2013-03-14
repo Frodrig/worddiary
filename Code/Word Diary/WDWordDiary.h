@@ -29,6 +29,7 @@
 
 - (WDWord *)      findTodayWord;
 - (WDWord *)      findLastCreatedWord;
+- (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
 
 - (WDColor *)     defaultColor;
 - (WDFont *)      defaultFont;

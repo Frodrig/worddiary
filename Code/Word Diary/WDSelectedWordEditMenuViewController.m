@@ -11,23 +11,43 @@
 #import "WDTodayWordMenuView.h"
 #import "WDPreviousWordMenuView.h"
 #import "WDConfirmWordActionMenuView.h"
+#import "WDCollectionOptionsWordMenuView.h"
 #import "UIView+UIViewNibLoad.h"
+#import "WDWordDiary.h"
+#import "WDFont.h"
+#import "WDWord.h"
+#import "WDUtils.h"
 
-static const NSUInteger VIEWS_CORNER_RADIUS                 = 10;
 static const NSUInteger TAG_CONTROL_TODAYWORDMENU_WRITE     = 10;
 static const NSUInteger TAG_CONTROL_TODAYWORDMENU_FONT      = 15;
 static const NSUInteger TAG_CONTROL_TODAYWORDMENU_COLOR     = 20;
-static const NSUInteger TAG_CONTROL_TODAYWORDMENU_CLEAR     = 25;
+static const NSUInteger TAG_CONTROL_TODAYWORDMENU_BACKCOLOR = 25;
 static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 
 @interface WDSelectedWordEditMenuViewController ()
 
-@property (nonatomic, strong) WDTodayWordMenuView         *todayWorldMenuView;
-@property (nonatomic, strong) WDPreviousWordMenuView      *previousDayWordMenuView;
-@property (nonatomic, strong) WDConfirmWordActionMenuView *confirmWordActionMenuView;
+@property (nonatomic, strong) WDTodayWordMenuView             *todayWorldMenuView;
+@property (nonatomic, strong) WDPreviousWordMenuView          *previousDayWordMenuView;
+@property (nonatomic, strong) WDConfirmWordActionMenuView     *confirmWordActionMenuView;
+@property (nonatomic, strong) WDCollectionOptionsWordMenuView *fontsMenuView;
+@property (nonatomic, strong) WDCollectionOptionsWordMenuView *backgroundColorMenuView;
+@property (nonatomic, weak)   WDWord                          *selectedWord;
+@property (nonatomic)         WDColorScheme                   backgroundColorScheme;
 
-- (void)showMenuView:(UIView *)menuView;
+- (void)      showMenuView:(UIView *)menuView;
+- (void)      showDeletePreviousWordConfirmationMenu;
+- (void)      showFontWordMenu;
+- (void)      showBackgroundColorWordMenu;
+
+- (NSArray *) createTitlesForFontMenu;
+- (NSArray *) createFontFamiliesForFontMenu;
+
+- (void)      backNavigationInfoButtonPressed:(UIButton *)sender;
+
+- (void)      configureButton:(UIButton *)button withColorScheme:(WDColorScheme)scheme;
+
+- (void)      configureColorSchemes;
 
 @end
 
@@ -35,21 +55,30 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 #pragma mark - Synthesize
 
-@synthesize todayWorldMenuView        = todayWorldMenuView_;
-@synthesize previousDayWordMenuView   = previousDayWordMenuView_;
-@synthesize delegate                  = delegate_;
-@synthesize confirmWordActionMenuView = confirmWordActionMenuView_;
+@synthesize todayWorldMenuView            = todayWorldMenuView_;
+@synthesize previousDayWordMenuView       = previousDayWordMenuView_;
+@synthesize delegate                      = delegate_;
+@synthesize confirmWordActionMenuView     = confirmWordActionMenuView_;
+@synthesize fontsMenuView                 = fontsMenuView_;
+@synthesize selectedWord                  = selectedWord_;
+@synthesize backgroundColorScheme         = backgroundColorScheme_;
+@synthesize backgroundColorMenuView       = backgroundColorMenuView_;
 
 #pragma mark - Init
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithSelectedWord:(WDWord *)word andBackgroundColorScheme:(WDColorScheme)scheme
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         // Custom initialization
+        selectedWord_ = word;
+        backgroundColorScheme_ = scheme;
+
         todayWorldMenuView_ = (WDTodayWordMenuView *)[WDTodayWordMenuView createFromNib];
         previousDayWordMenuView_ = (WDPreviousWordMenuView *)[WDPreviousWordMenuView createFromNib];
         confirmWordActionMenuView_ = (WDConfirmWordActionMenuView *)[WDConfirmWordActionMenuView createFromNib];
+        fontsMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 135.0) optionTitles:[self createTitlesForFontMenu] fontsForTitles:[self createFontFamiliesForFontMenu] optionImages:nil visibleOptions:3.75 andSelectedOption:[[WDWordDiary sharedWordDiary].fonts indexOfObject:selectedWord_.font]];
+        backgroundColorMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:fontsMenuView_.frame notConfiguredOptions:[WDUtils pickerColorArray].count visibleOptions:3.25 andSelectedOption:0];
     }
     
     return self;
@@ -60,33 +89,52 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     [super viewDidLoad];
     
     // Fondo
-    self.view.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.2];
-    self.view.layer.cornerRadius = VIEWS_CORNER_RADIUS;
-    
+    self.view.layer.cornerRadius = [WDUtils viewsCornerRadius];
+        
     // Menu principal para la palabra del dia de hoy
-    self.todayWorldMenuView.backgroundColor = [self.view.backgroundColor copy];
-    self.todayWorldMenuView.layer.cornerRadius = VIEWS_CORNER_RADIUS;
+    self.todayWorldMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
     [self.todayWorldMenuView.keyboardButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_WRITEOPTION", @"") forState:UIControlStateNormal];
-    [self.todayWorldMenuView.fontButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_FONTOPTION", @"") forState:UIControlStateNormal];
-    [self.todayWorldMenuView.backgroundColorButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_COLOROPTION", @"") forState:UIControlStateNormal];
-    [self.todayWorldMenuView.eraseButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_ERASEOPTION", @"") forState:UIControlStateNormal];
     [self.todayWorldMenuView.keyboardButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.todayWorldMenuView.fontButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_FONTOPTION", @"") forState:UIControlStateNormal];
+    [self.todayWorldMenuView.fontButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.todayWorldMenuView.backgroundColorButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_COLOROPTION", @"") forState:UIControlStateNormal];
+    [self.todayWorldMenuView.backgroundColorButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.todayWorldMenuView.eraseButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_ERASEOPTION", @"") forState:UIControlStateNormal];
     [self.todayWorldMenuView.eraseButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
 
     // Menu principal para palabras previas
-    self.previousDayWordMenuView.backgroundColor = [self.view.backgroundColor copy];
-    self.previousDayWordMenuView.layer.cornerRadius = VIEWS_CORNER_RADIUS;
+    self.previousDayWordMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
     [self.previousDayWordMenuView.deleteButton setTitle:NSLocalizedString(@"TAG_PREVIOUSWORDMENU_DELETEOPTION", @"") forState:UIControlStateNormal];
+    [self configureButton:self.previousDayWordMenuView.deleteButton withColorScheme:self.backgroundColorScheme];
     [self.previousDayWordMenuView.deleteButton addTarget:self action:@selector(previousDayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     // Menu de confirmacion
-    self.confirmWordActionMenuView.backgroundColor = [self.view.backgroundColor copy];
-    self.confirmWordActionMenuView.layer.cornerRadius = VIEWS_CORNER_RADIUS;
+    self.confirmWordActionMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
     self.confirmWordActionMenuView.descriptionLabel.text = NSLocalizedString(@"TAG_CONFIRMACTIONMENU_DESCRIPTION", @"");
     [self.confirmWordActionMenuView.cancelButton setTitle:NSLocalizedString(@"TAG_CONFIRMACTIONMENU_CANCEL", @"") forState:UIControlStateNormal];
-    [self.confirmWordActionMenuView.yesButton setTitle:NSLocalizedString(@"TAG_CONFIRMACTIONMENU_YES", @"") forState:UIControlStateNormal];
     [self.confirmWordActionMenuView.cancelButton addTarget:self action:@selector(confirmWordActionCancelPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.confirmWordActionMenuView.yesButton setTitle:NSLocalizedString(@"TAG_CONFIRMACTIONMENU_YES", @"") forState:UIControlStateNormal];
     [self.confirmWordActionMenuView.yesButton addTarget:self action:@selector(confirmWordActionAcceptPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
+    // Menu de fuentes
+    self.fontsMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
+    self.fontsMenuView.delegate = self;
+    
+    // Menu de colores
+    NSArray *pickerColorArray = [WDUtils pickerColorArray];
+    NSArray *backgroundColorsOptions = self.backgroundColorMenuView.buttonOptions;
+    for (NSUInteger optionIndex = 0; optionIndex < backgroundColorsOptions.count; ++optionIndex) {
+        UIButton *buttonOption = [backgroundColorsOptions objectAtIndex:optionIndex];
+        UIColor *colorValue = [pickerColorArray objectAtIndex:optionIndex];
+        buttonOption.backgroundColor = colorValue;
+    }
+    self.backgroundColorMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
+    
+    // Esquemas de color
+    [self configureColorSchemes];
+    
+    self.backgroundColorMenuView.delegate = self;
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,15 +145,104 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 #pragma mark - Metodos auxiliares
 
+- (void)configureColorSchemes
+{    
+    // Fondo
+    self.view.backgroundColor = [WDUtils schemeBackgroundColor:self.backgroundColorScheme];
+    
+    // Menu principal para la palabra del dia de hoy
+    self.todayWorldMenuView.backgroundColor = [self.view.backgroundColor copy];
+    
+    [self configureButton:self.todayWorldMenuView.keyboardButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.todayWorldMenuView.fontButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.todayWorldMenuView.backgroundColorButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.todayWorldMenuView.eraseButton withColorScheme:self.backgroundColorScheme];
+    
+    // Menu principal para palabras previas
+    self.previousDayWordMenuView.backgroundColor = [self.view.backgroundColor copy];
+    [self configureButton:self.previousDayWordMenuView.deleteButton withColorScheme:self.backgroundColorScheme];
+    
+    // Menu de confirmacion
+    self.confirmWordActionMenuView.backgroundColor = [self.view.backgroundColor copy];
+    self.confirmWordActionMenuView.descriptionLabel.textColor = [WDUtils schemeTextColor:self.backgroundColorScheme];
+    [self configureButton:self.confirmWordActionMenuView.cancelButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.confirmWordActionMenuView.yesButton withColorScheme:self.backgroundColorScheme];
+    
+    // Menu de fuentes
+    self.fontsMenuView.backgroundColor = [self.view.backgroundColor copy];
+    
+    // Menu de colores
+    self.backgroundColorMenuView.backgroundColor = [self.view.backgroundColor copy];
+}
+
+- (void)configureButton:(UIButton *)button withColorScheme:(WDColorScheme)scheme
+{
+    [button setTitleColor:[WDUtils schemeTextColor:scheme] forState:UIControlStateNormal];
+    [button setTitleColor:[WDUtils schemeTextColor:scheme] forState:UIControlStateHighlighted];
+}
+
 - (void)showMenuView:(UIView *)menuView
 {
-    NSSet *menus = [NSSet setWithObjects:self.todayWorldMenuView, self.previousDayWordMenuView, self.confirmWordActionMenuView, nil];
+    UIView *menuToRemove = nil;
+    NSSet *menus = [NSSet setWithObjects:self.todayWorldMenuView, self.previousDayWordMenuView, self.fontsMenuView, self.backgroundColorMenuView, self.confirmWordActionMenuView, nil];
     for (UIView *viewIt in menus) {
-        if (menuView == viewIt) {
-            [self.view addSubview:menuView];
-        } else {
-            [viewIt removeFromSuperview];
+        if (viewIt.superview == self.view) {
+            if (viewIt != menuView) {
+                menuToRemove = viewIt;
+            }
+            break;
         }
+    }
+    
+    if (menuView == self.todayWorldMenuView || menuView == self.previousDayWordMenuView) {
+        [menuToRemove removeFromSuperview];
+        [self.view addSubview:menuView];
+    } else {
+        [self.view addSubview:menuView];
+        CGPoint originalCenter = menuView.center;
+        // TODO: Saber si menuView es un menu a la izquierda o derecha de que habia antes. Por ahora suponemos que esta a la derecha
+        // Se podrían usar tags para ordenarlos.
+        menuView.center = CGPointMake(4.0 * menuView.center.x, originalCenter.y);
+    
+        [UIView animateWithDuration:0.75 animations:^{
+            menuToRemove.alpha = 0.0;
+            menuView.center = originalCenter;
+        } completion:^(BOOL finished) {
+            [menuToRemove removeFromSuperview];
+            menuToRemove.alpha = 1.0;
+        }];
+    }
+}
+
+- (NSArray *)createTitlesForFontMenu
+{
+    NSArray *fonts = [WDWordDiary sharedWordDiary].fonts;
+    NSMutableArray *titles = [NSMutableArray arrayWithCapacity:fonts.count];
+    for (NSString *fontFamily in fonts) {
+        [titles addObject:@"T"];
+    }
+    
+    return [NSArray arrayWithArray:titles];
+}
+
+- (NSArray *)createFontFamiliesForFontMenu
+{
+    NSArray *fonts = [WDWordDiary sharedWordDiary].fonts;
+    NSMutableArray *fontsFamilies = [NSMutableArray arrayWithCapacity:fonts.count];
+    for (WDFont *fontIt in fonts) {
+        [fontsFamilies addObject:fontIt.family];
+    }
+    
+    return [NSArray arrayWithArray:fontsFamilies];
+}
+
+#pragma mark - Updates
+
+- (void)updateColorScheme:(WDColorScheme)newScheme;
+{
+    if (newScheme != self.backgroundColorScheme) {
+        self.backgroundColorScheme = newScheme;
+        [self configureColorSchemes];
     }
 }
 
@@ -122,21 +259,32 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     [self showMenuView:self.previousDayWordMenuView];
 }
 
-- (void) showDeletePreviousWordConfirmationMenu
+- (void)showDeletePreviousWordConfirmationMenu
 {
     [self showMenuView:self.confirmWordActionMenuView];
 }
 
-#pragma mark - Menu Controls
+- (void)showFontWordMenu
+{
+    [self showMenuView:self.fontsMenuView];
+}
+
+- (void)showBackgroundColorWordMenu
+{
+    [self showMenuView:self.backgroundColorMenuView];
+}
+
+#pragma mark - Eventos de controles de menu
 
 - (void)todayWordMenuOptionPressed:(UIButton *)button
 {
     if (button.tag == TAG_CONTROL_TODAYWORDMENU_WRITE) {
         [self.delegate writeSelectedWordOption];
     } else if (button.tag == TAG_CONTROL_TODAYWORDMENU_FONT) {
+        [self showFontWordMenu];
     } else if (button.tag == TAG_CONTROL_TODAYWORDMENU_COLOR) {
-    } else if (button.tag == TAG_CONTROL_TODAYWORDMENU_CLEAR) {
-        [self.delegate clearTodaySelectedWordOption];
+    } else if (button.tag == TAG_CONTROL_TODAYWORDMENU_BACKCOLOR) {
+        [self showBackgroundColorWordMenu];
     }
 }
 
@@ -155,6 +303,28 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 - (void)confirmWordActionAcceptPressed:(UIButton *)button
 {
     [self.delegate acceptDeleteWordFromConfirmationMenu];
+}
+
+- (void)backNavigationInfoButtonPressed:(UIButton *)sender
+{
+    
+}
+
+#pragma mark - Fonts Menu Controls Delegate
+
+- (void)collectionOptionsMenuBackOptionSelected:(WDCollectionOptionsWordMenuView *)menu
+{
+    
+}
+
+- (void)collectionOptionsMenu:(WDCollectionOptionsWordMenuView *)menu optionSelected:(NSUInteger)indexOption
+{
+    if (self.fontsMenuView == menu) {
+        [self.delegate changeToFontWithIndex:indexOption];
+    } else if (self.backgroundColorMenuView == menu) {
+        WDBackgroundCategory category = [WDUtils convertPickerColorIndexToBackgroundCategory:indexOption];
+        [self.delegate changeToBackgroundCategory:category];
+    }
 }
 
 

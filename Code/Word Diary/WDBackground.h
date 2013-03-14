@@ -18,5 +18,6 @@
 @property (nonatomic, strong) UIView               *view;
 @property (nonatomic, strong) CAGradientLayer      *gradientLayer;
 @property (nonatomic, strong) UIImageView          *imageView;
+@property (nonatomic)         WDColorScheme        uiOverlayColorScheme;
 
 @end

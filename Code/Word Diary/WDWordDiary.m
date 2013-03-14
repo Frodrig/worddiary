@@ -116,7 +116,7 @@
     } else {
         NSMutableArray *fontInstances = [[NSMutableArray alloc] init];
         
-        NSArray *fontFamilies = [NSArray arrayWithObjects:@"ArialMT", @"CourierNewPSMT", @"SnellRoundhand", @"Palatino-Roman", nil];
+        NSArray *fontFamilies = [NSArray arrayWithObjects:@"ArialMT", @"CourierNewPSMT", @"AppleColorEmoji", @"Palatino-Roman", @"Didot", @"PartyLetPlain", @"Noteworthy-Light", nil];
         for (NSString *fontFamily in fontFamilies) {
             WDFont *font = [NSEntityDescription insertNewObjectForEntityForName:@"Font" inManagedObjectContext:self.context];
             font.family = fontFamily;
@@ -152,7 +152,7 @@
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
     wordObject.font = [self defaultFont];
-    wordObject.backgroundCategory = BC_GRADIENT;
+    wordObject.backgroundCategory = rand() % 12;
 
     [words_ addObject:wordObject];
     [self sortWords];
@@ -210,6 +210,15 @@
     return result;
 }
 
+- (NSUInteger)findIndexPositionForWord:(WDWord *)word
+{
+    NSUInteger retIndex = NSNotFound;
+    
+    retIndex = self.words.count - [self.words indexOfObject:word];
+    
+    return retIndex;
+}
+
 #pragma mark - Auxiliary
 
 - (void) addObserverToWord:(WDWord *)word
@@ -240,6 +249,7 @@
 
 - (WDFont *)defaultFont
 {
+    /*
     NSUInteger indexOfObject = [self.fonts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         WDFont *font = obj;
         *stop = [font.family compare:@"SnellRoundhand"] == NSOrderedSame;
@@ -247,7 +257,8 @@
     }];
     
     NSAssert(indexOfObject != NSNotFound, @"Object index of default font not found");
-    return [self.fonts objectAtIndex:indexOfObject];
+    */
+    return [self.fonts objectAtIndex:0];
 }
 
 #pragma mark - Key Value Observing

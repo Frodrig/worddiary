@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "WDBackgroundDefs.h"
 
 @protocol WDSelectedWordEditMenuDelegate <NSObject>
 
@@ -14,5 +15,7 @@
 - (void)clearTodaySelectedWordOption;
 - (void)cancelDeleteWordFromConfirmationMenu;
 - (void)acceptDeleteWordFromConfirmationMenu;
+- (void)changeToFontWithIndex:(NSUInteger)indexFont;
+- (void)changeToBackgroundCategory:(WDBackgroundCategory)category;
 
 @end
