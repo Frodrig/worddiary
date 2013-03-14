@@ -4,6 +4,7 @@
   tener en cuenta y mostrarse en base a esa informacion, es decir, tanto el fondo como el color de los textos de los botones y labels
 - Ya que no atendemos a poner en highlight con otro color el texto boton, debemos de atender al evento touch y punto.
 - Valorar poner arriba de la pantalla con la palabra seleccionada un encabezado con la fecha y con un boton de flecha para salir. Igualmente, con tap y dejando el gesto para salir.
+- Probada la aplicacion en dispositivos 3GS y 4S y se puede observar como caben menos celdas y, sobre todo, SALE MAL el menu de la pantalla de palabra seleccionada. Hay que revisar el codigo para establecer un tamaño pensando en el telefono 3GS y luego multiplicar por la escala adecuada.
 
 6/3/2013
 - El gran problema: Al crear una celda y vincular al backgroundview el gradiente, el backgroundview NO se ajsuta en anchura una vez retornada la celda y el tamaño del mismo es superior al deseado. Sin embargo, al recargar la tabla justo cuando la view que contienen la tabla es visualizada SI sale correctamente. Por lo tanto, backgroundview si tiene bien configurado el tema del ajuste de la anchura correcto pero por algún motivo no se crea bien.
