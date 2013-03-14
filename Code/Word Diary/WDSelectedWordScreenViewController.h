@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "WDSelectedWordEditMenuDelegate.h"
 #import "WDSelectedWordScreenDelegate.h"
+#import "WDWordRepresentationViewDelegate.h"
+#import "WDWordRepresentationViewDataSource.h"
 
 @class WDWord;
 
-@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
+@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate, UIGestureRecognizerDelegate, WDWordRepresentationViewDataSource, WDWordRepresentationViewDelegate>
 
 @property (nonatomic, weak) id<WDSelectedWordScreenDelegate> delegate;
 

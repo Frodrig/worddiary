@@ -135,11 +135,10 @@
     self.topInfoNavigationWordMenuView.hidden = YES;
 
     // Palabra
-    self.wordDiaryRepresentation.wordTextField.text = self.selectedWord.word;
     self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]];
-    self.wordDiaryRepresentation.wordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:[WDUtils sizeOfWordForUI:UI_SELECTEDWORDSCREEN_WORD andFont:self.selectedWord.font]];
-    self.wordDiaryRepresentation.wordTextField.textAlignment = NSTextAlignmentCenter;
     self.wordDiaryRepresentation.center = CGPointMake(self.view.bounds.size.width / 2.0, 140.0 + self.wordDiaryRepresentation.bounds.size.height / 2.0);
+    self.wordDiaryRepresentation.delegate = self;
+    self.wordDiaryRepresentation.dataSource = self;
     [self.view addSubview:self.wordDiaryRepresentation];
     
     /*
@@ -207,9 +206,6 @@
     [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
     gradient.endPoint = CGPointMake(0.0, 0.0);
     */
-    
-    // Vinculacion delegados
-   self.wordDiaryRepresentation.wordTextField.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -368,49 +364,6 @@
     //[self dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - UITextFieldDelegate
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    static const NSUInteger MAX_LENGHT = 45;
-    
-    // Se puede si:
-    // - No sobrepasamos el limite de caracteres
-    // - Estamos borrando
-    // - No hemos generado un doble tap en el espacio que produce el valor ". "
-    // - No es un espacio en blanco
-    BOOL should = textField.text.length < MAX_LENGHT;
-    if (!should) {
-        should = range.length > 0 && [string isEqualToString:@""];
-    }
-    
-    if (should) {
-        should = ![string isEqualToString:@". "];
-    }
-    
-    if (should) {
-        should = ![string isEqualToString:@" "];
-    }
-    
-    if (should) {
-       // NSString *word = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    }
-    
-    return should;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [self.wordDiaryRepresentation.wordTextField resignFirstResponder];
-    self.wordDiaryRepresentation.wordTextField.userInteractionEnabled = NO;
-    
-    self.selectedWord.word = self.wordDiaryRepresentation.wordTextField.text;
-    
-    [self.delegate selectedWordChanged];
-        
-    return YES;
-}
-
 #pragma mark KeyboardNotification
 
 - (void)keyboardWillShowNotification:(NSNotification *)notification
@@ -422,7 +375,6 @@
 - (void)keyboardWillHideNotification:(NSNotification *)notification
 {
     self.keyboardActive = NO;
-    self.wordDiaryRepresentation.wordTextField.textAlignment = NSTextAlignmentCenter;
     
     NSDictionary *userInfo = notification.userInfo;
     
@@ -442,9 +394,11 @@
 #pragma mark - WDSelectedWordEditMenuDelegate
 
 - (void)writeSelectedWordOption
-{
+{   /*
     self.wordDiaryRepresentation.wordTextField.userInteractionEnabled = YES;
     [self.wordDiaryRepresentation.wordTextField becomeFirstResponder];
+    */
+    [self.wordDiaryRepresentation becomeFirstResponder];
     self.editMenuViewController.view.hidden = YES;
     self.topInfoNavigationWordMenuView.hidden = YES;
 }
@@ -452,7 +406,6 @@
 - (void)clearTodaySelectedWordOption
 {
     self.selectedWord.word = @"";
-    self.wordDiaryRepresentation.wordTextField.text = self.selectedWord.word;
     self.editMenuViewController.view.hidden = YES;
     self.topInfoNavigationWordMenuView.hidden = YES;
     
@@ -478,8 +431,10 @@
 - (void)changeToFontWithIndex:(NSUInteger)indexFont
 {
     self.selectedWord.font = [[WDWordDiary sharedWordDiary].fonts objectAtIndex:indexFont];
-    self.wordDiaryRepresentation.wordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:self.wordDiaryRepresentation.wordTextField.font.pointSize];
     
+    [self.wordDiaryRepresentation setNeedsDisplay];
+    
+    /*
     NSLog(@"Family %@", self.selectedWord.font.family);
     NSLog(@"PointSize %f", self.wordDiaryRepresentation.wordTextField.font.pointSize);
     NSLog(@"Acender %f", self.wordDiaryRepresentation.wordTextField.font.ascender);
@@ -489,6 +444,7 @@
     NSLog(@"xHeight %f", self.wordDiaryRepresentation.wordTextField.font.xHeight);
     NSLog(@"Leading %f", self.wordDiaryRepresentation.wordTextField.font.leading);
     NSLog(@"\\\\\\\\\\\\\\\\\\\\\\");
+     */
 }
 
 - (void)changeToBackgroundCategory:(WDBackgroundCategory)category
@@ -502,5 +458,68 @@
     [self updateColorScheme:backgroundObj.uiOverlayColorScheme];
 }
 
+#pragma mark - WDWordRepresentationViewDelegate
+
+- (void)deleteBackwardsOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
+{
+    NSAssert(wordRepresentationView == self.wordDiaryRepresentation, @"objeto invalido");
+    
+    if (self.selectedWord.word.length > 0) {
+        self.selectedWord.word = [self.selectedWord.word substringWithRange:NSMakeRange(0, self.selectedWord.word.length - 1)];
+    }
+    
+    [self.wordDiaryRepresentation setNeedsDisplay];
+}
+
+- (void)wordRepresentationView:(WDWordRepresentationView *)wordRepresentationView insertText:(NSString *)text
+{
+    NSAssert(wordRepresentationView == self.wordDiaryRepresentation, @"objeto invalido");
+    
+    static const NSUInteger MAX_LENGHT = 45;
+    
+    if ([text isEqualToString:@"\n"]) {
+        [self.wordDiaryRepresentation resignFirstResponder];
+    } else {
+        // Se puede si:
+        // - No sobrepasamos el limite de caracteres
+        // - Estamos borrando
+        // - No hemos generado un doble tap en el espacio que produce el valor ". "
+        // - No es un espacio en blanco
+        BOOL should = text.length < MAX_LENGHT;
+        if (!should) {
+            should = ![text isEqualToString:@""];
+        }
+    
+        if (should) {
+            should = ![text isEqualToString:@". "];
+        }
+    
+        if (should) {
+            should = ![text isEqualToString:@" "];
+        }
+    
+        if (should) {
+            self.selectedWord.word = [self.selectedWord.word stringByAppendingString:text];
+        }
+    
+        [self.wordDiaryRepresentation setNeedsDisplay];
+    }
+}
+
+#pragma mark - WDWordRepresentationViewDataSource
+
+- (NSString *)actualTextValueForWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
+{
+    NSAssert(wordRepresentationView == self.wordDiaryRepresentation, @"objeto invalido");
+    
+    return self.selectedWord.word;
+}
+
+- (NSString *)actualFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
+{
+    NSAssert(wordRepresentationView == self.wordDiaryRepresentation, @"objeto invalido");
+    
+    return self.selectedWord.font.family;
+}
 
 @end

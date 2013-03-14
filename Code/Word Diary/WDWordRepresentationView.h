@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDWordRepresentationViewDataSource.h"
+#import "WDWordRepresentationViewDelegate.h"
 
-@interface WDWordRepresentationView : UIView
+@interface WDWordRepresentationView : UIView<UIKeyInput>
 
-@property (weak, nonatomic) IBOutlet UITextField *wordTextField;
-@property (weak, nonatomic) IBOutlet UILabel     *dayDiaryLabel;
+@property (weak, nonatomic) IBOutlet UILabel                        *dayDiaryLabel;
+@property (weak, nonatomic) id<WDWordRepresentationViewDelegate>    delegate;
+@property (weak, nonatomic) id<WDWordRepresentationViewDataSource>  dataSource;
 
 @end

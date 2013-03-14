@@ -21,6 +21,7 @@
 		5B1AC4D716EA3C9B00950206 /* WDConfirmWordActionMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4D616EA3C9B00950206 /* WDConfirmWordActionMenuView.xib */; };
 		5B3BBD1316E10489003FB9EC /* WDTodayWordSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3BBD1216E10489003FB9EC /* WDTodayWordSectionHeader.xib */; };
 		5B3BBD1516E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3BBD1416E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib */; };
+		5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B446F7616F22A48005A432D /* CoreText.framework */; };
 		5B6F313C16DF5CEB007E4DBA /* 341-keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */; };
 		5B6F313D16DF5CEB007E4DBA /* 341-keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313B16DF5CEB007E4DBA /* 341-keyboard@2x.png */; };
 		5B6F314016DF5D00007E4DBA /* 350-text.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313E16DF5D00007E4DBA /* 350-text.png */; };
@@ -100,6 +101,9 @@
 		5B1AC4D616EA3C9B00950206 /* WDConfirmWordActionMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDConfirmWordActionMenuView.xib; sourceTree = "<group>"; };
 		5B3BBD1216E10489003FB9EC /* WDTodayWordSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTodayWordSectionHeader.xib; sourceTree = "<group>"; };
 		5B3BBD1416E109C3003FB9EC /* WDPreviousDaysWordSectionHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDPreviousDaysWordSectionHeader.xib; sourceTree = "<group>"; };
+		5B446F7416F22368005A432D /* WDWordRepresentationViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationViewDelegate.h; sourceTree = "<group>"; };
+		5B446F7516F2237E005A432D /* WDWordRepresentationViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationViewDataSource.h; sourceTree = "<group>"; };
+		5B446F7616F22A48005A432D /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "341-keyboard.png"; sourceTree = "<group>"; };
 		5B6F313B16DF5CEB007E4DBA /* 341-keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "341-keyboard@2x.png"; sourceTree = "<group>"; };
 		5B6F313E16DF5D00007E4DBA /* 350-text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "350-text.png"; sourceTree = "<group>"; };
@@ -180,6 +184,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */,
 				5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */,
 				5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */,
 				5BB6B30416DBE13900394113 /* Foundation.framework in Frameworks */,
@@ -370,6 +375,8 @@
 				5B916CF416F07112009C40D6 /* WDWordRepresentationView.h */,
 				5B916CF516F07112009C40D6 /* WDWordRepresentationView.m */,
 				5B916CF716F0711D009C40D6 /* WDWordRepresentationView.xib */,
+				5B446F7416F22368005A432D /* WDWordRepresentationViewDelegate.h */,
+				5B446F7516F2237E005A432D /* WDWordRepresentationViewDataSource.h */,
 			);
 			name = WDWordRepresentationView;
 			sourceTree = "<group>";
@@ -387,6 +394,7 @@
 		5BB6B2F516DBE13900394113 = {
 			isa = PBXGroup;
 			children = (
+				5B446F7616F22A48005A432D /* CoreText.framework */,
 				5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */,
 				5BB6B30916DBE13900394113 /* Word Diary */,
 				5BB6B30016DBE13900394113 /* Frameworks */,
