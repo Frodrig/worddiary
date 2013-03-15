@@ -44,4 +44,5 @@
 "TAG_PLACEHOLDERTEXT_TODAYWORD"     = "Palabra...";
 "TAG_DIARYDAY_LABEL"                = "Día %d";
 
-"TAG_PLACEHOLDER_WORD"              = "Palabra";
+"TAG_PLACEHOLDER_WORD"              = "|";
+"TAG_CURSOR_INPUT"                  = "|";

@@ -18,6 +18,8 @@
 #import "WDWordRepresentationView.h"
 #import "UIView+UIViewNibLoad.h"
 
+const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
+
 @interface WDSelectedWordScreenViewController ()
 
 @property (nonatomic, weak)          WDWord                               *selectedWord;
@@ -32,6 +34,7 @@
 @property (nonatomic, weak)          NSNumber                             *idBackground;
 @property (nonatomic)                BOOL                                 keyboardActive;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
+@property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 
 - (void)       tapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)       swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
@@ -55,6 +58,8 @@
 
 - (void)       configureViewForSelectedWord;
 
+- (void)       updateCursorAnimation:(NSTimer *)timer;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -73,6 +78,7 @@
 @synthesize delegate                             = delegate_;
 @synthesize keyboardActive                       = keyboardActive_;
 @synthesize wordDiaryRepresentation              = wordDiaryRepresentation_;
+@synthesize cursorUpdateTimer                    = cursorUpdateTimer_;
 
 #pragma mark Init
 
@@ -82,6 +88,7 @@
     if (self) {
         // Selected word
         selectedWord_ = selectedWord;
+        keyboardActive_ = NO;
         
         // Views fuera del xib propio
         wordDiaryRepresentation_ = (WDWordRepresentationView *)[WDWordRepresentationView createFromNib];
@@ -141,16 +148,15 @@
     
     self.view.contentMode = UIViewContentModeCenter;
     
-
-    
     [self configureViewForSelectedWord];
+    
+    self.cursorUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_TIME_CURSOR target:self selector:@selector(updateCursorAnimation:) userInfo:nil repeats:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    // Otros
     self.originalCenterPositionOfSelectedWord = self.wordDiaryRepresentation.center;
 }
 
@@ -241,6 +247,11 @@
 
 }
 
+- (void)updateCursorAnimation:(NSTimer *)timer
+{
+    [self.wordDiaryRepresentation updateCursorAnimation];
+    [self.wordDiaryRepresentation setNeedsDisplay];
+}
 
 - (void)setDateInfo
 {
@@ -533,5 +544,13 @@
     
     return self.selectedWord.font.family;
 }
+
+- (BOOL)isInWritingModeFoWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
+{
+    NSAssert(wordRepresentationView == self.wordDiaryRepresentation, @"objeto invalido");
+    
+    return self.keyboardActive;
+}
+
 
 @end
