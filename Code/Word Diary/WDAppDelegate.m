@@ -9,7 +9,7 @@
 #import "WDAppDelegate.h"
 #import "WDWordDiary.h"
 #import "WDWord.h"
-#import "WDAllWordsScreenViewController.h"
+//#import "WDAllWordsScreenViewController.h"
 #import "WDSelectedWordScreenViewController.h"
 
 @interface WDAppDelegate()
@@ -59,14 +59,16 @@
     }
     
     if (nil == lastCreatedWord) {
-        lastCreatedWord = [[WDWordDiary sharedWordDiary] createWord:@"New Word..." inTimeInterval:[todayDate timeIntervalSince1970]];
+        lastCreatedWord = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[todayDate timeIntervalSince1970]];
     }
 }
 
 - (void)prepareRootViewController
 {
-    WDAllWordsScreenViewController *allWordsScreenViewController = [[WDAllWordsScreenViewController alloc] initWithNibName:nil bundle:nil];
-    self.window.rootViewController = allWordsScreenViewController;
+    WDWord *lastCreatedWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
+    WDSelectedWordScreenViewController *selectedWordScreenViewController = [[WDSelectedWordScreenViewController alloc] initWithSelectedWord:lastCreatedWord];
+    
+    self.window.rootViewController = selectedWordScreenViewController;
 }
 
 - (void)createDebugWords

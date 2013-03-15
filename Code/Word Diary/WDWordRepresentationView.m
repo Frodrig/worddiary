@@ -20,8 +20,12 @@
 
 #pragma mark - Syntehsize
 
-@synthesize dayDiaryLabel = dayDiaryLabel_;
-@synthesize drawTextBox = drawTextBox_;
+@synthesize dayDiaryLabel     = dayDiaryLabel_;
+@synthesize drawTextBox       = drawTextBox_;
+@synthesize dayMonthWordLabel = dayMonthWordLabel;
+@synthesize yearWordLabel     = yearWordLabel_;
+@synthesize delegate          = delegate_;
+@synthesize dataSource        = dataSource_;
 
 #pragma mark - Init
 
@@ -39,7 +43,7 @@
     CGContextTranslateCTM(contextRef, 0, self.bounds.size.height);
     CGContextScaleCTM(contextRef, 1.0, -1.0);
     
-    const CGPoint startWordDrawingPoint = CGPointMake(0.0, (self.drawTextBox.frame.origin.y + self.drawTextBox.frame.size.height - self.drawTextBox.frame.origin.y) * 0.75);
+    const CGPoint startWordDrawingPoint = CGPointMake(0.0, (self.drawTextBox.frame.origin.y + self.drawTextBox.frame.size.height - self.drawTextBox.frame.origin.y) * 0.5);
     CGPoint startPointDraw = startWordDrawingPoint;
     CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat dashPattern[] = {2.0, 10.0};
@@ -55,10 +59,9 @@
     
     CGContextRestoreGState(contextRef);
     
-    
     NSString *wordText = [self.dataSource actualTextValueForWordRepresentationView:self];
     NSString *familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
-    CGFloat fontSize = 130;
+    CGFloat fontSize = 100;
 
     CTLineRef line = nil;
     CGRect lineImageBounds;

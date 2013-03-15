@@ -15,9 +15,11 @@
 
 @interface WDSelectedWordEditMenuViewController : UIViewController<WDCollectionOptionsWordMenuViewDelegate>
 
+@property (nonatomic, weak)   WDWord                             *selectedWord;
 @property (nonatomic, strong) id<WDSelectedWordEditMenuDelegate> delegate;
+@property (nonatomic)         WDColorScheme                      backgroundColorScheme;
 
-- (id)initWithSelectedWord:(WDWord *)word andBackgroundColorScheme:(WDColorScheme)scheme;
+- (id)   initWithSelectedWord:(WDWord *)word;
 
 - (void) showTodayWordMenuWithClearButtonEnabled:(BOOL)enabled;
 - (void) showPreviousWordMenu;

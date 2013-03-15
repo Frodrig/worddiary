@@ -32,8 +32,6 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 @property (nonatomic, strong) WDConfirmWordActionMenuView     *confirmWordActionMenuView;
 @property (nonatomic, strong) WDCollectionOptionsWordMenuView *fontsMenuView;
 @property (nonatomic, strong) WDCollectionOptionsWordMenuView *backgroundColorMenuView;
-@property (nonatomic, weak)   WDWord                          *selectedWord;
-@property (nonatomic)         WDColorScheme                   backgroundColorScheme;
 
 - (void)      showMenuView:(UIView *)menuView;
 - (void)      showDeletePreviousWordConfirmationMenu;
@@ -64,16 +62,16 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 @synthesize backgroundColorScheme         = backgroundColorScheme_;
 @synthesize backgroundColorMenuView       = backgroundColorMenuView_;
 
+#pragma mark - 
+
 #pragma mark - Init
 
-- (id)initWithSelectedWord:(WDWord *)word andBackgroundColorScheme:(WDColorScheme)scheme
+- (id)initWithSelectedWord:(WDWord *)word
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        // Custom initialization
         selectedWord_ = word;
-        backgroundColorScheme_ = scheme;
-
+        
         todayWorldMenuView_ = (WDTodayWordMenuView *)[WDTodayWordMenuView createFromNib];
         previousDayWordMenuView_ = (WDPreviousWordMenuView *)[WDPreviousWordMenuView createFromNib];
         confirmWordActionMenuView_ = (WDConfirmWordActionMenuView *)[WDConfirmWordActionMenuView createFromNib];

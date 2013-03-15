@@ -219,6 +219,32 @@
     return retIndex;
 }
 
+- (WDWord *)findNextWordOf:(WDWord *)word
+{
+    NSAssert(self.words.count > 0, @"Deberia de haber al menos una palabra");
+    
+    WDWord *retWord = nil;
+    NSUInteger index = [self.words indexOfObject:word];
+    if (index != NSNotFound && index != self.words.count - 1) {
+        retWord = [self.words objectAtIndex:index + 1];
+    }
+    
+    return retWord;
+}
+
+- (WDWord *)findPreviousWordOf:(WDWord *)word
+{
+    NSAssert(self.words.count > 0, @"Deberia de haber al menos una palabra");
+    
+    WDWord *retWord = nil;
+    NSUInteger index = [self.words indexOfObject:word];
+    if (index != NSNotFound && index != 0) {
+        retWord = [self.words objectAtIndex:index - 1];
+    }
+    
+    return retWord;
+}
+
 #pragma mark - Auxiliary
 
 - (void) addObserverToWord:(WDWord *)word

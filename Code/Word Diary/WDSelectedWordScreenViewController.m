@@ -9,7 +9,6 @@
 #import "WDSelectedWordScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "WDSelectedWordEditMenuViewController.h"
-#import "WDTopInfoNavigationWordMenuView.h"
 #import "WDWord.h"
 #import "WDFont.h"
 #import "WDWordDiary.h"
@@ -23,10 +22,11 @@
 
 @property (nonatomic, weak)          WDWord                               *selectedWord;
 @property (nonatomic, strong)        WDSelectedWordEditMenuViewController *editMenuViewController;
-@property (nonatomic, strong)        WDTopInfoNavigationWordMenuView      *topInfoNavigationWordMenuView;
-//@property (weak, nonatomic) IBOutlet UITextField                          *selectedWordTextField;
+@property (weak, nonatomic) IBOutlet UILabel                              *yearDateTopInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel                              *dayMonthDateTopInfoLabel;
 @property (nonatomic, strong)        UITapGestureRecognizer               *tapGestureRecognizer;
-@property (nonatomic, strong)        UISwipeGestureRecognizer             *swipeGestureRecognizer;
+@property (nonatomic, strong)        UISwipeGestureRecognizer             *leftSwipeGesture;
+@property (nonatomic, strong)        UISwipeGestureRecognizer             *rightSwipeGesture;
 @property (nonatomic)                CGPoint                              originalCenterPositionOfSelectedWord;
 @property (nonatomic, strong)        NSTimer                              *animateStartEndPointOfGradientTimer;
 @property (nonatomic, weak)          NSNumber                             *idBackground;
@@ -42,8 +42,6 @@
 - (void)       animateStartEndPointOfGradient:(NSTimer *)timer;
 - (CGPoint)    incGradientLayerPoint:(CGPoint)point;
 
-- (void)       backNavigationInfoButtonPressed:(UIButton *)sender;
-
 - (NSString *) stringTopNavigationInfoMenuDateOfSelectedWord;
 
 - (void)       configureColorScheme:(WDColorScheme)scheme;
@@ -53,6 +51,10 @@
 - (void)       wordDiaryRepresentationAnimateUpWithDuration:(CGFloat)duration;
 - (void)       wordDiaryRepresentationAnimateDownWithDuration:(CGFloat)duration;
 
+- (void)       setDateInfo;
+
+- (void)       configureViewForSelectedWord;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -61,10 +63,11 @@
 
 @synthesize selectedWord                         = selectedWord_;
 @synthesize editMenuViewController               = editMenuViewController_;
-//@synthesize selectedWordTextField                = selectedWordTextField_;
+@synthesize yearDateTopInfoLabel                 = yearDateTopInfoLabel_;
+@synthesize dayMonthDateTopInfoLabel             = dayMonthDateTopInfoLabel_;
 @synthesize tapGestureRecognizer                 = tapGestureRecognizer_;
-@synthesize swipeGestureRecognizer               = swipeGestureRecognizer_;
-@synthesize topInfoNavigationWordMenuView        = topInfoNavigationWordMenuView_;
+@synthesize leftSwipeGesture                     = leftSwipeGesture_;
+@synthesize rightSwipeGesture                    = rightSwipeGesture_;
 @synthesize animateStartEndPointOfGradientTimer  = animateStartEndPointOfGradientTimer_;
 @synthesize idBackground                         = idBackground_;
 @synthesize delegate                             = delegate_;
@@ -81,7 +84,6 @@
         selectedWord_ = selectedWord;
         
         // Views fuera del xib propio
-        topInfoNavigationWordMenuView_ = (WDTopInfoNavigationWordMenuView *)[WDTopInfoNavigationWordMenuView createFromNib];
         wordDiaryRepresentation_ = (WDWordRepresentationView *)[WDWordRepresentationView createFromNib];
 
         // Gesture Recognizer
@@ -91,11 +93,17 @@
         tapGestureRecognizer_.delegate = self;
         [self.view addGestureRecognizer:tapGestureRecognizer_];
     
-        swipeGestureRecognizer_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
-        swipeGestureRecognizer_.direction = UISwipeGestureRecognizerDirectionRight;
-        swipeGestureRecognizer_.numberOfTouchesRequired = 1;
-        swipeGestureRecognizer_.delegate = self;
-        [self.view addGestureRecognizer:swipeGestureRecognizer_];
+        rightSwipeGesture_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
+        rightSwipeGesture_.direction = UISwipeGestureRecognizerDirectionRight;
+        rightSwipeGesture_.numberOfTouchesRequired = 1;
+        rightSwipeGesture_.delegate = self;
+        [self.view addGestureRecognizer:rightSwipeGesture_];
+        
+        leftSwipeGesture_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
+        leftSwipeGesture_.direction = UISwipeGestureRecognizerDirectionLeft;
+        leftSwipeGesture_.numberOfTouchesRequired = 1;
+        leftSwipeGesture_.delegate = self;
+        [self.view addGestureRecognizer:leftSwipeGesture_];
         
         // Notificaciones keyboard
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
@@ -114,39 +122,15 @@
 {
     [super viewDidLoad];
     
-    // Gradiente
-    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];
-    WDBackground *backgroundObj = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
-    
-    // Otros controllers
-    self.editMenuViewController = [[WDSelectedWordEditMenuViewController alloc] initWithSelectedWord:self.selectedWord andBackgroundColorScheme:backgroundObj.uiOverlayColorScheme];
-    
-    //  Constantes
-    const CGFloat menusMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
-
-    // Menu de navegacion en el top
-    // NOTA: Sera el unico menu que SIEMPRE estara visible
-    self.topInfoNavigationWordMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
-    self.topInfoNavigationWordMenuView.infoNavigationLabel.text = [self stringTopNavigationInfoMenuDateOfSelectedWord];
-    [self.topInfoNavigationWordMenuView.backNavigationButton addTarget:self action:@selector(backNavigationInfoButtonPressed:) forControlEvents:UIControlEventTouchDown];
-    self.topInfoNavigationWordMenuView.frame = CGRectMake(menusMargin, menusMargin, self.topInfoNavigationWordMenuView.bounds.size.width, self.topInfoNavigationWordMenuView.bounds.size.height);
-    [self configureColorScheme:backgroundObj.uiOverlayColorScheme];
-    [self.view addSubview:self.topInfoNavigationWordMenuView];
-    self.topInfoNavigationWordMenuView.hidden = YES;
-
     // Palabra
-    self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]];
-    self.wordDiaryRepresentation.center = CGPointMake(self.view.bounds.size.width / 2.0, 140.0 + self.wordDiaryRepresentation.bounds.size.height / 2.0);
+    self.wordDiaryRepresentation.center = CGPointMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.50);
     self.wordDiaryRepresentation.delegate = self;
     self.wordDiaryRepresentation.dataSource = self;
     [self.view addSubview:self.wordDiaryRepresentation];
     
-    /*
-    self.selectedWordTextField.text = self.selectedWord.word;
-    self.selectedWordTextField.font = [UIFont fontWithName:self.selectedWord.font.family size:[WDUtils sizeOfWordForUI:UI_SELECTEDWORDSCREEN_WORD andFont:self.selectedWord.font]];
-    */
-    
     // Menu de edicion
+    self.editMenuViewController = [[WDSelectedWordEditMenuViewController alloc] initWithSelectedWord:self.selectedWord];
+    const CGFloat menusMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
     [self.view addSubview:self.editMenuViewController.view];
     self.editMenuViewController.view.frame = CGRectMake(menusMargin,
                                                         self.view.frame.origin.y + self.view.frame.size.height - self.editMenuViewController.view.frame.size.height - menusMargin,
@@ -156,56 +140,10 @@
     self.editMenuViewController.delegate = self;
     
     self.view.contentMode = UIViewContentModeCenter;
-    //self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:BC_BACKGROUNDIMAGE_TESTCREEN forView:self.view];
+    
 
-  
-    /*
-    CAGradientLayer *gradient = [CAGradientLayer layer];
-    gradient.frame = self.view.frame;
-    UIColor *colorOne = [UIColor colorWithRed:1.0 green:1.0 blue:0.05 alpha:1.0];
-    UIColor *colorTwo = [UIColor colorWithRed:0.0 green:102.0/255.0 blue:1.0 alpha:1.0];
-    gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
-    gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
-    gradient.startPoint = CGPointMake(0.5, 0.0);
-    gradient.endPoint = CGPointMake(0.0, 1.0);
-    [self.view.layer insertSublayer:gradient atIndex:0];
-    */
     
-    /*+++
-    CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
-    NSArray *animateGradientColors = [NSArray arrayWithObjects:(id)[UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.0].CGColor, (id)[UIColor colorWithRed:0.3 green:0.5 blue:0.2 alpha:1.0].CGColor, nil];
-    gradientAnimation.fromValue = gradient.colors;
-    gradientAnimation.toValue = animateGradientColors;
-    gradientAnimation.duration = 10.0;
-    gradientAnimation.removedOnCompletion = NO;
-    gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    [gradient addAnimation:gradientAnimation forKey:@"animateGradient"];
-    gradient.colors = animateGradientColors;
-    */
-    
-    /*
-    CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
-    gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
-    gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
-    gradientAnimationStartPoint.duration = 30.0;
-    gradientAnimationStartPoint.removedOnCompletion = NO;
-    gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    gradientAnimationStartPoint.repeatCount = HUGE_VALF;
-    gradientAnimationStartPoint.autoreverses = YES;
-    [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
-//    gradient.startPoint = CGPointMake(1.0, 0.0);
-    */
-    
-    /*++++
-    CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
-    gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
-    gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)];
-    gradientAnimationEndPoint.duration = 20.0;
-    gradientAnimationEndPoint.removedOnCompletion = NO;
-    gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
-    gradient.endPoint = CGPointMake(0.0, 0.0);
-    */
+    [self configureViewForSelectedWord];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -235,6 +173,89 @@
 
 #pragma mark - Auxiliary
 
+- (void)configureViewForSelectedWord
+{
+    
+    // Gradiente
+    [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
+    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];    
+    self.editMenuViewController.selectedWord = self.selectedWord;
+    WDBackground *background = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
+    self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
+    
+    // Fecha
+    [self setDateInfo];
+    
+    // Palabra
+    self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]];
+    [self.wordDiaryRepresentation setNeedsDisplay];
+    
+    
+    /*
+     CAGradientLayer *gradient = [CAGradientLayer layer];
+     gradient.frame = self.view.frame;
+     UIColor *colorOne = [UIColor colorWithRed:1.0 green:1.0 blue:0.05 alpha:1.0];
+     UIColor *colorTwo = [UIColor colorWithRed:0.0 green:102.0/255.0 blue:1.0 alpha:1.0];
+     gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
+     gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
+     gradient.startPoint = CGPointMake(0.5, 0.0);
+     gradient.endPoint = CGPointMake(0.0, 1.0);
+     [self.view.layer insertSublayer:gradient atIndex:0];
+     */
+    
+    /*+++
+     CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
+     NSArray *animateGradientColors = [NSArray arrayWithObjects:(id)[UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.0].CGColor, (id)[UIColor colorWithRed:0.3 green:0.5 blue:0.2 alpha:1.0].CGColor, nil];
+     gradientAnimation.fromValue = gradient.colors;
+     gradientAnimation.toValue = animateGradientColors;
+     gradientAnimation.duration = 10.0;
+     gradientAnimation.removedOnCompletion = NO;
+     gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+     [gradient addAnimation:gradientAnimation forKey:@"animateGradient"];
+     gradient.colors = animateGradientColors;
+     */
+    
+    /*
+     CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
+     gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
+     gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
+     gradientAnimationStartPoint.duration = 30.0;
+     gradientAnimationStartPoint.removedOnCompletion = NO;
+     gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+     gradientAnimationStartPoint.repeatCount = HUGE_VALF;
+     gradientAnimationStartPoint.autoreverses = YES;
+     [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
+     //    gradient.startPoint = CGPointMake(1.0, 0.0);
+     */
+    
+    /*++++
+     CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
+     gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
+     gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)];
+     gradientAnimationEndPoint.duration = 20.0;
+     gradientAnimationEndPoint.removedOnCompletion = NO;
+     gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+     [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
+     gradient.endPoint = CGPointMake(0.0, 0.0);
+     */
+
+}
+
+
+- (void)setDateInfo
+{
+    self.yearDateTopInfoLabel.text = [NSNumber numberWithUnsignedInteger:self.selectedWord.dateComponents.year].stringValue;
+    if ([self.selectedWord isTodayWord]) {
+        self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@", NSLocalizedString(@"TAG_TODAYSECTION", @"")];
+    } else {
+        if ([WDUtils englishIsTheCurrentAppLanguage]) {
+            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@, %d", [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month], self.selectedWord.dateComponents.day];
+        } else {
+            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%d, %@", self.selectedWord.dateComponents.day, [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month]];
+        }
+    }
+}
+
 - (void)updateColorScheme:(WDColorScheme)scheme
 {
     [self configureColorScheme:scheme];
@@ -243,11 +264,6 @@
 
 - (void)configureColorScheme:(WDColorScheme)scheme
 {
-    self.topInfoNavigationWordMenuView.backgroundColor = [WDUtils schemeBackgroundColor:scheme];
-    [self.topInfoNavigationWordMenuView.backNavigationButton setImage:scheme == CS_LIGHT ? [UIImage imageNamed:@"39-back-light"] : [UIImage imageNamed:@"39-back-dark"] forState:UIControlStateNormal];
-    [self.topInfoNavigationWordMenuView.backNavigationButton setImage:scheme == CS_DARK ? [UIImage imageNamed:@"39-back-light"] : [UIImage imageNamed:@"39-back-dark"] forState:UIControlStateHighlighted];
-    self.topInfoNavigationWordMenuView.infoNavigationLabel.text = [self stringTopNavigationInfoMenuDateOfSelectedWord];
-    self.topInfoNavigationWordMenuView.infoNavigationLabel.textColor = [WDUtils schemeTextColor:scheme];
 }
 
 - (NSString *)stringTopNavigationInfoMenuDateOfSelectedWord
@@ -309,7 +325,7 @@
 {
     CGRect newArea = CGRectMake(0.0, 0.0, self.view.frame.size.width,  self.editMenuViewController.view.frame.origin.y);
     [UIView animateWithDuration:duration animations:^{
-        self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, newArea.origin.y + newArea.size.height / 2);
+        self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / 2) * 0.90);
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.25;
     }];
 }
@@ -327,9 +343,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     BOOL shouldReceive = YES;
-    if (touch.view == self.topInfoNavigationWordMenuView) {
-        shouldReceive = self.topInfoNavigationWordMenuView.hidden;
-    } else if (touch.view == self.editMenuViewController.view) {
+    if (touch.view == self.editMenuViewController.view) {
         shouldReceive = self.editMenuViewController.view.hidden;
     }
     
@@ -342,7 +356,7 @@
 {
     if (!self.keyboardActive) {
         self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
-        self.topInfoNavigationWordMenuView.hidden = self.editMenuViewController.view.hidden;
+        //self.topInfoNavigationWordMenuView.hidden = self.editMenuViewController.view.hidden;
         if (!self.editMenuViewController.view.hidden) {
             if ([self.selectedWord isTodayWord]) {
                 [self.editMenuViewController showTodayWordMenuWithClearButtonEnabled:![self.selectedWord.word isEqualToString:@""]];
@@ -361,7 +375,19 @@
 
 - (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
 {
-    //[self dismissViewControllerAnimated:YES completion:nil];
+    if (self.editMenuViewController.view.hidden && !self.keyboardActive) {
+        WDWord *newSelectedWord = nil;
+        if (gestureRecognizer == self.leftSwipeGesture) {
+            newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
+        } else if (gestureRecognizer == self.rightSwipeGesture) {
+            newSelectedWord = [[WDWordDiary sharedWordDiary] findNextWordOf:self.selectedWord];
+        }
+        
+        if (newSelectedWord) {
+            self.selectedWord = newSelectedWord;
+            [self configureViewForSelectedWord];
+        }
+    }
 }
 
 #pragma mark KeyboardNotification
@@ -369,7 +395,6 @@
 - (void)keyboardWillShowNotification:(NSNotification *)notification
 {
     self.keyboardActive = YES;
-    //self.wordDiaryRepresentation.wordTextField.textAlignment = NSTextAlignmentLeft;
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
@@ -385,47 +410,34 @@
     }];
 }
 
-#pragma mark - TopInfoNavigationWordMenu Control Events
-- (void)backNavigationInfoButtonPressed:(UIButton *)sender
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 #pragma mark - WDSelectedWordEditMenuDelegate
 
 - (void)writeSelectedWordOption
-{   /*
-    self.wordDiaryRepresentation.wordTextField.userInteractionEnabled = YES;
-    [self.wordDiaryRepresentation.wordTextField becomeFirstResponder];
-    */
+{
     [self.wordDiaryRepresentation becomeFirstResponder];
     self.editMenuViewController.view.hidden = YES;
-    self.topInfoNavigationWordMenuView.hidden = YES;
 }
 
 - (void)clearTodaySelectedWordOption
 {
     self.selectedWord.word = @"";
     self.editMenuViewController.view.hidden = YES;
-    self.topInfoNavigationWordMenuView.hidden = YES;
     
-    [self.delegate selectedWordChanged];
+    //[self.delegate selectedWordChanged];
 }
 
 - (void)cancelDeleteWordFromConfirmationMenu
 {
     self.editMenuViewController.view.hidden = YES;
-    self.topInfoNavigationWordMenuView.hidden = YES;
 }
 
 - (void)acceptDeleteWordFromConfirmationMenu
 {
-    [self.delegate selectedWordWillBeRemoved];
+    //[self.delegate selectedWordWillBeRemoved];
     
     self.editMenuViewController.view.hidden = YES;
-    self.topInfoNavigationWordMenuView.hidden = YES;
    
-    [self dismissViewControllerAnimated:YES completion:nil];
+   // [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)changeToFontWithIndex:(NSUInteger)indexFont
