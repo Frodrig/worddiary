@@ -13,6 +13,7 @@
 @interface WDWordRepresentationView : UIView<UIKeyInput>
 
 @property (weak, nonatomic) IBOutlet UILabel                        *dayDiaryLabel;
+@property (weak, nonatomic) IBOutlet UILabel                        *dayOfTheWeekLabel;
 @property (weak, nonatomic) id<WDWordRepresentationViewDelegate>    delegate;
 @property (weak, nonatomic) id<WDWordRepresentationViewDataSource>  dataSource;
 

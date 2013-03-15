@@ -43,4 +43,8 @@ typedef enum {
 + (WDBackgroundCategory) convertPickerColorIndexToBackgroundCategory:(NSUInteger)index;
 + (NSUInteger)           convertGradientBackgroundCategoryToPickerColorIndex:(WDBackgroundCategory)backgroundCategory;
 
++ (NSString *)           stringFromWeekday:(NSUInteger)weekDay;
+
++ (NSString *)           convertNumberToStringWithTwoDigitsMin:(NSNumber *)number;
+
 @end

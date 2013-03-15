@@ -36,6 +36,7 @@ static CGFloat CURSOR_OPACITY = 0.1;
 //@synthesize timeFrom            = timeFrom_;
 //@synthesize acumulateTime       = acumulateTime_;
 @synthesize actualColorOfCursor = actualColorOfCursor_;
+@synthesize dayOfTheWeekLabel   = dayOfTheWeekLabel_;
 
 #pragma mark - Properties
 

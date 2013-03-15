@@ -244,6 +244,45 @@
     return colorIndex;
 }
 
++ (NSString *)stringFromWeekday:(NSUInteger)weekDay
+{
+    NSString *retString = nil;
+    switch (weekDay) {
+        case 1:
+            retString = NSLocalizedString(@"TAG_WEEKDAY_SUNDAY", @"");
+        break;
+        case 2:
+            retString = NSLocalizedString(@"TAG_WEEKDAY_MONDAY", @"");
+        break;
+        case 3:
+            retString = NSLocalizedString(@"TAG_WEEKDAY_TUESDAY", @"");
+            break;
+        case 4:
+            retString = NSLocalizedString(@"TAG_WEEKDAY_WEDNESDAY", @"");
+            break;
+        case 5:
+            retString = NSLocalizedString(@"TAG_WEEKDAY_THURSDAY", @"");
+            break;
+        case 6:
+            retString = NSLocalizedString(@"TAG_WEEKDAY_FRIDAY", @"");
+            break;
+        case 7:
+            retString = NSLocalizedString(@"TAG_WEEKDAY_SATURDAY", @"");
+            break;
+        default:
+            break;
+    }
+    
+    return retString;
+}
+
++ (NSString *)convertNumberToStringWithTwoDigitsMin:(NSNumber *)number
+{
+    NSString *retNumber = number.unsignedIntegerValue < 10 ? [@"0" stringByAppendingString:number.stringValue] : number.stringValue;
+    return retNumber;
+}
+
+
 
 
 

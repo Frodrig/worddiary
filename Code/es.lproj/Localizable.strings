@@ -42,7 +42,15 @@
 "TAG_CONFIRMACTIONMENU_YES"         = "Borrar";
 
 "TAG_PLACEHOLDERTEXT_TODAYWORD"     = "Palabra...";
-"TAG_DIARYDAY_LABEL"                = "Día %d";
+"TAG_DIARYDAY_LABEL"                = "Día %@";
 
 "TAG_PLACEHOLDER_WORD"              = "|";
 "TAG_CURSOR_INPUT"                  = "|";
+
+"TAG_WEEKDAY_SUNDAY"                = "Domingo";
+"TAG_WEEKDAY_MONDAY"                = "Lunes";
+"TAG_WEEKDAY_TUESDAY"               = "Martes";
+"TAG_WEEKDAY_WEDNESDAY"             = "Miércoles";
+"TAG_WEEKDAY_THURSDAY"              = "Jueves";
+"TAG_WEEKDAY_FRIDAY"                = "Viernes";
+"TAG_WEEKDAY_SATURDAY"              = "Sábado";

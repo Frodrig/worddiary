@@ -193,7 +193,8 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
     [self setDateInfo];
     
     // Palabra
-    self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]];
+    NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:[[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]]];
+    self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
     [self.wordDiaryRepresentation setNeedsDisplay];
     
     
@@ -256,15 +257,22 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 - (void)setDateInfo
 {
     self.yearDateTopInfoLabel.text = [NSNumber numberWithUnsignedInteger:self.selectedWord.dateComponents.year].stringValue;
+    
     if ([self.selectedWord isTodayWord]) {
         self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@", NSLocalizedString(@"TAG_TODAYSECTION", @"")];
     } else {
+        NSString *dayString = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:self.selectedWord.dateComponents.day]];
         if ([WDUtils englishIsTheCurrentAppLanguage]) {
-            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@, %d", [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month], self.selectedWord.dateComponents.day];
+            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@, %@", [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month], dayString];
         } else {
-            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%d, %@", self.selectedWord.dateComponents.day, [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month]];
+            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month]];
         }
     }
+    
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDate *dateFromWordTimeInterval = [NSDate dateWithTimeIntervalSince1970:self.selectedWord.timeInterval];
+    NSDateComponents *dateComponents = [calendar components:NSWeekdayCalendarUnit fromDate:dateFromWordTimeInterval];
+    self.wordDiaryRepresentation.dayOfTheWeekLabel.text = [[WDUtils stringFromWeekday:dateComponents.weekday] lowercaseStringWithLocale:[NSLocale currentLocale]];
 }
 
 - (void)updateColorScheme:(WDColorScheme)scheme
@@ -338,6 +346,9 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
     [UIView animateWithDuration:duration animations:^{
         self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / 2) * 0.90);
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.25;
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.25;
+        self.yearDateTopInfoLabel.alpha = 0.25;
+        self.dayMonthDateTopInfoLabel.alpha = 0.25;
     }];
 }
 
@@ -346,6 +357,9 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
     [UIView animateWithDuration:duration animations:^{
         self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+        self.yearDateTopInfoLabel.alpha = 1.0;
+        self.dayMonthDateTopInfoLabel.alpha = 1.0;
     }];
 }
 
@@ -444,11 +458,14 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 
 - (void)acceptDeleteWordFromConfirmationMenu
 {
-    //[self.delegate selectedWordWillBeRemoved];
-    
     self.editMenuViewController.view.hidden = YES;
-   
-   // [self dismissViewControllerAnimated:YES completion:nil];
+
+    WDWord *newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
+    if (newSelectedWord) {
+        [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
+        self.selectedWord = newSelectedWord;
+        [self configureViewForSelectedWord];
+    }
 }
 
 - (void)changeToFontWithIndex:(NSUInteger)indexFont
