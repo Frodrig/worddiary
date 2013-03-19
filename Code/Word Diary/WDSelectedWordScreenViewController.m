@@ -386,16 +386,19 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
             useAsTapGesture = !CGRectContainsPoint(self.editMenuViewController.view.frame, hitPoint);
         }
         if (useAsTapGesture) {
-            self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
-            if (!self.editMenuViewController.view.hidden) {
+            BOOL hideMenu = !self.editMenuViewController.view.hidden;
+            //self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
+            //if (!self.editMenuViewController.view.hidden) {
+            if (!hideMenu) {
                 if ([self.selectedWord isTodayWord]) {
                     [self.editMenuViewController showTodayWordMenu];
                 } else {
                     [self.editMenuViewController showPreviousWordMenu];
                 }
-                [self wordDiaryRepresentationAnimateUpWithDuration:0.25];
+                [self wordDiaryRepresentationAnimateUpWithDuration:0.5];
             } else {
-                [self wordDiaryRepresentationAnimateDownWithDuration:0.25];
+                [self wordDiaryRepresentationAnimateDownWithDuration:0.5];
+                [self.editMenuViewController hideMenu];
             }
         }
     }

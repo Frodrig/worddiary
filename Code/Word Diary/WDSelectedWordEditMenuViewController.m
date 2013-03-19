@@ -33,6 +33,8 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 @property (nonatomic, strong) WDCollectionOptionsWordMenuView *fontsMenuView;
 @property (nonatomic, strong) WDCollectionOptionsWordMenuView *backgroundColorMenuView;
 
+- (UIView *)  findActualMenuViewAdded;
+
 - (void)      showMenuView:(UIView *)menuView;
 - (void)      showDeletePreviousWordConfirmationMenu;
 - (void)      showFontWordMenu;
@@ -179,37 +181,65 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     [button setTitleColor:[WDUtils schemeTextColor:scheme] forState:UIControlStateHighlighted];
 }
 
-- (void)showMenuView:(UIView *)menuView
+- (UIView *)findActualMenuViewAdded
 {
-    UIView *menuToRemove = nil;
+    UIView *menu = nil;
     NSSet *menus = [NSSet setWithObjects:self.todayWorldMenuView, self.previousDayWordMenuView, self.fontsMenuView, self.backgroundColorMenuView, self.confirmWordActionMenuView, nil];
     for (UIView *viewIt in menus) {
         if (viewIt.superview == self.view) {
-            if (viewIt != menuView) {
-                menuToRemove = viewIt;
-            }
+            menu = viewIt;
             break;
         }
     }
     
-    if (menuToRemove == nil && (menuView == self.todayWorldMenuView || menuView == self.previousDayWordMenuView)) {
-        [menuToRemove removeFromSuperview];
-        [self.view addSubview:menuView];
-    } else {
-        BOOL menuToShowIsNext = menuView != self.todayWorldMenuView && menuView != self.previousDayWordMenuView;
-        [self.view addSubview:menuView];
-        CGPoint originalCenter = menuView.center;
-        // TODO: Saber si menuView es un menu a la izquierda o derecha de que habia antes. Por ahora suponemos que esta a la derecha
-        // Se podrían usar tags para ordenarlos.
-        menuView.center = CGPointMake(menuToShowIsNext ? 3.0 * menuView.center.x : -1 * menuView.center.x, originalCenter.y);
+    return menu;
+}
+
+- (void)hideMenu
+{
+    [self showMenuView:nil];
+}
+
+- (void)showMenuView:(UIView *)menuView
+{
+    UIView *menuToRemove = [self findActualMenuViewAdded];
+    if (menuToRemove == menuView) {
+        menuToRemove = nil;
+    }
     
-        [UIView animateWithDuration:0.75 animations:^{
-            menuToRemove.alpha = 0.0;
-            menuView.center = originalCenter;
+    if (nil == menuView) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.view.alpha = 0.0;
         } completion:^(BOOL finished) {
+            self.view.hidden = YES;
+            self.view.alpha = 1.0;
             [menuToRemove removeFromSuperview];
-            menuToRemove.alpha = 1.0;
         }];
+    } else {
+        if (menuToRemove == nil && (menuView == self.todayWorldMenuView || menuView == self.previousDayWordMenuView)) {
+            [menuToRemove removeFromSuperview];
+            self.view.alpha = 0.0;
+            self.view.hidden = NO;
+            [self.view addSubview:menuView];
+            [UIView animateWithDuration:0.5 animations:^{
+                self.view.alpha = 1.0;
+            }];
+        } else {
+            BOOL menuToShowIsNext = menuView != self.todayWorldMenuView && menuView != self.previousDayWordMenuView;
+            [self.view addSubview:menuView];
+            CGPoint originalCenter = menuView.center;
+            // TODO: Saber si menuView es un menu a la izquierda o derecha de que habia antes. Por ahora suponemos que esta a la derecha
+            // Se podrían usar tags para ordenarlos.
+            menuView.center = CGPointMake(menuToShowIsNext ? 3.0 * menuView.center.x : -1 * menuView.center.x, originalCenter.y);
+            
+            [UIView animateWithDuration:0.75 animations:^{
+                menuToRemove.alpha = 0.0;
+                menuView.center = originalCenter;
+            } completion:^(BOOL finished) {
+                [menuToRemove removeFromSuperview];
+                menuToRemove.alpha = 1.0;
+            }];
+        }
     }
 }
 
@@ -311,10 +341,11 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (void)collectionOptionsMenuBackOptionSelected:(WDCollectionOptionsWordMenuView *)menu
 {
+    // Nota: Se retorna llamando al metodo de bajo nivel directamente con el fin de que haya animacion
     if (self.fontsMenuView == menu) {
-        [self showTodayWordMenu];
+        [self showMenuView:self.todayWorldMenuView];
     } else if (self.backgroundColorMenuView == menu) {
-        [self showTodayWordMenu];
+        [self showMenuView:self.todayWorldMenuView];
     }
 }
 

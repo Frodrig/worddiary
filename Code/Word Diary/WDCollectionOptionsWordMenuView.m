@@ -81,7 +81,7 @@
     // Backbutton
     self.backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.backButton setImage:[UIImage imageNamed:@"39-back-dark"] forState:UIControlStateNormal];
-    self.backButton.frame = CGRectMake(0.0, (self.bounds.size.height - 44)/ 2, 44.0, 44.0);
+    self.backButton.frame = CGRectMake(0.0, 0.0, 44.0, self.bounds.size.height);
     [self.backButton addTarget:self action:@selector(backButtonSelected:) forControlEvents:UIControlEventTouchDown];
     [self addSubview:self.backButton];
     
@@ -97,7 +97,7 @@
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.directionalLockEnabled = NO;
-    //[scrollView scrollRectToVisible:CGRectMake(buttonOptionsWidth * selectedOptionIndex, 10.0, scrollView.bounds.size.width, scrollView.bounds.size.height - 20.0) animated:NO];
+    [scrollView scrollRectToVisible:CGRectMake(buttonOptionsWidth * selectedOptionIndex, 10.0, scrollView.bounds.size.width, scrollView.bounds.size.height - 20.0) animated:NO];
     self.optionsScrollView = scrollView;
     [self addSubview:scrollView];
     
