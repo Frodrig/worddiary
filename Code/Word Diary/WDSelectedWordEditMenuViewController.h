@@ -21,7 +21,7 @@
 
 - (id)   initWithSelectedWord:(WDWord *)word;
 
-- (void) showTodayWordMenuWithClearButtonEnabled:(BOOL)enabled;
+- (void) showTodayWordMenu;
 - (void) showPreviousWordMenu;
 
 - (void) updateColorScheme:(WDColorScheme)newScheme;

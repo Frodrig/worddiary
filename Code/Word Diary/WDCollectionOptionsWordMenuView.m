@@ -13,6 +13,7 @@
 @property (nonatomic, strong)  NSArray      *titles;
 @property (nonatomic, strong)  NSArray      *titlesFonts;
 @property (nonatomic, strong)  NSArray      *images;
+@property (nonatomic, strong)  UIButton     *backButton;
 @property (nonatomic, weak)    UIScrollView *optionsScrollView;
 @property (nonatomic, weak)    UIButton     *actualSelectedOption;
 @property (nonatomic,readonly) NSUInteger   numOptions;
@@ -37,6 +38,7 @@
 @synthesize actualSelectedOption = actualSelectedOption_;
 @synthesize buttonOptions        = buttonOptions_;
 @synthesize numOptions           = numOptions_;
+@synthesize backButton           = backButton_;
 
 #pragma mark - Init
 
@@ -76,17 +78,26 @@
 
 - (void)createCollectionOfOptionsWithOptionSelectedAtIndex:(NSUInteger)selectedOptionIndex andNumberOfVisibleOptions:(CGFloat)numVisibleOptions;
 {
-    // Scroll view
-    const NSUInteger buttonOptionsWidth = self.bounds.size.width / numVisibleOptions;
+    // Backbutton
+    self.backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.backButton setImage:[UIImage imageNamed:@"39-back-dark"] forState:UIControlStateNormal];
+    self.backButton.frame = CGRectMake(0.0, (self.bounds.size.height - 44)/ 2, 44.0, 44.0);
+    [self.backButton addTarget:self action:@selector(backButtonSelected:) forControlEvents:UIControlEventTouchDown];
+    [self addSubview:self.backButton];
     
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height)];
+    // Scroll view
+    const CGPoint scrollViewStartPosition = CGPointMake(self.backButton.frame.origin.x + self.backButton.bounds.size.width, 0.0);
+    const CGFloat scrollViewWidth = self.bounds.size.width - self.backButton.bounds.size.width;
+    const NSUInteger buttonOptionsWidth = scrollViewWidth / numVisibleOptions;
+    
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(scrollViewStartPosition.x, scrollViewStartPosition.y, scrollViewWidth, self.bounds.size.height)];
     scrollView.contentSize = CGSizeMake(buttonOptionsWidth * self.numOptions, self.bounds.size.height);
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    scrollView.contentInset = UIEdgeInsetsMake(0, 10.0, 0, 10.0);
+    scrollView.contentInset = UIEdgeInsetsMake(0, 5.0, 0, 5.0);
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.directionalLockEnabled = NO;
-    [scrollView scrollRectToVisible:CGRectMake(buttonOptionsWidth * selectedOptionIndex, 10.0, scrollView.bounds.size.width, scrollView.bounds.size.height - 20.0) animated:NO];
+    //[scrollView scrollRectToVisible:CGRectMake(buttonOptionsWidth * selectedOptionIndex, 10.0, scrollView.bounds.size.width, scrollView.bounds.size.height - 20.0) animated:NO];
     self.optionsScrollView = scrollView;
     [self addSubview:scrollView];
     
@@ -99,7 +110,6 @@
         
         UIButton *option = [UIButton buttonWithType:UIButtonTypeCustom];
         option.frame = CGRectMake(optionIt * buttonOptionsWidth, 10.0, buttonOptionsWidth, scrollView.bounds.size.height - 20.0);
-        option.bounds = CGRectMake(0, 0, buttonOptionsWidth, self.bounds.size.height - 20.0);
         if (title) {
             [option setTitle:title forState:UIControlStateNormal];
             option.titleLabel.font = [UIFont fontWithName:titleFont size:98.0];
@@ -123,6 +133,8 @@
         [optionsContainer addObject:option];
     }
     
+    [scrollView scrollRectToVisible:CGRectNull animated:NO];
+    
     buttonOptions_ = [NSArray arrayWithArray:optionsContainer];
 }
 
@@ -144,6 +156,11 @@
 
         [self.delegate collectionOptionsMenu:self optionSelected:option.tag];
     }
+}
+
+- (void)backButtonSelected:(UIButton *)option
+{
+    [self.delegate collectionOptionsMenuBackOptionSelected:self];
 }
 
 

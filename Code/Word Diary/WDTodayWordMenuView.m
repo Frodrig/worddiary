@@ -15,6 +15,6 @@
 @synthesize keyboardButton           = keyboardButton_;
 @synthesize backgroundColorButton    = backgroundColorButton_;
 @synthesize fontButton               = fontButton_;
-@synthesize eraseButton              = eraseButton_;
+@synthesize settingsButton           = settingsButton_;
 
 @end

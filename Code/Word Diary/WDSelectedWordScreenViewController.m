@@ -380,18 +380,23 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 - (void)tapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
     if (!self.keyboardActive) {
-        self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
-        //self.topInfoNavigationWordMenuView.hidden = self.editMenuViewController.view.hidden;
-        if (!self.editMenuViewController.view.hidden) {
-            if ([self.selectedWord isTodayWord]) {
-                [self.editMenuViewController showTodayWordMenuWithClearButtonEnabled:![self.selectedWord.word isEqualToString:@""]];
+        BOOL useAsTapGesture = self.editMenuViewController.view.hidden;
+        if (!useAsTapGesture) {
+            CGPoint hitPoint = [gestureRecognizer locationInView:nil];
+            useAsTapGesture = !CGRectContainsPoint(self.editMenuViewController.view.frame, hitPoint);
+        }
+        if (useAsTapGesture) {
+            self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
+            if (!self.editMenuViewController.view.hidden) {
+                if ([self.selectedWord isTodayWord]) {
+                    [self.editMenuViewController showTodayWordMenu];
+                } else {
+                    [self.editMenuViewController showPreviousWordMenu];
+                }
+                [self wordDiaryRepresentationAnimateUpWithDuration:0.25];
             } else {
-                [self.editMenuViewController showPreviousWordMenu];
+                [self wordDiaryRepresentationAnimateDownWithDuration:0.25];
             }
-            [self wordDiaryRepresentationAnimateUpWithDuration:0.25];
-           
-        } else {
-            [self wordDiaryRepresentationAnimateDownWithDuration:0.25];
         }
     }
 }
