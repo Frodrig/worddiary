@@ -282,6 +282,10 @@
     return retNumber;
 }
 
++ (BOOL)isIPhone5Screen
+{
+    return [UIScreen mainScreen].bounds.size.height == 568.0;
+}
 
 
 

@@ -130,19 +130,15 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
     [super viewDidLoad];
     
     // Palabra
-    self.wordDiaryRepresentation.center = CGPointMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.50);
+    BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
+    self.wordDiaryRepresentation.center = CGPointMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / (isIPhone5Screen ? 2.50 : 3.5));
     self.wordDiaryRepresentation.delegate = self;
     self.wordDiaryRepresentation.dataSource = self;
     [self.view addSubview:self.wordDiaryRepresentation];
     
     // Menu de edicion
     self.editMenuViewController = [[WDSelectedWordEditMenuViewController alloc] initWithSelectedWord:self.selectedWord];
-    const CGFloat menusMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
     [self.view addSubview:self.editMenuViewController.view];
-    self.editMenuViewController.view.frame = CGRectMake(menusMargin,
-                                                        self.view.frame.origin.y + self.view.frame.size.height - self.editMenuViewController.view.frame.size.height - menusMargin,
-                                                        self.editMenuViewController.view.frame.size.width,
-                                                        self.editMenuViewController.view.frame.size.height);
     self.editMenuViewController.view.hidden = YES;
     self.editMenuViewController.delegate = self;
     
@@ -156,6 +152,12 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    const CGFloat menusMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
+    self.editMenuViewController.view.frame = CGRectMake(menusMargin,
+                                                        self.view.bounds.size.height - self.editMenuViewController.view.bounds.size.height - menusMargin,
+                                                        self.editMenuViewController.view.bounds.size.width,
+                                                        self.editMenuViewController.view.bounds.size.height);
     
     self.originalCenterPositionOfSelectedWord = self.wordDiaryRepresentation.center;
 }
@@ -344,7 +346,8 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 {
     CGRect newArea = CGRectMake(0.0, 0.0, self.view.frame.size.width,  self.editMenuViewController.view.frame.origin.y);
     [UIView animateWithDuration:duration animations:^{
-        self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / 2) * 0.90);
+        BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
+        self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / (isIPhone5Screen ? 2 : 2.25)) * 0.90);
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.25;
         self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.25;
         self.yearDateTopInfoLabel.alpha = 0.25;

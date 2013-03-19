@@ -47,4 +47,6 @@ typedef enum {
 
 + (NSString *)           convertNumberToStringWithTwoDigitsMin:(NSNumber *)number;
 
++ (BOOL)                 isIPhone5Screen;
+
 @end
