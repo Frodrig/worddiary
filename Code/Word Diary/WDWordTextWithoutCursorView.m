@@ -30,14 +30,13 @@
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     
     CGContextSaveGState(contextRef);
-
-    CGContextSetAllowsAntialiasing(contextRef, true);
     
     // Flip coordinate system
     CGContextSetTextMatrix(contextRef, CGAffineTransformIdentity);
     CGContextTranslateCTM(contextRef, 0, self.bounds.size.height);
     CGContextScaleCTM(contextRef, 1.0, -1.0);
-        
+    CGContextSetAllowsAntialiasing(contextRef, true);
+    
     CGPoint startPointDraw = [self.dataSource actualStartPointDrawingForWordTextView:self];
     
     // nota: creamos un string con cursor como caracter de referencia a la hora de hallar los bounds
@@ -45,7 +44,7 @@
     NSString *wordTextWithCursor = [wordText stringByAppendingString:@"|"];
     
     NSString *familyFont = [self.dataSource actualFamilyFontForWordTextView:self];
-    CGFloat fontSize = 100.0;
+    CGFloat fontSize = [self.dataSource fontStartSize];
     
     CTLineRef line = nil;
     CGRect lineImageBoundsWithoutCursor = CGRectNull;

@@ -14,6 +14,7 @@
 #import "WDWordTextWithoutCursorView.h"
 
 static CGFloat CURSOR_OPACITY = 0.1;
+static CGFloat FONT_START_SIZE = 100.0;
 
 @interface WDWordRepresentationView()
 
@@ -53,7 +54,7 @@ static CGFloat CURSOR_OPACITY = 0.1;
 
 - (CGPoint)startDrawingPosition
 {
-    return CGPointMake(0.0, (self.frame.origin.y + self.frame.size.height - self.frame.origin.y) * 0.5);
+    return CGPointMake(0.0, self.frame.size.height * ([WDUtils isIPhone5Screen] ? 0.45 : 0.37));
 }
 
 #pragma mark - Init
@@ -178,34 +179,31 @@ static CGFloat CURSOR_OPACITY = 0.1;
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
-    
+   
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
+    
+    // Flip coordinate system
+    CGContextSetTextMatrix(contextRef, CGAffineTransformIdentity);
+    CGContextTranslateCTM(contextRef, 0, self.bounds.size.height);
+    CGContextScaleCTM(contextRef, 1.0, -1.0);
+   
+    const CGPoint startPointDraw = self.startDrawingPosition;
+    const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
+    const CGFloat dashPattern[] = {2.0, 6.0};
     
     CGContextSaveGState(contextRef);
     CGContextSetAllowsAntialiasing(contextRef, true);
-    
-    CGPoint startPointDraw = self.startDrawingPosition;
-    CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
-    
-    // Linea de puntos
-    const CGFloat dashPattern[] = {2.0, 6.0};
-    CGContextSaveGState(contextRef);
     CGContextSetLineDash(contextRef, 0, dashPattern, 2);
     CGContextSetLineWidth(contextRef, 0.5);
     CGContextSetRGBStrokeColor(contextRef, 0, 0, 0, 0.8);
     CGContextMoveToPoint(contextRef, 0.0, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, self.bounds.size.width, endPointDraw.y);
     CGContextStrokePath(contextRef);
-    CGContextRestoreGState(contextRef);
     
     CGContextRestoreGState(contextRef);
     
-    //if (self.wordTextWithCursorView.superview != nil) {
-        [self.wordTextWithCursorView setNeedsDisplay];
-    //} else if (self.wordTextWithoutCursorView.superview != nil) {
-        [self.wordTextWithoutCursorView setNeedsDisplay];
-    //}
-    
+    [self.wordTextWithCursorView setNeedsDisplay];
+    [self.wordTextWithoutCursorView setNeedsDisplay];
     [self setNeedsDisplay];
 }
 
@@ -264,6 +262,11 @@ static CGFloat CURSOR_OPACITY = 0.1;
 - (BOOL)isInWritingModeForWordTextView:(WDWordTextView *)wordTextView
 {
     return [self.dataSource isInWritingModeFoWordRepresentationView:self];
+}
+
+- (CGFloat)fontStartSize
+{
+    return [WDUtils isIPhone5Screen] ? FONT_START_SIZE * 1.15 : FONT_START_SIZE * 0.9;
 }
 
 @end

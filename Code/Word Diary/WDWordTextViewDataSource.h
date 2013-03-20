@@ -16,6 +16,7 @@
 - (NSString *)actualFamilyFontForWordTextView:(WDWordTextView *)wordTextView;
 - (UIColor *)actualCursorColorForWordTextView:(WDWordTextView *)wordTextView;
 - (CGPoint)actualStartPointDrawingForWordTextView:(WDWordTextView *)wordTextView;
+- (CGFloat)fontStartSize;
 
 - (BOOL)isInWritingModeForWordTextView:(WDWordTextView *)wordTextView;
 
