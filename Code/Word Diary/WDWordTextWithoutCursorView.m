@@ -43,7 +43,7 @@
     NSString *wordText = [self.dataSource actualTextValueForWordTextView:self];
     NSString *wordTextWithCursor = [wordText stringByAppendingString:@"|"];
     
-    NSString *familyFont = [self.dataSource actualFamilyFontForWordTextView:self];
+    NSString *familyFont = self.familyFont;
     CGFloat fontSize = [self.dataSource fontStartSize];
     
     CTLineRef line = nil;

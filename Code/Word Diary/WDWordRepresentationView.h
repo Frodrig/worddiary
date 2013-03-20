@@ -18,6 +18,8 @@
 @property (weak, nonatomic) id<WDWordRepresentationViewDelegate>    delegate;
 @property (weak, nonatomic) id<WDWordRepresentationViewDataSource>  dataSource;
 
+- (void)familyFontOfSelectedWordChanged;
+
 - (void)setWithCursor:(CGFloat)duration;
 - (void)setWithoutCursor:(CGFloat)duration;
 

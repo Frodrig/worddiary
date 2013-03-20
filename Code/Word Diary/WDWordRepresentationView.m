@@ -23,6 +23,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 @property (nonatomic, readonly) CGPoint                   startDrawingPosition;
 @property (nonatomic, strong) WDWordTextWithCursorView    *wordTextWithCursorView;
 @property (nonatomic, strong) WDWordTextWithoutCursorView *wordTextWithoutCursorView;
+@property (nonatomic, strong) NSMutableArray              *wordTextWithoutCursorFontTransitionsView;
 
 - (void)setWordTextView:(UIView *)setView andQuitWordTextView:(UIView *)quitView withDuration:(CGFloat)duration;
 
@@ -32,15 +33,16 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 #pragma mark - Syntehsize
 
-@synthesize dayDiaryLabel             = dayDiaryLabel_;
-@synthesize drawTextBox               = drawTextBox_;
-@synthesize delegate                  = delegate_;
-@synthesize dataSource                = dataSource_;
-@synthesize actualColorOfCursor       = actualColorOfCursor_;
-@synthesize dayOfTheWeekLabel         = dayOfTheWeekLabel_;
-@synthesize startDrawingPosition      = startDrawingPosition_;
-@synthesize wordTextWithCursorView    = wordTextWithCursorView_;
-@synthesize wordTextWithoutCursorView = wordTextWithoutCursorView_;
+@synthesize dayDiaryLabel                            = dayDiaryLabel_;
+@synthesize drawTextBox                              = drawTextBox_;
+@synthesize delegate                                 = delegate_;
+@synthesize dataSource                               = dataSource_;
+@synthesize actualColorOfCursor                      = actualColorOfCursor_;
+@synthesize dayOfTheWeekLabel                        = dayOfTheWeekLabel_;
+@synthesize startDrawingPosition                     = startDrawingPosition_;
+@synthesize wordTextWithCursorView                   = wordTextWithCursorView_;
+@synthesize wordTextWithoutCursorView                = wordTextWithoutCursorView_;
+@synthesize wordTextWithoutCursorFontTransitionsView = wordTextWithoutCursorFontTransitionsView_;
 
 #pragma mark - Properties
 
@@ -55,6 +57,15 @@ static CGFloat FONT_START_SIZE = 100.0;
 - (CGPoint)startDrawingPosition
 {
     return CGPointMake(0.0, self.frame.size.height * ([WDUtils isIPhone5Screen] ? 0.45 : 0.37));
+}
+
+- (NSMutableArray *)wordTextWithoutCursorFontTransitionsView
+{
+    if (nil == wordTextWithoutCursorFontTransitionsView_) {
+        wordTextWithoutCursorFontTransitionsView_ = [NSMutableArray array];
+    }
+    
+    return wordTextWithoutCursorFontTransitionsView_;
 }
 
 #pragma mark - Init
@@ -132,6 +143,34 @@ static CGFloat FONT_START_SIZE = 100.0;
     }
 }
 */
+
+- (void)familyFontOfSelectedWordChanged
+{
+    // Nota: - Las transiciones se guardan en un array para soportar multiples pulsaciones
+    
+    WDWordTextWithoutCursorView *oldWordTextView = self.wordTextWithoutCursorFontTransitionsView.count > 0 ? self.wordTextWithoutCursorFontTransitionsView.lastObject : self.wordTextWithoutCursorView;
+    CGRect oldWordTextOriginalFrame = oldWordTextView.frame;
+    CGPoint oldWordTextOriginalCenter = oldWordTextView.center;
+
+    WDWordTextWithoutCursorView *wordTextTransition = [[WDWordTextWithoutCursorView alloc] initWithFrame:oldWordTextOriginalFrame];
+    wordTextTransition.backgroundColor = [UIColor clearColor];
+    wordTextTransition.dataSource = self;
+    wordTextTransition.alpha = 0.0;
+    wordTextTransition.center = CGPointMake(wordTextTransition.center.x * -2.0, wordTextTransition.center.y);
+    [self.wordTextWithoutCursorFontTransitionsView addObject:wordTextTransition];
+    [self addSubview:wordTextTransition];
+    
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+    [UIView animateWithDuration:1.25 animations:^{
+        wordTextTransition.alpha = 1.0;
+        wordTextTransition.center = oldWordTextOriginalCenter;
+        oldWordTextView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [self.wordTextWithoutCursorView removeFromSuperview];
+        self.wordTextWithoutCursorView = wordTextTransition;
+        [self.wordTextWithoutCursorFontTransitionsView removeObject:wordTextTransition];
+    }];
+}
 
 #pragma mark - Updates
 

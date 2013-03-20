@@ -116,7 +116,36 @@
     } else {
         NSMutableArray *fontInstances = [[NSMutableArray alloc] init];
         
-        NSArray *fontFamilies = [NSArray arrayWithObjects:@"ArialMT", @"CourierNewPSMT", @"AppleColorEmoji", @"Palatino-Roman", @"Didot", @"PartyLetPlain", @"Noteworthy-Light", nil];
+        NSArray *fontFamilies = [NSArray arrayWithObjects:@"AcademyEngravedLetPlain",
+                                 @"AmericanTypewriter",
+                                 @"AppleColorEmoji",
+                                 @"ArialHebrew",
+                                 @"Avenir-Book",
+                                 @"AvenirNext-UltraLight",
+                                 @"Baskerville",
+                                 @"BradleyHandITCTT-Bold",
+                                 @"ChalkboardSE-Light",
+                                 @"Chalkduster",
+                                 @"Cochin",
+                                 @"Courier",
+                                 @"CourierNewPSMT",
+                                 @"Didot",
+                                 @"Futura-CondensedMedium",
+                                 @"Georgia",
+                                 @"GillSans",
+                                 @"GurmukhiMN",
+                                 @"Helvetica",
+                                 @"HoeflerText-Regular",
+                                 @"MarkerFelt-Thin",
+                                 @"Noteworthy-Light",
+                                 @"Palatino-Roman",
+                                 @"Papyrus",
+                                 @"PartyLetPlain",
+                                 @"SnellRoundhand",
+                                 @"TimesNewRomanPSMT",
+                                 @"TrebuchetMS",
+                                 @"Zapfino",
+                                 nil];
         for (NSString *fontFamily in fontFamilies) {
             WDFont *font = [NSEntityDescription insertNewObjectForEntityForName:@"Font" inManagedObjectContext:self.context];
             font.family = fontFamily;

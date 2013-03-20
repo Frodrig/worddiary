@@ -169,6 +169,31 @@
 
 + (NSArray *)pickerColorArray
 {
+    /*
+    NSDictionary *params = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithFloat:0.3],
+                                                                    [NSNumber numberWithFloat:0.3],
+                                                                    [NSNumber numberWithFloat:0.3],
+                                                                    [NSNumber numberWithFloat:0.0],
+                                                                    [NSNumber numberWithFloat:2.0],
+                                                                    [NSNumber numberWithFloat:4.0],
+                                                                    [NSNumber numberWithInteger:200],
+                                                                    [NSNumber numberWithInteger:55],
+                                                                    [NSNumber numberWithInteger:12],
+                                                                nil]
+                                                           forKeys:[NSArray arrayWithObjects:@"rFrecuency",
+                                                                    @"gFrecueny",
+                                                                    @"bFrecuency",
+                                                                    @"rPhase",
+                                                                    @"gPhase",
+                                                                    @"bPhase",
+                                                                    @"center",
+                                                                    @"amplitude",
+                                                                    @"loopLength",
+                                                                    nil]];
+    
+    NSArray *pickerColorArray = [self.class makeColorGradientWithParameters:params];
+    */
+    
     NSArray *pickerColorArray = [NSArray arrayWithObjects:[UIColor colorWithRed:251.0/255.0 green:235.0/255.0 blue:0 alpha:1.0],
                                                           [UIColor colorWithRed:222.0/255.0 green:255.0/255.0 blue:0 alpha:1.0],
                                                           [UIColor colorWithRed:21/255.0 green:249.0/255.0 blue:2.0/255.0 alpha:1.0],
@@ -186,7 +211,7 @@
     return pickerColorArray;
 }
 
-+ (WDBackgroundCategory) convertPickerColorIndexToBackgroundCategory:(NSUInteger)index
++ (WDBackgroundCategory)convertPickerColorIndexToBackgroundCategory:(NSUInteger)index
 {
     WDBackgroundCategory backgroundCategory = index;
     
@@ -286,6 +311,41 @@
 {
     return [UIScreen mainScreen].bounds.size.height == 568.0;
 }
+
++ (NSArray *)makeColorGradientWithParameters:(NSDictionary *)parameters
+{
+    NSNumber *rFrecuency = [parameters objectForKey:@"rFrecuency"];
+    NSNumber *gFrecuency = [parameters objectForKey:@"gFrecuency"];
+    NSNumber *bFrecuency = [parameters objectForKey:@"bFrecuency"];
+    NSNumber *rPhase = [parameters objectForKey:@"rPhase"];
+    NSNumber *gPhase = [parameters objectForKey:@"gPhase"];
+    NSNumber *bPhase = [parameters objectForKey:@"bPhase"];
+    NSNumber *center = [parameters objectForKey:@"center"];
+    NSNumber *amplitude = [parameters objectForKey:@"amplitude"];
+    NSNumber *loopLenght = [parameters objectForKey:@"loopLength"];
+    
+    if (center == nil) {
+        center = [NSNumber numberWithUnsignedInteger:128];
+    }
+    if (amplitude == nil) {
+        amplitude = [NSNumber numberWithUnsignedInteger:127];
+    }
+    if (loopLenght == nil) {
+        loopLenght = [NSNumber numberWithUnsignedInteger:50];
+    }
+    
+    NSMutableArray *colors = [NSMutableArray arrayWithCapacity:loopLenght.unsignedIntegerValue];
+    for (NSUInteger inc = 0; inc < loopLenght.unsignedIntegerValue; inc++) {
+        CGFloat redComponent = sin(rFrecuency.floatValue * inc + rPhase.floatValue) * amplitude.floatValue + center.floatValue;
+        CGFloat greenComponent = sin(gFrecuency.floatValue * inc + gPhase.floatValue) * amplitude.floatValue + center.floatValue;
+        CGFloat blueComponent = sin(bFrecuency.floatValue * inc + bPhase.floatValue) * amplitude.floatValue + center.floatValue;
+        UIColor *color = [UIColor colorWithRed:redComponent/255.0 green:greenComponent/255.0 blue:blueComponent/255.0 alpha:1.0];
+        [colors addObject:color];
+    }
+    
+    return [NSArray arrayWithArray:colors];
+}
+
 
 
 

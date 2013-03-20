@@ -42,11 +42,13 @@ typedef enum {
 + (NSArray *)            pickerColorArray;
 + (WDBackgroundCategory) convertPickerColorIndexToBackgroundCategory:(NSUInteger)index;
 + (NSUInteger)           convertGradientBackgroundCategoryToPickerColorIndex:(WDBackgroundCategory)backgroundCategory;
++ (NSArray *)            makeColorGradientWithParameters:(NSDictionary *)parameters;
 
 + (NSString *)           stringFromWeekday:(NSUInteger)weekDay;
 
 + (NSString *)           convertNumberToStringWithTwoDigitsMin:(NSNumber *)number;
 
 + (BOOL)                 isIPhone5Screen;
+
 
 @end

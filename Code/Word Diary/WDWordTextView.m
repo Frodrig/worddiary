@@ -13,6 +13,19 @@
 #pragma mark - Synthesize
 
 @synthesize dataSource = dataSource_;
+@synthesize familyFont = familyFont_;
+
+#pragma mark - Properties
+
+// Nota: Esto mejor que se recibiera por inicializacion para evitar confusion.
+- (NSString *)familyFont
+{
+    if (nil == familyFont_) {
+        familyFont_ = [self.dataSource actualFamilyFontForWordTextView:self];
+    }
+    
+    return familyFont_;
+}
 
 #pragma mark - Init
 

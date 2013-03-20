@@ -11,6 +11,7 @@
 
 @interface WDWordTextView : UIView
 
-@property(nonatomic, weak) id<WDWordTextViewDataSource> dataSource;
+@property (nonatomic, weak) id<WDWordTextViewDataSource> dataSource;
+@property (nonatomic, strong, readonly) NSString         *familyFont;
 
 @end

@@ -499,11 +499,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     self.selectedWord.font = [[WDWordDiary sharedWordDiary].fonts objectAtIndex:indexFont];
     
+    [self.wordDiaryRepresentation familyFontOfSelectedWordChanged];
     [self.wordDiaryRepresentation setNeedsDisplay];
     
-    /*
     NSLog(@"Family %@", self.selectedWord.font.family);
-    NSLog(@"PointSize %f", self.wordDiaryRepresentation.wordTextField.font.pointSize);
+    /*NSLog(@"PointSize %f", self.wordDiaryRepresentation.wordTextField.font.pointSize);
     NSLog(@"Acender %f", self.wordDiaryRepresentation.wordTextField.font.ascender);
     NSLog(@"Descender %f", self.wordDiaryRepresentation.wordTextField.font.descender);
     NSLog(@"Cap Height %f", self.wordDiaryRepresentation.wordTextField.font.capHeight);
