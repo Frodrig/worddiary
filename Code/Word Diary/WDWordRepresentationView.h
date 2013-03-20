@@ -9,13 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "WDWordRepresentationViewDataSource.h"
 #import "WDWordRepresentationViewDelegate.h"
+#import "WDWordTextViewDataSource.h"
 
-@interface WDWordRepresentationView : UIView<UIKeyInput>
+@interface WDWordRepresentationView : UIView<UIKeyInput, WDWordTextViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UILabel                        *dayDiaryLabel;
 @property (weak, nonatomic) IBOutlet UILabel                        *dayOfTheWeekLabel;
 @property (weak, nonatomic) id<WDWordRepresentationViewDelegate>    delegate;
 @property (weak, nonatomic) id<WDWordRepresentationViewDataSource>  dataSource;
+
+- (void)setWithCursor:(CGFloat)duration;
+- (void)setWithoutCursor:(CGFloat)duration;
 
 - (void)updateCursorAnimation;
 

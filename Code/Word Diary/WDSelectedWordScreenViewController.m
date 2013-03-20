@@ -19,6 +19,8 @@
 #import "UIView+UIViewNibLoad.h"
 
 const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
+const static CGFloat ANIMATION_TIME_CURSORMODE = 0.5;
+const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 @interface WDSelectedWordScreenViewController ()
 
@@ -158,6 +160,12 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
                                                         self.view.bounds.size.height - self.editMenuViewController.view.bounds.size.height - menusMargin,
                                                         self.editMenuViewController.view.bounds.size.width,
                                                         self.editMenuViewController.view.bounds.size.height);
+    
+    if (self.selectedWord.word.length > 0) {
+        [self.wordDiaryRepresentation setWithoutCursor:0.0];
+    } else {
+        [self.wordDiaryRepresentation setWithCursor:0.0];
+    }
     
     self.originalCenterPositionOfSelectedWord = self.wordDiaryRepresentation.center;
 }
@@ -431,6 +439,8 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 - (void)keyboardWillShowNotification:(NSNotification *)notification
 {
     self.keyboardActive = YES;
+    
+    [self.wordDiaryRepresentation setWithCursor:ANIMATION_TIME_CURSORMODE];
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
@@ -444,6 +454,12 @@ const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
     [UIView animateWithDuration:keyboardAnimationDuration.doubleValue animations:^{
         self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
     }];
+    
+    if (self.selectedWord.word.length == 0) {
+        [self.wordDiaryRepresentation setWithCursor:ANIMATION_TIME_WITHOUTCURSORMODE];
+    } else {
+        [self.wordDiaryRepresentation setWithoutCursor:ANIMATION_TIME_WITHOUTCURSORMODE];
+    }
 }
 
 #pragma mark - WDSelectedWordEditMenuDelegate

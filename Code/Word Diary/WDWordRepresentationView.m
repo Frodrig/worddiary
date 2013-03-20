@@ -10,13 +10,20 @@
 #import <CoreText/CoreText.h>
 #import "WDWord.h"
 #import "WDUtils.h"
+#import "WDWordTextWithCursorView.h"
+#import "WDWordTextWithoutCursorView.h"
 
 static CGFloat CURSOR_OPACITY = 0.1;
 
 @interface WDWordRepresentationView()
 
-@property (weak, nonatomic) IBOutlet UIView *drawTextBox;
-@property (nonatomic) UIColor               *actualColorOfCursor;
+@property (weak, nonatomic) IBOutlet UIView               *drawTextBox;
+@property (nonatomic) UIColor                             *actualColorOfCursor;
+@property (nonatomic, readonly) CGPoint                   startDrawingPosition;
+@property (nonatomic, strong) WDWordTextWithCursorView    *wordTextWithCursorView;
+@property (nonatomic, strong) WDWordTextWithoutCursorView *wordTextWithoutCursorView;
+
+- (void)setWordTextView:(UIView *)setView andQuitWordTextView:(UIView *)quitView withDuration:(CGFloat)duration;
 
 @end
 
@@ -24,12 +31,15 @@ static CGFloat CURSOR_OPACITY = 0.1;
 
 #pragma mark - Syntehsize
 
-@synthesize dayDiaryLabel       = dayDiaryLabel_;
-@synthesize drawTextBox         = drawTextBox_;
-@synthesize delegate            = delegate_;
-@synthesize dataSource          = dataSource_;
-@synthesize actualColorOfCursor = actualColorOfCursor_;
-@synthesize dayOfTheWeekLabel   = dayOfTheWeekLabel_;
+@synthesize dayDiaryLabel             = dayDiaryLabel_;
+@synthesize drawTextBox               = drawTextBox_;
+@synthesize delegate                  = delegate_;
+@synthesize dataSource                = dataSource_;
+@synthesize actualColorOfCursor       = actualColorOfCursor_;
+@synthesize dayOfTheWeekLabel         = dayOfTheWeekLabel_;
+@synthesize startDrawingPosition      = startDrawingPosition_;
+@synthesize wordTextWithCursorView    = wordTextWithCursorView_;
+@synthesize wordTextWithoutCursorView = wordTextWithoutCursorView_;
 
 #pragma mark - Properties
 
@@ -40,6 +50,13 @@ static CGFloat CURSOR_OPACITY = 0.1;
 
     return actualColorOfCursor_;
 }
+
+- (CGPoint)startDrawingPosition
+{
+    return CGPointMake(0.0, (self.frame.origin.y + self.frame.size.height - self.frame.origin.y) * 0.5);
+}
+
+#pragma mark - Init
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -56,10 +73,35 @@ static CGFloat CURSOR_OPACITY = 0.1;
     self = [super initWithCoder:decoder];
     if (self) {
         actualColorOfCursor_ = [UIColor colorWithWhite:0.0 alpha:1.0];
+        
+        wordTextWithCursorView_ = [[WDWordTextWithCursorView alloc] initWithFrame:self.frame];
+        wordTextWithCursorView_.backgroundColor = [UIColor clearColor];
+        wordTextWithCursorView_.dataSource = self;
+        
+        wordTextWithoutCursorView_ = [[WDWordTextWithoutCursorView alloc] initWithFrame:self.frame];
+        wordTextWithoutCursorView_.backgroundColor = [UIColor clearColor];
+        wordTextWithoutCursorView_.dataSource = self;
+        
         //timeFrom_ = [NSDate timeIntervalSinceReferenceDate];
         //acumulateTime_ = 0;
     }
     return self;
+}
+
+#pragma mark - Auxiliary
+
+- (void)setWordTextView:(UIView *)setView andQuitWordTextView:(UIView *)quitView withDuration:(CGFloat)duration
+{
+    NSAssert(quitView.superview == self, @"La view a quitar tiene que estar en la jerarquia propia");
+    
+    setView.alpha = 0.0;
+    [self addSubview:setView];
+    [UIView animateWithDuration:duration animations:^{
+        setView.alpha = 1.0;
+        quitView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [quitView removeFromSuperview];
+    }];
 }
 
 #pragma mark - Animation
@@ -90,6 +132,8 @@ static CGFloat CURSOR_OPACITY = 0.1;
 }
 */
 
+#pragma mark - Updates
+
 - (void)updateCursorAnimation
 {
     CGFloat whiteValue = 0.0;
@@ -102,25 +146,45 @@ static CGFloat CURSOR_OPACITY = 0.1;
     }
 }
 
+#pragma mark - SetModes
+
+- (void)setWithCursor:(CGFloat)duration;
+{
+    // Nota: Puede que llegue este mensaje pese a estar con cursor ya que no haya palabra vinculada y se saque el teclado.
+    //       En este caso no hacemos nada.
+    if (self.wordTextWithCursorView.superview == nil) {
+        if ([WDUtils is:duration equalsTo:0.0]) {
+            [self.wordTextWithoutCursorView removeFromSuperview];
+            [self addSubview:self.wordTextWithCursorView];
+        } else {
+            [self setWordTextView:self.wordTextWithCursorView andQuitWordTextView:self.wordTextWithoutCursorView withDuration:duration];
+        }
+    }
+}
+
+- (void)setWithoutCursor:(CGFloat)duration;
+{
+    if ([WDUtils is:duration equalsTo:0.0]) {
+        [self.wordTextWithCursorView removeFromSuperview];
+        [self addSubview:self.wordTextWithoutCursorView];
+    } else {
+        [self setWordTextView:self.wordTextWithoutCursorView andQuitWordTextView:self.wordTextWithCursorView withDuration:duration];
+    }
+}
 
 #pragma mark - Draw
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
-{    
-    // Drawing code
+{
+    [super drawRect:rect];
+    
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     
+    CGContextSaveGState(contextRef);
     CGContextSetAllowsAntialiasing(contextRef, true);
     
-    // Flip coordinate system
-    CGContextSetTextMatrix(contextRef, CGAffineTransformIdentity);
-    CGContextTranslateCTM(contextRef, 0, self.bounds.size.height);
-    CGContextScaleCTM(contextRef, 1.0, -1.0);
-    
-    const CGPoint startWordDrawingPoint = CGPointMake(0.0, (self.drawTextBox.frame.origin.y + self.drawTextBox.frame.size.height - self.drawTextBox.frame.origin.y) * 0.5);
-    
-    CGPoint startPointDraw = startWordDrawingPoint;
+    CGPoint startPointDraw = self.startDrawingPosition;
     CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     
     // Linea de puntos
@@ -134,82 +198,13 @@ static CGFloat CURSOR_OPACITY = 0.1;
     CGContextStrokePath(contextRef);
     CGContextRestoreGState(contextRef);
     
-    // nota: creamos un string con cursor como caracter de referencia a la hora de hallar los bounds
-    NSString *wordText = [self.dataSource actualTextValueForWordRepresentationView:self];
-    NSString *wordTextWithCursor = [wordText stringByAppendingString:@"|"];
-    BOOL cursorVisible = [self.dataSource isInWritingModeFoWordRepresentationView:self] || wordText.length == 0;
-    
-    NSString *familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
-    CGFloat fontSize = 100;
-    
-    CTLineRef line = nil;
-    CGRect lineImageBoundsWithoutCursor = CGRectNull;
-    CGRect lineImageBounds;
-    BOOL endFindingFontSize = NO;
-    do {
-        CTFontRef fontRef = CTFontCreateWithName((__bridge CFStringRef)familyFont, fontSize, NULL);
-        NSDictionary *attrDictionary = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)fontRef, (NSString *)kCTFontAttributeName,
-                                        [UIColor blackColor], (NSString *)NSForegroundColorAttributeName, nil];
-        CFRelease(fontRef);
-        
-        NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:wordTextWithCursor attributes:attrDictionary];
-        //[attString addAttribute:(NSString *)kCTForegroundColorAttributeName value:[UIColor colorWithWhite:1.0 alpha:1.0] range:NSMakeRange(wordTextWithCursor.length - 1, 1)];
-        [attString addAttribute:(NSString *)kCTForegroundColorAttributeName value:[UIColor colorWithWhite:1.0 alpha:0.0] range:NSMakeRange(wordTextWithCursor.length - 1, 1)];
-        
-        line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attString));
-        
-        // Para centrar sin tener en cuenta el cursor 
-       // if (CGRectEqualToRect(lineImageBoundsWithoutCursor, CGRectNull)) {
-            NSAttributedString *attStringWithoutCursor = [[NSAttributedString alloc] initWithString:wordText attributes:attrDictionary];
-            CTLineRef lineWithoutCursor = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attStringWithoutCursor));
-            lineImageBoundsWithoutCursor = CTLineGetImageBounds(lineWithoutCursor, contextRef);
-            CFRelease(lineWithoutCursor);
-        //}
-        
-        // Set text position and draw the line into the graphics context
-        lineImageBounds = CTLineGetImageBounds(line, contextRef);
-        endFindingFontSize = self.drawTextBox.frame.origin.x + lineImageBounds.size.width + 40.0 < self.drawTextBox.frame.origin.x + self.drawTextBox.bounds.size.width;
-        if (endFindingFontSize) {
-            endFindingFontSize = lineImageBounds.size.height + 40.0 < self.drawTextBox.bounds.size.height;
-        }
-        if (!endFindingFontSize) {
-            fontSize--;
-            CFRelease(line);
-        }
-    } while (!endFindingFontSize);
-    
-    //CTLineRef line = [self createCTLineRefAdjustedToFitWithContextRef:contextRef withText:wordText color:[UIColor blackColor] activeCursor:writeModeActive];
-    CGPoint fontDrawPoint = CGPointMake(cursorVisible ? self.drawTextBox.frame.origin.x : self.drawTextBox.frame.origin.x + (self.drawTextBox.bounds.size.width - lineImageBoundsWithoutCursor.size.width) / 2, startPointDraw.y);
-
-    CGContextSaveGState(contextRef);
-
-    CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);
-    
-    if (cursorVisible) {
-        CGRect cursorBounds = CGRectMake(fontDrawPoint.x, fontDrawPoint.y, 0.0, lineImageBounds.size.height);
-        if (wordText.length > 0) {
-            CFArrayRef lineGlyphRuns = CTLineGetGlyphRuns(line);
-            CFIndex glyphRunsCount = CFArrayGetCount(lineGlyphRuns);
-            CTRunRef glyphRunRef = CFArrayGetValueAtIndex(lineGlyphRuns, glyphRunsCount - 2);
-            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(glyphRunRef).location + CTRunGetStringRange(glyphRunRef).length, NULL);
-            CGFloat width = CTRunGetTypographicBounds(glyphRunRef, CFRangeMake(0, 0), NULL, NULL, NULL);
-            cursorBounds = CGRectMake(fontDrawPoint.x + xOffset, cursorBounds.origin.y, width, cursorBounds.size.height);
-            //NSLog(@"WordTextLength %d glyphCount %ld xOffset %f width %f", wordText.length, glyphRunsCount, xOffset, width);
-        }
-        
-        CGContextSaveGState(contextRef);
-        CGContextSetLineWidth(contextRef, 1.0); 
-        CGContextSetStrokeColorWithColor(contextRef, self.actualColorOfCursor.CGColor);
-        CGContextMoveToPoint(contextRef, cursorBounds.origin.x, cursorBounds.origin.y + cursorBounds.size.height * 0.75);
-        CGContextAddLineToPoint(contextRef, cursorBounds.origin.x, cursorBounds.origin.y - cursorBounds.size.height * 0.25);
-        CGContextStrokePath(contextRef);
-        CGContextRestoreGState(contextRef);
-    }
-    
-    CTLineDraw(line, contextRef);
-    CFRelease(line);
-    
     CGContextRestoreGState(contextRef);
+    
+    //if (self.wordTextWithCursorView.superview != nil) {
+        [self.wordTextWithCursorView setNeedsDisplay];
+    //} else if (self.wordTextWithoutCursorView.superview != nil) {
+        [self.wordTextWithoutCursorView setNeedsDisplay];
+    //}
     
     [self setNeedsDisplay];
 }
@@ -242,6 +237,33 @@ static CGFloat CURSOR_OPACITY = 0.1;
 - (void)insertText:(NSString *)text
 {
     [self.delegate wordRepresentationView:self insertText:text];
+}
+
+#pragma mark - WDWordTextViewDataSource
+
+- (NSString *)actualTextValueForWordTextView:(WDWordTextView *)wordTextView
+{
+    return [self.dataSource actualTextValueForWordRepresentationView:self];
+}
+
+- (NSString *)actualFamilyFontForWordTextView:(WDWordTextView *)wordTextView
+{
+    return [self.dataSource actualFamilyFontForWordRepresentationView:self];
+}
+
+- (UIColor *)actualCursorColorForWordTextView:(WDWordTextView *)wordTextView
+{
+    return self.actualColorOfCursor;
+}
+
+- (CGPoint)actualStartPointDrawingForWordTextView:(WDWordTextView *)wordTextView
+{
+    return self.startDrawingPosition;
+}
+
+- (BOOL)isInWritingModeForWordTextView:(WDWordTextView *)wordTextView
+{
+    return [self.dataSource isInWritingModeFoWordRepresentationView:self];
 }
 
 @end
