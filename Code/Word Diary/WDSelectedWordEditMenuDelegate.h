@@ -17,5 +17,5 @@
 - (void)acceptDeleteWordFromConfirmationMenu;
 - (void)changeToFontWithIndex:(NSUInteger)indexFont;
 - (void)changeToBackgroundCategory:(WDBackgroundCategory)category;
-
+- (void)menuDidHide;
 @end

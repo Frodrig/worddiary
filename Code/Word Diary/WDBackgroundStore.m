@@ -77,7 +77,7 @@
     gradient.endPoint = CGPointMake(1.0, 1.0);
     gradient.cornerRadius = 10.0;
     gradient.masksToBounds = YES;
-            
+    
     [view.layer insertSublayer:gradient atIndex:0];
     
     CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"colors"];

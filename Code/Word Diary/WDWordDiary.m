@@ -323,7 +323,7 @@
     [self saveAll];
     
     if ([keyPath compare:@"timeInterval"] == NSOrderedSame) {
-        [self sortWords];
+      //  [self sortWords];
     }
 }
 

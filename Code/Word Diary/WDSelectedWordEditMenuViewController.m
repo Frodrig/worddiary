@@ -213,6 +213,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
             self.view.hidden = YES;
             self.view.alpha = 1.0;
             [menuToRemove removeFromSuperview];
+            [self.delegate menuDidHide];
         }];
     } else {
         if (menuToRemove == nil && (menuView == self.todayWordMenuView || menuView == self.previousDayWordMenuView)) {

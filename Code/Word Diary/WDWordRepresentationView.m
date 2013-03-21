@@ -107,7 +107,7 @@ static CGFloat FONT_START_SIZE = 100.0;
     NSAssert(quitView.superview == self, @"La view a quitar tiene que estar en la jerarquia propia");
     
     setView.alpha = 0.0;
-    [self addSubview:setView];
+    [self insertSubview:setView atIndex:0];
     [UIView animateWithDuration:duration animations:^{
         setView.alpha = 1.0;
         quitView.alpha = 0.0;
@@ -147,7 +147,6 @@ static CGFloat FONT_START_SIZE = 100.0;
 - (void)familyFontOfSelectedWordChanged
 {
     // Nota: - Las transiciones se guardan en un array para soportar multiples pulsaciones
-    
     WDWordTextWithoutCursorView *oldWordTextView = self.wordTextWithoutCursorFontTransitionsView.count > 0 ? self.wordTextWithoutCursorFontTransitionsView.lastObject : self.wordTextWithoutCursorView;
     CGRect oldWordTextOriginalFrame = oldWordTextView.frame;
     CGPoint oldWordTextOriginalCenter = oldWordTextView.center;
@@ -169,6 +168,7 @@ static CGFloat FONT_START_SIZE = 100.0;
         [self.wordTextWithoutCursorView removeFromSuperview];
         self.wordTextWithoutCursorView = wordTextTransition;
         [self.wordTextWithoutCursorFontTransitionsView removeObject:wordTextTransition];
+        self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     }];
 }
 
@@ -195,10 +195,13 @@ static CGFloat FONT_START_SIZE = 100.0;
     if (self.wordTextWithCursorView.superview == nil) {
         if ([WDUtils is:duration equalsTo:0.0]) {
             [self.wordTextWithoutCursorView removeFromSuperview];
-            [self addSubview:self.wordTextWithCursorView];
+            [self insertSubview:self.wordTextWithCursorView atIndex:0];
+            self.wordTextWithCursorView.alpha = 1.0;
         } else {
             [self setWordTextView:self.wordTextWithCursorView andQuitWordTextView:self.wordTextWithoutCursorView withDuration:duration];
         }
+        
+        self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     }
 }
 
@@ -206,10 +209,13 @@ static CGFloat FONT_START_SIZE = 100.0;
 {
     if ([WDUtils is:duration equalsTo:0.0]) {
         [self.wordTextWithCursorView removeFromSuperview];
-        [self addSubview:self.wordTextWithoutCursorView];
+        [self insertSubview:self.wordTextWithoutCursorView atIndex:0];
+        self.wordTextWithoutCursorView.alpha = 1.0;
     } else {
         [self setWordTextView:self.wordTextWithoutCursorView andQuitWordTextView:self.wordTextWithCursorView withDuration:duration];
     }
+    
+    self.wordTextWithoutCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
 }
 
 #pragma mark - Draw

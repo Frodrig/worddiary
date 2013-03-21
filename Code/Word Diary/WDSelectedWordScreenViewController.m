@@ -39,8 +39,10 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
+@property (nonatomic)                BOOL                                 dayChangePendingToResolve;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
+- (void)       updateByDayChange;
 
 - (void)       tapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)       swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
@@ -66,6 +68,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)       updateCursorAnimation:(NSTimer *)timer;
 
+- (void)       startCursorUpdateTimer;
+- (void)       endCursorUpdateTimer;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -86,6 +91,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize wordDiaryRepresentation              = wordDiaryRepresentation_;
 @synthesize cursorUpdateTimer                    = cursorUpdateTimer_;
 @synthesize dayChecker                           = dayChecker_;
+@synthesize dayChangePendingToResolve            = dayChangePendingToResolve_;
 
 #pragma mark Init
 
@@ -96,6 +102,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         // Selected word
         selectedWord_ = [self selectWordOfWordDiaryAtLaunchOrResume];
         dayChecker_  = [[WDDayChecker alloc] init];
+        dayChecker_.delegate = self;
         keyboardActive_ = NO;
         
         // Views fuera del xib propio
@@ -123,6 +130,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         // Notificaciones keyboard
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHideNotification:) name:UIKeyboardDidHideNotification object:nil];
 
     }
     return self;
@@ -153,8 +161,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.view.contentMode = UIViewContentModeCenter;
     
     [self configureViewForSelectedWord];
-    
-    self.cursorUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_TIME_CURSOR target:self selector:@selector(updateCursorAnimation:) userInfo:nil repeats:YES];
+
+    [self startCursorUpdateTimer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -191,16 +199,25 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
-    [self.cursorUpdateTimer invalidate];
-    self.cursorUpdateTimer = nil;
+    [self endCursorUpdateTimer];
 }
 
 #pragma mark - Auxiliary
 
+- (void)startCursorUpdateTimer
+{
+    self.cursorUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_TIME_CURSOR target:self selector:@selector(updateCursorAnimation:) userInfo:nil repeats:YES];
+}
+
+- (void)endCursorUpdateTimer
+{
+    [self.cursorUpdateTimer invalidate];
+    self.cursorUpdateTimer = nil;
+}
+
 - (WDWord *)selectWordOfWordDiaryAtLaunchOrResume
 {
     NSDate *todayDate = [NSDate date];
-    
     WDWord *lastCreatedWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
     if (lastCreatedWord != nil) {
         if (![lastCreatedWord isTodayWord]) {
@@ -220,11 +237,24 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     return lastCreatedWord;
 }
 
+- (void)updateByDayChange
+{
+    if ([self.selectedWord isEmpty]) {
+        self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
+    } else {
+        WDWord *newLastWord = [self selectWordOfWordDiaryAtLaunchOrResume];
+        NSAssert(newLastWord != self.selectedWord, @"La nueva palabra creada NO es la actual que mantenemos la de ayer");
+    }
+    [self configureViewForSelectedWord];
+    
+    self.dayChangePendingToResolve = NO;
+}
+
 - (void)configureViewForSelectedWord
 {
     // Gradiente
     [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
-    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];    
+    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];
     self.editMenuViewController.selectedWord = self.selectedWord;
     WDBackground *background = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
     self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
@@ -235,8 +265,15 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     // Palabra
     NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:[[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]]];
     self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
-    [self.wordDiaryRepresentation setNeedsDisplay];
+    if ([self.selectedWord isEmpty]) {
+        NSAssert([self.selectedWord isTodayWord], @"Solo PUEDE estar vacia la palabra del dia de hoy");
+        [self.wordDiaryRepresentation setWithCursor:0];
+    } else {
+        [self.wordDiaryRepresentation setWithoutCursor:0];
+    }
+ 
     
+    [self.wordDiaryRepresentation setNeedsDisplay];
     
     /*
      CAGradientLayer *gradient = [CAGradientLayer layer];
@@ -492,6 +529,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 }
 
+- (void)keyboardDidHideNotification:(NSNotification *)notification
+{
+    if (self.dayChangePendingToResolve) {
+        [self updateByDayChange];
+    }
+}
+
 #pragma mark - WDSelectedWordEditMenuDelegate
 
 - (void)writeSelectedWordOption
@@ -522,6 +566,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
         self.selectedWord = newSelectedWord;
         [self configureViewForSelectedWord];
+    }
+}
+
+- (void)menuDidHide
+{
+    if (self.dayChangePendingToResolve) {
+        [self updateByDayChange];
     }
 }
 
@@ -630,22 +681,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)resign
 {
-    [self.cursorUpdateTimer invalidate];
-    self.cursorUpdateTimer = nil;
-    
+    self.dayChangePendingToResolve = NO;
+    [self endCursorUpdateTimer];    
     [self.dayChecker pause];
 }
 
 - (void)pause
 {
-    if (self.cursorUpdateTimer != nil) {
-        [self.cursorUpdateTimer invalidate];
-        self.cursorUpdateTimer = nil;
-    }
-    
+    self.dayChangePendingToResolve = NO;
+    [self endCursorUpdateTimer];
     [self.dayChecker pause];
     [self.wordDiaryRepresentation resignFirstResponder];
-    [self.wordDiaryRepresentation setWithoutCursor:0.0];
     self.editMenuViewController.view.hidden = YES;
     
     [[WDWordDiary sharedWordDiary] saveAll];
@@ -654,8 +700,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)resume
 {
     self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
-    self.cursorUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_TIME_CURSOR target:self selector:@selector(updateCursorAnimation:) userInfo:nil repeats:YES];
+    [self startCursorUpdateTimer];
     [self.dayChecker resume];
+    [self configureViewForSelectedWord];
 }
 
 - (void)terminate
@@ -667,7 +714,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)dayCheckerOnNewDay:(WDDayChecker *)dayChecker
 {
-    
+    if (!self.keyboardActive && self.editMenuViewController.view.hidden) {
+        [self updateByDayChange];
+    } else {
+        self.dayChangePendingToResolve = YES;
+    }
 }
 
 @end

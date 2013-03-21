@@ -19,9 +19,9 @@
 
 #pragma mark - Synthesize
 
-@synthesize delegate = delegate_;
-@synthesize timer    = timer_;
-@synthesize date     = date_;
+@synthesize delegate  = delegate_;
+@synthesize timer     = timer_;
+@synthesize date      = date_;
 
 #pragma mark - Init
 
