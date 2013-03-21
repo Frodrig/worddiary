@@ -1,3 +1,7 @@
+21/03/2013
+- Revisar metodos para establecer las views con cursor y sin cursor pues no está el codigo muy factorizado y consistente.
+- Revisar la forma de obtener la familia de la fuente con la que dibujar. Tenemos un datasource y sin embargo ese dato esta como property en la clase base. No tiene mucho sentido.
+- Testear: Cambio de dia con menus desplegados, ir a segundo plano y volver. PROBADO, funciona.
 8/3/2013
 - Sigue el problema de cargar un bitmap estático para la resolucion de iPhone 5.
 - Hay que meter dentro del fondo el tipo de esquema, light o dark, para el top y el bottom. Esto es importante de cara a sacar los menus. Los menus ahora lo tendran que
