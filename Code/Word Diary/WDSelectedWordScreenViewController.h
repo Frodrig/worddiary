@@ -11,13 +11,19 @@
 #import "WDSelectedWordScreenDelegate.h"
 #import "WDWordRepresentationViewDelegate.h"
 #import "WDWordRepresentationViewDataSource.h"
+#import "WDDayCheckerDelegate.h"
 
 @class WDWord;
 
-@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate, UIGestureRecognizerDelegate, WDWordRepresentationViewDataSource, WDWordRepresentationViewDelegate>
+@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate, UIGestureRecognizerDelegate, WDWordRepresentationViewDataSource, WDWordRepresentationViewDelegate, WDDayCheckerDelegate>
 
 @property (nonatomic, weak) id<WDSelectedWordScreenDelegate> delegate;
 
-- (id)initWithSelectedWord:(WDWord *)selectedWord;
+- (id)init;
+
+- (void)resign;
+- (void)pause;
+- (void)resume;
+- (void)terminate;
 
 @end

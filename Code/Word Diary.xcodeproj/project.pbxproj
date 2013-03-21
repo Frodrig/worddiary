@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B0764A516FB0B9B00A046BC /* WDDayChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0764A416FB0B9B00A046BC /* WDDayChecker.m */; };
 		5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
 		5B1AC4BC16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */; };
@@ -71,6 +72,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B0764A316FB0B9B00A046BC /* WDDayChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayChecker.h; sourceTree = "<group>"; };
+		5B0764A416FB0B9B00A046BC /* WDDayChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDayChecker.m; sourceTree = "<group>"; };
+		5B0764A716FB0D2B00A046BC /* WDDayCheckerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayCheckerDelegate.h; sourceTree = "<group>"; };
 		5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundView.h; sourceTree = "<group>"; };
 		5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundView.m; sourceTree = "<group>"; };
 		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
@@ -182,6 +186,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B0764A116FB0B7700A046BC /* General */ = {
+			isa = PBXGroup;
+			children = (
+				5B80894616DE3CE2002CD179 /* WDUtils.h */,
+				5B80894716DE3CE2002CD179 /* WDUtils.m */,
+			);
+			name = General;
+			sourceTree = "<group>";
+		};
+		5B0764A216FB0B7D00A046BC /* Day Checker */ = {
+			isa = PBXGroup;
+			children = (
+				5B0764A316FB0B9B00A046BC /* WDDayChecker.h */,
+				5B0764A416FB0B9B00A046BC /* WDDayChecker.m */,
+				5B0764A716FB0D2B00A046BC /* WDDayCheckerDelegate.h */,
+			);
+			name = "Day Checker";
+			sourceTree = "<group>";
+		};
 		5B1A712F16E8A24C00355F59 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -332,8 +355,8 @@
 		5B80894516DE3CCA002CD179 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				5B80894616DE3CE2002CD179 /* WDUtils.h */,
-				5B80894716DE3CE2002CD179 /* WDUtils.m */,
+				5B0764A216FB0B7D00A046BC /* Day Checker */,
+				5B0764A116FB0B7700A046BC /* General */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -622,6 +645,7 @@
 				5B431DD416F9BEE100AED63B /* WDWordTextView.m in Sources */,
 				5B431DD716F9BEF800AED63B /* WDWordTextWithCursorView.m in Sources */,
 				5B431DDA16F9BF0400AED63B /* WDWordTextWithoutCursorView.m in Sources */,
+				5B0764A516FB0B9B00A046BC /* WDDayChecker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

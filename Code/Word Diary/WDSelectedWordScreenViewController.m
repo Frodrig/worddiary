@@ -17,6 +17,7 @@
 #import "WDBackground.h"
 #import "WDWordRepresentationView.h"
 #import "UIView+UIViewNibLoad.h"
+#import "WDDayChecker.h"
 
 const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 const static CGFloat ANIMATION_TIME_CURSORMODE = 0.5;
@@ -37,6 +38,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic)                BOOL                                 keyboardActive;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
+@property (nonatomic, strong)        WDDayChecker                         *dayChecker;
+
+- (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
 
 - (void)       tapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)       swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
@@ -81,27 +85,29 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize keyboardActive                       = keyboardActive_;
 @synthesize wordDiaryRepresentation              = wordDiaryRepresentation_;
 @synthesize cursorUpdateTimer                    = cursorUpdateTimer_;
+@synthesize dayChecker                           = dayChecker_;
 
 #pragma mark Init
 
-- (id)initWithSelectedWord:(WDWord *)selectedWord
+- (id)init
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         // Selected word
-        selectedWord_ = selectedWord;
+        selectedWord_ = [self selectWordOfWordDiaryAtLaunchOrResume];
+        dayChecker_  = [[WDDayChecker alloc] init];
         keyboardActive_ = NO;
         
         // Views fuera del xib propio
         wordDiaryRepresentation_ = (WDWordRepresentationView *)[WDWordRepresentationView createFromNib];
-
+        
         // Gesture Recognizer
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
         tapGestureRecognizer_.numberOfTapsRequired = 1;
         tapGestureRecognizer_.numberOfTouchesRequired = 1;
         tapGestureRecognizer_.delegate = self;
         [self.view addGestureRecognizer:tapGestureRecognizer_];
-    
+        
         rightSwipeGesture_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
         rightSwipeGesture_.direction = UISwipeGestureRecognizerDirectionRight;
         rightSwipeGesture_.numberOfTouchesRequired = 1;
@@ -117,8 +123,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         // Notificaciones keyboard
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
+
     }
-    
     return self;
 }
 
@@ -185,13 +191,37 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
+    [self.cursorUpdateTimer invalidate];
+    self.cursorUpdateTimer = nil;
 }
 
 #pragma mark - Auxiliary
 
+- (WDWord *)selectWordOfWordDiaryAtLaunchOrResume
+{
+    NSDate *todayDate = [NSDate date];
+    
+    WDWord *lastCreatedWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
+    if (lastCreatedWord != nil) {
+        if (![lastCreatedWord isTodayWord]) {
+            if ([lastCreatedWord isEmpty]) {
+                lastCreatedWord.timeInterval = [todayDate timeIntervalSince1970];
+                lastCreatedWord.word = @"";
+            } else {
+                lastCreatedWord = nil;
+            }
+        }
+    }
+    
+    if (nil == lastCreatedWord) {
+        lastCreatedWord = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[todayDate timeIntervalSince1970]];
+    }
+    
+    return lastCreatedWord;
+}
+
 - (void)configureViewForSelectedWord
 {
-    
     // Gradiente
     [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
     self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];    
@@ -596,5 +626,48 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     return self.keyboardActive;
 }
 
+#pragma mark - App iOS events
+
+- (void)resign
+{
+    [self.cursorUpdateTimer invalidate];
+    self.cursorUpdateTimer = nil;
+    
+    [self.dayChecker pause];
+}
+
+- (void)pause
+{
+    if (self.cursorUpdateTimer != nil) {
+        [self.cursorUpdateTimer invalidate];
+        self.cursorUpdateTimer = nil;
+    }
+    
+    [self.dayChecker pause];
+    [self.wordDiaryRepresentation resignFirstResponder];
+    [self.wordDiaryRepresentation setWithoutCursor:0.0];
+    self.editMenuViewController.view.hidden = YES;
+    
+    [[WDWordDiary sharedWordDiary] saveAll];
+}
+
+- (void)resume
+{
+    self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
+    self.cursorUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_TIME_CURSOR target:self selector:@selector(updateCursorAnimation:) userInfo:nil repeats:YES];
+    [self.dayChecker resume];
+}
+
+- (void)terminate
+{
+    [[WDWordDiary sharedWordDiary] saveAll];
+}
+
+#pragma mark - DayCheckerDelegate
+
+- (void)dayCheckerOnNewDay:(WDDayChecker *)dayChecker
+{
+    
+}
 
 @end
