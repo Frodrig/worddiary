@@ -13,8 +13,11 @@
 
 @interface WDBackgroundStore()
 
-@property NSUInteger           idCounter;
-@property NSMutableDictionary *backgrounds;
+@property (nonatomic) NSUInteger           idCounter;
+@property (nonatomic, strong) NSMutableDictionary  *backgrounds;
+@property (nonatomic, weak)   WDBackground         *animateBackground;
+@property (nonatomic, strong) WDBackground         *backgroundChangingCategoryWithAnimation;
+@property (nonatomic, strong) NSMutableArray       *gradientLayersWithAnimationPendingToAdd;
 
 - (CAGradientLayer *)    createGradientLayerOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
 - (UIImageView *)        createImageBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
@@ -29,8 +32,22 @@
 
 #pragma mark - Synthesize
 
-@synthesize backgrounds = backgrounds_;
-@synthesize idCounter   = idCounter_;
+@synthesize backgrounds                                 = backgrounds_;
+@synthesize idCounter                                   = idCounter_;
+@synthesize backgroundChangingCategoryWithAnimation     = backgroundChangingCategoryWithAnimation;
+@synthesize gradientLayersWithAnimationPendingToAdd     = gradientLayersWithAnimationPendingToAdd_;
+@synthesize animateBackground                           = animateBackground_;
+
+#pragma mark - Properties
+
+- (NSMutableArray *)gradientLayersWithAnimationPendingToAdd
+{
+    if (nil == gradientLayersWithAnimationPendingToAdd_) {
+        gradientLayersWithAnimationPendingToAdd_ = [NSMutableArray arrayWithCapacity:1];
+    }
+    
+    return gradientLayersWithAnimationPendingToAdd_;
+}
 
 #pragma mark - Singleton
 
@@ -70,49 +87,51 @@
     gradient.frame = view.bounds;
     NSArray *pickerColorArray = [WDUtils pickerColorArray];
     UIColor *colorOne = [pickerColorArray objectAtIndex:[WDUtils convertGradientBackgroundCategoryToPickerColorIndex:category]];
-    UIColor *colorTwo = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0];
+    UIColor *colorTwo = [UIColor colorWithWhite:0.9 alpha:1.0];
     gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
     gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
     gradient.startPoint = CGPointMake(0.0, 0.0);
     gradient.endPoint = CGPointMake(1.0, 1.0);
     gradient.cornerRadius = 10.0;
     gradient.masksToBounds = YES;
-    
     [view.layer insertSublayer:gradient atIndex:0];
     
-    CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"colors"];
-    gradientAnimationStartPoint.fromValue = gradient.colors;//[NSValue valueWithCGPoint:gradient.startPoint];
-    gradientAnimationStartPoint.toValue = [NSArray arrayWithObjects:(id)colorTwo.CGColor, (id)colorOne.CGColor, nil];
-    gradientAnimationStartPoint.duration = 4.0;
+    CABasicAnimation *gradientAnimationColors = [CABasicAnimation animationWithKeyPath:@"colors"];
+    gradientAnimationColors.fromValue = gradient.colors;
+    gradientAnimationColors.toValue = [NSArray arrayWithObjects:(id)colorTwo.CGColor, (id)colorOne.CGColor, nil];
+    gradientAnimationColors.duration = 5;
+    gradientAnimationColors.removedOnCompletion = NO;
+    gradientAnimationColors.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    gradientAnimationColors.repeatCount = HUGE_VALF;
+    gradientAnimationColors.autoreverses = YES;
+    [gradient addAnimation:gradientAnimationColors forKey:@"animateGradientChangeColors"];
+    
+    CAKeyframeAnimation *gradientAnimationStartPoint = [CAKeyframeAnimation animationWithKeyPath:@"startPoint"];
+    [gradientAnimationStartPoint setValues:[NSArray arrayWithObjects:
+                                           [NSValue valueWithCGPoint:CGPointMake(1.0, 0.0)],
+                                           [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
+                                            nil]];
+    gradientAnimationStartPoint.duration = 5;
     gradientAnimationStartPoint.removedOnCompletion = NO;
-    gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    gradientAnimationStartPoint.calculationMode = kCAAnimationPaced;
+    gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     gradientAnimationStartPoint.repeatCount = HUGE_VALF;
     gradientAnimationStartPoint.autoreverses = YES;
-    [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientChangeColors"];
+    [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientChangeStartPoints"];
     
-    /*
-     CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"startPoint"];
-     gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
-     gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 0.2)];
-     gradientAnimationStartPoint.duration = 4.0;
-     gradientAnimationStartPoint.removedOnCompletion = NO;
-     gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-     gradientAnimationStartPoint.repeatCount = HUGE_VALF;
-     gradientAnimationStartPoint.autoreverses = YES;
-     [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientStartPoint"];
-     
-     CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
-     gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
-     gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.8)];
-     gradientAnimationEndPoint.duration = 4.0;
-     gradientAnimationEndPoint.removedOnCompletion = NO;
-     gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-     gradientAnimationEndPoint.repeatCount = HUGE_VALF;
-     gradientAnimationEndPoint.autoreverses = YES;
-     [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
-     */
-
-    
+    CAKeyframeAnimation *gradientAnimationEndPoint = [CAKeyframeAnimation animationWithKeyPath:@"endPoint"];
+    [gradientAnimationEndPoint setValues:[NSArray arrayWithObjects:
+                                            [NSValue valueWithCGPoint:CGPointMake(0.0, 1.0)],
+                                            [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
+                                            nil]];
+    gradientAnimationEndPoint.duration = 5;
+    gradientAnimationEndPoint.removedOnCompletion = NO;
+    gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    gradientAnimationEndPoint.calculationMode = kCAAnimationPaced;
+    gradientAnimationEndPoint.repeatCount = HUGE_VALF;
+    gradientAnimationEndPoint.autoreverses = YES;
+    [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientChangeEndPoints"];
+        
     return gradient;
 }
 
@@ -160,7 +179,72 @@
     return scheme;
 }
 
+#pragma mark - CABasicAnimation delegate
+
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+    // Con este codigo ES FUNDAMENTAL que SIEMPRE llegue antes la animacion release que la add
+    if (flag) {
+        CAGradientLayer *layer = nil;
+        
+        BOOL isTheAddAnimation = self.gradientLayersWithAnimationPendingToAdd.count > 0;
+        if (isTheAddAnimation) {
+            layer = [self.gradientLayersWithAnimationPendingToAdd objectAtIndex:0];
+            CAAnimation *addAnimation = [layer animationForKey:@"add"];
+            isTheAddAnimation = addAnimation == anim;
+            if (isTheAddAnimation) {
+                [layer removeAnimationForKey:@"add"];
+                [self.gradientLayersWithAnimationPendingToAdd removeObject:layer];
+                self.animateBackground.gradientLayer = layer;
+            }
+        }
+        
+        if (!isTheAddAnimation) {
+            layer = backgroundChangingCategoryWithAnimation.gradientLayer;
+            CAAnimation *releaseAnimation = [layer animationForKey:@"release"];
+            NSAssert(releaseAnimation == anim, @"Problema con la coherencia de animaciones y layers");
+            [layer removeAnimationForKey:@"release"];
+            [layer removeFromSuperlayer];
+            self.backgroundChangingCategoryWithAnimation = nil;
+        }
+    }
+}
+
 #pragma mark - Creation & Destruction
+
+- (void)changeBackground:(NSNumber *)idBackground toCategory:(WDBackgroundCategory)category
+{
+    if (self.backgroundChangingCategoryWithAnimation == nil && self.gradientLayersWithAnimationPendingToAdd.count == 0) {
+        WDBackground *backgroundToChange = [self findBackgroundWithID:idBackground];
+        if (backgroundToChange) {
+            self.animateBackground = backgroundToChange;
+            backgroundToChange.gradientLayer.opacity = 0;
+            
+            CABasicAnimation *animationFadeOut = [CABasicAnimation animationWithKeyPath:@"opacity"];
+            animationFadeOut.fromValue = [NSNumber numberWithInt:1.0];
+            animationFadeOut.toValue = [NSNumber numberWithInt:0.0];
+            animationFadeOut.removedOnCompletion = NO;
+            animationFadeOut.duration = 2.25;
+            animationFadeOut.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+            animationFadeOut.delegate = self;
+            [backgroundToChange.gradientLayer addAnimation:animationFadeOut forKey:@"release"];
+            self.backgroundChangingCategoryWithAnimation = backgroundToChange;
+            
+            CAGradientLayer *newLayer = [self createGradientLayerOfCategory:category forView:backgroundToChange.view];
+            newLayer.opacity = 1;
+            
+            CABasicAnimation *animationFadeIn = [CABasicAnimation animationWithKeyPath:@"opacity"];
+            animationFadeIn.fromValue = [NSNumber numberWithInt:0.0];
+            animationFadeIn.toValue = [NSNumber numberWithInt:1.0];
+            animationFadeIn.removedOnCompletion = NO;
+            animationFadeIn.duration = 4;
+            animationFadeIn.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+            animationFadeIn.delegate = self;
+            [newLayer addAnimation:animationFadeIn forKey:@"add"];
+            [self.gradientLayersWithAnimationPendingToAdd addObject:newLayer];
+        }
+    }
+}
 
 - (NSNumber *)createBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view
 {

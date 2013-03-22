@@ -599,8 +599,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     self.selectedWord.backgroundCategory = category;
 
+    /*
     [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
     self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:category forView:self.view];
+    */
+    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:category];
     
     WDBackground *backgroundObj = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
     [self updateColorScheme:backgroundObj.uiOverlayColorScheme];

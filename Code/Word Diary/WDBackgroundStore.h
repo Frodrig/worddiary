@@ -17,6 +17,9 @@
 
 - (NSNumber *)          createBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
 - (NSNumber *)          createBackgroundCopyOfBackgroundWithID:(NSNumber *)idBackground forView:(UIView *)view;
+
+- (void)                changeBackground:(NSNumber *)idBackground toCategory:(WDBackgroundCategory)category;
+
 - (void)                releaseBackgroundWithID:(NSNumber *)idBackground;
 
 - (WDBackground *)      findBackgroundWithID:(NSNumber *)idBackground;

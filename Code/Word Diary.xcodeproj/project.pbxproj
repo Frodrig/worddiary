@@ -58,7 +58,6 @@
 		5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */; };
 		5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840E116DCB9470005AF21 /* WDWordDiary.m */; };
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
-		5BB8410D16DD32D90005AF21 /* todo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 5BB8410C16DD32D90005AF21 /* todo.txt */; };
 		5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */; };
 		5BD34CA016E799F2007B46A2 /* WDBackgroundStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD34C9F16E799F2007B46A2 /* WDBackgroundStore.m */; };
 		5BD34CA416E7A08E007B46A2 /* WDBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD34CA316E7A08E007B46A2 /* WDBackground.m */; };
@@ -152,7 +151,6 @@
 		5BB840F816DCC80E0005AF21 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FA16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		5BB8410C16DD32D90005AF21 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5BD34C9E16E799F2007B46A2 /* WDBackgroundStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundStore.h; sourceTree = "<group>"; };
 		5BD34C9F16E799F2007B46A2 /* WDBackgroundStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundStore.m; sourceTree = "<group>"; };
@@ -419,7 +417,6 @@
 			children = (
 				5BB6B31216DBE13900394113 /* WDAppDelegate.h */,
 				5BB6B31316DBE13900394113 /* WDAppDelegate.m */,
-				5BB8410B16DD32BD0005AF21 /* Pending */,
 				5B767E6C16E8FA9400C589FC /* Resources */,
 				5BB840EF16DCC6C20005AF21 /* Localization */,
 				5B80894516DE3CCA002CD179 /* Utils */,
@@ -496,14 +493,6 @@
 				5B1AC4B916EA0A9200950206 /* WDSelectedWordScreenViewController.h */,
 			);
 			name = "Selected Word Screen";
-			sourceTree = "<group>";
-		};
-		5BB8410B16DD32BD0005AF21 /* Pending */ = {
-			isa = PBXGroup;
-			children = (
-				5BB8410C16DD32D90005AF21 /* todo.txt */,
-			);
-			name = Pending;
 			sourceTree = "<group>";
 		};
 		5BD34C9D16E799D4007B46A2 /* Word Diary */ = {
@@ -585,7 +574,6 @@
 				5BB6B31816DBE13900394113 /* Default@2x.png in Resources */,
 				5BB6B31A16DBE13900394113 /* Default-568h@2x.png in Resources */,
 				5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */,
-				5BB8410D16DD32D90005AF21 /* todo.txt in Resources */,
 				5B6F313C16DF5CEB007E4DBA /* 341-keyboard.png in Resources */,
 				5B6F313D16DF5CEB007E4DBA /* 341-keyboard@2x.png in Resources */,
 				5B6F314016DF5D00007E4DBA /* 350-text.png in Resources */,
