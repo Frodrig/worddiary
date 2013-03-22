@@ -20,7 +20,7 @@
 - (NSNumber *)          createBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
 - (NSNumber *)          createBackgroundCopyOfBackgroundWithID:(NSNumber *)idBackground forView:(UIView *)view;
 
-- (void)                changeBackground:(NSNumber *)idBackground toCategory:(WDBackgroundCategory)category;
+- (void)                changeBackground:(NSNumber *)idBackground toCategory:(WDBackgroundCategory)category withDuration:(CGFloat)time;
 
 - (void)                enterSwipeMode:(NSNumber *)idBackground;
 - (void)                exitSwipemode:(NSNumber *)idBackground;

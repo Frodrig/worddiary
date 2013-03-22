@@ -85,17 +85,6 @@
 - (void)enterSwipeMode:(NSNumber *)idBackground
 {
     if (!self.swipeMode) {
-        WDBackground *background = [self findBackgroundWithID:idBackground];
-        [background.gradientLayer removeAllAnimations];
-        
-        CABasicAnimation *whiteBackground = [CABasicAnimation animationWithKeyPath:@"colors"];
-        whiteBackground.fromValue = background.gradientLayer.colors;
-        whiteBackground.toValue = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.9 alpha:1.0].CGColor, (id)[UIColor colorWithWhite:0.9 alpha:1.0].CGColor, nil];
-        whiteBackground.removedOnCompletion = YES;
-        whiteBackground.duration = 2;
-        [background.gradientLayer addAnimation:whiteBackground forKey:@"swipeWhiteBackground"];
-        background.gradientLayer.colors = whiteBackground.toValue;
-
         swipeMode_ = YES;
     }
 }
@@ -103,10 +92,6 @@
 - (void)exitSwipemode:(NSNumber *)idBackground
 {
     if (self.swipeMode) {
-        WDBackground *background = [self findBackgroundWithID:idBackground];
-        [background.gradientLayer removeAllAnimations];
-        [self addAnimationsOfCategory:background.category toGradientLayer:background.gradientLayer];
-        
         swipeMode_ = NO;
     }
 }
@@ -256,9 +241,9 @@
 
 #pragma mark - Creation & Destruction
 
-- (void)changeBackground:(NSNumber *)idBackground toCategory:(WDBackgroundCategory)category
+- (void)changeBackground:(NSNumber *)idBackground toCategory:(WDBackgroundCategory)category withDuration:(CGFloat)time
 {
-    if (!self.swipeMode && self.backgroundChangingCategoryWithAnimation == nil && self.gradientLayersWithAnimationPendingToAdd.count == 0) {
+    if (self.backgroundChangingCategoryWithAnimation == nil && self.gradientLayersWithAnimationPendingToAdd.count == 0) {
         WDBackground *backgroundToChange = [self findBackgroundWithID:idBackground];
         if (backgroundToChange) {
             self.animateBackground = backgroundToChange;
@@ -268,7 +253,7 @@
             animationFadeOut.fromValue = [NSNumber numberWithInt:1.0];
             animationFadeOut.toValue = [NSNumber numberWithInt:0.0];
             animationFadeOut.removedOnCompletion = NO;
-            animationFadeOut.duration = 1.25;
+            animationFadeOut.duration = time;
             animationFadeOut.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
             animationFadeOut.delegate = self;
             [backgroundToChange.gradientLayer addAnimation:animationFadeOut forKey:@"release"];
@@ -281,7 +266,7 @@
             animationFadeIn.fromValue = [NSNumber numberWithInt:0.0];
             animationFadeIn.toValue = [NSNumber numberWithInt:1.0];
             animationFadeIn.removedOnCompletion = NO;
-            animationFadeIn.duration = 2;
+            animationFadeIn.duration = time;
             animationFadeIn.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
             animationFadeIn.delegate = self;
             [newLayer addAnimation:animationFadeIn forKey:@"add"];
@@ -310,6 +295,7 @@
         case BC_GRADIENT_9:
         case BC_GRADIENT_10:
         case BC_GRADIENT_11:
+        case BC_SWIPE_GRADIENT:
             background.gradientLayer = [self createGradientLayerOfCategory:category forView:view];
             background.uiOverlayColorScheme = [self colorSchemeForBackgroundCategory:category];
             break;
@@ -358,6 +344,7 @@
             case BC_GRADIENT_9:
             case BC_GRADIENT_10:
             case BC_GRADIENT_11:
+            case BC_SWIPE_GRADIENT:
                 [background.gradientLayer removeFromSuperlayer];
                 break;
                 

@@ -258,11 +258,12 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)configureViewForSelectedWord
 {
+    self.editMenuViewController.selectedWord = self.selectedWord;
+
     // Gradiente
     if (nil == self.idBackground) {
         [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
         self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];
-        self.editMenuViewController.selectedWord = self.selectedWord;
         WDBackground *background = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
         self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
     }
@@ -448,8 +449,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     if (self.swipeTimer) {
         [self.swipeTimer invalidate];
         self.swipeTimer = nil;
+    } else {
+        [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:BC_SWIPE_GRADIENT withDuration:0];
+        [UIView animateWithDuration:0 animations:^{
+            self.yearDateTopInfoLabel.alpha = 0.2;
+            self.dayMonthDateTopInfoLabel.alpha = 0.2;
+            self.wordDiaryRepresentation.alpha = 0.8;
+            self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.7;
+            self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.2;
+        }];
     }
-    self.swipeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(swipeTimerEnd:) userInfo:nil repeats:NO];
+    self.swipeTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(swipeTimerEnd:) userInfo:nil repeats:NO];
 }
 
 - (void)endSwipeTimer
@@ -462,7 +472,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [self endSwipeTimer];
     [[WDBackgroundStore sharedStore] exitSwipemode:self.idBackground];
-    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:self.selectedWord.backgroundCategory];
+    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:self.selectedWord.backgroundCategory withDuration:1.5];
+    [UIView animateWithDuration:1.5 animations:^{
+        self.yearDateTopInfoLabel.alpha = 1.0;
+        self.dayMonthDateTopInfoLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.alpha = 1.0;
+    }];
 }
 
 #pragma mark - Swipe Gesture Recognizer
@@ -589,7 +606,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
     self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:category forView:self.view];
     */
-    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:category];
+    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:category withDuration:1.25];
     
     WDBackground *backgroundObj = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
     [self updateColorScheme:backgroundObj.uiOverlayColorScheme];

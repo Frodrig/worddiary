@@ -206,6 +206,7 @@
                                                           [UIColor colorWithRed:255.0/255.0 green:90.0/255.0 blue:4.0/255.0 alpha:1.0],
                                                           [UIColor colorWithRed:255.0/255.0 green:156.0/255.0 blue:0/255.0 alpha:1.0],
                                                           [UIColor colorWithRed:255.0/255.0 green:198.0/255.0 blue:0/255.0 alpha:1.0],
+                                                          [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0],
                                  nil];
     
     return pickerColorArray;
