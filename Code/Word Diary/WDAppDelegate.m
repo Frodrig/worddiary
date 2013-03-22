@@ -34,7 +34,6 @@
   
     // Override point for customization after application launch
     //[self createDebugWords];
-    //[self prepareWordDiaryAtLaunch];
     [self prepareRootViewController];
     
     self.window.backgroundColor = [UIColor blackColor];

@@ -13,12 +13,17 @@
 
 @interface WDBackgroundStore : NSObject
 
+@property(nonatomic, readonly) BOOL swipeMode;
+
 + (WDBackgroundStore *) sharedStore;
 
 - (NSNumber *)          createBackgroundOfCategory:(WDBackgroundCategory)category forView:(UIView *)view;
 - (NSNumber *)          createBackgroundCopyOfBackgroundWithID:(NSNumber *)idBackground forView:(UIView *)view;
 
 - (void)                changeBackground:(NSNumber *)idBackground toCategory:(WDBackgroundCategory)category;
+
+- (void)                enterSwipeMode:(NSNumber *)idBackground;
+- (void)                exitSwipemode:(NSNumber *)idBackground;
 
 - (void)                releaseBackgroundWithID:(NSNumber *)idBackground;
 

@@ -40,6 +40,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
 @property (nonatomic)                BOOL                                 dayChangePendingToResolve;
+@property (nonatomic, strong)        NSTimer                              *swipeTimer;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
 - (void)       updateByDayChange;
@@ -71,6 +72,10 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       startCursorUpdateTimer;
 - (void)       endCursorUpdateTimer;
 
+- (void)        startSwipeTimer;
+- (void)        endSwipeTimer;
+- (void)        swipeTimerEnd:(NSTimer *)timer;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -92,6 +97,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize cursorUpdateTimer                    = cursorUpdateTimer_;
 @synthesize dayChecker                           = dayChecker_;
 @synthesize dayChangePendingToResolve            = dayChangePendingToResolve_;
+@synthesize swipeTimer                           = swipeTimer_;
 
 #pragma mark Init
 
@@ -253,12 +259,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)configureViewForSelectedWord
 {
     // Gradiente
-    [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
-    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];
-    self.editMenuViewController.selectedWord = self.selectedWord;
-    WDBackground *background = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
-    self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
-    
+    if (nil == self.idBackground) {
+        [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
+        self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];
+        self.editMenuViewController.selectedWord = self.selectedWord;
+        WDBackground *background = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
+        self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
+    }
+
     // Fecha
     [self setDateInfo];
     
@@ -274,55 +282,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
  
     
     [self.wordDiaryRepresentation setNeedsDisplay];
-    
-    /*
-     CAGradientLayer *gradient = [CAGradientLayer layer];
-     gradient.frame = self.view.frame;
-     UIColor *colorOne = [UIColor colorWithRed:1.0 green:1.0 blue:0.05 alpha:1.0];
-     UIColor *colorTwo = [UIColor colorWithRed:0.0 green:102.0/255.0 blue:1.0 alpha:1.0];
-     gradient.colors = [NSArray arrayWithObjects:(id)colorOne.CGColor, (id)colorTwo.CGColor, nil];
-     gradient.locations = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:1.0], nil];
-     gradient.startPoint = CGPointMake(0.5, 0.0);
-     gradient.endPoint = CGPointMake(0.0, 1.0);
-     [self.view.layer insertSublayer:gradient atIndex:0];
-     */
-    
-    /*+++
-     CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
-     NSArray *animateGradientColors = [NSArray arrayWithObjects:(id)[UIColor colorWithRed:0.8 green:0.2 blue:0.2 alpha:1.0].CGColor, (id)[UIColor colorWithRed:0.3 green:0.5 blue:0.2 alpha:1.0].CGColor, nil];
-     gradientAnimation.fromValue = gradient.colors;
-     gradientAnimation.toValue = animateGradientColors;
-     gradientAnimation.duration = 10.0;
-     gradientAnimation.removedOnCompletion = NO;
-     gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-     [gradient addAnimation:gradientAnimation forKey:@"animateGradient"];
-     gradient.colors = animateGradientColors;
-     */
-    
-    /*
-     CABasicAnimation *gradientAnimationStartPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
-     gradientAnimationStartPoint.fromValue = [NSValue valueWithCGPoint:gradient.endPoint];
-     gradientAnimationStartPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
-     gradientAnimationStartPoint.duration = 30.0;
-     gradientAnimationStartPoint.removedOnCompletion = NO;
-     gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-     gradientAnimationStartPoint.repeatCount = HUGE_VALF;
-     gradientAnimationStartPoint.autoreverses = YES;
-     [gradient addAnimation:gradientAnimationStartPoint forKey:@"animateGradientEndPoint"];
-     //    gradient.startPoint = CGPointMake(1.0, 0.0);
-     */
-    
-    /*++++
-     CABasicAnimation *gradientAnimationEndPoint = [CABasicAnimation animationWithKeyPath:@"endPoint"];
-     gradientAnimationEndPoint.fromValue = [NSValue valueWithCGPoint:gradient.startPoint];
-     gradientAnimationEndPoint.toValue = [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)];
-     gradientAnimationEndPoint.duration = 20.0;
-     gradientAnimationEndPoint.removedOnCompletion = NO;
-     gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-     [gradient addAnimation:gradientAnimationEndPoint forKey:@"animateGradientEndPoint"];
-     gradient.endPoint = CGPointMake(0.0, 0.0);
-     */
-
 }
 
 - (void)updateCursorAnimation:(NSTimer *)timer
@@ -482,10 +441,37 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 }
 
+#pragma mark - SwipeTimer
+
+- (void)startSwipeTimer
+{
+    if (self.swipeTimer) {
+        [self.swipeTimer invalidate];
+        self.swipeTimer = nil;
+    }
+    self.swipeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(swipeTimerEnd:) userInfo:nil repeats:NO];
+}
+
+- (void)endSwipeTimer
+{
+    [self.swipeTimer invalidate];
+    self.swipeTimer = nil;
+}
+
+- (void)swipeTimerEnd:(NSTimer *)timer
+{
+    [self endSwipeTimer];
+    [[WDBackgroundStore sharedStore] exitSwipemode:self.idBackground];
+    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:self.selectedWord.backgroundCategory];
+}
+
 #pragma mark - Swipe Gesture Recognizer
 
 - (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
 {
+    [self startSwipeTimer];
+    [[WDBackgroundStore sharedStore] enterSwipeMode:self.idBackground];
+    
     if (self.editMenuViewController.view.hidden && !self.keyboardActive) {
         WDWord *newSelectedWord = nil;
         if (gestureRecognizer == self.leftSwipeGesture) {
@@ -687,6 +673,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.dayChangePendingToResolve = NO;
     [self endCursorUpdateTimer];    
     [self.dayChecker pause];
+    [self endSwipeTimer];
 }
 
 - (void)pause
@@ -694,6 +681,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.dayChangePendingToResolve = NO;
     [self endCursorUpdateTimer];
     [self.dayChecker pause];
+    [self endSwipeTimer];
     [self.wordDiaryRepresentation resignFirstResponder];
     self.editMenuViewController.view.hidden = YES;
     
