@@ -52,6 +52,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.userInteractionEnabled = NO;
         [self configureLayerWithColorIndex:index];
     }
     

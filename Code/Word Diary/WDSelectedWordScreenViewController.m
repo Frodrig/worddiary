@@ -43,6 +43,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        NSMutableArray                       *pendingBackgroundChanges;
 @property (nonatomic, strong)        WDGradientBackground                 *actualGradientBackground;
 @property (nonatomic, strong)        WDGradientBackground                 *nextGradientBackground;
+@property (nonatomic, strong)        UIView                               *backgroundSwipeView;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
 - (void)       updateByDayChange;
@@ -74,7 +75,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       startCursorUpdateTimer;
 - (void)       endCursorUpdateTimer;
 
-- (void)        startSwipeTimer;
+- (void)        startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction;
+- (void)        startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction;
+- (void)        startSwipeTimer:( UISwipeGestureRecognizerDirection)direction;
 - (void)        endSwipeTimer;
 - (void)        swipeTimerEnd:(NSTimer *)timer;
 
@@ -105,6 +108,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize pendingBackgroundChanges             = pendingBackgroundChanges_;
 @synthesize actualGradientBackground             = actualGradientBackground_;
 @synthesize nextGradientBackground               = nextGradientBackground_;
+@synthesize backgroundSwipeView             = whiteBackgroundSwipeView_;
 
 #pragma mark Init
 
@@ -458,7 +462,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     if (touch.view == self.editMenuViewController.view) {
         shouldReceive = self.editMenuViewController.view.hidden;
     }
-    
+        
     return shouldReceive;
 }
 
@@ -493,19 +497,33 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - SwipeTimer
 
-- (void)startSwipeTimer
+- (void)startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction
 {
-    if (self.swipeTimer) {
+    BOOL diferentBackgroundSwipeColor = self.backgroundSwipeView.backgroundColor.CGColor != color.CGColor;
+    BOOL swipeTimerActive = self.swipeTimer != nil;
+    
+    if (swipeTimerActive) {
         [self.swipeTimer invalidate];
         self.swipeTimer = nil;
-    } else {
-        UIView *backgroundWhiteColor = [[UIView alloc] initWithFrame:self.actualGradientBackground.frame];
-        backgroundWhiteColor.backgroundColor = [UIColor whiteColor];
-        [self.view insertSubview:backgroundWhiteColor atIndex:0];
+    }
+    
+    if (!swipeTimerActive || diferentBackgroundSwipeColor) {
+        if (self.backgroundSwipeView) {
+            [self.backgroundSwipeView removeFromSuperview];
+            self.backgroundSwipeView = nil;
+        }
+        self.backgroundSwipeView = [[UIView alloc] initWithFrame:self.actualGradientBackground.frame];
+        self.backgroundSwipeView.backgroundColor = color;
+        self.backgroundSwipeView.layer.cornerRadius = 10.0;
+        self.backgroundSwipeView.userInteractionEnabled = NO;
+        [self.view insertSubview:self.backgroundSwipeView atIndex:0];
         
         [self.actualGradientBackground removeFromSuperview];
+        [self.nextGradientBackground removeFromSuperview];
+        self.nextGradientBackground = nil;
+        [self.pendingBackgroundChanges removeAllObjects];
         
-        [UIView animateWithDuration:0 animations:^{
+        [UIView animateWithDuration:duration animations:^{
             self.yearDateTopInfoLabel.alpha = 0.2;
             self.dayMonthDateTopInfoLabel.alpha = 0.2;
             self.wordDiaryRepresentation.alpha = 1.0;
@@ -513,7 +531,21 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.2;
         }];
     }
+    
     self.swipeTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(swipeTimerEnd:) userInfo:nil repeats:NO];
+}
+
+- (void)startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction
+{
+    [self startSwipeTimerWithColor:[UIColor colorWithWhite:0.70 alpha:1.0] duration:0 andDirection:direction];
+    UIImageView *noIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37-circle-x"]];
+    noIcon.frame = CGRectMake((self.view.frame.size.width - noIcon.frame.size.width) / 2, (self.view.frame.origin.y + self.view.frame.size.height) - 64.0, noIcon.frame.size.width, noIcon.frame.size.height);
+    [self.backgroundSwipeView addSubview:noIcon];
+}
+
+- (void)startSwipeTimer:(UISwipeGestureRecognizerDirection)direction
+{
+    [self startSwipeTimerWithColor:[UIColor colorWithWhite:0.90 alpha:1.0] duration:0 andDirection:direction];
 }
 
 - (void)endSwipeTimer
@@ -526,13 +558,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [self endSwipeTimer];
     
-    UIView *actualWhiteBackgroundView = [self.view.subviews objectAtIndex:0];
     self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
-    [self.view insertSubview:self.actualGradientBackground atIndex:0];
+    [self.view insertSubview:self.actualGradientBackground belowSubview:self.backgroundSwipeView];
+    self.backgroundSwipeView.userInteractionEnabled = NO;
     self.actualGradientBackground.alpha = 0.0;
- 
+
     [UIView animateWithDuration:1.5 animations:^{
-        actualWhiteBackgroundView.alpha = 0.0;
+        self.backgroundSwipeView.alpha = 0.0;
         self.actualGradientBackground.alpha = 1.0;
         self.yearDateTopInfoLabel.alpha = 1.0;
         self.dayMonthDateTopInfoLabel.alpha = 1.0;
@@ -540,7 +572,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
         self.wordDiaryRepresentation.alpha = 1.0;
     } completion:^(BOOL finished) {
-        [actualWhiteBackgroundView removeFromSuperview];
+        if (finished) {
+            [self.backgroundSwipeView removeFromSuperview];
+            self.backgroundSwipeView = nil;
+        }
+      //
     }];
 }
 
@@ -548,18 +584,21 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
 {
-    [self startSwipeTimer];
+    UISwipeGestureRecognizerDirection swipeDirection = gestureRecognizer == self.leftSwipeGesture ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
     
     if (self.editMenuViewController.view.hidden && !self.keyboardActive) {
         WDWord *newSelectedWord = nil;
-        if (gestureRecognizer == self.leftSwipeGesture) {
+        if (swipeDirection & UISwipeGestureRecognizerDirectionLeft) {
             newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
-        } else if (gestureRecognizer == self.rightSwipeGesture) {
+        } else if (swipeDirection & UISwipeGestureRecognizerDirectionRight) {
             newSelectedWord = [[WDWordDiary sharedWordDiary] findNextWordOf:self.selectedWord];
         }
         
-        if (newSelectedWord) {
+        if (nil == newSelectedWord) {
+            [self startInvalidSwipeTimer:swipeDirection];
+        } else {
             self.selectedWord = newSelectedWord;
+            [self startSwipeTimer:swipeDirection];
             [self configureViewForSelectedWord];
         }
     }
