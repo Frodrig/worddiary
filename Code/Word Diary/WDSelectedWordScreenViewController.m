@@ -29,6 +29,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (weak, nonatomic) IBOutlet UILabel                              *yearDateTopInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel                              *dayMonthDateTopInfoLabel;
 @property (nonatomic, strong)        UITapGestureRecognizer               *tapGestureRecognizer;
+@property (nonatomic, strong)        UITapGestureRecognizer               *doubleTapGestureRecognizer;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *leftSwipeGesture;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *rightSwipeGesture;
 @property (nonatomic)                CGPoint                              originalCenterPositionOfSelectedWord;
@@ -49,6 +50,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       updateByDayChange;
 
 - (void)       tapHandle:(UIGestureRecognizer *)gestureRecognizer;
+- (void)       doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)       swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
 
 - (void)       keyboardWillShowNotification:(NSNotification *)notification;
@@ -75,13 +77,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       startCursorUpdateTimer;
 - (void)       endCursorUpdateTimer;
 
-- (void)        startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction;
-- (void)        startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction;
-- (void)        startSwipeTimer:( UISwipeGestureRecognizerDirection)direction;
-- (void)        endSwipeTimer;
-- (void)        swipeTimerEnd:(NSTimer *)timer;
+- (void)       startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction;
+- (void)       startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction;
+- (void)       startSwipeTimer:( UISwipeGestureRecognizerDirection)direction;
+- (void)       endSwipeTimer;
+- (void)       swipeTimerEnd:(NSTimer *)timer;
 
-- (void)        changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration;
+- (void)       changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration;
 
 @end
 
@@ -94,6 +96,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize yearDateTopInfoLabel                 = yearDateTopInfoLabel_;
 @synthesize dayMonthDateTopInfoLabel             = dayMonthDateTopInfoLabel_;
 @synthesize tapGestureRecognizer                 = tapGestureRecognizer_;
+@synthesize doubleTapGestureRecognizer           = doubleTapGestureRecognizer_;
 @synthesize leftSwipeGesture                     = leftSwipeGesture_;
 @synthesize rightSwipeGesture                    = rightSwipeGesture_;
 @synthesize animateStartEndPointOfGradientTimer  = animateStartEndPointOfGradientTimer_;
@@ -108,7 +111,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize pendingBackgroundChanges             = pendingBackgroundChanges_;
 @synthesize actualGradientBackground             = actualGradientBackground_;
 @synthesize nextGradientBackground               = nextGradientBackground_;
-@synthesize backgroundSwipeView             = whiteBackgroundSwipeView_;
+@synthesize backgroundSwipeView                  = whiteBackgroundSwipeView_;
 
 #pragma mark Init
 
@@ -126,11 +129,18 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         wordDiaryRepresentation_ = (WDWordRepresentationView *)[WDWordRepresentationView createFromNib];
         
         // Gesture Recognizer
+        doubleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapHandle:)];
+        doubleTapGestureRecognizer_.numberOfTapsRequired = 2;
+        doubleTapGestureRecognizer_.numberOfTouchesRequired = 1;
+        doubleTapGestureRecognizer_.delegate = self;
+        [self.view addGestureRecognizer:doubleTapGestureRecognizer_];
+        
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
         tapGestureRecognizer_.numberOfTapsRequired = 1;
         tapGestureRecognizer_.numberOfTouchesRequired = 1;
         tapGestureRecognizer_.delegate = self;
         [self.view addGestureRecognizer:tapGestureRecognizer_];
+        [tapGestureRecognizer_ requireGestureRecognizerToFail:doubleTapGestureRecognizer_];
         
         rightSwipeGesture_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
         rightSwipeGesture_.direction = UISwipeGestureRecognizerDirectionRight;
@@ -470,26 +480,41 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)tapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (!self.keyboardActive) {
-        BOOL useAsTapGesture = self.editMenuViewController.view.hidden;
-        if (!useAsTapGesture) {
-            CGPoint hitPoint = [gestureRecognizer locationInView:nil];
-            useAsTapGesture = !CGRectContainsPoint(self.editMenuViewController.view.frame, hitPoint);
-        }
-        if (useAsTapGesture) {
-            BOOL hideMenu = !self.editMenuViewController.view.hidden;
-            //self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
-            //if (!self.editMenuViewController.view.hidden) {
-            if (!hideMenu) {
-                if ([self.selectedWord isTodayWord]) {
-                    [self.editMenuViewController showTodayWordMenu];
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        if (!self.keyboardActive) {
+            BOOL useAsTapGesture = self.editMenuViewController.view.hidden;
+            if (!useAsTapGesture) {
+                CGPoint hitPoint = [gestureRecognizer locationInView:nil];
+                useAsTapGesture = !CGRectContainsPoint(self.editMenuViewController.view.frame, hitPoint);
+            }
+            if (useAsTapGesture) {
+                BOOL hideMenu = !self.editMenuViewController.view.hidden;
+                //self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
+                //if (!self.editMenuViewController.view.hidden) {
+                if (!hideMenu) {
+                    if ([self.selectedWord isTodayWord]) {
+                        [self.editMenuViewController showTodayWordMenu];
+                    } else {
+                        [self.editMenuViewController showPreviousWordMenu];
+                    }
+                    [self wordDiaryRepresentationAnimateUpWithDuration:0.5];
                 } else {
-                    [self.editMenuViewController showPreviousWordMenu];
+                    [self wordDiaryRepresentationAnimateDownWithDuration:0.5];
+                    [self.editMenuViewController hideMenu];
                 }
-                [self wordDiaryRepresentationAnimateUpWithDuration:0.5];
-            } else {
-                [self wordDiaryRepresentationAnimateDownWithDuration:0.5];
-                [self.editMenuViewController hideMenu];
+            }
+        }
+    }
+}
+
+- (void)doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        if (!self.keyboardActive && self.editMenuViewController.view.hidden) {
+            WDWord *lastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
+            if (lastWord != self.selectedWord) {
+                self.selectedWord = lastWord;
+                [self configureViewForSelectedWord];
             }
         }
     }
