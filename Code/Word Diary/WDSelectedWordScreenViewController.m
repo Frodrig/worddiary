@@ -13,11 +13,10 @@
 #import "WDFont.h"
 #import "WDWordDiary.h"
 #import "WDUtils.h"
-#import "WDBackgroundStore.h"
-#import "WDBackground.h"
 #import "WDWordRepresentationView.h"
 #import "UIView+UIViewNibLoad.h"
 #import "WDDayChecker.h"
+#import "WDGradientBackground.h"
 
 const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 const static CGFloat ANIMATION_TIME_CURSORMODE = 0.5;
@@ -41,6 +40,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
 @property (nonatomic)                BOOL                                 dayChangePendingToResolve;
 @property (nonatomic, strong)        NSTimer                              *swipeTimer;
+@property (nonatomic, strong)        NSMutableArray                       *pendingBackgroundChanges;
+@property (nonatomic, strong)        WDGradientBackground                 *actualGradientBackground;
+@property (nonatomic, strong)        WDGradientBackground                 *nextGradientBackground;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
 - (void)       updateByDayChange;
@@ -76,6 +78,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)        endSwipeTimer;
 - (void)        swipeTimerEnd:(NSTimer *)timer;
 
+- (void)        changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -98,6 +102,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize dayChecker                           = dayChecker_;
 @synthesize dayChangePendingToResolve            = dayChangePendingToResolve_;
 @synthesize swipeTimer                           = swipeTimer_;
+@synthesize pendingBackgroundChanges             = pendingBackgroundChanges_;
+@synthesize actualGradientBackground             = actualGradientBackground_;
+@synthesize nextGradientBackground               = nextGradientBackground_;
 
 #pragma mark Init
 
@@ -204,8 +211,47 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
     [self endCursorUpdateTimer];
+}
+
+#pragma mark - WDGradientBackground
+
+- (void)changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration
+{
+    if (self.nextGradientBackground != nil) {
+        [self.pendingBackgroundChanges addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:index], [NSNumber numberWithFloat:duration], nil]
+                                                                             forKeys:[NSArray arrayWithObjects:@"gradientIndex", @"duration",  nil]]];
+    } else {
+        self.nextGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:index];
+        self.nextGradientBackground.alpha = 0.0;
+        [self.view insertSubview:self.nextGradientBackground belowSubview:self.actualGradientBackground];
+        
+        [UIView animateWithDuration:duration animations:^{
+            self.nextGradientBackground.alpha = 1.0;
+            self.actualGradientBackground.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self.actualGradientBackground removeFromSuperview];
+            self.actualGradientBackground = self.nextGradientBackground;
+            self.nextGradientBackground = nil;
+            
+            if (self.pendingBackgroundChanges.count > 0) {
+                NSDictionary *pendingGradientBackground = [self.pendingBackgroundChanges objectAtIndex:0];
+                NSNumber *pendingGradientColorIndex = [pendingGradientBackground objectForKey:@"gradientIndex"];
+                NSNumber *pendingGradientDuration = [pendingGradientBackground objectForKey:@"duration"];
+                [self.pendingBackgroundChanges removeObject:pendingGradientBackground];
+                
+                // Evitamos llamadas recursivas
+                // OJO: Posible agujero si entre que se produce la llamada llega otra a changeToGradientBackground, haría que se colara frente a la que de verdad toca
+                //      Debido a este agujero decido no activar la llamada a mainqueue y aguantar la recursiva.
+                [self changeToGradientBackgroundOfColorIndex:pendingGradientColorIndex.unsignedIntegerValue withDuration:pendingGradientDuration.floatValue];
+                /*
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    [self changeToGradientBackgroundOfColorIndex:pendingGradientColorIndex.unsignedIntegerValue withDuration:pendingGradientDuration.floatValue];
+                }];
+                */
+            }
+        }];
+    }
 }
 
 #pragma mark - Auxiliary
@@ -261,12 +307,15 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.editMenuViewController.selectedWord = self.selectedWord;
 
     // Gradiente
-    if (nil == self.idBackground) {
-        [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
-        self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:self.selectedWord.backgroundCategory forView:self.view];
-        WDBackground *background = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
-        self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
+    if (nil == self.swipeTimer) {
+        if (self.actualGradientBackground == nil) {
+            self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
+            [self.view insertSubview:self.actualGradientBackground atIndex:0];
+        } else if (self.selectedWord.backgroundCategory != self.actualGradientBackground.gradientColorIndex) {
+            [self changeToGradientBackgroundOfColorIndex:self.selectedWord.backgroundCategory withDuration:0.75];
+        }
     }
+    // self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
 
     // Fecha
     [self setDateInfo];
@@ -280,7 +329,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     } else {
         [self.wordDiaryRepresentation setWithoutCursor:0];
     }
- 
+
     
     [self.wordDiaryRepresentation setNeedsDisplay];
 }
@@ -450,12 +499,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.swipeTimer invalidate];
         self.swipeTimer = nil;
     } else {
-        [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:BC_SWIPE_GRADIENT withDuration:0];
+        UIView *backgroundWhiteColor = [[UIView alloc] initWithFrame:self.actualGradientBackground.frame];
+        backgroundWhiteColor.backgroundColor = [UIColor whiteColor];
+        [self.view insertSubview:backgroundWhiteColor atIndex:0];
+        
+        [self.actualGradientBackground removeFromSuperview];
+        
         [UIView animateWithDuration:0 animations:^{
             self.yearDateTopInfoLabel.alpha = 0.2;
             self.dayMonthDateTopInfoLabel.alpha = 0.2;
-            self.wordDiaryRepresentation.alpha = 0.8;
-            self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.7;
+            self.wordDiaryRepresentation.alpha = 1.0;
+            self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.2;
             self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.2;
         }];
     }
@@ -471,14 +525,22 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)swipeTimerEnd:(NSTimer *)timer
 {
     [self endSwipeTimer];
-    [[WDBackgroundStore sharedStore] exitSwipemode:self.idBackground];
-    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:self.selectedWord.backgroundCategory withDuration:1.5];
+    
+    UIView *actualWhiteBackgroundView = [self.view.subviews objectAtIndex:0];
+    self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
+    [self.view insertSubview:self.actualGradientBackground atIndex:0];
+    self.actualGradientBackground.alpha = 0.0;
+ 
     [UIView animateWithDuration:1.5 animations:^{
+        actualWhiteBackgroundView.alpha = 0.0;
+        self.actualGradientBackground.alpha = 1.0;
         self.yearDateTopInfoLabel.alpha = 1.0;
         self.dayMonthDateTopInfoLabel.alpha = 1.0;
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
         self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
         self.wordDiaryRepresentation.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        [actualWhiteBackgroundView removeFromSuperview];
     }];
 }
 
@@ -487,7 +549,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
 {
     [self startSwipeTimer];
-    [[WDBackgroundStore sharedStore] enterSwipeMode:self.idBackground];
     
     if (self.editMenuViewController.view.hidden && !self.keyboardActive) {
         WDWord *newSelectedWord = nil;
@@ -601,15 +662,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)changeToBackgroundCategory:(WDBackgroundCategory)category
 {
     self.selectedWord.backgroundCategory = category;
-
-    /*
-    [[WDBackgroundStore sharedStore] releaseBackgroundWithID:self.idBackground];
-    self.idBackground = [[WDBackgroundStore sharedStore] createBackgroundOfCategory:category forView:self.view];
-    */
-    [[WDBackgroundStore sharedStore] changeBackground:self.idBackground toCategory:category withDuration:1.25];
-    
-    WDBackground *backgroundObj = [[WDBackgroundStore sharedStore] findBackgroundWithID:self.idBackground];
-    [self updateColorScheme:backgroundObj.uiOverlayColorScheme];
+    [self changeToGradientBackgroundOfColorIndex:category withDuration:1.5];
 }
 
 #pragma mark - WDWordRepresentationViewDelegate

@@ -192,8 +192,7 @@
                                                                     nil]];
     
     NSArray *pickerColorArray = [self.class makeColorGradientWithParameters:params];
-    */
-    
+ */
     NSArray *pickerColorArray = [NSArray arrayWithObjects:[UIColor colorWithRed:251.0/255.0 green:235.0/255.0 blue:0 alpha:1.0],
                                                           [UIColor colorWithRed:222.0/255.0 green:255.0/255.0 blue:0 alpha:1.0],
                                                           [UIColor colorWithRed:21/255.0 green:249.0/255.0 blue:2.0/255.0 alpha:1.0],

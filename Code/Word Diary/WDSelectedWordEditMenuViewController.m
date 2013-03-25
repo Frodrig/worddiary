@@ -17,6 +17,7 @@
 #import "WDFont.h"
 #import "WDWord.h"
 #import "WDUtils.h"
+#import "WDGradientBackground.h"
 
 static const NSUInteger TAG_CONTROL_TODAYWORDMENU_WRITE     = 10;
 static const NSUInteger TAG_CONTROL_TODAYWORDMENU_FONT      = 15;
@@ -78,7 +79,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
         previousDayWordMenuView_ = (WDPreviousWordMenuView *)[WDPreviousWordMenuView createFromNib];
         confirmWordActionMenuView_ = (WDConfirmWordActionMenuView *)[WDConfirmWordActionMenuView createFromNib];
         fontsMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 135.0) optionTitles:[self createTitlesForFontMenu] fontsForTitles:[self createFontFamiliesForFontMenu] optionImages:nil visibleOptions:3.5 andSelectedOption:[[WDWordDiary sharedWordDiary].fonts indexOfObject:selectedWord_.font]];
-        backgroundColorMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:fontsMenuView_.frame notConfiguredOptions:[WDUtils pickerColorArray].count visibleOptions:3.5 andSelectedOption:0];
+        backgroundColorMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:fontsMenuView_.frame notConfiguredOptions:[WDGradientBackground gradientColors].count visibleOptions:3.5 andSelectedOption:0];
     }
     
     return self;
@@ -121,7 +122,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     self.fontsMenuView.delegate = self;
     
     // Menu de colores
-    NSArray *pickerColorArray = [WDUtils pickerColorArray];
+    NSArray *pickerColorArray = [WDGradientBackground gradientColors];
     NSArray *backgroundColorsOptions = self.backgroundColorMenuView.buttonOptions;
     for (NSUInteger optionIndex = 0; optionIndex < backgroundColorsOptions.count; ++optionIndex) {
         UIButton *buttonOption = [backgroundColorsOptions objectAtIndex:optionIndex];
