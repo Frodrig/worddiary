@@ -34,7 +34,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *rightSwipeGesture;
 @property (nonatomic)                CGPoint                              originalCenterPositionOfSelectedWord;
 @property (nonatomic, strong)        NSTimer                              *animateStartEndPointOfGradientTimer;
-@property (nonatomic, weak)          NSNumber                             *idBackground;
 @property (nonatomic)                BOOL                                 keyboardActive;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
@@ -78,13 +77,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       startCursorUpdateTimer;
 - (void)       endCursorUpdateTimer;
 
-- (void)       startDeleteWordTimer;
-
-- (void)       startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction;
-- (void)       startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction;
-- (void)       startSwipeTimer:( UISwipeGestureRecognizerDirection)direction;
-- (void)       endSwipeTimer;
-- (void)       swipeTimerEnd:(NSTimer *)timer;
+- (void)       startBackgroundTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction;
+- (void)       startInvalidBackgroundTimer:(UISwipeGestureRecognizerDirection)direction;
+- (void)       startBackgroundTimer:( UISwipeGestureRecognizerDirection)direction;
+- (void)       endBackgroundTimer;
+- (void)       backgroundTimerEnd:(NSTimer *)timer;
 
 - (void)       changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration;
 
@@ -106,7 +103,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize leftSwipeGesture                     = leftSwipeGesture_;
 @synthesize rightSwipeGesture                    = rightSwipeGesture_;
 @synthesize animateStartEndPointOfGradientTimer  = animateStartEndPointOfGradientTimer_;
-@synthesize idBackground                         = idBackground_;
 @synthesize delegate                             = delegate_;
 @synthesize keyboardActive                       = keyboardActive_;
 @synthesize wordDiaryRepresentation              = wordDiaryRepresentation_;
@@ -566,9 +562,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - BackgroundTimer
 
-- (void)startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction
+- (void)startBackgroundTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction
 {
-    BOOL diferentBackgroundSwipeColor = self.backgroundSwipeView.backgroundColor.CGColor != color.CGColor;
+    BOOL diferentBackgroundColor = self.backgroundSwipeView.backgroundColor.CGColor != color.CGColor;
     BOOL timerActive = self.backgroundTimer != nil;
     
     if (timerActive) {
@@ -576,7 +572,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.backgroundTimer = nil;
     }
     
-    if (!timerActive || diferentBackgroundSwipeColor) {
+    if (!timerActive || diferentBackgroundColor) {
         if (self.backgroundSwipeView) {
             [self.backgroundSwipeView removeFromSuperview];
             self.backgroundSwipeView = nil;
@@ -601,36 +597,31 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         }];
     }
     
-    self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(swipeTimerEnd:) userInfo:nil repeats:NO];
+    self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(backgroundTimerEnd:) userInfo:nil repeats:NO];
 }
 
-- (void)startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction
+- (void)startInvalidBackgroundTimer:(UISwipeGestureRecognizerDirection)direction
 {
-    [self startSwipeTimerWithColor:[UIColor colorWithWhite:0.70 alpha:1.0] duration:0 andDirection:direction];
+    [self startBackgroundTimerWithColor:[UIColor colorWithWhite:0.70 alpha:1.0] duration:0 andDirection:direction];
     UIImageView *noIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37-circle-x"]];
     noIcon.frame = CGRectMake((self.view.frame.size.width - noIcon.frame.size.width) / 2, (self.view.frame.origin.y + self.view.frame.size.height) - 64.0, noIcon.frame.size.width, noIcon.frame.size.height);
     [self.backgroundSwipeView addSubview:noIcon];
 }
 
-- (void)startSwipeTimer:(UISwipeGestureRecognizerDirection)direction
+- (void)startBackgroundTimer:(UISwipeGestureRecognizerDirection)direction
 {
-    [self startSwipeTimerWithColor:[UIColor colorWithWhite:0.90 alpha:1.0] duration:0 andDirection:direction];
+    [self startBackgroundTimerWithColor:[UIColor colorWithWhite:0.90 alpha:1.0] duration:0 andDirection:direction];
 }
 
-- (void)startDeleteWordTimer
-{
-    [self startSwipeTimerWithColor:[UIColor colorWithWhite:0.90 alpha:1.0] duration:0 andDirection:0];
-}
-
-- (void)endSwipeTimer
+- (void)endBackgroundTimer
 {
     [self.backgroundTimer invalidate];
     self.backgroundTimer = nil;
 }
 
-- (void)swipeTimerEnd:(NSTimer *)timer
+- (void)backgroundTimerEnd:(NSTimer *)timer
 {
-    [self endSwipeTimer];
+    [self endBackgroundTimer];
     
     self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
     [self.view insertSubview:self.actualGradientBackground belowSubview:self.backgroundSwipeView];
@@ -669,10 +660,10 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         }
         
         if (nil == newSelectedWord) {
-            [self startInvalidSwipeTimer:swipeDirection];
+            [self startInvalidBackgroundTimer:swipeDirection];
         } else {
             self.selectedWord = newSelectedWord;
-            [self startSwipeTimer:swipeDirection];
+            [self startBackgroundTimer:swipeDirection];
             [self configureViewForSelectedWord];
         }
     }
@@ -747,11 +738,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
     [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
     self.selectedWord = newSelectedWord;
-    [self configureViewForSelectedWord];
     [self hideMainMenu];
-    
-    // TODO: Queremos hacer fade del fondo a gris al borrar tambien
-    //[self startDeleteWordTimer];
+    [self startBackgroundTimer:0];
+    [self configureViewForSelectedWord];
 }
 
 - (void)menuDidHide
@@ -864,7 +853,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.dayChangePendingToResolve = NO;
     [self endCursorUpdateTimer];    
     [self.dayChecker pause];
-    [self endSwipeTimer];
+    [self endBackgroundTimer];
 }
 
 - (void)pause
@@ -872,7 +861,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.dayChangePendingToResolve = NO;
     [self endCursorUpdateTimer];
     [self.dayChecker pause];
-    [self endSwipeTimer];
+    [self endBackgroundTimer];
     [self.wordDiaryRepresentation resignFirstResponder];
     self.editMenuViewController.view.hidden = YES;
     
