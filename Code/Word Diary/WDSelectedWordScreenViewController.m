@@ -706,19 +706,18 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)cancelDeleteWordFromConfirmationMenu
 {
-    self.editMenuViewController.view.hidden = YES;
+    [self hideMainMenu];
 }
 
 - (void)acceptDeleteWordFromConfirmationMenu
 {
-    self.editMenuViewController.view.hidden = YES;
-
     WDWord *newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
-    if (newSelectedWord) {
-        [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
-        self.selectedWord = newSelectedWord;
-        [self configureViewForSelectedWord];
-    }
+    NSAssert(newSelectedWord, @"Siempre tiene que existir una instancia de tipo palabra");
+
+    [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
+    self.selectedWord = newSelectedWord;
+    [self configureViewForSelectedWord];
+    [self hideMainMenu];
 }
 
 - (void)menuDidHide
