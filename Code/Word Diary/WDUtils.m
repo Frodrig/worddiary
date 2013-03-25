@@ -346,6 +346,24 @@
     return [NSArray arrayWithArray:colors];
 }
 
++ (UIView *)destroyViewGosthEffect:(UIView *)srcView withDuration:(CGFloat)duration andDisplacement:(CGFloat)displacement
+{
+    NSData *tempArchive = [NSKeyedArchiver archivedDataWithRootObject:srcView];
+    __block UIView *viewToApplyGosthEffect = (UIView *)[NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];
+    
+    [srcView.superview addSubview:viewToApplyGosthEffect];
+    
+    [UIView animateWithDuration:duration animations:^{
+        viewToApplyGosthEffect.frame = CGRectMake(viewToApplyGosthEffect.frame.origin.x + displacement, viewToApplyGosthEffect.frame.origin.y, viewToApplyGosthEffect.frame.size.width, viewToApplyGosthEffect.frame.size.height);
+        viewToApplyGosthEffect.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [viewToApplyGosthEffect removeFromSuperview];
+        viewToApplyGosthEffect = nil;
+    }];
+    
+    return viewToApplyGosthEffect;
+}
+
 
 
 

@@ -9,8 +9,20 @@
 #import "WDWordTextWithoutCursorView.h"
 #import "WDWordTextViewDataSource.h"
 #import <CoreText/CoreText.h>
+#import "WDUtils.h"
+
+@interface WDWordTextWithoutCursorView()
+
+@property(nonatomic, strong) NSString *lastWordText;
+
+@end
 
 @implementation WDWordTextWithoutCursorView
+
+@synthesize gosthWordText = gosthWordText_;
+@synthesize lastWordText  = lastWordText_;
+
+#pragma init
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -20,6 +32,37 @@
     }
     return self;
 }
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.gosthWordText = [aDecoder decodeObjectForKey:@"gosthWordText"];
+        lastWordText_ = nil;
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:self.gosthWordText forKey:@"gosthWordText"];
+    
+    [super encodeWithCoder:aCoder];
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    return [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:self]];
+}
+
+- (id)copy
+{
+    return [self copyWithZone:nil];
+}
+
+#pragma mark - Draw
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -40,9 +83,23 @@
     CGPoint startPointDraw = [self.dataSource actualStartPointDrawingForWordTextView:self];
     
     // nota: creamos un string con cursor como caracter de referencia a la hora de hallar los bounds
-    NSString *wordText = [self.dataSource actualTextValueForWordTextView:self];
+    NSString *wordText = self.gosthWordText != nil ? self.gosthWordText : [self.dataSource actualTextValueForWordTextView:self];
     NSString *wordTextWithCursor = [wordText stringByAppendingString:@"|"];
-    
+    /*
+    if (self.gosthWordText == nil && self.lastWordText != nil) {
+        if ([self.lastWordText compare:wordText] != NSOrderedSame) {
+            WDWordTextWithoutCursorView *gosthView = [self copy];
+            gosthView.dataSource = self.dataSource;
+            gosthView.gosthWordText = self.lastWordText;
+            gosthView.userInteractionEnabled = NO;
+            [self.superview insertSubview:gosthView aboveSubview:self];
+            [UIView animateWithDuration:0.55 animations:^{
+                gosthView.alpha = 0;
+            }];
+        }
+    }*/
+    self.lastWordText = wordText;
+
     NSString *familyFont = self.familyFont;
     CGFloat fontSize = [self.dataSource fontStartSize];
     

@@ -40,7 +40,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
 @property (nonatomic)                BOOL                                 dayChangePendingToResolve;
-@property (nonatomic, strong)        NSTimer                              *swipeTimer;
+@property (nonatomic, strong)        NSTimer                              *backgroundTimer;
 @property (nonatomic, strong)        NSMutableArray                       *pendingBackgroundChanges;
 @property (nonatomic, strong)        WDGradientBackground                 *actualGradientBackground;
 @property (nonatomic, strong)        WDGradientBackground                 *nextGradientBackground;
@@ -78,6 +78,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       startCursorUpdateTimer;
 - (void)       endCursorUpdateTimer;
 
+- (void)       startDeleteWordTimer;
+
 - (void)       startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction;
 - (void)       startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction;
 - (void)       startSwipeTimer:( UISwipeGestureRecognizerDirection)direction;
@@ -111,7 +113,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize cursorUpdateTimer                    = cursorUpdateTimer_;
 @synthesize dayChecker                           = dayChecker_;
 @synthesize dayChangePendingToResolve            = dayChangePendingToResolve_;
-@synthesize swipeTimer                           = swipeTimer_;
+@synthesize backgroundTimer                      = backgroundTimer_;
 @synthesize pendingBackgroundChanges             = pendingBackgroundChanges_;
 @synthesize actualGradientBackground             = actualGradientBackground_;
 @synthesize nextGradientBackground               = nextGradientBackground_;
@@ -326,7 +328,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.editMenuViewController.selectedWord = self.selectedWord;
 
     // Gradiente
-    if (nil == self.swipeTimer) {
+    if (nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
             self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
             [self.view insertSubview:self.actualGradientBackground atIndex:0];
@@ -340,6 +342,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self setDateInfo];
     
     // Palabra
+   // [WDUtils destroyViewGosthEffect:self.wordDiaryRepresentation withDuration:1.5 andDisplacement:0];
+
     NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:[[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]]];
     self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
     if ([self.selectedWord isEmpty]) {
@@ -349,7 +353,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.wordDiaryRepresentation setWithoutCursor:0];
     }
 
-    
     [self.wordDiaryRepresentation setNeedsDisplay];
 }
 
@@ -361,23 +364,46 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)setDateInfo
 {
-    self.yearDateTopInfoLabel.text = [NSNumber numberWithUnsignedInteger:self.selectedWord.dateComponents.year].stringValue;
+    static const CGFloat gosthEffectTime = 1.5;
     
+    NSString *newYearDateText = [NSNumber numberWithUnsignedInteger:self.selectedWord.dateComponents.year].stringValue;
+    if ([newYearDateText compare:self.yearDateTopInfoLabel.text] != NSOrderedSame) {
+        if (self.yearDateTopInfoLabel.text.length > 0) {
+            [WDUtils destroyViewGosthEffect:self.yearDateTopInfoLabel withDuration:gosthEffectTime andDisplacement:0];
+        }
+        self.yearDateTopInfoLabel.text = newYearDateText;
+    }
+    
+    NSString *dayMonthDateText = nil;
     if ([self.selectedWord isTodayWord]) {
-        self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@", NSLocalizedString(@"TAG_TODAYSECTION", @"")];
+        dayMonthDateText = [NSString stringWithFormat:@"%@", NSLocalizedString(@"TAG_TODAYSECTION", @"")];
     } else {
         NSString *dayString = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:self.selectedWord.dateComponents.day]];
         if ([WDUtils englishIsTheCurrentAppLanguage]) {
-            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@, %@", [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month], dayString];
+            dayMonthDateText = [NSString stringWithFormat:@"%@, %@", [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month], dayString];
         } else {
-            self.dayMonthDateTopInfoLabel.text = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month]];
+            dayMonthDateText = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils abreviateMonthString:self.selectedWord.dateComponents.month]];
         }
+    }
+    
+    if ([dayMonthDateText compare:self.dayMonthDateTopInfoLabel.text] != NSOrderedSame) {
+        if (self.dayMonthDateTopInfoLabel.text.length > 0) {
+            [WDUtils destroyViewGosthEffect:self.dayMonthDateTopInfoLabel withDuration:gosthEffectTime andDisplacement:0];
+        }
+        self.dayMonthDateTopInfoLabel.text = dayMonthDateText;
     }
     
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDate *dateFromWordTimeInterval = [NSDate dateWithTimeIntervalSince1970:self.selectedWord.timeInterval];
     NSDateComponents *dateComponents = [calendar components:NSWeekdayCalendarUnit fromDate:dateFromWordTimeInterval];
-    self.wordDiaryRepresentation.dayOfTheWeekLabel.text = [[WDUtils stringFromWeekday:dateComponents.weekday] lowercaseStringWithLocale:[NSLocale currentLocale]];
+    NSString *dayOfTheWeekLabel = [[WDUtils stringFromWeekday:dateComponents.weekday] lowercaseStringWithLocale:[NSLocale currentLocale]];
+    if ([dayMonthDateText compare:self.wordDiaryRepresentation.dayOfTheWeekLabel.text] != NSOrderedSame) {
+        if (self.wordDiaryRepresentation.dayOfTheWeekLabel.text.length > 0) {
+            [WDUtils destroyViewGosthEffect:self.wordDiaryRepresentation.dayOfTheWeekLabel withDuration:gosthEffectTime andDisplacement:0];
+        }
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.text = dayOfTheWeekLabel;
+    }
+
 }
 
 - (void)updateColorScheme:(WDColorScheme)scheme
@@ -538,19 +564,19 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 }
 
-#pragma mark - SwipeTimer
+#pragma mark - BackgroundTimer
 
 - (void)startSwipeTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction
 {
     BOOL diferentBackgroundSwipeColor = self.backgroundSwipeView.backgroundColor.CGColor != color.CGColor;
-    BOOL swipeTimerActive = self.swipeTimer != nil;
+    BOOL timerActive = self.backgroundTimer != nil;
     
-    if (swipeTimerActive) {
-        [self.swipeTimer invalidate];
-        self.swipeTimer = nil;
+    if (timerActive) {
+        [self.backgroundTimer invalidate];
+        self.backgroundTimer = nil;
     }
     
-    if (!swipeTimerActive || diferentBackgroundSwipeColor) {
+    if (!timerActive || diferentBackgroundSwipeColor) {
         if (self.backgroundSwipeView) {
             [self.backgroundSwipeView removeFromSuperview];
             self.backgroundSwipeView = nil;
@@ -575,7 +601,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         }];
     }
     
-    self.swipeTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(swipeTimerEnd:) userInfo:nil repeats:NO];
+    self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:0.75 target:self selector:@selector(swipeTimerEnd:) userInfo:nil repeats:NO];
 }
 
 - (void)startInvalidSwipeTimer:(UISwipeGestureRecognizerDirection)direction
@@ -591,10 +617,15 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self startSwipeTimerWithColor:[UIColor colorWithWhite:0.90 alpha:1.0] duration:0 andDirection:direction];
 }
 
+- (void)startDeleteWordTimer
+{
+    [self startSwipeTimerWithColor:[UIColor colorWithWhite:0.90 alpha:1.0] duration:0 andDirection:0];
+}
+
 - (void)endSwipeTimer
 {
-    [self.swipeTimer invalidate];
-    self.swipeTimer = nil;
+    [self.backgroundTimer invalidate];
+    self.backgroundTimer = nil;
 }
 
 - (void)swipeTimerEnd:(NSTimer *)timer
@@ -718,6 +749,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.selectedWord = newSelectedWord;
     [self configureViewForSelectedWord];
     [self hideMainMenu];
+    
+    // TODO: Queremos hacer fade del fondo a gris al borrar tambien
+    //[self startDeleteWordTimer];
 }
 
 - (void)menuDidHide

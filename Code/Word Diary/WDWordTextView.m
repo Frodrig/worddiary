@@ -38,6 +38,23 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.familyFont = [aDecoder decodeObjectForKey:@"famlyFont"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    // Nota: El data source se pone desde fuera
+    [aCoder encodeObject:self.familyFont forKey:@"familyFont"];
+    
+    [super encodeWithCoder:aCoder];
+}
+
 #pragma mark - Draw
 
 /*

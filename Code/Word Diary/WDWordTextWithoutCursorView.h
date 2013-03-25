@@ -8,6 +8,12 @@
 
 #import "WDWordTextView.h"
 
-@interface WDWordTextWithoutCursorView : WDWordTextView
+@interface WDWordTextWithoutCursorView : WDWordTextView<NSCopying>
+
+// Nota:
+// - Sirve para guardar el texto en modo fantasma. Tengo dudas de si esto en MVC es correcto
+@property(nonatomic, strong) NSString *gosthWordText;
+
+- (id)copy;
 
 @end
