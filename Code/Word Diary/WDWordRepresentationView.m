@@ -176,13 +176,15 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (void)updateCursorAnimation
 {
-    CGFloat whiteValue = 0.0;
-    CGFloat alphaValue = 0.0;
-    [self.actualColorOfCursor getWhite:&whiteValue alpha:&alphaValue];
-    if ([WDUtils is:alphaValue equalsTo:CURSOR_OPACITY]) {
-        self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:1.0];
-    } else {
-        self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:CURSOR_OPACITY];
+    if (self.actualColorOfCursor) {
+        CGFloat whiteValue = 0.0;
+        CGFloat alphaValue = 0.0;
+        [self.actualColorOfCursor getWhite:&whiteValue alpha:&alphaValue];
+        if ([WDUtils is:alphaValue equalsTo:CURSOR_OPACITY]) {
+            self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:1.0];
+        } else {
+            self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:CURSOR_OPACITY];
+        }
     }
 }
 
@@ -203,6 +205,8 @@ static CGFloat FONT_START_SIZE = 100.0;
         
         self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     }
+    
+    self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:1.0];
 }
 
 - (void)setWithoutCursor:(CGFloat)duration;
@@ -216,6 +220,7 @@ static CGFloat FONT_START_SIZE = 100.0;
     }
     
     self.wordTextWithoutCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
+    self.actualColorOfCursor = nil;
 }
 
 #pragma mark - Draw
@@ -296,7 +301,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (UIColor *)actualCursorColorForWordTextView:(WDWordTextView *)wordTextView
 {
-    return self.actualColorOfCursor;
+    return self.actualColorOfCursor ? self.actualColorOfCursor : [UIColor colorWithWhite:1.0 alpha:0.0];
 }
 
 - (CGPoint)actualStartPointDrawingForWordTextView:(WDWordTextView *)wordTextView
