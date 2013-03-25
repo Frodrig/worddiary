@@ -45,6 +45,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        WDGradientBackground                 *actualGradientBackground;
 @property (nonatomic, strong)        WDGradientBackground                 *nextGradientBackground;
 @property (nonatomic, strong)        UIView                               *backgroundSwipeView;
+@property (nonatomic)                BOOL                                 hideKeyboardWithTap;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
 - (void)       updateByDayChange;
@@ -85,6 +86,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)       changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration;
 
+- (void)       showMainMenu;
+- (void)       hideMainMenu;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -112,6 +116,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize actualGradientBackground             = actualGradientBackground_;
 @synthesize nextGradientBackground               = nextGradientBackground_;
 @synthesize backgroundSwipeView                  = whiteBackgroundSwipeView_;
+@synthesize hideKeyboardWithTap                  = hideKeyboardWithTap_;
 
 #pragma mark Init
 
@@ -464,6 +469,22 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }];
 }
 
+- (void)showMainMenu
+{
+    if ([self.selectedWord isTodayWord]) {
+        [self.editMenuViewController showTodayWordMenu];
+    } else {
+        [self.editMenuViewController showPreviousWordMenu];
+    }
+    [self wordDiaryRepresentationAnimateUpWithDuration:0.5];
+}
+
+- (void)hideMainMenu
+{
+    [self wordDiaryRepresentationAnimateDownWithDuration:0.5];
+    [self.editMenuViewController hideMenu];
+}
+
 #pragma mark - UIGestureRecognizer
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -492,17 +513,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
                 //self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
                 //if (!self.editMenuViewController.view.hidden) {
                 if (!hideMenu) {
-                    if ([self.selectedWord isTodayWord]) {
-                        [self.editMenuViewController showTodayWordMenu];
-                    } else {
-                        [self.editMenuViewController showPreviousWordMenu];
-                    }
-                    [self wordDiaryRepresentationAnimateUpWithDuration:0.5];
+                    [self showMainMenu];
                 } else {
-                    [self wordDiaryRepresentationAnimateDownWithDuration:0.5];
-                    [self.editMenuViewController hideMenu];
+                    [self hideMainMenu];
                 }
             }
+        } else {
+            self.hideKeyboardWithTap = YES;
+            [self.wordDiaryRepresentation resignFirstResponder];
         }
     }
 }
@@ -644,17 +662,23 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     NSDictionary *userInfo = notification.userInfo;
     
-    NSNumber *keyboardAnimationDuration = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    [self wordDiaryRepresentationAnimateDownWithDuration:keyboardAnimationDuration.floatValue];
-    [UIView animateWithDuration:keyboardAnimationDuration.doubleValue animations:^{
-        self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
-    }];
-    
     if (self.selectedWord.word.length == 0) {
         [self.wordDiaryRepresentation setWithCursor:ANIMATION_TIME_WITHOUTCURSORMODE];
     } else {
         [self.wordDiaryRepresentation setWithoutCursor:ANIMATION_TIME_WITHOUTCURSORMODE];
     }
+    
+    if (!self.hideKeyboardWithTap) {
+        [self showMainMenu];
+    } else {
+        NSNumber *keyboardAnimationDuration = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+        [self wordDiaryRepresentationAnimateDownWithDuration:keyboardAnimationDuration.floatValue];
+        [UIView animateWithDuration:keyboardAnimationDuration.doubleValue animations:^{
+            self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
+        }];
+    }
+    
+    self.hideKeyboardWithTap = NO;
 }
 
 - (void)keyboardDidHideNotification:(NSNotification *)notification
