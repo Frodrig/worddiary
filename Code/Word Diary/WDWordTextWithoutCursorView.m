@@ -98,6 +98,16 @@
             }];
         }
     }*/
+    /*
+    if (self.gosthWordText == nil && self.lastWordText != nil) {
+        if ([self.lastWordText compare:wordText] != NSOrderedSame) {
+            self.alpha = 0.0;
+            [UIView animateWithDuration:4 animations:^{
+                self.alpha = 1.0;
+            }];
+        }
+    }
+    */
     self.lastWordText = wordText;
 
     NSString *familyFont = self.familyFont;

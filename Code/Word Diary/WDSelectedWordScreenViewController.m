@@ -590,7 +590,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [UIView animateWithDuration:duration animations:^{
             self.yearDateTopInfoLabel.alpha = 0.2;
             self.dayMonthDateTopInfoLabel.alpha = 0.2;
-            self.wordDiaryRepresentation.alpha = 1.0;
+            self.wordDiaryRepresentation.alpha = 0.6;
             self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.2;
             self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.2;
         }];
