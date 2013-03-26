@@ -147,29 +147,33 @@ static CGFloat FONT_START_SIZE = 100.0;
 - (void)familyFontOfSelectedWordChanged
 {
     // Nota: - Las transiciones se guardan en un array para soportar multiples pulsaciones
-    WDWordTextWithoutCursorView *oldWordTextView = self.wordTextWithoutCursorFontTransitionsView.count > 0 ? self.wordTextWithoutCursorFontTransitionsView.lastObject : self.wordTextWithoutCursorView;
-    CGRect oldWordTextOriginalFrame = oldWordTextView.frame;
-    CGPoint oldWordTextOriginalCenter = oldWordTextView.center;
-
-    WDWordTextWithoutCursorView *wordTextTransition = [[WDWordTextWithoutCursorView alloc] initWithFrame:oldWordTextOriginalFrame];
-    wordTextTransition.backgroundColor = [UIColor clearColor];
-    wordTextTransition.dataSource = self;
-    wordTextTransition.alpha = 0.0;
-    wordTextTransition.center = CGPointMake(wordTextTransition.center.x * -2.0, wordTextTransition.center.y);
-    [self.wordTextWithoutCursorFontTransitionsView addObject:wordTextTransition];
-    [self addSubview:wordTextTransition];
-    
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-    [UIView animateWithDuration:1.25 animations:^{
-        wordTextTransition.alpha = 1.0;
-        wordTextTransition.center = oldWordTextOriginalCenter;
-        oldWordTextView.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        [self.wordTextWithoutCursorView removeFromSuperview];
-        self.wordTextWithoutCursorView = wordTextTransition;
-        [self.wordTextWithoutCursorFontTransitionsView removeObject:wordTextTransition];
+    if ([self.dataSource actualTextValueForWordRepresentationView:self].length > 0) {
+        WDWordTextWithoutCursorView *oldWordTextView = self.wordTextWithoutCursorFontTransitionsView.count > 0 ? self.wordTextWithoutCursorFontTransitionsView.lastObject : self.wordTextWithoutCursorView;
+        CGRect oldWordTextOriginalFrame = oldWordTextView.frame;
+        CGPoint oldWordTextOriginalCenter = oldWordTextView.center;
+        
+        WDWordTextWithoutCursorView *wordTextTransition = [[WDWordTextWithoutCursorView alloc] initWithFrame:oldWordTextOriginalFrame];
+        wordTextTransition.backgroundColor = [UIColor clearColor];
+        wordTextTransition.dataSource = self;
+        wordTextTransition.alpha = 0.0;
+        wordTextTransition.center = CGPointMake(wordTextTransition.center.x * -2.0, wordTextTransition.center.y);
+        [self.wordTextWithoutCursorFontTransitionsView addObject:wordTextTransition];
+        [self addSubview:wordTextTransition];
+        
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+        [UIView animateWithDuration:1.25 animations:^{
+            wordTextTransition.alpha = 1.0;
+            wordTextTransition.center = oldWordTextOriginalCenter;
+            oldWordTextView.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self.wordTextWithoutCursorView removeFromSuperview];
+            self.wordTextWithoutCursorView = wordTextTransition;
+            [self.wordTextWithoutCursorFontTransitionsView removeObject:wordTextTransition];
+            self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
+        }];
+    } else {
         self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
-    }];
+    }
 }
 
 #pragma mark - Updates
