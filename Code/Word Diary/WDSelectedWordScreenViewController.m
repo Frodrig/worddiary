@@ -532,8 +532,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             }
             if (useAsTapGesture) {
                 BOOL hideMenu = !self.editMenuViewController.view.hidden;
-                //self.editMenuViewController.view.hidden = !self.editMenuViewController.view.hidden;
-                //if (!self.editMenuViewController.view.hidden) {
                 if (!hideMenu) {
                     [self showMainMenu];
                 } else {
@@ -554,6 +552,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             WDWord *lastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
             if (lastWord != self.selectedWord) {
                 self.selectedWord = lastWord;
+                [self startBackgroundTimer:0];
                 [self configureViewForSelectedWord];
             }
         }
