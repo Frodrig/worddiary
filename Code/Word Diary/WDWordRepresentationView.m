@@ -284,7 +284,11 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (void)insertText:(NSString *)text
 {
-    [self.delegate wordRepresentationView:self insertText:text];
+    if ([text stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]].length == 0) {
+        [self.delegate keyboardDoneOnWordRepresentationView:self];
+    } else if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length > 0) {
+        [self.delegate wordRepresentationView:self insertText:text];
+    }
 }
 
 #pragma mark - WDWordTextViewDataSource

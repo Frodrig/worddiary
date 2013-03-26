@@ -14,5 +14,6 @@
 
 - (void)deleteBackwardsOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
 - (void)wordRepresentationView:(WDWordRepresentationView *)wordRepresentationView insertText:(NSString *)text;
+- (void)keyboardDoneOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
 
 @end

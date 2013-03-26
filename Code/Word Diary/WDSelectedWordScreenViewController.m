@@ -791,35 +791,18 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     NSAssert(wordRepresentationView == self.wordDiaryRepresentation, @"objeto invalido");
     
-    static const NSUInteger MAX_LENGHT = 45;
-    
-    if ([text isEqualToString:@"\n"]) {
-        [self.wordDiaryRepresentation resignFirstResponder];
-    } else {
-        // Se puede si:
-        // - No sobrepasamos el limite de caracteres
-        // - Estamos borrando
-        // - No hemos generado un doble tap en el espacio que produce el valor ". "
-        // - No es un espacio en blanco
-        BOOL should = text.length < MAX_LENGHT;
-        if (!should) {
-            should = ![text isEqualToString:@""];
-        }
-    
-        if (should) {
-            should = ![text isEqualToString:@". "];
-        }
-    
-        if (should) {
-            should = ![text isEqualToString:@" "];
-        }
-    
-        if (should) {
-            self.selectedWord.word = [self.selectedWord.word stringByAppendingString:text];
-        }
-    
-        [self.wordDiaryRepresentation setNeedsDisplay];
+    static const NSUInteger MAX_LENGHT = 40;
+    if (self.selectedWord.word.length < MAX_LENGHT) {
+        self.selectedWord.word = [self.selectedWord.word stringByAppendingString:text];
     }
+    
+    [self.wordDiaryRepresentation setNeedsDisplay];
+}
+
+- (void)keyboardDoneOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
+{
+    [self.wordDiaryRepresentation resignFirstResponder];
+    [self showMainMenu];
 }
 
 #pragma mark - WDWordRepresentationViewDataSource
