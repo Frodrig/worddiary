@@ -36,7 +36,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (UIView *)  findActualMenuViewAdded;
 
-- (void)      showMenuView:(UIView *)menuView;
+- (void)      showMenuView:(UIView *)menuView inInmediateMode:(BOOL)inmediate;
 - (void)      showDeletePreviousWordConfirmationMenu;
 - (void)      showFontWordMenu;
 - (void)      showBackgroundColorWordMenu;
@@ -197,10 +197,15 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (void)hideMenu
 {
-    [self showMenuView:nil];
+    [self showMenuView:nil inInmediateMode:NO];
 }
 
-- (void)showMenuView:(UIView *)menuView
+- (void)hideMenuInmediate
+{
+    [self showMenuView:nil inInmediateMode:YES];
+}
+
+- (void)showMenuView:(UIView *)menuView inInmediateMode:(BOOL)inmediate
 {
     UIView *menuToRemove = [self findActualMenuViewAdded];
     if (menuToRemove == menuView) {
@@ -208,7 +213,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     }
     
     if (nil == menuView) {
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:inmediate ? 0.0 : 0.5 animations:^{
             self.view.alpha = 0.0;
         } completion:^(BOOL finished) {
             self.view.hidden = YES;
@@ -222,7 +227,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
             self.view.alpha = 0.0;
             self.view.hidden = NO;
             [self.view addSubview:menuView];
-            [UIView animateWithDuration:0.5 animations:^{
+            [UIView animateWithDuration:inmediate ? 0.0 : 0.5 animations:^{
                 self.view.alpha = 1.0;
             }];
         } else {
@@ -233,7 +238,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
             // Se podrían usar tags para ordenarlos.
             menuView.center = CGPointMake(menuToShowIsNext ? 3.0 * menuView.center.x : -1 * menuView.center.x, originalCenter.y);
             
-            [UIView animateWithDuration:0.75 animations:^{
+            [UIView animateWithDuration:inmediate ? 0.0 : 0.75 animations:^{
                 menuToRemove.alpha = 0.0;
                 menuView.center = originalCenter;
             } completion:^(BOOL finished) {
@@ -280,27 +285,27 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (void)showTodayWordMenu
 {
-    [self showMenuView:self.todayWordMenuView];
+    [self showMenuView:self.todayWordMenuView inInmediateMode:NO];
 }
 
 - (void)showPreviousWordMenu
 {
-    [self showMenuView:self.previousDayWordMenuView];
+    [self showMenuView:self.previousDayWordMenuView inInmediateMode:NO];
 }
 
 - (void)showDeletePreviousWordConfirmationMenu
 {
-    [self showMenuView:self.confirmWordActionMenuView];
+    [self showMenuView:self.confirmWordActionMenuView inInmediateMode:NO];
 }
 
 - (void)showFontWordMenu
 {
-    [self showMenuView:self.fontsMenuView];
+    [self showMenuView:self.fontsMenuView inInmediateMode:NO];
 }
 
 - (void)showBackgroundColorWordMenu
 {
-    [self showMenuView:self.backgroundColorMenuView];
+    [self showMenuView:self.backgroundColorMenuView inInmediateMode:NO];
 }
 
 #pragma mark - Eventos de controles de menu
@@ -344,9 +349,9 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 {
     // Nota: Se retorna llamando al metodo de bajo nivel directamente con el fin de que haya animacion
     if (self.fontsMenuView == menu) {
-        [self showMenuView:self.todayWordMenuView];
+        [self showMenuView:self.todayWordMenuView inInmediateMode:NO];
     } else if (self.backgroundColorMenuView == menu) {
-        [self showMenuView:self.todayWordMenuView];
+        [self showMenuView:self.todayWordMenuView inInmediateMode:NO];
     }
 }
 

@@ -52,4 +52,7 @@ typedef enum {
 
 + (UIView *)             destroyViewGosthEffect:(UIView *)srcView withDuration:(CGFloat)duration andDisplacement:(CGFloat)displacement;
 
++ (void)                 pauseLayer:(CALayer*)layer;
++ (void)                 resumeLayer:(CALayer*)layer;
+
 @end

@@ -22,6 +22,7 @@
 - (id)   initWithSelectedWord:(WDWord *)word;
 
 - (void) hideMenu;
+- (void) hideMenuInmediate;
 - (void) showTodayWordMenu;
 - (void) showPreviousWordMenu;
 

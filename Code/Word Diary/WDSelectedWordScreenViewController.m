@@ -74,7 +74,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)       setDateInfo;
 
-- (void)       configureViewForSelectedWord;
+- (void)       configureViewForSelectedWord:(BOOL)updateBackground;
 
 - (void)       updateCursorAnimation:(NSTimer *)timer;
 
@@ -91,6 +91,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)       showMainMenu;
 - (void)       hideMainMenu;
+- (void)       hideMainMenuInmediate;
 
 - (void)       updateLongPressSwipe:(NSTimer *)timer;
 
@@ -173,7 +174,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHideNotification:) name:UIKeyboardDidHideNotification object:nil];
-
+        
     }
     return self;
 }
@@ -202,7 +203,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     self.view.contentMode = UIViewContentModeCenter;
     
-    [self configureViewForSelectedWord];
+    [self configureViewForSelectedWord:YES];
 
     [self startCursorUpdateTimer];
 }
@@ -331,33 +332,33 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     WDWord *newLastWord = [self selectWordOfWordDiaryAtLaunchOrResume];
     if (newLastWord != self.selectedWord) {
         self.selectedWord = newLastWord;
+        [self configureViewForSelectedWord:YES];
+    } else {
+        [self configureViewForSelectedWord:NO];
     }
-    [self configureViewForSelectedWord];
     
     self.dayChangePendingToResolve = NO;
 }
 
-- (void)configureViewForSelectedWord
+- (void)configureViewForSelectedWord:(BOOL)updateBackground
 {
     self.editMenuViewController.selectedWord = self.selectedWord;
 
     // Gradiente
-    if (nil == self.backgroundTimer) {
+    if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
             self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
             [self.view insertSubview:self.actualGradientBackground atIndex:0];
         } else if (self.selectedWord.backgroundCategory != self.actualGradientBackground.gradientColorIndex) {
             [self changeToGradientBackgroundOfColorIndex:self.selectedWord.backgroundCategory withDuration:0.75];
         }
+        // self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
     }
-    // self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
 
     // Fecha
     [self setDateInfo];
     
     // Palabra
-   // [WDUtils destroyViewGosthEffect:self.wordDiaryRepresentation withDuration:1.5 andDisplacement:0];
-
     NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:[[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]]];
     self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
     if ([self.selectedWord isEmpty]) {
@@ -525,6 +526,12 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self.editMenuViewController hideMenu];
 }
 
+- (void)hideMainMenuInmediate
+{
+    [self wordDiaryRepresentationAnimateDownWithDuration:0.0];
+    [self.editMenuViewController hideMenuInmediate];
+}
+
 - (void)updateLongPressSwipe:(NSTimer *)timer
 {
     NSNumber *userInfo = timer.userInfo;
@@ -583,7 +590,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             if (lastWord != self.selectedWord) {
                 self.selectedWord = lastWord;
                 [self startBackgroundTimer:0];
-                [self configureViewForSelectedWord];
+                [self configureViewForSelectedWord:YES];
             }
         }
     }
@@ -686,7 +693,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 }
 
 - (void)backgroundTimerEnd:(NSTimer *)timer
-{
+{    
     [self endBackgroundTimer];
     
     self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
@@ -728,7 +735,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         } else {
             self.selectedWord = newSelectedWord;
             [self startBackgroundTimer:direction];
-            [self configureViewForSelectedWord];
+            [self configureViewForSelectedWord:YES];
         }
     }
 
@@ -812,7 +819,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.selectedWord = newSelectedWord;
     [self hideMainMenu];
     [self startBackgroundTimer:0];
-    [self configureViewForSelectedWord];
+    [self configureViewForSelectedWord:YES];
 }
 
 - (void)menuDidHide
@@ -905,30 +912,45 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)resign
 {
+    // Nota: Por algun extraño motivo, cuando se pasa todo a background se dispara antes el timer asociado a la transicion entre palabras
+    // que los eventos resign o pause y no da lugar a controlar que hacer desde aqui por lo que al dispararse el timer se mandan ordenes para
+    // activar las animaciones. Metemos este codigo controlado
+    if (self.backgroundSwipeView) {
+        [self.backgroundSwipeView.layer removeAllAnimations];
+        [self.actualGradientBackground.layer removeAllAnimations];
+        [self.dayMonthDateTopInfoLabel.layer removeAllAnimations];
+        [self.wordDiaryRepresentation.layer removeAllAnimations];
+    }
+    
+    [WDUtils pauseLayer:self.actualGradientBackground.layer];
+    [WDUtils pauseLayer:self.nextGradientBackground.layer];
+    
     self.dayChangePendingToResolve = NO;
-    [self endCursorUpdateTimer];    
+    [self endCursorUpdateTimer];
     [self.dayChecker pause];
+    [self.backgroundTimer fire];
     [self endBackgroundTimer];
+    [self.wordDiaryRepresentation resignFirstResponder];
+    [self hideMainMenuInmediate];
 }
 
 - (void)pause
 {
-    self.dayChangePendingToResolve = NO;
-    [self endCursorUpdateTimer];
-    [self.dayChecker pause];
-    [self endBackgroundTimer];
-    [self.wordDiaryRepresentation resignFirstResponder];
-    self.editMenuViewController.view.hidden = YES;
-    
     [[WDWordDiary sharedWordDiary] saveAll];
 }
 
 - (void)resume
 {
-    self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
+    [WDUtils resumeLayer:self.actualGradientBackground.layer];
+    [WDUtils resumeLayer:self.nextGradientBackground.layer];
+    BOOL updateBackground = NO;
+    if (nil == self.selectedWord) {
+        self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
+        updateBackground = YES;
+    }
     [self startCursorUpdateTimer];
     [self.dayChecker resume];
-    [self configureViewForSelectedWord];
+    [self configureViewForSelectedWord:updateBackground];
 }
 
 - (void)terminate
