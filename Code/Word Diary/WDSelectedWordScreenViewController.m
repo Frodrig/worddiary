@@ -320,11 +320,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)updateByDayChange
 {
+    /*
     if ([self.selectedWord isEmpty]) {
         self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
     } else {
         WDWord *newLastWord = [self selectWordOfWordDiaryAtLaunchOrResume];
         NSAssert(newLastWord != self.selectedWord, @"La nueva palabra creada NO es la actual que mantenemos la de ayer");
+    }
+    */
+    WDWord *newLastWord = [self selectWordOfWordDiaryAtLaunchOrResume];
+    if (newLastWord != self.selectedWord) {
+        self.selectedWord = newLastWord;
     }
     [self configureViewForSelectedWord];
     

@@ -165,6 +165,7 @@
     NSArray *result = [self fetchAllEntitiesOfType:@"Word"];
     
     words_ = result.count > 0 ? [NSMutableArray arrayWithArray:result] : [NSMutableArray array];
+    [self cutWordsArrayAtPresentDay];
     [self sortWords];
     
     for (WDWord *word in words_) {
@@ -173,6 +174,13 @@
 }
 
 #pragma mark - Actions
+
+- (void)cutWordsArrayAtPresentDay
+{
+    NSTimeInterval actualTimeInterval = [[NSDate date] timeIntervalSince1970];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", actualTimeInterval];
+    words_ = [NSMutableArray arrayWithArray:[words_ filteredArrayUsingPredicate:predicate]];
+}
 
 - (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval
 {
@@ -276,7 +284,7 @@
 
 #pragma mark - Auxiliary
 
-- (void) addObserverToWord:(WDWord *)word
+- (void)addObserverToWord:(WDWord *)word
 {
     [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];

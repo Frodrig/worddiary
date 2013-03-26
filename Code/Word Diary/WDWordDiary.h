@@ -36,4 +36,6 @@
 - (WDColor *)     defaultColor;
 - (WDFont *)      defaultFont;
 
+- (void)          cutWordsArrayAtPresentDay;
+
 @end
