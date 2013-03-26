@@ -321,24 +321,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)updateByDayChange
 {
-    /*
-    if ([self.selectedWord isEmpty]) {
-        self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
-    } else {
-        WDWord *newLastWord = [self selectWordOfWordDiaryAtLaunchOrResume];
-        NSAssert(newLastWord != self.selectedWord, @"La nueva palabra creada NO es la actual que mantenemos la de ayer");
-    }
-    */
     WDWord *newLastWord = [self selectWordOfWordDiaryAtLaunchOrResume];
     if (newLastWord != self.selectedWord) {
         self.selectedWord = newLastWord;
+        [self startBackgroundTimer:0];
         [self configureViewForSelectedWord:YES];
     } else {
         [self configureViewForSelectedWord:NO];
     }
     
     self.dayChangePendingToResolve = NO;
-}
+ }
 
 - (void)configureViewForSelectedWord:(BOOL)updateBackground
 {
@@ -359,7 +352,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self setDateInfo];
     
     // Palabra
-    NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:[[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]]];
+    NSUInteger indexPositionOfSelectedWord = [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord];
+    NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:indexPositionOfSelectedWord]];
     self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
     if ([self.selectedWord isEmpty]) {
         NSAssert([self.selectedWord isTodayWord], @"Solo PUEDE estar vacia la palabra del dia de hoy");
@@ -944,7 +938,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [WDUtils resumeLayer:self.actualGradientBackground.layer];
     [WDUtils resumeLayer:self.nextGradientBackground.layer];
     BOOL updateBackground = NO;
-    if (nil == self.selectedWord) {
+    if (nil == self.selectedWord || ![self.selectedWord isTodayWord]) {
         self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
         updateBackground = YES;
     }

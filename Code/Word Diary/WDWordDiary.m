@@ -177,8 +177,16 @@
 
 - (void)cutWordsArrayAtPresentDay
 {
-    NSTimeInterval actualTimeInterval = [[NSDate date] timeIntervalSince1970];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", actualTimeInterval];
+    NSDate *todayDate = [NSDate date];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *todayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:todayDate];
+    todayDateComponents.hour = 23;
+    todayDateComponents.minute = 59;
+    todayDateComponents.second = 59;
+    NSTimeInterval todayLimitTimeInterval = [calendar dateFromComponents:todayDateComponents].timeIntervalSince1970;
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
+    
     words_ = [NSMutableArray arrayWithArray:[words_ filteredArrayUsingPredicate:predicate]];
 }
 
@@ -307,7 +315,7 @@
 
 - (WDColor *)defaultColor
 {
-    return [self.colors objectAtIndex:0];
+    return [self.colors objectAtIndex:rand() % self.colors.count];
 }
 
 - (WDFont *)defaultFont

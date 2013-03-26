@@ -38,6 +38,11 @@
     [self addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
 }
 
+- (void)awakeFromInsert
+{
+    [self addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
+}
+
 #pragma mark - End
 
 - (void)dealloc
@@ -69,13 +74,12 @@
     NSDate *todayDate = [NSDate date];
     NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    
     NSDateComponents *dateComponentsFromToday = [calendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:todayDate];
     NSDateComponents *dateComponentsFromWordDate = [calendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:wordDate];
     
     return dateComponentsFromToday.year == dateComponentsFromWordDate.year &&
-    dateComponentsFromToday.month == dateComponentsFromWordDate.month &&
-    dateComponentsFromToday.day == dateComponentsFromWordDate.day;
+           dateComponentsFromToday.month == dateComponentsFromWordDate.month &&
+           dateComponentsFromToday.day == dateComponentsFromWordDate.day;
     
 }
 
