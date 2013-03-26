@@ -32,6 +32,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        UITapGestureRecognizer               *doubleTapGestureRecognizer;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *leftSwipeGesture;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *rightSwipeGesture;
+@property (nonatomic, strong)        UILongPressGestureRecognizer         *longPressGestureRecognizer;
+@property (nonatomic, strong)        NSTimer                              *longPressGestureRecognizerTimer;
 @property (nonatomic)                CGPoint                              originalCenterPositionOfSelectedWord;
 @property (nonatomic, strong)        NSTimer                              *animateStartEndPointOfGradientTimer;
 @property (nonatomic)                BOOL                                 keyboardActive;
@@ -52,6 +54,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       tapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)       doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)       swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
+- (void)       longPressureHandle:(UIGestureRecognizer *)gestureRecognizer;
+- (void)       changeSelectedWordInSwipeDirection:(UISwipeGestureRecognizerDirection)direction;
 
 - (void)       keyboardWillShowNotification:(NSNotification *)notification;
 - (void)       keyboardWillHideNotification:(NSNotification *)notification;
@@ -88,6 +92,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       showMainMenu;
 - (void)       hideMainMenu;
 
+- (void)       updateLongPressSwipe:(NSTimer *)timer;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -102,6 +108,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize doubleTapGestureRecognizer           = doubleTapGestureRecognizer_;
 @synthesize leftSwipeGesture                     = leftSwipeGesture_;
 @synthesize rightSwipeGesture                    = rightSwipeGesture_;
+@synthesize longPressGestureRecognizer           = longPressGestureRecognizer_;
+@synthesize longPressGestureRecognizerTimer      = longPressGestureRecognizerTimer_;
 @synthesize animateStartEndPointOfGradientTimer  = animateStartEndPointOfGradientTimer_;
 @synthesize delegate                             = delegate_;
 @synthesize keyboardActive                       = keyboardActive_;
@@ -145,6 +153,10 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.view addGestureRecognizer:tapGestureRecognizer_];
         [tapGestureRecognizer_ requireGestureRecognizerToFail:doubleTapGestureRecognizer_];
         
+        longPressGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressureHandle:)];
+        longPressGestureRecognizer_.numberOfTouchesRequired = 1;
+        [self.view addGestureRecognizer:longPressGestureRecognizer_];
+
         rightSwipeGesture_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
         rightSwipeGesture_.direction = UISwipeGestureRecognizerDirectionRight;
         rightSwipeGesture_.numberOfTouchesRequired = 1;
@@ -507,6 +519,18 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self.editMenuViewController hideMenu];
 }
 
+- (void)updateLongPressSwipe:(NSTimer *)timer
+{
+    NSNumber *userInfo = timer.userInfo;
+    [self changeSelectedWordInSwipeDirection:userInfo.unsignedIntegerValue];
+    
+    if (timer.timeInterval > 0.25) {
+        NSTimeInterval actualTimeInterval = timer.timeInterval;
+        [self.longPressGestureRecognizerTimer invalidate];
+        self.longPressGestureRecognizerTimer = [NSTimer scheduledTimerWithTimeInterval:actualTimeInterval - 0.45 target:self selector:@selector(updateLongPressSwipe:) userInfo:userInfo repeats:YES];
+    }
+}
+
 #pragma mark - UIGestureRecognizer
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -559,6 +583,43 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 }
 
+#pragma mark - LongPressureRecognizer
+
+- (void)longPressureHandle:(UIGestureRecognizer *)gestureRecognizer
+{
+    BOOL inLongPressSwipeMode = NO;
+    
+    switch (gestureRecognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            inLongPressSwipeMode = YES;
+            break;
+        case UIGestureRecognizerStateChanged:
+            inLongPressSwipeMode = YES;
+            break;
+        case UIGestureRecognizerStateEnded:
+            break;
+            
+        default:
+            break;
+    };
+    
+    if (inLongPressSwipeMode) {
+        if (nil == self.longPressGestureRecognizerTimer) {
+            UISwipeGestureRecognizerDirection direction = UISwipeGestureRecognizerDirectionRight;
+            CGPoint hitLocation = [self.longPressGestureRecognizer locationInView:self.view];
+            if (hitLocation.x > self.view.frame.size.width / 2) {
+                direction = UISwipeGestureRecognizerDirectionLeft;
+            }
+            self.longPressGestureRecognizerTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateLongPressSwipe:) userInfo:[NSNumber numberWithUnsignedInteger:direction] repeats:YES];
+
+            [self changeSelectedWordInSwipeDirection:direction];
+        }
+    } else {
+        [self.longPressGestureRecognizerTimer invalidate];
+        self.longPressGestureRecognizerTimer = nil;
+    }
+}
+
 #pragma mark - BackgroundTimer
 
 - (void)startBackgroundTimerWithColor:(UIColor *)color duration:(CGFloat)duration andDirection:(UISwipeGestureRecognizerDirection)direction
@@ -590,8 +651,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [UIView animateWithDuration:duration animations:^{
             self.yearDateTopInfoLabel.alpha = 0.2;
             self.dayMonthDateTopInfoLabel.alpha = 0.2;
-            self.wordDiaryRepresentation.alpha = 0.6;
-            self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.2;
+            self.wordDiaryRepresentation.alpha = 0.8;
+            self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.4;
             self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.2;
         }];
     }
@@ -646,26 +707,32 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - Swipe Gesture Recognizer
 
-- (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
+- (void)changeSelectedWordInSwipeDirection:(UISwipeGestureRecognizerDirection)direction
 {
-    UISwipeGestureRecognizerDirection swipeDirection = gestureRecognizer == self.leftSwipeGesture ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
-    
     if (self.editMenuViewController.view.hidden && !self.keyboardActive) {
         WDWord *newSelectedWord = nil;
-        if (swipeDirection & UISwipeGestureRecognizerDirectionLeft) {
+        if (direction & UISwipeGestureRecognizerDirectionLeft) {
             newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
-        } else if (swipeDirection & UISwipeGestureRecognizerDirectionRight) {
+        } else if (direction & UISwipeGestureRecognizerDirectionRight) {
             newSelectedWord = [[WDWordDiary sharedWordDiary] findNextWordOf:self.selectedWord];
         }
         
         if (nil == newSelectedWord) {
-            [self startInvalidBackgroundTimer:swipeDirection];
+            [self startInvalidBackgroundTimer:direction];
         } else {
             self.selectedWord = newSelectedWord;
-            [self startBackgroundTimer:swipeDirection];
+            [self startBackgroundTimer:direction];
             [self configureViewForSelectedWord];
         }
     }
+
+}
+
+- (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
+{
+    UISwipeGestureRecognizerDirection swipeDirection = gestureRecognizer == self.leftSwipeGesture ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
+    
+    [self changeSelectedWordInSwipeDirection:swipeDirection];
 }
 
 #pragma mark KeyboardNotification
