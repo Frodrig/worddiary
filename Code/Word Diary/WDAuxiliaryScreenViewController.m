@@ -13,11 +13,16 @@
 
 @interface WDAuxiliaryScreenViewController ()
 
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
+- (void)showScreenInView:(UIView *)view withDuration:(CGFloat)duration;
+
 @end
 
 @implementation WDAuxiliaryScreenViewController
 
-@synthesize delegate = delegate_;
+@synthesize delegate   = delegate_;
+@synthesize titleLabel = titleLabel_;
 
 #pragma mark - Properties
 
@@ -47,9 +52,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Acciones
+#pragma mark - Auxiliares
 
-- (void)showSupportScreenInView:(UIView *)view withDuration:(CGFloat)duration
+- (void)showScreenInView:(UIView *)view withDuration:(CGFloat)duration
 {
     CGPoint originalAuxiliaryScreenCenter = self.view.center;
     self.view.center = CGPointMake(self.view.center.x, (view.frame.origin.y + view.frame.size.height) * 1.5);
@@ -61,6 +66,33 @@
     } completion:^(BOOL finished) {
         // ...
     }];
+}
+
+
+#pragma mark - Acciones
+
+- (void)showSupportScreenInView:(UIView *)view withDuration:(CGFloat)duration
+{
+    self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_SUPPORTTITLE", @"");
+    [self showScreenInView:view withDuration:duration];
+}
+
+- (void)showAboutScreenInView:(UIView *)view withDuration:(CGFloat)duration
+{
+    self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_ABOUTTITLE", @"");
+    [self showScreenInView:view withDuration:duration];
+}
+
+- (void)showSettingsScreenInView:(UIView *)view withDuration:(CGFloat)duration
+{
+    self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_SETTINGSTITLE", @"");
+    [self showScreenInView:view withDuration:duration];
+}
+
+- (void)showTipsScreenInView:(UIView *)view withDuration:(CGFloat)duration
+{
+    self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_TIPSTITLE", @"");
+    [self showScreenInView:view withDuration:duration];
 }
 
 - (void)hideWithDuration:(CGFloat)duration

@@ -347,6 +347,12 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
         [self showBackgroundColorWordMenu];
     } else if (button == self.todayWordMenuView.page2.supportButton) {
         [self.delegate supportOptionSelected];
+    } else if (button == self.todayWordMenuView.page2.tipsButton) {
+        [self.delegate tipsOptionSelected];
+    } else if (button == self.todayWordMenuView.page2.aboutButton) {
+        [self.delegate infoOptionSelected];
+    } else if (button == self.todayWordMenuView.page2.settingsButton) {
+        [self.delegate settingsOptionSelected];
     }
 }
 

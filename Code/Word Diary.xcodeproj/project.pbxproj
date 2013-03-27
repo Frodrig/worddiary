@@ -286,6 +286,34 @@
 			name = "Confirm Word Menu";
 			sourceTree = "<group>";
 		};
+		5B31A63917038EA000039CFC /* Support */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
+		5B31A63A17038EA800039CFC /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		5B31A63B17038EB700039CFC /* Tips */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Tips;
+			sourceTree = "<group>";
+		};
+		5B31A63C17038EC700039CFC /* About */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = About;
+			sourceTree = "<group>";
+		};
 		5B431DD116F9BEA500AED63B /* WDWordTextView */ = {
 			isa = PBXGroup;
 			children = (
@@ -311,6 +339,10 @@
 		5B5FB84C1703486300A11A56 /* Auxiliary Screen View */ = {
 			isa = PBXGroup;
 			children = (
+				5B31A63C17038EC700039CFC /* About */,
+				5B31A63B17038EB700039CFC /* Tips */,
+				5B31A63A17038EA800039CFC /* Settings */,
+				5B31A63917038EA000039CFC /* Support */,
 				5B5FB84D1703488B00A11A56 /* WDAuxiliaryScreenViewController.h */,
 				5B5FB84E1703488B00A11A56 /* WDAuxiliaryScreenViewController.m */,
 				5B5FB84F1703488B00A11A56 /* WDAuxiliaryScreenViewController.xib */,

@@ -14,6 +14,9 @@
 @property(nonatomic, weak) id<WDAuxiliaryScreenViewControllerDelegate> delegate;
 
 - (void)showSupportScreenInView:(UIView *)view withDuration:(CGFloat)duration;
+- (void)showAboutScreenInView:(UIView *)view withDuration:(CGFloat)duration;
+- (void)showSettingsScreenInView:(UIView *)view withDuration:(CGFloat)duration;
+- (void)showTipsScreenInView:(UIView *)view withDuration:(CGFloat)duration;
 
 - (void)hideWithDuration:(CGFloat)duration;
 

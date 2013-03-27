@@ -18,5 +18,8 @@
 - (void)changeToFontWithIndex:(NSUInteger)indexFont;
 - (void)changeToBackgroundCategory:(WDBackgroundCategory)category;
 - (void)supportOptionSelected;
+- (void)tipsOptionSelected;
+- (void)infoOptionSelected;
+- (void)settingsOptionSelected;
 - (void)menuDidHide;
 @end

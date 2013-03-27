@@ -98,6 +98,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)       updateLongPressSwipe:(NSTimer *)timer;
 
+- (void)       prepareViewToShowAuxiliaryScreen;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -294,6 +296,21 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 }
 
 #pragma mark - Auxiliary
+
+- (void)prepareViewToShowAuxiliaryScreen
+{
+    [self.editMenuViewController hideMenu];
+    [UIView animateWithDuration:0.75 animations:^{
+        self.yearDateTopInfoLabel.alpha = 0.0;
+        self.dayMonthDateTopInfoLabel.alpha = 0.0;
+        self.wordDiaryRepresentation.alpha = 0.0;
+        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        // Quitamos este componente, que es el verdaderamente pesado
+        [self.wordDiaryRepresentation removeFromSuperview];
+    }];
+}
 
 - (void)startCursorUpdateTimer
 {
@@ -818,19 +835,27 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - WDSelectedWordEditMenuDelegate
 
+- (void)tipsOptionSelected
+{
+    [self prepareViewToShowAuxiliaryScreen];
+    [self.auxiliarySreenViewController showTipsScreenInView:self.view withDuration:1];
+}
+
+- (void)infoOptionSelected
+{
+    [self prepareViewToShowAuxiliaryScreen];
+    [self.auxiliarySreenViewController showAboutScreenInView:self.view withDuration:1];
+}
+
+- (void)settingsOptionSelected
+{
+    [self prepareViewToShowAuxiliaryScreen];
+    [self.auxiliarySreenViewController showSettingsScreenInView:self.view withDuration:1];
+}
+
 - (void)supportOptionSelected
 {
-    [self.editMenuViewController hideMenu];
-    [UIView animateWithDuration:0.75 animations:^{
-        self.yearDateTopInfoLabel.alpha = 0.0;
-        self.dayMonthDateTopInfoLabel.alpha = 0.0;
-        self.wordDiaryRepresentation.alpha = 0.0;
-        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
-    } completion:^(BOOL finished) {
-        // Quitamos este componente, que es el verdaderamente pesado
-        [self.wordDiaryRepresentation removeFromSuperview];
-    }];
+    [self prepareViewToShowAuxiliaryScreen];
     [self.auxiliarySreenViewController showSupportScreenInView:self.view withDuration:1];
 }
 
