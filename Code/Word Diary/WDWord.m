@@ -9,6 +9,11 @@
 #import "WDWord.h"
 #import "WDFont.h"
 
+@interface WDWord()
+
+- (void)KVCRegister;
+
+@end
 
 @implementation WDWord
 
@@ -33,14 +38,20 @@
     return dateComponents_;
 }
 
-- (void)awakeFromFetch
+- (void)KVCRegister
 {
     [self addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
+    [self addObserver:self forKeyPath:@"word" options:0 context:NULL];
+}
+
+- (void)awakeFromFetch
+{
+    [self KVCRegister];
 }
 
 - (void)awakeFromInsert
 {
-    [self addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
+    [self KVCRegister];
 }
 
 #pragma mark - End
@@ -89,6 +100,11 @@
 {
     if ([keyPath compare:@"timeInterval"] == NSOrderedSame) {
         dateComponents_ = nil;
+    } else if ([keyPath compare:@"word"] == NSOrderedSame) {
+        // Si la palabra es la actual, nos interesa para el futuro poder guardar el instante preciso de actualizacion del dato
+        if ([self isTodayWord]) {
+            self.timeInterval = [[NSDate date] timeIntervalSince1970];
+        }
     }
 }
 
