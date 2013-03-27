@@ -47,6 +47,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        WDGradientBackground                 *nextGradientBackground;
 @property (nonatomic, strong)        UIView                               *backgroundSwipeView;
 @property (nonatomic)                BOOL                                 hideKeyboardWithTap;
+@property (nonatomic)                BOOL                                 appWasResigned;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
 - (void)       updateByDayChange;
@@ -124,6 +125,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize nextGradientBackground               = nextGradientBackground_;
 @synthesize backgroundSwipeView                  = whiteBackgroundSwipeView_;
 @synthesize hideKeyboardWithTap                  = hideKeyboardWithTap_;
+@synthesize appWasResigned                       = appWasResigned_;
 
 #pragma mark Init
 
@@ -906,6 +908,20 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)resign
 {
+    [WDUtils pauseLayer:self.actualGradientBackground.layer];
+    [WDUtils pauseLayer:self.nextGradientBackground.layer];
+    
+    self.dayChangePendingToResolve = NO;
+    [self endCursorUpdateTimer];
+    [self.dayChecker pause];
+    [self.backgroundTimer fire];
+    [self endBackgroundTimer];
+    
+    self.appWasResigned = YES;
+}
+
+- (void)didEnterBackground
+{
     // Nota: Por algun extraño motivo, cuando se pasa todo a background se dispara antes el timer asociado a la transicion entre palabras
     // que los eventos resign o pause y no da lugar a controlar que hacer desde aqui por lo que al dispararse el timer se mandan ordenes para
     // activar las animaciones. Metemos este codigo controlado
@@ -915,36 +931,36 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.dayMonthDateTopInfoLabel.layer removeAllAnimations];
         [self.wordDiaryRepresentation.layer removeAllAnimations];
     }
-    
-    [WDUtils pauseLayer:self.actualGradientBackground.layer];
-    [WDUtils pauseLayer:self.nextGradientBackground.layer];
-    
-    self.dayChangePendingToResolve = NO;
-    [self endCursorUpdateTimer];
-    [self.dayChecker pause];
-    [self.backgroundTimer fire];
-    [self endBackgroundTimer];
-    [self.wordDiaryRepresentation resignFirstResponder];
-    [self hideMainMenuInmediate];
-}
 
-- (void)pause
-{
+    [self hideMainMenuInmediate];
+    [self.wordDiaryRepresentation resignFirstResponder];
+
     [[WDWordDiary sharedWordDiary] saveAll];
 }
 
-- (void)resume
+- (void)willEnterForeground
 {
-    [WDUtils resumeLayer:self.actualGradientBackground.layer];
-    [WDUtils resumeLayer:self.nextGradientBackground.layer];
-    BOOL updateBackground = NO;
-    if (nil == self.selectedWord || ![self.selectedWord isTodayWord]) {
-        self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
-        updateBackground = YES;
+   
+}
+
+- (void)didBecomeActive
+{
+    if (self.appWasResigned) {
+        [WDUtils resumeLayer:self.actualGradientBackground.layer];
+        [WDUtils resumeLayer:self.nextGradientBackground.layer];
+        
+        BOOL updateBackground = NO;
+        if (nil == self.selectedWord || ![self.selectedWord isTodayWord]) {
+            self.selectedWord = [self selectWordOfWordDiaryAtLaunchOrResume];
+            [self startBackgroundTimer:0];
+            updateBackground = YES;
+        }
+        [self startCursorUpdateTimer];
+        [self.dayChecker resume];
+        [self configureViewForSelectedWord:updateBackground];
+        
+        self.appWasResigned = NO;
     }
-    [self startCursorUpdateTimer];
-    [self.dayChecker resume];
-    [self configureViewForSelectedWord:updateBackground];
 }
 
 - (void)terminate

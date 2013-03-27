@@ -54,7 +54,10 @@
 
 - (void)resume
 {
-    NSAssert(self.timer == nil, @"No debería de existir timer en este punto");
+    //NSAssert(self.timer == nil, @"No debería de existir timer en este punto");
+    if (self.timer != nil) {
+        [self.timer invalidate];
+    }
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(update:) userInfo:nil repeats:YES];
 }

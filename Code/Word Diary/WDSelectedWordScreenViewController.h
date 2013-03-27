@@ -22,8 +22,9 @@
 - (id)init;
 
 - (void)resign;
-- (void)pause;
-- (void)resume;
+- (void)didEnterBackground;
+- (void)willEnterForeground;
+- (void)didBecomeActive;
 - (void)terminate;
 
 @end
