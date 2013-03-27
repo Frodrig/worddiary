@@ -26,6 +26,10 @@
 		5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B446F7616F22A48005A432D /* CoreText.framework */; };
 		5B5FB8411702F48500A11A56 /* WDTodayWordMenuViewPage1.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B5FB8401702F48500A11A56 /* WDTodayWordMenuViewPage1.m */; };
 		5B5FB8441702F50D00A11A56 /* WDTodayWordMenuViewPage2.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B5FB8431702F50D00A11A56 /* WDTodayWordMenuViewPage2.m */; };
+		5B5FB8501703488B00A11A56 /* WDAuxiliaryScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B5FB84E1703488B00A11A56 /* WDAuxiliaryScreenViewController.m */; };
+		5B5FB8511703488B00A11A56 /* WDAuxiliaryScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B5FB84F1703488B00A11A56 /* WDAuxiliaryScreenViewController.xib */; };
+		5B5FB855170361E300A11A56 /* 32-circle-south.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5FB853170361E300A11A56 /* 32-circle-south.png */; };
+		5B5FB856170361E300A11A56 /* 32-circle-south@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5FB854170361E300A11A56 /* 32-circle-south@2x.png */; };
 		5B6F313C16DF5CEB007E4DBA /* 341-keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */; };
 		5B6F313D16DF5CEB007E4DBA /* 341-keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313B16DF5CEB007E4DBA /* 341-keyboard@2x.png */; };
 		5B6F314016DF5D00007E4DBA /* 350-text.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313E16DF5D00007E4DBA /* 350-text.png */; };
@@ -114,6 +118,12 @@
 		5B5FB8401702F48500A11A56 /* WDTodayWordMenuViewPage1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDTodayWordMenuViewPage1.m; sourceTree = "<group>"; };
 		5B5FB8421702F50D00A11A56 /* WDTodayWordMenuViewPage2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDTodayWordMenuViewPage2.h; sourceTree = "<group>"; };
 		5B5FB8431702F50D00A11A56 /* WDTodayWordMenuViewPage2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDTodayWordMenuViewPage2.m; sourceTree = "<group>"; };
+		5B5FB84D1703488B00A11A56 /* WDAuxiliaryScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAuxiliaryScreenViewController.h; sourceTree = "<group>"; };
+		5B5FB84E1703488B00A11A56 /* WDAuxiliaryScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAuxiliaryScreenViewController.m; sourceTree = "<group>"; };
+		5B5FB84F1703488B00A11A56 /* WDAuxiliaryScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAuxiliaryScreenViewController.xib; sourceTree = "<group>"; };
+		5B5FB8521703507900A11A56 /* WDAuxiliaryScreenViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAuxiliaryScreenViewControllerDelegate.h; sourceTree = "<group>"; };
+		5B5FB853170361E300A11A56 /* 32-circle-south.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "32-circle-south.png"; sourceTree = "<group>"; };
+		5B5FB854170361E300A11A56 /* 32-circle-south@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "32-circle-south@2x.png"; sourceTree = "<group>"; };
 		5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "341-keyboard.png"; sourceTree = "<group>"; };
 		5B6F313B16DF5CEB007E4DBA /* 341-keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "341-keyboard@2x.png"; sourceTree = "<group>"; };
 		5B6F313E16DF5D00007E4DBA /* 350-text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "350-text.png"; sourceTree = "<group>"; };
@@ -298,7 +308,18 @@
 			name = "Word View";
 			sourceTree = "<group>";
 		};
-		5B6F313216DF5A0A007E4DBA /* Menus */ = {
+		5B5FB84C1703486300A11A56 /* Auxiliary Screen View */ = {
+			isa = PBXGroup;
+			children = (
+				5B5FB84D1703488B00A11A56 /* WDAuxiliaryScreenViewController.h */,
+				5B5FB84E1703488B00A11A56 /* WDAuxiliaryScreenViewController.m */,
+				5B5FB84F1703488B00A11A56 /* WDAuxiliaryScreenViewController.xib */,
+				5B5FB8521703507900A11A56 /* WDAuxiliaryScreenViewControllerDelegate.h */,
+			);
+			name = "Auxiliary Screen View";
+			sourceTree = "<group>";
+		};
+		5B6F313216DF5A0A007E4DBA /* Selected Word Edit Menu  */ = {
 			isa = PBXGroup;
 			children = (
 				5B1AC4C316EA0ABA00950206 /* Paneles */,
@@ -307,7 +328,7 @@
 				5B1AC4BF16EA0AAE00950206 /* WDSelectedWordEditMenuViewController.m */,
 				5B1AC4D016EA296E00950206 /* WDSelectedWordEditMenuDelegate.h */,
 			);
-			name = Menus;
+			name = "Selected Word Edit Menu ";
 			sourceTree = "<group>";
 		};
 		5B6F313916DF5AB9007E4DBA /* Icons */ = {
@@ -323,6 +344,8 @@
 				5BE2F6EA1700954E00A68287 /* 37-circle-x@2x.png */,
 				5B6F314616DF5D1B007E4DBA /* 433-x.png */,
 				5B6F314716DF5D1B007E4DBA /* 433-x@2x.png */,
+				5B5FB853170361E300A11A56 /* 32-circle-south.png */,
+				5B5FB854170361E300A11A56 /* 32-circle-south@2x.png */,
 				5B6F314216DF5D0F007E4DBA /* 344-paintbrush.png */,
 				5BF834DA16EE503C0080FCDF /* 19-gear.png */,
 				5BF834DB16EE503D0080FCDF /* 19-gear@2x.png */,
@@ -501,8 +524,9 @@
 		5BB8410A16DD12DE0005AF21 /* Selected Word Screen */ = {
 			isa = PBXGroup;
 			children = (
+				5B6F313216DF5A0A007E4DBA /* Selected Word Edit Menu  */,
 				5B431DDC16F9D06700AED63B /* Word View */,
-				5B6F313216DF5A0A007E4DBA /* Menus */,
+				5B5FB84C1703486300A11A56 /* Auxiliary Screen View */,
 				5B1AC4D116EA397D00950206 /* WDSelectedWordScreenDelegate.h */,
 				5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */,
 				5B1AC4BB16EA0A9A00950206 /* WDSelectedWordScreenViewController.m */,
@@ -647,6 +671,9 @@
 				5BE2F6EC1700954E00A68287 /* 37-circle-x@2x.png in Resources */,
 				5BD4B04D1702EE280091D7D6 /* WDTodayWordMenuViewPage1.xib in Resources */,
 				5BD4B04F1702EE330091D7D6 /* WDTodayWordMenuViewPage2.xib in Resources */,
+				5B5FB8511703488B00A11A56 /* WDAuxiliaryScreenViewController.xib in Resources */,
+				5B5FB855170361E300A11A56 /* 32-circle-south.png in Resources */,
+				5B5FB856170361E300A11A56 /* 32-circle-south@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,6 +707,7 @@
 				5BE2F6E41700216400A68287 /* WDGradientBackground.m in Sources */,
 				5B5FB8411702F48500A11A56 /* WDTodayWordMenuViewPage1.m in Sources */,
 				5B5FB8441702F50D00A11A56 /* WDTodayWordMenuViewPage2.m in Sources */,
+				5B5FB8501703488B00A11A56 /* WDAuxiliaryScreenViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

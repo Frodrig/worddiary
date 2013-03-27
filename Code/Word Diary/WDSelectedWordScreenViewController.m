@@ -17,6 +17,7 @@
 #import "UIView+UIViewNibLoad.h"
 #import "WDDayChecker.h"
 #import "WDGradientBackground.h"
+#import "WDAuxiliaryScreenViewController.h"
 
 const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 const static CGFloat ANIMATION_TIME_CURSORMODE = 0.5;
@@ -48,6 +49,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        UIView                               *backgroundSwipeView;
 @property (nonatomic)                BOOL                                 hideKeyboardWithTap;
 @property (nonatomic)                BOOL                                 appWasResigned;
+@property (nonatomic, strong)        WDAuxiliaryScreenViewController      *auxiliarySreenViewController;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
 - (void)       updateByDayChange;
@@ -126,6 +128,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize backgroundSwipeView                  = whiteBackgroundSwipeView_;
 @synthesize hideKeyboardWithTap                  = hideKeyboardWithTap_;
 @synthesize appWasResigned                       = appWasResigned_;
+@synthesize auxiliarySreenViewController         = auxiliaryScreenViewController_;
 
 #pragma mark Init
 
@@ -141,6 +144,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         
         // Views fuera del xib propio
         wordDiaryRepresentation_ = (WDWordRepresentationView *)[WDWordRepresentationView createFromNib];
+        auxiliaryScreenViewController_ = [[WDAuxiliaryScreenViewController alloc] initWithNibName:nil bundle:nil];
         
         // Gesture Recognizer
         doubleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapHandle:)];
@@ -203,6 +207,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.editMenuViewController.view.hidden = YES;
     self.editMenuViewController.delegate = self;
     
+    self.auxiliarySreenViewController.delegate = self;
+    
     self.view.contentMode = UIViewContentModeCenter;
     
     [self configureViewForSelectedWord:YES];
@@ -214,11 +220,12 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [super viewWillAppear:animated];
     
-    const CGFloat menusMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
-    self.editMenuViewController.view.frame = CGRectMake(menusMargin,
-                                                        self.view.bounds.size.height - self.editMenuViewController.view.bounds.size.height - menusMargin,
+    const CGFloat xMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
+    self.editMenuViewController.view.frame = CGRectMake(xMargin,
+                                                        self.view.bounds.size.height - self.editMenuViewController.view.bounds.size.height - xMargin,
                                                         self.editMenuViewController.view.bounds.size.width,
                                                         self.editMenuViewController.view.bounds.size.height);
+    self.auxiliarySreenViewController.view.frame = CGRectMake(self.view.frame.origin.x + xMargin, xMargin, self.view.bounds.size.width - xMargin * 2, self.view.bounds.size.height - xMargin * 2);
     
     if (self.selectedWord.word.length > 0) {
         [self.wordDiaryRepresentation setWithoutCursor:0.0];
@@ -501,6 +508,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
         self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.alpha = 1.0;
         self.yearDateTopInfoLabel.alpha = 1.0;
         self.dayMonthDateTopInfoLabel.alpha = 1.0;
     }];
@@ -557,7 +565,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)tapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        if (!self.keyboardActive) {
+        if (!self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
             BOOL useAsTapGesture = self.editMenuViewController.view.hidden;
             if (!useAsTapGesture) {
                 CGPoint hitPoint = [gestureRecognizer locationInView:nil];
@@ -581,7 +589,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        if (!self.keyboardActive && self.editMenuViewController.view.hidden) {
+        if (!self.keyboardActive && self.editMenuViewController.view.hidden && ![self.auxiliarySreenViewController isShowed]) {
             WDWord *lastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
             if (lastWord != self.selectedWord) {
                 self.selectedWord = lastWord;
@@ -648,7 +656,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         }
         self.backgroundSwipeView = [[UIView alloc] initWithFrame:self.actualGradientBackground.frame];
         self.backgroundSwipeView.backgroundColor = color;
-        self.backgroundSwipeView.layer.cornerRadius = 10.0;
+        self.backgroundSwipeView.layer.cornerRadius = self.actualGradientBackground.layer.cornerRadius;
         self.backgroundSwipeView.userInteractionEnabled = NO;
         [self.view insertSubview:self.backgroundSwipeView atIndex:0];
         
@@ -718,30 +726,29 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)changeSelectedWordInSwipeDirection:(UISwipeGestureRecognizerDirection)direction
 {
-    if (self.editMenuViewController.view.hidden && !self.keyboardActive) {
-        WDWord *newSelectedWord = nil;
-        if (direction & UISwipeGestureRecognizerDirectionLeft) {
-            newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
-        } else if (direction & UISwipeGestureRecognizerDirectionRight) {
-            newSelectedWord = [[WDWordDiary sharedWordDiary] findNextWordOf:self.selectedWord];
-        }
-        
-        if (nil == newSelectedWord) {
-            [self startInvalidBackgroundTimer:direction];
-        } else {
-            self.selectedWord = newSelectedWord;
-            [self startBackgroundTimer:direction];
-            [self configureViewForSelectedWord:YES];
-        }
+    WDWord *newSelectedWord = nil;
+    if (direction & UISwipeGestureRecognizerDirectionLeft) {
+        newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
+    } else if (direction & UISwipeGestureRecognizerDirectionRight) {
+        newSelectedWord = [[WDWordDiary sharedWordDiary] findNextWordOf:self.selectedWord];
     }
-
+        
+    if (nil == newSelectedWord) {
+        [self startInvalidBackgroundTimer:direction];
+    } else {
+        self.selectedWord = newSelectedWord;
+        [self startBackgroundTimer:direction];
+        [self configureViewForSelectedWord:YES];
+    }
 }
 
 - (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
 {
-    UISwipeGestureRecognizerDirection swipeDirection = gestureRecognizer == self.leftSwipeGesture ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
-    
-    [self changeSelectedWordInSwipeDirection:swipeDirection];
+    if (self.editMenuViewController.view.hidden && !self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
+        UISwipeGestureRecognizerDirection swipeDirection = gestureRecognizer == self.leftSwipeGesture ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
+        
+        [self changeSelectedWordInSwipeDirection:swipeDirection];
+    }
 }
 
 #pragma mark KeyboardNotification
@@ -785,7 +792,47 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 }
 
+#pragma mark - WDAuxiliaryScreenViewControllerDelegate
+
+- (void)auxiliaryScreenViewBackButtonPressed:(WDAuxiliaryScreenViewController *)auxiliaryViewController
+{
+    [self.view addSubview:self.wordDiaryRepresentation];
+    self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
+    [UIView animateWithDuration:0.55 animations:^{
+        self.yearDateTopInfoLabel.alpha = 1.0;
+        self.dayMonthDateTopInfoLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.alpha = 1.0;
+        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        
+    }];
+    [self.auxiliarySreenViewController hideWithDuration:0.55];
+    self.view.backgroundColor = nil;
+}
+
+- (void)auxiliaryScreenViewWillHide:(WDAuxiliaryScreenViewController *)auxiliaryViewController
+{
+    
+}
+
 #pragma mark - WDSelectedWordEditMenuDelegate
+
+- (void)supportOptionSelected
+{
+    [self.editMenuViewController hideMenu];
+    [UIView animateWithDuration:0.75 animations:^{
+        self.yearDateTopInfoLabel.alpha = 0.0;
+        self.dayMonthDateTopInfoLabel.alpha = 0.0;
+        self.wordDiaryRepresentation.alpha = 0.0;
+        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        // Quitamos este componente, que es el verdaderamente pesado
+        [self.wordDiaryRepresentation removeFromSuperview];
+    }];
+    [self.auxiliarySreenViewController showSupportScreenInView:self.view withDuration:1];
+}
 
 - (void)writeSelectedWordOption
 {

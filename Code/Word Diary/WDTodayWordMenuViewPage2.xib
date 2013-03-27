@@ -75,7 +75,7 @@
 					<object class="IBUIButton" id="1010004148">
 						<reference key="NSNextResponder" ref="960338926"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{130, 0}, {130, 44}}</string>
+						<string key="NSFrame">{{0, 44}, {130, 44}}</string>
 						<reference key="NSSuperview" ref="960338926"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="53235097"/>
@@ -97,7 +97,7 @@
 					<object class="IBUIButton" id="53235097">
 						<reference key="NSNextResponder" ref="960338926"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{0, 44}, {130, 45}}</string>
+						<string key="NSFrame">{{130, 0}, {130, 45}}</string>
 						<reference key="NSSuperview" ref="960338926"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="597869037"/>
@@ -122,8 +122,9 @@
 						<string key="NSFrame">{{130, 44}, {130, 45}}</string>
 						<reference key="NSSuperview" ref="960338926"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<object class="NSColor" key="IBUIBackgroundColor" id="633007351">
+						<object class="NSColor" key="IBUIBackgroundColor" id="415059916">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MCAwAA</bytes>
 						</object>
@@ -147,7 +148,7 @@
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="749398040"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
-				<reference key="IBUIBackgroundColor" ref="633007351"/>
+				<reference key="IBUIBackgroundColor" ref="415059916"/>
 				<object class="IBUISimulatedSizeMetrics" key="IBUISimulatedDestinationMetrics">
 					<string key="IBUISimulatedSizeMetricsClass">IBUISimulatedFreeformSizeMetricsSentinel</string>
 					<string key="IBUIDisplayName">Freeform</string>
