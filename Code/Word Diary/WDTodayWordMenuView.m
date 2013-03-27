@@ -7,14 +7,28 @@
 //
 
 #import "WDTodayWordMenuView.h"
+#import "WDTodayWordMenuViewPage1.h"
+#import "WDTodayWordMenuViewPage2.h"
+#import "UIView+UIViewNibLoad.h"
 
 @implementation WDTodayWordMenuView
 
 #pragma mark - Synthesize
 
-@synthesize keyboardButton           = keyboardButton_;
-@synthesize backgroundColorButton    = backgroundColorButton_;
-@synthesize fontButton               = fontButton_;
-@synthesize settingsButton           = settingsButton_;
+@synthesize page1                    = page1_;
+@synthesize page2                    = page2_;
+@synthesize scrollView               = scrollView_;
+@synthesize pageView                 = pageView_;
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        page1_ = (WDTodayWordMenuViewPage1 *)[WDTodayWordMenuViewPage1 createFromNib];
+        page2_ = (WDTodayWordMenuViewPage2 *)[WDTodayWordMenuViewPage2 createFromNib];
+    }
+    
+    return self;
+}
 
 @end

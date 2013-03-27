@@ -13,7 +13,7 @@
 
 @class WDWord;
 
-@interface WDSelectedWordEditMenuViewController : UIViewController<WDCollectionOptionsWordMenuViewDelegate>
+@interface WDSelectedWordEditMenuViewController : UIViewController<WDCollectionOptionsWordMenuViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, weak)   WDWord                             *selectedWord;
 @property (nonatomic, strong) id<WDSelectedWordEditMenuDelegate> delegate;

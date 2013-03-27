@@ -8,10 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class WDTodayWordMenuViewPage1;
+@class WDTodayWordMenuViewPage2;
+
 @interface WDTodayWordMenuView : UIView
 
-@property (weak, nonatomic) IBOutlet UIButton *keyboardButton;
-@property (weak, nonatomic) IBOutlet UIButton *fontButton;
-@property (weak, nonatomic) IBOutlet UIButton *backgroundColorButton;
-@property (weak, nonatomic) IBOutlet UIButton *settingsButton;
+@property (nonatomic, strong)        WDTodayWordMenuViewPage1 *page1;
+@property (nonatomic, strong)        WDTodayWordMenuViewPage2 *page2;
+@property (weak, nonatomic) IBOutlet UIScrollView             *scrollView;
+@property (weak, nonatomic) IBOutlet UIPageControl            *pageView;
+
 @end
