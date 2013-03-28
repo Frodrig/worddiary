@@ -183,8 +183,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHideNotification:) name:UIKeyboardDidHideNotification object:nil];
-        
     }
+    
     return self;
 }
 
@@ -979,6 +979,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self showMainMenu];
 }
 
+- (void)shakeOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
+{
+    if (self.selectedWord.word.length > 0) {
+        self.selectedWord.word = @"";
+    }
+}
+
 #pragma mark - WDWordRepresentationViewDataSource
 
 - (NSString *)actualTextValueForWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
@@ -1038,7 +1045,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)willEnterForeground
 {
-   
+   // ...
 }
 
 - (void)didBecomeActive

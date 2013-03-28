@@ -327,4 +327,13 @@ static CGFloat FONT_START_SIZE = 100.0;
     return [WDUtils isIPhone5Screen] ? FONT_START_SIZE * 1.15 : FONT_START_SIZE * 0.9;
 }
 
+#pragma mark - Motion Events
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake) {
+        [self.delegate shakeOnWordRepresentationView:self];
+    }
+}
+
 @end

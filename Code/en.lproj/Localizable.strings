@@ -8,6 +8,8 @@
 
 "TAG_LANG" = "en";
 
+"TAG_VERSION" = "1.0";
+
 "TAG_OPENDB_FAILED" = "Failed opening DB";
 "TAG_OPENDBFAILED_REASON" = "Reason %@";
 "TAG_FETCHFAILED" = "Fetch Failed";

@@ -55,4 +55,6 @@ typedef enum {
 + (void)                 pauseLayer:(CALayer*)layer;
 + (void)                 resumeLayer:(CALayer*)layer;
 
++ (BOOL)                 deviceCanDetectShakeMovement;
+
 @end

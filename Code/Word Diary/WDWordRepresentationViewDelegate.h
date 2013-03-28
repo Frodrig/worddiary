@@ -16,4 +16,6 @@
 - (void)wordRepresentationView:(WDWordRepresentationView *)wordRepresentationView insertText:(NSString *)text;
 - (void)keyboardDoneOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
 
+- (void)shakeOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
+
 @end

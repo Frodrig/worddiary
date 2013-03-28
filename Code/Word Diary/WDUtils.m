@@ -8,6 +8,7 @@
 
 #import "WDUtils.h"
 #import <QuartzCore/QuartzCore.h>
+#import <CoreMotion/CoreMotion.h>
 
 @implementation WDUtils
 
@@ -381,6 +382,12 @@
     CFTimeInterval timeSincePause = [layer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
     layer.beginTime = timeSincePause;
 }
+
++ (BOOL)deviceCanDetectShakeMovement
+{
+    return [[CMMotionManager alloc] init].gyroAvailable;
+}
+
 
 
 
