@@ -10,7 +10,6 @@
 
 @interface WDTodayWordMenuViewPage2 : UIView
 
-@property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 @property (weak, nonatomic) IBOutlet UIButton *tipsButton;
 @property (weak, nonatomic) IBOutlet UIButton *supportButton;
 @property (weak, nonatomic) IBOutlet UIButton *aboutButton;

@@ -1,18 +1,21 @@
 //
-//  WDTodayWorldMenuViewPage2.m
+//  WDAuxiliaryScreenHelpPanelView.m
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 27/03/13.
+//  Created by Fernando Rodríguez Martínez on 28/03/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
-#import "WDTodayWordMenuViewPage2.h"
+#import "WDAuxiliaryScreenHelpPanelView.h"
 
-@implementation WDTodayWordMenuViewPage2
+@implementation WDAuxiliaryScreenHelpPanelView
 
-@synthesize tipsButton     = tipsButton_;
-@synthesize supportButton  = supportButton_;
-@synthesize aboutButton    = aboutButton;
+#pragma mark - Synthesize
+
+@synthesize helpContainerScrollView = helpContainerScrollView_;
+@synthesize pageController          = pageController_;
+
+#pragma mark - Init
 
 - (id)initWithFrame:(CGRect)frame
 {

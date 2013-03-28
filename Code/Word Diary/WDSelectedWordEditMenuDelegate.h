@@ -20,6 +20,5 @@
 - (void)supportOptionSelected;
 - (void)tipsOptionSelected;
 - (void)infoOptionSelected;
-- (void)settingsOptionSelected;
 - (void)menuDidHide;
 @end

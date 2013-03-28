@@ -11,7 +11,9 @@
 #import "WDBackgroundDefs.h"
 #import "WDAuxiliaryScreenAboutPanelView.h"
 #import "WDAuxiliaryScreenSupportPanelView.h"
+#import "WDAuxiliaryScreenHelpPanelView.h"
 #import "UIView+UIViewNibLoad.h"
+#import "UILabel+TopAlign.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface WDAuxiliaryScreenViewController ()
@@ -20,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UILabel                    *titleLabel;
 @property (nonatomic, strong) WDAuxiliaryScreenAboutPanelView   *aboutPanel;
 @property (nonatomic, strong) WDAuxiliaryScreenSupportPanelView *supportPanel;
+@property (nonatomic, strong) WDAuxiliaryScreenHelpPanelView    *helpPanel;
 @property (nonatomic) CGPoint                                   centerPositionForAuxiliaryPanels;
 @property (nonatomic, strong) MFMailComposeViewController       *mailComposerViewController;
 
@@ -30,6 +33,8 @@
 
 - (void)supportPanelEmailButtonPressed:(UIControl *)sender;
 
+- (void)insertPanel:(UIView *)view;
+
 @end
 
 @implementation WDAuxiliaryScreenViewController
@@ -39,6 +44,7 @@
 @synthesize titleLabel                 = titleLabel_;
 @synthesize aboutPanel                 = aboutPanel_;
 @synthesize mailComposerViewController = mailComposerViewController_;
+@synthesize helpPanel                  = helpPanel_;
 
 #pragma mark - Properties
 
@@ -59,7 +65,7 @@
     
     // Do any additional setup after loading the view from its nib.
     self.view.layer.cornerRadius = [WDUtils viewsCornerRadius];
-    self.view.backgroundColor = [WDUtils schemeBackgroundColor:CS_DARK];
+    self.view.backgroundColor = [WDUtils schemeBackgroundColor:CS_LIGHT];
     self.view.clipsToBounds = YES;
     self.backgroundHeaderView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
 }
@@ -86,6 +92,12 @@
     }];
 }
 
+- (void)insertPanel:(UIView *)view
+{
+    [self.view addSubview:view];
+    view.center = CGPointMake(self.view.bounds.size.width / 2, self.view.center.y);;
+}
+
 
 #pragma mark - Acciones
 
@@ -99,9 +111,8 @@
     [self.supportPanel.emailDescriptionSupportButton setTitle:NSLocalizedString(@"TAG_AUXILIARYSUPPORTPANEL_EMAILDESCRIPTION", @"") forState:UIControlStateNormal];
     [self.supportPanel.emailDescriptionSupportButton addTarget:self action:@selector(supportPanelEmailButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
-    [self.view addSubview:self.supportPanel];
-    self.supportPanel.center = CGPointMake(self.view.bounds.size.width / 2, self.view.center.y);;
-    
+    [self insertPanel:self.supportPanel];
+
     [self showScreenInView:view withDuration:duration];
 }
 
@@ -120,21 +131,52 @@
     [self.aboutPanel.wordDiaryURLButton addTarget:self action:@selector(aboutPanelWordDiaryURLButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.aboutPanel.twitterURLButton addTarget:self action:@selector(aboutPanelTwitterURLButton:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:self.aboutPanel];
-    self.aboutPanel.center = CGPointMake(self.view.bounds.size.width / 2, self.view.center.y);;
+    [self insertPanel:self.aboutPanel];
     
     [self showScreenInView:view withDuration:duration];
 }
 
-- (void)showSettingsScreenInView:(UIView *)view withDuration:(CGFloat)duration
-{
-    self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_SETTINGSTITLE", @"");
-    [self showScreenInView:view withDuration:duration];
-}
-
-- (void)showTipsScreenInView:(UIView *)view withDuration:(CGFloat)duration
+- (void)showHelpScreenInView:(UIView *)view withDuration:(CGFloat)duration
 {
     self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_TIPSTITLE", @"");
+    
+    self.helpPanel = (WDAuxiliaryScreenHelpPanelView *)[WDAuxiliaryScreenHelpPanelView createFromNib];
+    
+    NSArray *helpTips = [NSArray arrayWithObjects:NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_1", @""),
+                                                  NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_2", @""),
+                                                  NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_3", @""),
+                                                  NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_4", @""),
+                                                  NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_5", @""),
+                                                  NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_6", @""),
+                                                  NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_7", @""),
+                                                  nil];
+    
+    self.helpPanel.helpContainerScrollView.contentSize = CGSizeMake(self.helpPanel.helpContainerScrollView.bounds.size.width * helpTips.count, self.helpPanel.helpContainerScrollView.bounds.size.height);
+    for (NSUInteger tipIt = 0; tipIt < helpTips.count; tipIt++) {
+        NSString *helpTipString = [helpTips objectAtIndex:tipIt];
+        
+        CGRect labelFrameIt = CGRectMake(self.helpPanel.helpContainerScrollView.frame.size.width * tipIt,
+                                         0,
+                                         self.helpPanel.helpContainerScrollView.frame.size.width,
+                                         self.helpPanel.helpContainerScrollView.frame.size.height);
+        NSLog(@"%@", NSStringFromCGRect(labelFrameIt));
+        UILabel *labelIt = [[UILabel alloc] initWithFrame:labelFrameIt];
+        labelIt.text = helpTipString;
+        labelIt.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:33];
+        labelIt.textColor = [UIColor blackColor];
+        labelIt.textAlignment = NSTextAlignmentCenter;
+        labelIt.numberOfLines = 0;
+        labelIt.backgroundColor = [UIColor clearColor];
+        
+        [self.helpPanel.helpContainerScrollView addSubview:labelIt];
+        
+        [labelIt topAlign];
+    }
+    self.helpPanel.helpContainerScrollView.delegate = self;
+    self.helpPanel.pageController.numberOfPages = helpTips.count;
+    
+    [self insertPanel:self.helpPanel];
+    
     [self showScreenInView:view withDuration:duration];
 }
 
@@ -158,9 +200,23 @@
             [self.supportPanel removeFromSuperview];
             self.supportPanel = nil;
         }
+        
+        if (self.helpPanel) {
+            [self.helpPanel removeFromSuperview];
+            self.helpPanel = nil;
+        }
     }];
     
     [self.delegate auxiliaryScreenViewWillHide:self];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (scrollView == self.helpPanel.helpContainerScrollView) {
+        self.helpPanel.pageController.currentPage = self.helpPanel.helpContainerScrollView.contentOffset.x / self.helpPanel.helpContainerScrollView.bounds.size.width;
+    }
 }
 
 #pragma mark - Controles About Panel

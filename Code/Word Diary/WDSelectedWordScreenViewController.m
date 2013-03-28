@@ -864,19 +864,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)tipsOptionSelected
 {
     [self prepareViewToShowAuxiliaryScreen];
-    [self.auxiliarySreenViewController showTipsScreenInView:self.view withDuration:1];
+    [self.auxiliarySreenViewController showHelpScreenInView:self.view withDuration:1];
 }
 
 - (void)infoOptionSelected
 {
     [self prepareViewToShowAuxiliaryScreen];
     [self.auxiliarySreenViewController showAboutScreenInView:self.view withDuration:1];
-}
-
-- (void)settingsOptionSelected
-{
-    [self prepareViewToShowAuxiliaryScreen];
-    [self.auxiliarySreenViewController showSettingsScreenInView:self.view withDuration:1];
 }
 
 - (void)supportOptionSelected

@@ -10,10 +10,13 @@
 		5B0764A516FB0B9B00A046BC /* WDDayChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0764A416FB0B9B00A046BC /* WDDayChecker.m */; };
 		5B11934E17042FF400CAF765 /* WDAuxiliaryScreenAboutPanelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11934D17042FF400CAF765 /* WDAuxiliaryScreenAboutPanelView.xib */; };
 		5B119351170433FF00CAF765 /* WDAuxiliaryScreenAboutPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B119350170433FF00CAF765 /* WDAuxiliaryScreenAboutPanelView.m */; };
-		5B11935317044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11935217044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */; };
-		5B11935617044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B11935517044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m */; };
 		5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1193571704752B00CAF765 /* MessageUI.framework */; };
 		5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B119359170489D200CAF765 /* CoreMotion.framework */; };
+		5B11935F1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11935C1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */; };
+		5B1193601704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B11935E1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.m */; };
+		5B1193621704A51100CAF765 /* WDAuxiliaryScreenHelpPanelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1193611704A51100CAF765 /* WDAuxiliaryScreenHelpPanelView.xib */; };
+		5B1193651704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1193641704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.m */; };
+		5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */; };
 		5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
 		5B1AC4BC16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */; };
@@ -92,11 +95,16 @@
 		5B11934D17042FF400CAF765 /* WDAuxiliaryScreenAboutPanelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAuxiliaryScreenAboutPanelView.xib; sourceTree = "<group>"; };
 		5B11934F170433FF00CAF765 /* WDAuxiliaryScreenAboutPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAuxiliaryScreenAboutPanelView.h; sourceTree = "<group>"; };
 		5B119350170433FF00CAF765 /* WDAuxiliaryScreenAboutPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAuxiliaryScreenAboutPanelView.m; sourceTree = "<group>"; };
-		5B11935217044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAuxiliaryScreenSupportPanelView.xib; sourceTree = "<group>"; };
-		5B11935417044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAuxiliaryScreenSupportPanelView.h; sourceTree = "<group>"; };
-		5B11935517044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAuxiliaryScreenSupportPanelView.m; sourceTree = "<group>"; };
 		5B1193571704752B00CAF765 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		5B119359170489D200CAF765 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		5B11935C1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAuxiliaryScreenSupportPanelView.xib; sourceTree = "<group>"; };
+		5B11935D1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAuxiliaryScreenSupportPanelView.h; sourceTree = "<group>"; };
+		5B11935E1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAuxiliaryScreenSupportPanelView.m; sourceTree = "<group>"; };
+		5B1193611704A51100CAF765 /* WDAuxiliaryScreenHelpPanelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAuxiliaryScreenHelpPanelView.xib; sourceTree = "<group>"; };
+		5B1193631704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAuxiliaryScreenHelpPanelView.h; sourceTree = "<group>"; };
+		5B1193641704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAuxiliaryScreenHelpPanelView.m; sourceTree = "<group>"; };
+		5B1193671704B61C00CAF765 /* UILabel+TopAlign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+TopAlign.h"; sourceTree = "<group>"; };
+		5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+TopAlign.m"; sourceTree = "<group>"; };
 		5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundView.h; sourceTree = "<group>"; };
 		5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundView.m; sourceTree = "<group>"; };
 		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
@@ -240,6 +248,16 @@
 			name = "Day Checker";
 			sourceTree = "<group>";
 		};
+		5B11935B1704A14500CAF765 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				5B11935C1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */,
+				5B11935D1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.h */,
+				5B11935E1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.m */,
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
 		5B1A712F16E8A24C00355F59 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +272,8 @@
 			children = (
 				5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */,
 				5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */,
+				5B1193671704B61C00CAF765 /* UILabel+TopAlign.h */,
+				5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -302,28 +322,14 @@
 			name = "Confirm Word Menu";
 			sourceTree = "<group>";
 		};
-		5B31A63917038EA000039CFC /* Support */ = {
+		5B31A63B17038EB700039CFC /* Help */ = {
 			isa = PBXGroup;
 			children = (
-				5B11935217044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */,
-				5B11935417044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.h */,
-				5B11935517044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m */,
+				5B1193611704A51100CAF765 /* WDAuxiliaryScreenHelpPanelView.xib */,
+				5B1193631704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.h */,
+				5B1193641704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.m */,
 			);
-			name = Support;
-			sourceTree = "<group>";
-		};
-		5B31A63A17038EA800039CFC /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Settings;
-			sourceTree = "<group>";
-		};
-		5B31A63B17038EB700039CFC /* Tips */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Tips;
+			name = Help;
 			sourceTree = "<group>";
 		};
 		5B31A63C17038EC700039CFC /* About */ = {
@@ -366,10 +372,9 @@
 		5B5FB84C1703486300A11A56 /* Auxiliary Screen View */ = {
 			isa = PBXGroup;
 			children = (
+				5B11935B1704A14500CAF765 /* Support */,
 				5B31A63C17038EC700039CFC /* About */,
-				5B31A63B17038EB700039CFC /* Tips */,
-				5B31A63A17038EA800039CFC /* Settings */,
-				5B31A63917038EA000039CFC /* Support */,
+				5B31A63B17038EB700039CFC /* Help */,
 				5B5FB84D1703488B00A11A56 /* WDAuxiliaryScreenViewController.h */,
 				5B5FB84E1703488B00A11A56 /* WDAuxiliaryScreenViewController.m */,
 				5B5FB84F1703488B00A11A56 /* WDAuxiliaryScreenViewController.xib */,
@@ -723,7 +728,8 @@
 				5B5FB855170361E300A11A56 /* 32-circle-south.png in Resources */,
 				5B5FB856170361E300A11A56 /* 32-circle-south@2x.png in Resources */,
 				5B11934E17042FF400CAF765 /* WDAuxiliaryScreenAboutPanelView.xib in Resources */,
-				5B11935317044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib in Resources */,
+				5B11935F1704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.xib in Resources */,
+				5B1193621704A51100CAF765 /* WDAuxiliaryScreenHelpPanelView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,7 +765,9 @@
 				5B5FB8441702F50D00A11A56 /* WDTodayWordMenuViewPage2.m in Sources */,
 				5B5FB8501703488B00A11A56 /* WDAuxiliaryScreenViewController.m in Sources */,
 				5B119351170433FF00CAF765 /* WDAuxiliaryScreenAboutPanelView.m in Sources */,
-				5B11935617044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m in Sources */,
+				5B1193601704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.m in Sources */,
+				5B1193651704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.m in Sources */,
+				5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

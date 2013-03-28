@@ -36,9 +36,9 @@
 "TAG_TODAYWORDMENU_FONTOPTION"      = "style";
 "TAG_TODAYWORDMENU_COLOROPTION"     = "color";
 "TAG_TODAYWORDMENU_SETTINGSOPTION"  = "settings";
-"TAG_TODAYWORDMENU_TIPSOPTION"      = "tips";
+"TAG_TODAYWORDMENU_TIPSOPTION"      = "help";
 "TAG_TODAYWORDMENU_SUPPORTOPTION"   = "support";
-"TAG_TODAYWORDMENU_ABOUTOPTION"     = "info";
+"TAG_TODAYWORDMENU_ABOUTOPTION"     = "about";
 
 "TAG_PREVIOUSWORDMENU_DELETEOPTION" = "delete";
 
@@ -61,9 +61,9 @@
 "TAG_WEEKDAY_SATURDAY"              = "Saturday";
 
 "TAG_AUXILIARYSCREEN_SUPPORTTITLE"  = "support";
-"TAG_AUXILIARYSCREEN_ABOUTTITLE"    = "info";
+"TAG_AUXILIARYSCREEN_ABOUTTITLE"    = "about";
 "TAG_AUXILIARYSCREEN_SETTINGSTITLE" = "settings";
-"TAG_AUXILIARYSCREEN_TIPSTITLE"     = "tips";
+"TAG_AUXILIARYSCREEN_TIPSTITLE"     = "help";
 
 "TAG_AUXILIARYABOUTPANEL_WORDDIARYTITLE"           = "Word Diary";
 "TAG_AUXILIARYABOUTPANEL_WORDDIARYURL"             = "www.worddiaryapp.com";
@@ -75,9 +75,17 @@
 "TAG_WORDDIARY_URL"                                = "http://www.frodrig.com";
 "TAG_FRODRIGTWITTER_URL"                           = "https://twitter.com/_Frodrig";
 
-"TAG_AUXILIARYSUPPORTPANEL_DESCRIPTION"            = "If you have any problem with the app or you want to send us feedback (suggestions, critics, ideas, …) you can write to us.\nWe will very happy to take care of you.";
+"TAG_AUXILIARYSUPPORTPANEL_DESCRIPTION"            = "If you have any problem with the app or you want to send me feedback (suggestions, critics, ideas, …) you can write to me.\I will very happy to take care of you.";
 "TAG_AUXILIARYSUPPORTPANEL_EMAILDESCRIPTION"       = "hello@frodrig.com";
 "TAG_AUXILIARYSUPPORTPANEL_EMAILSEND"              = "Send email";
 
 "TAG_SUPPORTEMAIL_TEMPLATE_TITLE"                  = "About Word Diary";
 "TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "hello@frodrig.com";
+
+"TAG_AUXILIARYHELPPANEL_1"                         = "Word Diary es un diario minimalista en el que podrás escribir una única palabra cada día.";
+"TAG_AUXILIARYHELPPANEL_2"                         = "Cada palabra podrá tener su propio estilo de fuente y color de fondo.";
+"TAG_AUXILIARYHELPPANEL_3"                         = "Podrás desplazarte por el diario deslizando el dedo en la dirección a la que desees ir.";
+"TAG_AUXILIARYHELPPANEL_4"                         = "Para desplazarte por el diario rápidamente, deja el dedo pulsado en la mitad derecha o izquierda de la pantalla.";
+"TAG_AUXILIARYHELPPANEL_5"                         = "Si quieres situarte inmediatamente en el día actual haz doble pulsación en la pantalla.";
+"TAG_AUXILIARYHELPPANEL_6"                         = "Si estás escribiendo una palabra (tienes el teclado desplegado) y quieres borrarla rápidamente, agita tu iPhone.";
+"TAG_AUXILIARYHELPPANEL_7"                         = "¿Te ha gustado Word Diary? ¿Tienes alguna crítica o sugerencia?\n\nEscríbeme, estaré encantado de leerte y ayudarte.";
