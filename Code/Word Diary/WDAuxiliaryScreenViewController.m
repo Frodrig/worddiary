@@ -10,19 +10,24 @@
 #import "WDUtils.h"
 #import "WDBackgroundDefs.h"
 #import "WDAuxiliaryScreenAboutPanelView.h"
+#import "WDAuxiliaryScreenSupportPanelView.h"
 #import "UIView+UIViewNibLoad.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface WDAuxiliaryScreenViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView                   *backgroundHeaderView;
-@property (weak, nonatomic) IBOutlet UILabel                  *titleLabel;
-@property (nonatomic, strong) WDAuxiliaryScreenAboutPanelView *aboutPanel;
+@property (weak, nonatomic) IBOutlet UIView                     *backgroundHeaderView;
+@property (weak, nonatomic) IBOutlet UILabel                    *titleLabel;
+@property (nonatomic, strong) WDAuxiliaryScreenAboutPanelView   *aboutPanel;
+@property (nonatomic, strong) WDAuxiliaryScreenSupportPanelView *supportPanel;
+@property (nonatomic) CGPoint                                   centerPositionForAuxiliaryPanels;
 
 - (void)showScreenInView:(UIView *)view withDuration:(CGFloat)duration;
 
 - (void)aboutPanelWordDiaryURLButtonPressed:(UIControl *)sender;
 - (void)aboutPanelTwitterURLButton:(UIControl *)sender;
+
+- (void)supportPanelEmailButtonPressed:(UIControl *)sender;
 
 @end
 
@@ -85,7 +90,16 @@
 - (void)showSupportScreenInView:(UIView *)view withDuration:(CGFloat)duration
 {
     self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_SUPPORTTITLE", @"");
+    
+    self.supportPanel = (WDAuxiliaryScreenSupportPanelView *)[WDAuxiliaryScreenSupportPanelView createFromNib];
+    
+    self.supportPanel.descriptionSupportLabel.text = NSLocalizedString(@"TAG_AUXILIARYSUPPORTPANEL_DESCRIPTION", @"");
+    [self.supportPanel.emailDescriptionSupportButton setTitle:NSLocalizedString(@"TAG_AUXILIARYSUPPORTPANEL_EMAILDESCRIPTION", @"") forState:UIControlStateNormal];
+    [self.supportPanel.emailDescriptionSupportButton addTarget:self action:@selector(supportPanelEmailButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
+    [self.view addSubview:self.supportPanel];
+    self.supportPanel.center = CGPointMake(self.view.bounds.size.width / 2, self.view.center.y);;
+    
     [self showScreenInView:view withDuration:duration];
 }
 
@@ -94,6 +108,7 @@
     self.titleLabel.text = NSLocalizedString(@"TAG_AUXILIARYSCREEN_ABOUTTITLE", @"");
     
     self.aboutPanel = (WDAuxiliaryScreenAboutPanelView *)[WDAuxiliaryScreenAboutPanelView createFromNib];
+    
     self.aboutPanel.wordDiaryTitleLabel.text = NSLocalizedString(@"TAG_AUXILIARYABOUTPANEL_WORDDIARYTITLE", @"");
     self.aboutPanel.designedAndDevelopedByLabel.text = NSLocalizedString(@"TAG_AUXILIARYABOUTPANEL_DESIGNEDDEVELOPEDTITLE", @"");
     self.aboutPanel.developerNameLabel.text = NSLocalizedString(@"TAG_AUXILIARYABOUTPANEL_DEVELOPERNAME", @"");
@@ -104,8 +119,7 @@
     [self.aboutPanel.twitterURLButton addTarget:self action:@selector(aboutPanelTwitterURLButton:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.aboutPanel];
-    //self.aboutPanel.bounds = CGRectMake(0.0, 0.0, self.view.bounds.size.width - AUXILIARY_SCREEN_PANELS_MARGIN * 2, self.aboutPanel.bounds.size.height);
-    self.aboutPanel.center = CGPointMake(self.view.bounds.size.width / 2, self.view.center.y);
+    self.aboutPanel.center = CGPointMake(self.view.bounds.size.width / 2, self.view.center.y);;
     
     [self showScreenInView:view withDuration:duration];
 }
@@ -137,6 +151,11 @@
             [self.aboutPanel removeFromSuperview];
             self.aboutPanel = nil;
         }
+        
+        if (self.supportPanel) {
+            [self.supportPanel removeFromSuperview];
+            self.supportPanel = nil;
+        }
     }];
     
     [self.delegate auxiliaryScreenViewWillHide:self];
@@ -157,6 +176,16 @@
     
     [self.delegate auxiliaryAboutScreenViewDeveloperTwitterURLPressedAndOpen:self];
 }
+
+#pragma mark - Controles Support Panel
+
+- (void)supportPanelEmailButtonPressed:(UIControl *)sender
+{
+    // ToDo envío del email
+    
+    [self.delegate auxiliarySupportScreenViewEmailPressedAndOpen:self];
+}
+
 
 #pragma mark - Controles generales
 

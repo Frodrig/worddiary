@@ -72,3 +72,7 @@
 
 "TAG_WORDDIARY_URL"                                = "http://www.frodrig.com";
 "TAG_FRODRIGTWITTER_URL"                           = "https://twitter.com/_Frodrig";
+
+"TAG_AUXILIARYSUPPORTPANEL_DESCRIPTION"            = "If you have any problem with the app or you want to send us feedback (suggestions, critics, ideas, …) you can write to us.\nWe will very happy to take care of you.";
+"TAG_AUXILIARYSUPPORTPANEL_EMAILDESCRIPTION"       = "hello@frodrig.com";
+"TAG_AUXILIARYSUPPORTPANEL_EMAILSEND"              = "Send email";

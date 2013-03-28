@@ -839,6 +839,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
 }
 
+- (void)auxiliarySupportScreenViewEmailPressedAndOpen:(WDAuxiliaryScreenViewController *)auxiliaryViewController
+{
+    [self hideAuxiliaryScreen];
+}
+
 - (void)auxiliaryAboutScreenViewWordDiaryURLPressedAndOpen:(WDAuxiliaryScreenViewController *)auxiliaryViewController
 {
     [self hideAuxiliaryScreen];
