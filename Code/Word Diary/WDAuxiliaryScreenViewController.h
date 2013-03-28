@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "WDAuxiliaryScreenViewControllerDelegate.h"
+#import <MessageUI/MFMailComposeViewController.h>
 
-@interface WDAuxiliaryScreenViewController : UIViewController
+@interface WDAuxiliaryScreenViewController : UIViewController<MFMailComposeViewControllerDelegate>
 
 @property(nonatomic, weak) id<WDAuxiliaryScreenViewControllerDelegate> delegate;
 

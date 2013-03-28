@@ -12,6 +12,7 @@
 		5B119351170433FF00CAF765 /* WDAuxiliaryScreenAboutPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B119350170433FF00CAF765 /* WDAuxiliaryScreenAboutPanelView.m */; };
 		5B11935317044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B11935217044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */; };
 		5B11935617044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B11935517044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m */; };
+		5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1193571704752B00CAF765 /* MessageUI.framework */; };
 		5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
 		5B1AC4BC16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */; };
@@ -93,6 +94,7 @@
 		5B11935217044B4800CAF765 /* WDAuxiliaryScreenSupportPanelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAuxiliaryScreenSupportPanelView.xib; sourceTree = "<group>"; };
 		5B11935417044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAuxiliaryScreenSupportPanelView.h; sourceTree = "<group>"; };
 		5B11935517044B5600CAF765 /* WDAuxiliaryScreenSupportPanelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAuxiliaryScreenSupportPanelView.m; sourceTree = "<group>"; };
+		5B1193571704752B00CAF765 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundView.h; sourceTree = "<group>"; };
 		5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundView.m; sourceTree = "<group>"; };
 		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */,
 				5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */,
 				5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */,
 				5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */,
@@ -471,6 +474,7 @@
 		5BB6B2F516DBE13900394113 = {
 			isa = PBXGroup;
 			children = (
+				5B1193571704752B00CAF765 /* MessageUI.framework */,
 				5B446F7616F22A48005A432D /* CoreText.framework */,
 				5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */,
 				5BB6B30916DBE13900394113 /* Word Diary */,

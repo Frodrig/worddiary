@@ -76,3 +76,6 @@
 "TAG_AUXILIARYSUPPORTPANEL_DESCRIPTION"            = "If you have any problem with the app or you want to send us feedback (suggestions, critics, ideas, …) you can write to us.\nWe will very happy to take care of you.";
 "TAG_AUXILIARYSUPPORTPANEL_EMAILDESCRIPTION"       = "hello@frodrig.com";
 "TAG_AUXILIARYSUPPORTPANEL_EMAILSEND"              = "Send email";
+
+"TAG_SUPPORTEMAIL_TEMPLATE_TITLE"                  = "About Word Diary";
+"TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "hello@frodrig.com";

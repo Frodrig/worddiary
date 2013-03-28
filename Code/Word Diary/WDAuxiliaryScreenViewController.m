@@ -21,6 +21,7 @@
 @property (nonatomic, strong) WDAuxiliaryScreenAboutPanelView   *aboutPanel;
 @property (nonatomic, strong) WDAuxiliaryScreenSupportPanelView *supportPanel;
 @property (nonatomic) CGPoint                                   centerPositionForAuxiliaryPanels;
+@property (nonatomic, strong) MFMailComposeViewController       *mailComposerViewController;
 
 - (void)showScreenInView:(UIView *)view withDuration:(CGFloat)duration;
 
@@ -33,10 +34,11 @@
 
 @implementation WDAuxiliaryScreenViewController
 
-@synthesize backgroundHeaderView = backgroundHeaderView_;
-@synthesize delegate             = delegate_;
-@synthesize titleLabel           = titleLabel_;
-@synthesize aboutPanel           = aboutPanel_;
+@synthesize backgroundHeaderView       = backgroundHeaderView_;
+@synthesize delegate                   = delegate_;
+@synthesize titleLabel                 = titleLabel_;
+@synthesize aboutPanel                 = aboutPanel_;
+@synthesize mailComposerViewController = mailComposerViewController_;
 
 #pragma mark - Properties
 
@@ -181,7 +183,11 @@
 
 - (void)supportPanelEmailButtonPressed:(UIControl *)sender
 {
-    // ToDo envío del email
+    self.mailComposerViewController = [[MFMailComposeViewController alloc] init];
+    self.mailComposerViewController.mailComposeDelegate = self;
+    [self.mailComposerViewController setSubject:NSLocalizedString(@"TAG_SUPPORTEMAIL_TEMPLATE_TITLE", @"")];
+    [self.mailComposerViewController setToRecipients:[NSArray arrayWithObject:NSLocalizedString(@"TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT", @"")]];
+    [self presentViewController:self.mailComposerViewController animated:YES completion:nil];
     
     [self.delegate auxiliarySupportScreenViewEmailPressedAndOpen:self];
 }
@@ -199,6 +205,16 @@
 - (BOOL)isShowed
 {
     return self.view.superview != nil;
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+    [self.mailComposerViewController dismissViewControllerAnimated:YES completion:nil];
+    self.mailComposerViewController = nil;
+    
+    [self.delegate auxiliarySupportScreenViewEmailWasSend:self];
 }
 
 

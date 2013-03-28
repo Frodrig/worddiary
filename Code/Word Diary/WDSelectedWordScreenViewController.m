@@ -841,6 +841,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)auxiliarySupportScreenViewEmailPressedAndOpen:(WDAuxiliaryScreenViewController *)auxiliaryViewController
 {
+    // Escondemos el menu auxiliar cuando haya sido enviado el email
+}
+
+- (void)auxiliarySupportScreenViewEmailWasSend:(WDAuxiliaryScreenViewController *)auxiliaryViewController
+{
     [self hideAuxiliaryScreen];
 }
 
