@@ -62,3 +62,13 @@
 "TAG_AUXILIARYSCREEN_ABOUTTITLE"    = "info";
 "TAG_AUXILIARYSCREEN_SETTINGSTITLE" = "ajustes";
 "TAG_AUXILIARYSCREEN_TIPSTITLE"     = "tips";
+
+"TAG_AUXILIARYABOUTPANEL_WORDDIARYTITLE"           = "Word Diary";
+"TAG_AUXILIARYABOUTPANEL_WORDDIARYURL"             = "www.worddiaryapp.com";
+"TAG_AUXILIARYABOUTPANEL_DESIGNEDDEVELOPEDTITLE"   = "Diseñado y desarrollado por";
+"TAG_AUXILIARYABOUTPANEL_DEVELOPERNAME"            = "Fernando Rodríguez";
+"TAG_AUXILIARYABOUTPANEL_DEVELOPERTWITTER"         = "@_frodrig";
+"TAG_AUXILIARYABOUTPANEL_ALLRIGHTRESERVED_TITLE"   = "(C) 2013 - Todos los derechos reservados";
+
+"TAG_WORDDIARY_URL"                                = "http://www.frodrig.com";
+"TAG_FRODRIGTWITTER_URL"                           = "https://twitter.com/_Frodrig";

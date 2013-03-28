@@ -95,6 +95,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       showMainMenu;
 - (void)       hideMainMenu;
 - (void)       hideMainMenuInmediate;
+- (void)       hideAuxiliaryScreen;
 
 - (void)       updateLongPressSwipe:(NSTimer *)timer;
 
@@ -553,6 +554,23 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self.editMenuViewController hideMenuInmediate];
 }
 
+- (void)hideAuxiliaryScreen
+{
+    [self.view addSubview:self.wordDiaryRepresentation];
+    self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
+    [UIView animateWithDuration:0.55 animations:^{
+        self.yearDateTopInfoLabel.alpha = 1.0;
+        self.dayMonthDateTopInfoLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.alpha = 1.0;
+        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
+        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        
+    }];
+    [self.auxiliarySreenViewController hideWithDuration:0.55];
+    self.view.backgroundColor = nil;
+}
+
 - (void)updateLongPressSwipe:(NSTimer *)timer
 {
     NSNumber *userInfo = timer.userInfo;
@@ -813,24 +831,22 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)auxiliaryScreenViewBackButtonPressed:(WDAuxiliaryScreenViewController *)auxiliaryViewController
 {
-    [self.view addSubview:self.wordDiaryRepresentation];
-    self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
-    [UIView animateWithDuration:0.55 animations:^{
-        self.yearDateTopInfoLabel.alpha = 1.0;
-        self.dayMonthDateTopInfoLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.alpha = 1.0;
-        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
-    } completion:^(BOOL finished) {
-        
-    }];
-    [self.auxiliarySreenViewController hideWithDuration:0.55];
-    self.view.backgroundColor = nil;
+    [self hideAuxiliaryScreen];
 }
 
 - (void)auxiliaryScreenViewWillHide:(WDAuxiliaryScreenViewController *)auxiliaryViewController
 {
     
+}
+
+- (void)auxiliaryAboutScreenViewWordDiaryURLPressedAndOpen:(WDAuxiliaryScreenViewController *)auxiliaryViewController
+{
+    [self hideAuxiliaryScreen];
+}
+
+- (void)auxiliaryAboutScreenViewDeveloperTwitterURLPressedAndOpen:(WDAuxiliaryScreenViewController *)auxiliaryViewController
+{
+    [self hideAuxiliaryScreen];
 }
 
 #pragma mark - WDSelectedWordEditMenuDelegate

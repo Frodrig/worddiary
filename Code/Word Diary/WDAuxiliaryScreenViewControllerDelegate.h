@@ -14,6 +14,9 @@
 
 - (void)auxiliaryScreenViewBackButtonPressed:(WDAuxiliaryScreenViewController *)auxiliaryViewController;
 
+- (void)auxiliaryAboutScreenViewWordDiaryURLPressedAndOpen:(WDAuxiliaryScreenViewController *)auxiliaryViewController;
+- (void)auxiliaryAboutScreenViewDeveloperTwitterURLPressedAndOpen:(WDAuxiliaryScreenViewController *)auxiliaryViewController;
+
 - (void)auxiliaryScreenViewWillHide:(WDAuxiliaryScreenViewController *)auxiliaryViewController;
 
 @end
