@@ -694,7 +694,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         }
         self.backgroundSwipeView = [[UIView alloc] initWithFrame:self.actualGradientBackground.frame];
         self.backgroundSwipeView.backgroundColor = color;
-        self.backgroundSwipeView.layer.cornerRadius = self.actualGradientBackground.layer.cornerRadius;
+        self.backgroundSwipeView.layer.cornerRadius = [WDUtils viewsCornerRadius];
         self.backgroundSwipeView.userInteractionEnabled = NO;
         [self.view insertSubview:self.backgroundSwipeView atIndex:0];
         

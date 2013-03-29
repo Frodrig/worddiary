@@ -90,6 +90,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     
     // Fondo
     self.view.layer.cornerRadius = [WDUtils viewsCornerRadius];
+    self.view.clipsToBounds = YES;
         
     // Menu principal
     self.wordMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
