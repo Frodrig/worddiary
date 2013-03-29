@@ -195,6 +195,8 @@
     
     NSArray *pickerColorArray = [self.class makeColorGradientWithParameters:params];
  */
+    
+    /*
     NSArray *pickerColorArray = [NSArray arrayWithObjects:[UIColor colorWithRed:251.0/255.0 green:235.0/255.0 blue:0 alpha:1.0],
                                                           [UIColor colorWithRed:222.0/255.0 green:255.0/255.0 blue:0 alpha:1.0],
                                                           [UIColor colorWithRed:21/255.0 green:249.0/255.0 blue:2.0/255.0 alpha:1.0],
@@ -209,7 +211,22 @@
                                                           [UIColor colorWithRed:255.0/255.0 green:198.0/255.0 blue:0/255.0 alpha:1.0],
                                                           [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0],
                                  nil];
+    */
     
+    NSArray *pickerColorArray = [NSArray arrayWithObjects:[UIColor colorWithRed:255.0/255.0 green:247.0/255.0 blue:0 alpha:1.0],
+                                 [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:224.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:0/255.0 green:255.0/255.0 blue:127.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:189.0/255.0 green:252.0/255.0 blue:201.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:255/255.0 green:192.0/255.0 blue:203.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:255.0/255.0 green:160.0/255.0 blue:122.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:181.0/255.0 green:226/255.0 blue:220.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:221.0/255.0 green:160.0/255.0 blue:122.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:181.0/255.0 green:226.0/255.0 blue:220.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:221.0/255.0 green:160.0/255.0 blue:221.0/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:135.0/255.0 green:206.0/255.0 blue:204/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:64.0/255.0 green:224.0/255.0 blue:208/255.0 alpha:1.0],
+                                 [UIColor colorWithRed:1 green:1 blue:1 alpha:1.0],
+                                 nil];
     return pickerColorArray;
 }
 

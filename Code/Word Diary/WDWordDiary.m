@@ -197,7 +197,7 @@
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
     wordObject.font = [self defaultFont];
-    wordObject.backgroundCategory = rand() % 12;
+    wordObject.backgroundCategory = 0;
 
     [words_ addObject:wordObject];
     [self sortWords];

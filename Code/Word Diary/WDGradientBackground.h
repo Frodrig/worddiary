@@ -13,6 +13,7 @@
 @property(nonatomic) NSUInteger gradientColorIndex;
 
 + (NSArray *)gradientColors;
++ (NSArray *)coupleGradientColors;
 
 - (id)initWithFrame:(CGRect)frame andGradientColorIndex:(NSUInteger)index;
 
