@@ -66,7 +66,7 @@
 "TAG_AUXILIARYSCREEN_TIPSTITLE"     = "help";
 
 "TAG_AUXILIARYABOUTPANEL_WORDDIARYTITLE"           = "Word Diary";
-"TAG_AUXILIARYABOUTPANEL_WORDDIARYURL"             = "www.worddiaryapp.com";
+"TAG_AUXILIARYABOUTPANEL_WORDDIARYURL"             = "www.worddiary.frodrig.com";
 "TAG_AUXILIARYABOUTPANEL_DESIGNEDDEVELOPEDTITLE"   = "Designed and developed by";
 "TAG_AUXILIARYABOUTPANEL_DEVELOPERNAME"            = "Fernando Rodríguez";
 "TAG_AUXILIARYABOUTPANEL_DEVELOPERTWITTER"         = "@_frodrig";
@@ -89,3 +89,4 @@
 "TAG_AUXILIARYHELPPANEL_5"                         = "Si quieres situarte inmediatamente en el día actual haz doble pulsación en la pantalla.";
 "TAG_AUXILIARYHELPPANEL_6"                         = "Si estás escribiendo una palabra (tienes el teclado desplegado) y quieres borrarla rápidamente, agita tu iPhone.";
 "TAG_AUXILIARYHELPPANEL_7"                         = "¿Te ha gustado Word Diary? ¿Tienes alguna crítica o sugerencia?\n\nEscríbeme, estaré encantado de leerte y ayudarte.";
+"TAG_AUXILIARYHELPPANEL_8"                         = "Recuerda:\n\nUna palabra al día.";

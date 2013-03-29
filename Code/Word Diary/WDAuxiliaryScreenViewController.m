@@ -149,6 +149,7 @@
                                                   NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_5", @""),
                                                   NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_6", @""),
                                                   NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_7", @""),
+                                                  NSLocalizedString(@"TAG_AUXILIARYHELPPANEL_8", @""),
                                                   nil];
     
     self.helpPanel.helpContainerScrollView.contentSize = CGSizeMake(self.helpPanel.helpContainerScrollView.bounds.size.width * helpTips.count, self.helpPanel.helpContainerScrollView.bounds.size.height);
@@ -166,6 +167,8 @@
         labelIt.textColor = [UIColor blackColor];
         labelIt.textAlignment = NSTextAlignmentCenter;
         labelIt.numberOfLines = 0;
+        labelIt.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.15];
+        labelIt.shadowOffset = CGSizeMake(0.0, 1.0);
         labelIt.backgroundColor = [UIColor clearColor];
         
         [self.helpPanel.helpContainerScrollView addSubview:labelIt];
@@ -174,6 +177,7 @@
     }
     self.helpPanel.helpContainerScrollView.delegate = self;
     self.helpPanel.pageController.numberOfPages = helpTips.count;
+    self.helpPanel.pageController.currentPage = 0;
     
     [self insertPanel:self.helpPanel];
     
