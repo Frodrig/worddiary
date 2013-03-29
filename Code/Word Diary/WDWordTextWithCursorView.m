@@ -100,10 +100,10 @@
     }
         
     CGContextSaveGState(contextRef);
-    CGContextSetLineWidth(contextRef, 1.0);
+    CGContextSetLineWidth(contextRef, 2.0);
     CGContextSetStrokeColorWithColor(contextRef, [self.dataSource actualCursorColorForWordTextView:self].CGColor);
-    CGContextMoveToPoint(contextRef, cursorBounds.origin.x, cursorBounds.origin.y + fontSize * 0.75);
-    CGContextAddLineToPoint(contextRef, cursorBounds.origin.x, cursorBounds.origin.y - fontSize * 0.25);
+    CGContextMoveToPoint(contextRef, cursorBounds.origin.x + 1, cursorBounds.origin.y + fontSize * 0.75);
+    CGContextAddLineToPoint(contextRef, cursorBounds.origin.x + 1, cursorBounds.origin.y - fontSize * 0.25);
     CGContextStrokePath(contextRef);
     CGContextRestoreGState(contextRef);
     
