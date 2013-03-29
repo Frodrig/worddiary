@@ -639,21 +639,24 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)longPressureHandle:(UIGestureRecognizer *)gestureRecognizer
 {
-    BOOL inLongPressSwipeMode = NO;
+    BOOL inLongPressSwipeMode = ![self.auxiliarySreenViewController isShowed];
     
-    switch (gestureRecognizer.state) {
-        case UIGestureRecognizerStateBegan:
-            inLongPressSwipeMode = YES;
-            break;
-        case UIGestureRecognizerStateChanged:
-            inLongPressSwipeMode = YES;
-            break;
-        case UIGestureRecognizerStateEnded:
-            break;
-            
-        default:
-            break;
-    };
+    if (inLongPressSwipeMode) {
+        switch (gestureRecognizer.state) {
+            case UIGestureRecognizerStateBegan:
+                inLongPressSwipeMode = YES;
+                break;
+            case UIGestureRecognizerStateChanged:
+                inLongPressSwipeMode = YES;
+                break;
+            case UIGestureRecognizerStateEnded:
+                inLongPressSwipeMode = NO;
+                break;
+                
+            default:
+                break;
+        };
+    }
     
     if (inLongPressSwipeMode) {
         if (nil == self.longPressGestureRecognizerTimer) {
