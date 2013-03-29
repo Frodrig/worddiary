@@ -33,7 +33,7 @@
 "TAG_ABREVIATEMONTH_DECEMBER" = "Dec";
 
 "TAG_TODAYWORDMENU_WRITEOPTION"     = "write";
-"TAG_TODAYWORDMENU_FONTOPTION"      = "style";
+"TAG_TODAYWORDMENU_FONTOPTION"      = "font";
 "TAG_TODAYWORDMENU_COLOROPTION"     = "color";
 "TAG_TODAYWORDMENU_SETTINGSOPTION"  = "settings";
 "TAG_TODAYWORDMENU_TIPSOPTION"      = "help";
@@ -85,8 +85,8 @@
 "TAG_AUXILIARYHELPPANEL_1"                         = "Word Diary es un diario minimalista en el que podrás escribir una única palabra cada día.";
 "TAG_AUXILIARYHELPPANEL_2"                         = "Cada palabra podrá tener su propio estilo de fuente y color de fondo.";
 "TAG_AUXILIARYHELPPANEL_3"                         = "Podrás desplazarte por el diario deslizando el dedo en la dirección a la que desees ir.";
-"TAG_AUXILIARYHELPPANEL_4"                         = "Para desplazarte por el diario rápidamente, deja el dedo pulsado en la mitad derecha o izquierda de la pantalla.";
-"TAG_AUXILIARYHELPPANEL_5"                         = "Si quieres situarte inmediatamente en el día actual haz doble pulsación en la pantalla.";
-"TAG_AUXILIARYHELPPANEL_6"                         = "Si estás escribiendo una palabra (tienes el teclado desplegado) y quieres borrarla rápidamente, agita tu iPhone.";
-"TAG_AUXILIARYHELPPANEL_7"                         = "¿Te ha gustado Word Diary? ¿Tienes alguna crítica o sugerencia?\n\nEscríbeme, estaré encantado de leerte y ayudarte.";
-"TAG_AUXILIARYHELPPANEL_8"                         = "Recuerda:\n\nUna palabra al día.";
+"TAG_AUXILIARYHELPPANEL_4"                         = "Para moverte muy rápidamente, deja el dedo pulsado en la mitad derecha o izquierda de la pantalla.";
+"TAG_AUXILIARYHELPPANEL_5"                         = "Para situarte inmediatamente en el día actual haz doble pulsación en la pantalla.";
+"TAG_AUXILIARYHELPPANEL_6"                         = "Si estás escribiendo una palabra (con el teclado desplegado) y quieres borrarla fácilmente, agita tu iPhone.";
+"TAG_AUXILIARYHELPPANEL_7"                         = "Las palabras de días previos no se pueden cambiar. Únicamente borrar.";
+"TAG_AUXILIARYHELPPANEL_8"                         = "Recuerda:\n\nUna palabra al día.\n\nUn diario llevado a la mínima expresión.";

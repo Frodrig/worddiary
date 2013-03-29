@@ -245,7 +245,9 @@
 {
     self.mailComposerViewController = [[MFMailComposeViewController alloc] init];
     self.mailComposerViewController.mailComposeDelegate = self;
-    [self.mailComposerViewController setSubject:NSLocalizedString(@"TAG_SUPPORTEMAIL_TEMPLATE_TITLE", @"")];
+    NSString *subjectWithVersion = NSLocalizedString(@"TAG_SUPPORTEMAIL_TEMPLATE_TITLE", @"");
+    subjectWithVersion = [subjectWithVersion stringByAppendingFormat:@" %@", NSLocalizedString(@"TAG_VERSION", @"")];
+    [self.mailComposerViewController setSubject:subjectWithVersion];
     [self.mailComposerViewController setToRecipients:[NSArray arrayWithObject:NSLocalizedString(@"TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT", @"")]];
     [self presentViewController:self.mailComposerViewController animated:YES completion:nil];
     
