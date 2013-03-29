@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WDTodayWordMenuViewPage2 : UIView
+@interface WDWordMenuAuxiliaryViewPage2 : UIView
 
 @property (weak, nonatomic) IBOutlet UIButton *tipsButton;
 @property (weak, nonatomic) IBOutlet UIButton *supportButton;

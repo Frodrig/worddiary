@@ -8,10 +8,10 @@
 
 #import "WDSelectedWordEditMenuViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "WDTodayWordMenuView.h"
+#import "WDWordMenuView.h"
 #import "WDTodayWordMenuViewPage1.h"
-#import "WDTodayWordMenuViewPage2.h"
-#import "WDPreviousWordMenuView.h"
+#import "WDWordMenuAuxiliaryViewPage2.h"
+#import "WDPreviousDayWordMenuViewPage1.h"
 #import "WDConfirmWordActionMenuView.h"
 #import "WDCollectionOptionsWordMenuView.h"
 #import "UIView+UIViewNibLoad.h"
@@ -30,8 +30,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 @interface WDSelectedWordEditMenuViewController ()
 
-@property (nonatomic, strong) WDTodayWordMenuView             *todayWordMenuView;
-@property (nonatomic, strong) WDPreviousWordMenuView          *previousDayWordMenuView;
+@property (nonatomic, strong) WDWordMenuView                  *wordMenuView;
 @property (nonatomic, strong) WDConfirmWordActionMenuView     *confirmWordActionMenuView;
 @property (nonatomic, strong) WDCollectionOptionsWordMenuView *fontsMenuView;
 @property (nonatomic, strong) WDCollectionOptionsWordMenuView *backgroundColorMenuView;
@@ -58,8 +57,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 #pragma mark - Synthesize
 
-@synthesize todayWordMenuView            = todayWorldMenuView_;
-@synthesize previousDayWordMenuView       = previousDayWordMenuView_;
+@synthesize wordMenuView                  = wordMenuView_;
 @synthesize delegate                      = delegate_;
 @synthesize confirmWordActionMenuView     = confirmWordActionMenuView_;
 @synthesize fontsMenuView                 = fontsMenuView_;
@@ -77,8 +75,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     if (self) {
         selectedWord_ = word;
         
-        todayWorldMenuView_ = (WDTodayWordMenuView *)[WDTodayWordMenuView createFromNib];
-        previousDayWordMenuView_ = (WDPreviousWordMenuView *)[WDPreviousWordMenuView createFromNib];
+        wordMenuView_ = (WDWordMenuView *)[WDWordMenuView createFromNib];
         confirmWordActionMenuView_ = (WDConfirmWordActionMenuView *)[WDConfirmWordActionMenuView createFromNib];
         fontsMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 135.0) optionTitles:[self createTitlesForFontMenu] fontsForTitles:[self createFontFamiliesForFontMenu] optionImages:nil visibleOptions:3.5 andSelectedOption:[[WDWordDiary sharedWordDiary].fonts indexOfObject:selectedWord_.font]];
         backgroundColorMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:fontsMenuView_.frame notConfiguredOptions:[WDGradientBackground gradientColors].count visibleOptions:3.5 andSelectedOption:0];
@@ -95,39 +92,38 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     self.view.layer.cornerRadius = [WDUtils viewsCornerRadius];
         
     // Menu principal
-    self.todayWordMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
+    self.wordMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
     
     // Scroll
-    self.todayWordMenuView.page2.frame = CGRectMake(self.todayWordMenuView.page1.frame.size.width, 0.0, self.todayWordMenuView.page1.bounds.size.width, self.todayWordMenuView.page1.bounds.size.height);
-    self.todayWordMenuView.scrollView.contentSize = CGSizeMake(self.todayWordMenuView.page1.bounds.size.width + self.todayWordMenuView.page1.bounds.size.width, self.todayWordMenuView.scrollView.bounds.size.height);
-    [self.todayWordMenuView.scrollView addSubview:self.todayWordMenuView.page1];
-    [self.todayWordMenuView.scrollView addSubview:self.todayWordMenuView.page2];
-    self.todayWordMenuView.scrollView.delegate = self;
+    self.wordMenuView.page2.frame = CGRectMake(self.wordMenuView.page1TodayWord.frame.size.width, 0.0, self.wordMenuView.page1TodayWord.bounds.size.width, self.wordMenuView.page1TodayWord.bounds.size.height);
+    self.wordMenuView.scrollView.contentSize = CGSizeMake(self.wordMenuView.page1TodayWord.bounds.size.width + self.wordMenuView.page1TodayWord.bounds.size.width, self.wordMenuView.scrollView.bounds.size.height);
+    [self.wordMenuView.scrollView addSubview:self.wordMenuView.page1TodayWord];
+    [self.wordMenuView.scrollView addSubview:self.wordMenuView.page1PreviousDayWord];
+    [self.wordMenuView.scrollView addSubview:self.wordMenuView.page2];
+    self.wordMenuView.scrollView.delegate = self;
     
-    // Page 1
-    [self.todayWordMenuView.page1.keyboardButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_WRITEOPTION", @"") forState:UIControlStateNormal];
-    [self.todayWordMenuView.page1.keyboardButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.todayWordMenuView.page1.fontButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_FONTOPTION", @"") forState:UIControlStateNormal];
-    [self.todayWordMenuView.page1.fontButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.todayWordMenuView.page1.backgroundColorButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_COLOROPTION", @"") forState:UIControlStateNormal];
-    [self.todayWordMenuView.page1.backgroundColorButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    // Page 1 Today Word
+    [self.wordMenuView.page1TodayWord.keyboardButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_WRITEOPTION", @"") forState:UIControlStateNormal];
+    [self.wordMenuView.page1TodayWord.keyboardButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.wordMenuView.page1TodayWord.fontButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_FONTOPTION", @"") forState:UIControlStateNormal];
+    [self.wordMenuView.page1TodayWord.fontButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.wordMenuView.page1TodayWord.backgroundColorButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_COLOROPTION", @"") forState:UIControlStateNormal];
+    [self.wordMenuView.page1TodayWord.backgroundColorButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    self.wordMenuView.page1TodayWord.hidden = YES;
+    
+    // Page 1 Previous Day Word
+    [self.wordMenuView.page1PreviousDayWord.deleteButton setTitle:NSLocalizedString(@"TAG_PREVIOUSWORDMENU_DELETEOPTION", @"") forState:UIControlStateNormal];
+    [self configureButton:self.wordMenuView.page1PreviousDayWord.deleteButton withColorScheme:self.backgroundColorScheme];
+    [self.wordMenuView.page1PreviousDayWord.deleteButton addTarget:self action:@selector(previousDayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    self.wordMenuView.page1PreviousDayWord.hidden = YES;
     
     // Page 2
-    [self.todayWordMenuView.page2.tipsButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_TIPSOPTION", @"") forState:UIControlStateNormal];
-    [self.todayWordMenuView.page2.tipsButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.todayWordMenuView.page2.supportButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_SUPPORTOPTION", @"") forState:UIControlStateNormal];
-    [self.todayWordMenuView.page2.supportButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.todayWordMenuView.page2.aboutButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_ABOUTOPTION", @"") forState:UIControlStateNormal];
-    [self.todayWordMenuView.page2.aboutButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //[self.todayWordMenuView.settingsButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_SETTINGSOPTION", @"") forState:UIControlStateNormal];
-    //[self.todayWordMenuView.settingsButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
-
-    // Menu principal para palabras previas
-    self.previousDayWordMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
-    [self.previousDayWordMenuView.deleteButton setTitle:NSLocalizedString(@"TAG_PREVIOUSWORDMENU_DELETEOPTION", @"") forState:UIControlStateNormal];
-    [self configureButton:self.previousDayWordMenuView.deleteButton withColorScheme:self.backgroundColorScheme];
-    [self.previousDayWordMenuView.deleteButton addTarget:self action:@selector(previousDayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.wordMenuView.page2.tipsButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_TIPSOPTION", @"") forState:UIControlStateNormal];
+    [self.wordMenuView.page2.tipsButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.wordMenuView.page2.supportButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_SUPPORTOPTION", @"") forState:UIControlStateNormal];
+    [self.wordMenuView.page2.supportButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.wordMenuView.page2.aboutButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_ABOUTOPTION", @"") forState:UIControlStateNormal];
+    [self.wordMenuView.page2.aboutButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     // Menu de confirmacion
     self.confirmWordActionMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
@@ -171,19 +167,16 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     self.view.backgroundColor = [WDUtils schemeBackgroundColor:self.backgroundColorScheme];
     
     // Menu principal para la palabra del dia de hoy
-    self.todayWordMenuView.backgroundColor = [self.view.backgroundColor copy];
+    self.wordMenuView.backgroundColor = [self.view.backgroundColor copy];
     
-    [self configureButton:self.todayWordMenuView.page1.keyboardButton withColorScheme:self.backgroundColorScheme];
-    [self configureButton:self.todayWordMenuView.page1.fontButton withColorScheme:self.backgroundColorScheme];
-    [self configureButton:self.todayWordMenuView.page1.backgroundColorButton withColorScheme:self.backgroundColorScheme];
-    [self configureButton:self.todayWordMenuView.page2.tipsButton withColorScheme:self.backgroundColorScheme];
-    [self configureButton:self.todayWordMenuView.page2.aboutButton withColorScheme:self.backgroundColorScheme];
-    [self configureButton:self.todayWordMenuView.page2.supportButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page1TodayWord.keyboardButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page1TodayWord.fontButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page1TodayWord.backgroundColorButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page1PreviousDayWord.deleteButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page2.tipsButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page2.aboutButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page2.supportButton withColorScheme:self.backgroundColorScheme];
     //[self configureButton:self.todayWordMenuView.settingsButton withColorScheme:self.backgroundColorScheme];
-    
-    // Menu principal para palabras previas
-    self.previousDayWordMenuView.backgroundColor = [self.view.backgroundColor copy];
-    [self configureButton:self.previousDayWordMenuView.deleteButton withColorScheme:self.backgroundColorScheme];
     
     // Menu de confirmacion
     self.confirmWordActionMenuView.backgroundColor = [self.view.backgroundColor copy];
@@ -207,7 +200,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 - (UIView *)findActualMenuViewAdded
 {
     UIView *menu = nil;
-    NSSet *menus = [NSSet setWithObjects:self.todayWordMenuView, self.previousDayWordMenuView, self.fontsMenuView, self.backgroundColorMenuView, self.confirmWordActionMenuView, nil];
+    NSSet *menus = [NSSet setWithObjects:self.wordMenuView, self.fontsMenuView, self.backgroundColorMenuView, self.confirmWordActionMenuView, nil];
     for (UIView *viewIt in menus) {
         if (viewIt.superview == self.view) {
             menu = viewIt;
@@ -245,7 +238,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
             [self.delegate menuDidHide];
         }];
     } else {
-        if (menuToRemove == nil && (menuView == self.todayWordMenuView || menuView == self.previousDayWordMenuView)) {
+        if (menuToRemove == nil && (menuView == self.wordMenuView)) {
             [menuToRemove removeFromSuperview];
             self.view.alpha = 0.0;
             self.view.hidden = NO;
@@ -254,7 +247,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
                 self.view.alpha = 1.0;
             }];
         } else {
-            BOOL menuToShowIsNext = menuView != self.todayWordMenuView && menuView != self.previousDayWordMenuView;
+            BOOL menuToShowIsNext = menuView != self.wordMenuView;
             [self.view addSubview:menuView];
             CGPoint originalCenter = menuView.center;
             // TODO: Saber si menuView es un menu a la izquierda o derecha de que habia antes. Por ahora suponemos que esta a la derecha
@@ -308,13 +301,20 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (void)showTodayWordMenu
 {
-    [self.todayWordMenuView.scrollView scrollRectToVisible:self.todayWordMenuView.page1.frame animated:NO];
-    [self showMenuView:self.todayWordMenuView inInmediateMode:NO];
+    self.wordMenuView.page1PreviousDayWord.hidden = YES;
+    self.wordMenuView.page1TodayWord.hidden = NO;
+    self.wordMenuView.pageView.currentPage = 0;
+    [self.wordMenuView.scrollView scrollRectToVisible:self.wordMenuView.page1TodayWord.frame animated:NO];
+    [self showMenuView:self.wordMenuView inInmediateMode:NO];
 }
 
 - (void)showPreviousWordMenu
 {
-    [self showMenuView:self.previousDayWordMenuView inInmediateMode:NO];
+    self.wordMenuView.page1PreviousDayWord.hidden = NO;
+    self.wordMenuView.page1TodayWord.hidden = YES;
+    self.wordMenuView.pageView.currentPage = 0;
+    [self.wordMenuView.scrollView scrollRectToVisible:self.wordMenuView.page1PreviousDayWord.frame animated:NO];
+    [self showMenuView:self.wordMenuView inInmediateMode:NO];
 }
 
 - (void)showDeletePreviousWordConfirmationMenu
@@ -336,17 +336,17 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (void)todayWordMenuOptionPressed:(UIButton *)button
 {
-    if (button == self.todayWordMenuView.page1.keyboardButton) {
+    if (button == self.wordMenuView.page1TodayWord.keyboardButton) {
         [self.delegate writeSelectedWordOption];
-    } else if (button == self.todayWordMenuView.page1.fontButton) {
+    } else if (button == self.wordMenuView.page1TodayWord.fontButton) {
         [self showFontWordMenu];
-    } else if (button == self.todayWordMenuView.page1.backgroundColorButton) {
+    } else if (button == self.wordMenuView.page1TodayWord.backgroundColorButton) {
         [self showBackgroundColorWordMenu];
-    } else if (button == self.todayWordMenuView.page2.supportButton) {
+    } else if (button == self.wordMenuView.page2.supportButton) {
         [self.delegate supportOptionSelected];
-    } else if (button == self.todayWordMenuView.page2.tipsButton) {
+    } else if (button == self.wordMenuView.page2.tipsButton) {
         [self.delegate tipsOptionSelected];
-    } else if (button == self.todayWordMenuView.page2.aboutButton) {
+    } else if (button == self.wordMenuView.page2.aboutButton) {
         [self.delegate infoOptionSelected];
     }
 }
@@ -378,9 +378,9 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 {
     // Nota: Se retorna llamando al metodo de bajo nivel directamente con el fin de que haya animacion
     if (self.fontsMenuView == menu) {
-        [self showMenuView:self.todayWordMenuView inInmediateMode:NO];
+        [self showMenuView:self.wordMenuView inInmediateMode:NO];
     } else if (self.backgroundColorMenuView == menu) {
-        [self showMenuView:self.todayWordMenuView inInmediateMode:NO];
+        [self showMenuView:self.wordMenuView inInmediateMode:NO];
     }
 }
 
@@ -399,8 +399,8 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     
-    self.todayWordMenuView.pageView.currentPage = scrollView.contentOffset.x == 0 ? 0 : 1;
-    [self.todayWordMenuView.pageView updateCurrentPageDisplay];
+    self.wordMenuView.pageView.currentPage = scrollView.contentOffset.x == 0 ? 0 : 1;
+    [self.wordMenuView.pageView updateCurrentPageDisplay];
 }
 
 

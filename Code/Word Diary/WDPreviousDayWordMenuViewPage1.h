@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WDPreviousWordMenuView : UIView
+@interface WDPreviousDayWordMenuViewPage1 : UIView
 
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 

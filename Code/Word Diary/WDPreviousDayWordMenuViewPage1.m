@@ -1,18 +1,14 @@
 //
-//  WDTodayWorldMenuViewPage2.m
+//  WDPreviousWordMenuView.m
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 27/03/13.
+//  Created by Fernando Rodríguez Martínez on 08/03/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
-#import "WDTodayWordMenuViewPage2.h"
+#import "WDPreviousDayWordMenuViewPage1.h"
 
-@implementation WDTodayWordMenuViewPage2
-
-@synthesize tipsButton     = tipsButton_;
-@synthesize supportButton  = supportButton_;
-@synthesize aboutButton    = aboutButton;
+@implementation WDPreviousDayWordMenuViewPage1
 
 - (id)initWithFrame:(CGRect)frame
 {

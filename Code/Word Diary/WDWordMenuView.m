@@ -6,16 +6,18 @@
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
-#import "WDTodayWordMenuView.h"
+#import "WDWordMenuView.h"
 #import "WDTodayWordMenuViewPage1.h"
-#import "WDTodayWordMenuViewPage2.h"
+#import "WDPreviousDayWordMenuViewPage1.h"
+#import "WDWordMenuAuxiliaryViewPage2.h"
 #import "UIView+UIViewNibLoad.h"
 
-@implementation WDTodayWordMenuView
+@implementation WDWordMenuView
 
 #pragma mark - Synthesize
 
-@synthesize page1                    = page1_;
+@synthesize page1TodayWord           = page1TodayWord_;
+@synthesize page1PreviousDayWord     = page1PreviousDayWord_;
 @synthesize page2                    = page2_;
 @synthesize scrollView               = scrollView_;
 @synthesize pageView                 = pageView_;
@@ -24,8 +26,9 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        page1_ = (WDTodayWordMenuViewPage1 *)[WDTodayWordMenuViewPage1 createFromNib];
-        page2_ = (WDTodayWordMenuViewPage2 *)[WDTodayWordMenuViewPage2 createFromNib];
+        page1TodayWord_ = (WDTodayWordMenuViewPage1 *)[WDTodayWordMenuViewPage1 createFromNib];
+        page1PreviousDayWord_ = (WDPreviousDayWordMenuViewPage1 *)[WDPreviousDayWordMenuViewPage1 createFromNib];
+        page2_ = (WDWordMenuAuxiliaryViewPage2 *)[WDWordMenuAuxiliaryViewPage2 createFromNib];
     }
     
     return self;
