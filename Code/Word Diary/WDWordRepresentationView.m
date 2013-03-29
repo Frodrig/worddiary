@@ -253,7 +253,6 @@ static CGFloat FONT_START_SIZE = 100.0;
     CGContextMoveToPoint(contextRef, 0.0, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, self.bounds.size.width, endPointDraw.y);
     CGContextStrokePath(contextRef);
-    
     CGContextRestoreGState(contextRef);
     
     [self.wordTextWithCursorView setNeedsDisplay];

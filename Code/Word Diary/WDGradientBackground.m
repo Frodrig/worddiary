@@ -19,10 +19,10 @@ typedef enum {
     BAS_STABLE,
 } BackgroundAnimationState;
 
-static NSUInteger     MAX_BACKGROUND_ANIMATION_STATES          = 2;
-static NSTimeInterval ANIMATION_TIMER_TIME_TO_STABLE           = 5;
+//static NSUInteger     MAX_BACKGROUND_ANIMATION_STATES          = 2;
+//static NSTimeInterval ANIMATION_TIMER_TIME_TO_STABLE           = 5;
 static NSTimeInterval ANIMATION_TIMER_TIME_TO_COLOR_TRANSITION = 2;
-static NSTimeInterval ANIMATION_TRANSITION_TIME                = 8;
+//static NSTimeInterval ANIMATION_TRANSITION_TIME                = 8;
 static CGFloat        MODULATION_COLOR_HIGH                    = 1.45;
 static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
 
@@ -227,7 +227,7 @@ static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
     CGFloat brightnessColorOne;
     CGFloat alphaColorOne;
     [colorOne getHue:&hueColorOne saturation:&saturationColorOne brightness:&brightnessColorOne alpha:&alphaColorOne];
-    UIColor *colorTwo = [UIColor colorWithHue:hueColorOne * 1 saturation:saturationColorOne * 1 brightness:brightnessColorOne * 0.8 alpha:alphaColorOne];
+    //UIColor *colorTwo = [UIColor colorWithHue:hueColorOne * 1 saturation:saturationColorOne * 1 brightness:brightnessColorOne * 0.8 alpha:alphaColorOne];
     self.layer.cornerRadius = 10.0;
     self.layer.masksToBounds = YES;
     

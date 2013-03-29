@@ -29,6 +29,7 @@
 		5B1AC4CE16EA1FF400950206 /* WDPreviousDayWordMenuViewPage1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4CD16EA1FF400950206 /* WDPreviousDayWordMenuViewPage1.xib */; };
 		5B1AC4D516EA3C8D00950206 /* WDConfirmWordActionMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4D416EA3C8D00950206 /* WDConfirmWordActionMenuView.m */; };
 		5B1AC4D716EA3C9B00950206 /* WDConfirmWordActionMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B1AC4D616EA3C9B00950206 /* WDConfirmWordActionMenuView.xib */; };
+		5B2BB1871706364000A3882A /* WDSelectedWordScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2BB1861706364000A3882A /* WDSelectedWordScreenView.m */; };
 		5B431DD416F9BEE100AED63B /* WDWordTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B431DD316F9BEE100AED63B /* WDWordTextView.m */; };
 		5B431DD716F9BEF800AED63B /* WDWordTextWithCursorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B431DD616F9BEF800AED63B /* WDWordTextWithCursorView.m */; };
 		5B431DDA16F9BF0400AED63B /* WDWordTextWithoutCursorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B431DD916F9BF0400AED63B /* WDWordTextWithoutCursorView.m */; };
@@ -126,6 +127,8 @@
 		5B1AC4D316EA3C8D00950206 /* WDConfirmWordActionMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDConfirmWordActionMenuView.h; sourceTree = "<group>"; };
 		5B1AC4D416EA3C8D00950206 /* WDConfirmWordActionMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDConfirmWordActionMenuView.m; sourceTree = "<group>"; };
 		5B1AC4D616EA3C9B00950206 /* WDConfirmWordActionMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDConfirmWordActionMenuView.xib; sourceTree = "<group>"; };
+		5B2BB1851706363F00A3882A /* WDSelectedWordScreenView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSelectedWordScreenView.h; sourceTree = "<group>"; };
+		5B2BB1861706364000A3882A /* WDSelectedWordScreenView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSelectedWordScreenView.m; sourceTree = "<group>"; };
 		5B431DD216F9BEE100AED63B /* WDWordTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordTextView.h; sourceTree = "<group>"; };
 		5B431DD316F9BEE100AED63B /* WDWordTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWordTextView.m; sourceTree = "<group>"; };
 		5B431DD516F9BEF800AED63B /* WDWordTextWithCursorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordTextWithCursorView.h; sourceTree = "<group>"; };
@@ -592,6 +595,8 @@
 				5B1AC4BA16EA0A9A00950206 /* WDSelectedWordScreenViewController.xib */,
 				5B1AC4BB16EA0A9A00950206 /* WDSelectedWordScreenViewController.m */,
 				5B1AC4B916EA0A9200950206 /* WDSelectedWordScreenViewController.h */,
+				5B2BB1851706363F00A3882A /* WDSelectedWordScreenView.h */,
+				5B2BB1861706364000A3882A /* WDSelectedWordScreenView.m */,
 			);
 			name = "Selected Word Screen";
 			sourceTree = "<group>";
@@ -776,6 +781,7 @@
 				5B1193601704A15D00CAF765 /* WDAuxiliaryScreenSupportPanelView.m in Sources */,
 				5B1193651704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.m in Sources */,
 				5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */,
+				5B2BB1871706364000A3882A /* WDSelectedWordScreenView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
