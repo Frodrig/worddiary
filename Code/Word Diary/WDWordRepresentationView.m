@@ -56,7 +56,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (CGPoint)startDrawingPosition
 {
-    return CGPointMake(0.0, self.frame.size.height * ([WDUtils isIPhone5Screen] ? 0.45 : 0.37));
+    return CGPointMake(10.0, self.frame.size.height * ([WDUtils isIPhone5Screen] ? 0.45 : 0.37));
 }
 
 - (NSMutableArray *)wordTextWithoutCursorFontTransitionsView
@@ -243,7 +243,7 @@ static CGFloat FONT_START_SIZE = 100.0;
    
     const CGPoint startPointDraw = self.startDrawingPosition;
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
-    const CGFloat dashPattern[] = {2.0, 6.0};
+    const CGFloat dashPattern[] = {2.0, 9.0};
     
     CGContextSaveGState(contextRef);
     CGContextSetAllowsAntialiasing(contextRef, true);

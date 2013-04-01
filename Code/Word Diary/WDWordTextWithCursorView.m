@@ -73,7 +73,7 @@
         
         // Set text position and draw the line into the graphics context
         lineImageBounds = CTLineGetImageBounds(line, contextRef);
-        endFindingFontSize = self.frame.origin.x + lineImageBounds.size.width + 40.0 < self.frame.origin.x + self.bounds.size.width;
+        endFindingFontSize = startPointDraw.x + self.frame.origin.x + lineImageBounds.size.width + 10.0 < startPointDraw.x + self.frame.origin.x + self.bounds.size.width;
         if (endFindingFontSize) {
             endFindingFontSize = lineImageBounds.size.height + 40.0 < self.bounds.size.height;
         }
@@ -84,7 +84,7 @@
     } while (!endFindingFontSize);
     
     //CTLineRef line = [self createCTLineRefAdjustedToFitWithContextRef:contextRef withText:wordText color:[UIColor blackColor] activeCursor:writeModeActive];
-    CGPoint fontDrawPoint = CGPointMake(self.frame.origin.x, startPointDraw.y);
+    CGPoint fontDrawPoint = CGPointMake(startPointDraw.x + self.frame.origin.x, startPointDraw.y);
     
     CGContextSaveGState(contextRef);
     CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);
