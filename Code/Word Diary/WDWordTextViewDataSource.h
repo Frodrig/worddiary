@@ -18,6 +18,8 @@
 - (CGPoint)actualStartPointDrawingForWordTextView:(WDWordTextView *)wordTextView;
 - (CGFloat)fontStartSize;
 
+- (UIColor *)actualSelectedWordBackgroundColorForWordTextView:(WDWordTextView *)wordTextView;
+
 - (BOOL)isInWritingModeForWordTextView:(WDWordTextView *)wordTextView;
 
 @end

@@ -16,4 +16,6 @@
 - (NSString *)actualFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
 - (BOOL)isInWritingModeFoWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
 
+- (UIColor *)actualSelectedWordBackgroundColorForWordRepresentation:(WDWordRepresentationView *)wordRepresentationView;
+
 @end

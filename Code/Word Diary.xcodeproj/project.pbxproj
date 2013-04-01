@@ -872,6 +872,7 @@
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -883,6 +884,7 @@
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

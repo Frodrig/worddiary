@@ -108,6 +108,12 @@
         }
     }
     */
+    /*
+    UIColor *textColor = [self.dataSource actualSelectedWordBackgroundColorForWordTextView:self];
+    CGFloat hue, saturation, brightness, alpha;
+    [textColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
+    textColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness * 0.35 alpha:alpha];
+    */
     self.lastWordText = wordText;
 
     NSString *familyFont = self.familyFont;
@@ -119,13 +125,17 @@
     BOOL endFindingFontSize = NO;
     do {
         CTFontRef fontRef = CTFontCreateWithName((__bridge CFStringRef)familyFont, fontSize, NULL);
-        NSDictionary *attrDictionary = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)fontRef, (NSString *)kCTFontAttributeName,
-                                        [UIColor blackColor], (NSString *)NSForegroundColorAttributeName, nil];
+        NSDictionary *attrDictionary = @{
+                                         NSFontAttributeName:(__bridge id)fontRef,
+                                         //NSForegroundColorAttributeName:textColor,
+                                         NSForegroundColorAttributeName:[UIColor blackColor],
+
+        };
         CFRelease(fontRef);
         
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:wordTextWithCursor attributes:attrDictionary];
         [attString addAttribute:(NSString *)kCTForegroundColorAttributeName value:[UIColor colorWithWhite:1.0 alpha:0.0] range:NSMakeRange(wordTextWithCursor.length - 1, 1)];
-        
+       
         line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attString));
         
         // Para centrar sin tener en cuenta el cursor
@@ -151,6 +161,9 @@
     CGPoint fontDrawPoint = CGPointMake(self.frame.origin.x + (self.bounds.size.width - lineImageBoundsWithoutCursor.size.width) / 2, startPointDraw.y);
     
     CGContextSaveGState(contextRef);
+    
+    //CGContextSetShadowWithColor(contextRef,CGSizeMake(2, 1), 0 ,[UIColor blackColor].CGColor);
+    
     CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);
     CTLineDraw(line, contextRef);
     CFRelease(line);

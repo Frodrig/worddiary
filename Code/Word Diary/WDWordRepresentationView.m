@@ -326,6 +326,12 @@ static CGFloat FONT_START_SIZE = 100.0;
     return [WDUtils isIPhone5Screen] ? FONT_START_SIZE * 1.15 : FONT_START_SIZE * 0.9;
 }
 
+- (UIColor *)actualSelectedWordBackgroundColorForWordTextView:(WDWordTextView *)wordTextView
+{
+    return [self.dataSource actualSelectedWordBackgroundColorForWordRepresentation:self];
+}
+
+
 #pragma mark - Motion Events
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event

@@ -1006,6 +1006,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     return self.keyboardActive;
 }
 
+-(UIColor *)actualSelectedWordBackgroundColorForWordRepresentation:(WDWordRepresentationView *)wordRepresentationView
+{
+    return [[WDGradientBackground gradientColors] objectAtIndex:self.selectedWord.backgroundCategory];
+}
+
 #pragma mark - App iOS events
 
 - (void)resign
