@@ -29,6 +29,7 @@ static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
 
 @interface WDGradientBackground()
 
+@property(nonatomic, strong) UIView                   *noiseBackground;
 @property(nonatomic, strong) CAGradientLayer          *gradientLayer;
 @property(nonatomic, strong) NSTimer                  *animationTimer;
 @property(nonatomic)         BackgroundAnimationState animationState;
@@ -49,6 +50,7 @@ static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
 
 #pragma mark - Synthesize
 
+@synthesize noiseBackground     = noiseBackground_;
 @synthesize gradientLayer       = gradientLayer_;
 @synthesize gradientColorIndex  = gradientColorIndex_;
 @synthesize animationTimer      = animationTimer_;
@@ -135,6 +137,10 @@ static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
         //self.layer.borderWidth = 1.0;
         //self.layer.borderColor = [UIColor colorWithHexadecimalValue:@"0x000000" withAlphaComponent:NO skipInitialCharacter:NO].CGColor;
         self.layer.masksToBounds = YES;
+        
+        self.noiseBackground = [[UIView alloc] initWithFrame:self.frame];
+        self.noiseBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_noise01"]];
+        [self addSubview:self.noiseBackground];
     }
     
     return self;

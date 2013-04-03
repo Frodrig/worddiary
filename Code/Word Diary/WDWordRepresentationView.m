@@ -248,6 +248,7 @@ static CGFloat FONT_START_SIZE = 100.0;
     CGContextSetLineWidth(contextRef, 1);
     CGFloat colorComponents[4] = {0, 0, 0, 0};
     [[self.dataSource actualSelectedWordAccessoriesWordRepresentation:self] getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
+    colorComponents[3] *= 0.5;
     CGContextSetStrokeColor(contextRef, colorComponents);
     CGContextMoveToPoint(contextRef, 0.0, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, self.bounds.size.width, endPointDraw.y);
