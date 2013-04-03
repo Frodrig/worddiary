@@ -154,10 +154,10 @@
         palettes_ = result;
     } else {
         WDPalette *palette = [NSEntityDescription insertNewObjectForEntityForName:@"WDPalette" inManagedObjectContext:self.context];
-        palette.idName = @"01";
-        palette.aColor = @"778899";
-        palette.bColor = @"556B2F";
-        palette.cColor = @"4682B4";
+        palette.idName = @"127";
+        palette.backgroundColor = @"0xFFA640";
+        palette.wordColor = @"0xE52E39";
+        palette.accessoriesColor = @"0x732800";
         
         palettes_ = [NSArray arrayWithObject:palette];
         // ToDo: Por ahora una unica paleta para todas las emociones
@@ -185,8 +185,10 @@
         for (NSString *emotionName in emotionsNames) {
             WDEmotion *emotion = [NSEntityDescription insertNewObjectForEntityForName:@"WDEmotion" inManagedObjectContext:self.context];
             emotion.name = emotionName;
-            [emotion addPaletteObject:[self.palettes objectAtIndex:0]];
             // ToDo: Por ahora todas las emociones con las mismas paletas
+            WDPalette *paletteOfEmotion = [self.palettes objectAtIndex:0];
+            [emotion addPaletteObject:paletteOfEmotion];
+
             [emotionInstances addObject:emotion];
         }
         
@@ -235,7 +237,7 @@
     wordObject.style = [self defaultStyle];
     wordObject.emotion = [self defaultEmotion];
     // ToDo: Este valor tiene que venir de un parametro de la funcion
-    wordObject.paletteIdNameOfEmotion = @"01";
+    wordObject.paletteIdNameOfEmotion = @"127";
 
     [words_ addObject:wordObject];
     [self sortWords];

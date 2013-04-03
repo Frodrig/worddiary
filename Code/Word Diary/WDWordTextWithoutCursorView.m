@@ -128,7 +128,7 @@
         NSDictionary *attrDictionary = @{
                                          NSFontAttributeName:(__bridge id)fontRef,
                                          //NSForegroundColorAttributeName:textColor,
-                                         NSForegroundColorAttributeName:[UIColor blackColor],
+                                         NSForegroundColorAttributeName:[self.dataSource actualSelectedWordColorForWordTextView:self],
 
         };
         CFRelease(fontRef);

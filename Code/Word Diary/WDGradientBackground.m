@@ -7,6 +7,7 @@
 //
 
 #import "WDGradientBackground.h"
+#import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
 typedef enum {
@@ -120,6 +121,26 @@ static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
 }
 
 #pragma mark - Init
+
+- (id)initWithFrame:(CGRect)frame andHexColor:(NSString *)hexColor
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.userInteractionEnabled = NO;
+        animationState_ = BAS_STABLE;
+        
+        self.backgroundColor = [UIColor colorWithHexadecimalValue:hexColor withAlphaComponent:NO skipInitialCharacter:NO];
+        [self.backgroundColor getHue:&hueComponent_ saturation:&saturationComponent_ brightness:&brightnessComponent_ alpha:&alphaComponent_];
+        self.layer.cornerRadius = 15.0;
+        //self.layer.borderWidth = 1.0;
+        //self.layer.borderColor = [UIColor colorWithHexadecimalValue:@"0x000000" withAlphaComponent:NO skipInitialCharacter:NO].CGColor;
+        self.layer.masksToBounds = YES;
+    }
+    
+    return self;
+
+}
+
 
 - (id)initWithFrame:(CGRect)frame andGradientColorIndex:(NSUInteger)index
 {

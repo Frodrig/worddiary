@@ -54,7 +54,7 @@
     do {
         CTFontRef fontRef = CTFontCreateWithName((__bridge CFStringRef)familyFont, fontSize, NULL);
         NSDictionary *attrDictionary = [NSDictionary dictionaryWithObjectsAndKeys:(__bridge id)fontRef, (NSString *)kCTFontAttributeName,
-                                        [UIColor blackColor], (NSString *)NSForegroundColorAttributeName, nil];
+                                        [self.dataSource actualSelectedWordColorForWordTextView:self], (NSString *)NSForegroundColorAttributeName, nil];
         CFRelease(fontRef);
         
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:wordTextWithCursor attributes:attrDictionary];

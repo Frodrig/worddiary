@@ -16,6 +16,9 @@
 @property (nonatomic, retain) NSString  *name;
 @property (nonatomic, retain) NSSet     *palette;
 @property (nonatomic, retain) NSSet     *word;
+
+- (WDPalette *)findPaletteOfIdName:(NSString *)idName;
+
 @end
 
 @interface WDEmotion (CoreDataGeneratedAccessors)

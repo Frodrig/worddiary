@@ -18,6 +18,9 @@
 #import "WDDayChecker.h"
 #import "WDGradientBackground.h"
 #import "WDAuxiliaryScreenViewController.h"
+#import "WDEmotion.h"
+#import "WDPalette.h"
+#import "UIColor+hexColorCreation.h"
 
 const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
 const static CGFloat ANIMATION_TIME_CURSORMODE = 0.5;
@@ -39,6 +42,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        NSTimer                              *animateStartEndPointOfGradientTimer;
 @property (nonatomic)                BOOL                                 keyboardActive;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
+@property (nonatomic, strong)        UILabel                              *emotionLabel;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
 @property (nonatomic)                BOOL                                 dayChangePendingToResolve;
@@ -121,6 +125,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize delegate                             = delegate_;
 @synthesize keyboardActive                       = keyboardActive_;
 @synthesize wordDiaryRepresentation              = wordDiaryRepresentation_;
+@synthesize emotionLabel                         = emotionLabel_;
 @synthesize cursorUpdateTimer                    = cursorUpdateTimer_;
 @synthesize dayChecker                           = dayChecker_;
 @synthesize dayChangePendingToResolve            = dayChangePendingToResolve_;
@@ -196,13 +201,24 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+        
     // Palabra
     BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
     self.wordDiaryRepresentation.center = CGPointMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / (isIPhone5Screen ? 2.50 : 3.5));
     self.wordDiaryRepresentation.delegate = self;
     self.wordDiaryRepresentation.dataSource = self;
     [self.view addSubview:self.wordDiaryRepresentation];
+    
+    // Emotion label
+    self.emotionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44.0)];
+    self.emotionLabel.textAlignment = NSTextAlignmentCenter;
+    self.emotionLabel.attributedText = [[NSAttributedString alloc] initWithString:[NSLocalizedString(self.selectedWord.emotion.name,@"") uppercaseString]
+                                                                       attributes:@{ NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:14],
+                                                                                     NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:[self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion].wordColor withAlphaComponent:NO skipInitialCharacter:NO],
+                                                                                     NSKernAttributeName: [NSNumber numberWithInteger:2] }];
+    
+    self.emotionLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.emotionLabel];
     
     // Menu de edicion
     self.editMenuViewController = [[WDSelectedWordEditMenuViewController alloc] initWithSelectedWord:self.selectedWord];
@@ -223,12 +239,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [super viewWillAppear:animated];
     
+    // Se centran las views correctamente
     const CGFloat xMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
     self.editMenuViewController.view.frame = CGRectMake(xMargin,
                                                         self.view.bounds.size.height - self.editMenuViewController.view.bounds.size.height - xMargin,
                                                         self.editMenuViewController.view.bounds.size.width,
                                                         self.editMenuViewController.view.bounds.size.height);
     self.auxiliarySreenViewController.view.frame = CGRectMake(self.view.frame.origin.x + xMargin, xMargin, self.view.bounds.size.width - xMargin * 2, self.view.bounds.size.height - xMargin * 2);
+    
+    self.emotionLabel.center = CGPointMake(self.emotionLabel.bounds.size.width / 2,
+                                           (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height + (self.view.frame.origin.y + self.view.frame.size.height - (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height)) / 2));
+    NSLog(@"%@ - %f", NSStringFromCGPoint(self.emotionLabel.center), self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height);
     
     if (self.selectedWord.word.length > 0) {
         [self.wordDiaryRepresentation setWithoutCursor:0.0];
@@ -363,12 +384,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)configureViewForSelectedWord:(BOOL)updateBackground
 {
     self.editMenuViewController.selectedWord = self.selectedWord;
+    
+    WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
 
     // Gradiente
     if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
             // ToDo: Quitar el 0 y relacionar con la paleta de colores adecuada
-            self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andGradientColorIndex:0];
+            self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andHexColor:palette.backgroundColor];
             [self.view insertSubview:self.actualGradientBackground atIndex:0];
         } else if (0 != self.actualGradientBackground.gradientColorIndex) {
             [self changeToGradientBackgroundOfColorIndex:0 withDuration:0.75];
@@ -377,9 +400,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 
     // Fecha
+    UIColor *accessoriesColor = [UIColor colorWithHexadecimalValue:palette.accessoriesColor withAlphaComponent:NO skipInitialCharacter:NO];
+    self.yearDateTopInfoLabel.textColor = [accessoriesColor copy];
+    self.dayMonthDateTopInfoLabel.textColor = [accessoriesColor copy];
+    self.wordDiaryRepresentation.dayOfTheWeekLabel.textColor = [accessoriesColor copy];
+    
     [self setDateInfo];
     
     // Palabra
+    //UIColor *wordColor = [UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
+    self.wordDiaryRepresentation.dayDiaryLabel.textColor = [accessoriesColor copy];
+    
     NSUInteger indexPositionOfSelectedWord = [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord];
     NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:indexPositionOfSelectedWord]];
     self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
@@ -1009,10 +1040,16 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     return self.keyboardActive;
 }
 
--(UIColor *)actualSelectedWordBackgroundColorForWordRepresentation:(WDWordRepresentationView *)wordRepresentationView
+- (UIColor *)actualSelectedWordColorForWordRepresentation:(WDWordRepresentationView *)wordRepresentation
 {
-    // ToDo: Cambio del 0 al color de paleta adecuado
-    return [[WDGradientBackground gradientColors] objectAtIndex:0];
+    WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
+    return [UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
+}
+
+- (UIColor *)actualSelectedWordAccessoriesWordRepresentation:(WDWordRepresentationView *)wordRepresentation
+{
+    WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
+    return [UIColor colorWithHexadecimalValue:palette.accessoriesColor withAlphaComponent:NO skipInitialCharacter:NO];
 }
 
 #pragma mark - App iOS events

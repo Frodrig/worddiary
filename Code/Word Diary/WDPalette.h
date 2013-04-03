@@ -14,10 +14,10 @@
 @interface WDPalette : NSManagedObject
 
 @property (nonatomic, retain) NSString  *idName;
-@property (nonatomic, retain) NSString  *aColor;
-@property (nonatomic, retain) NSString  *bColor;
-@property (nonatomic, retain) NSString  *cColor;
-@property (nonatomic, retain) NSString  *dColor;
+@property (nonatomic, retain) NSString  *backgroundColor;
+@property (nonatomic, retain) NSString  *wordColor;
+@property (nonatomic, retain) NSString  *accessoriesColor;
+@property (nonatomic, retain) NSString  *reservedColor;
 @property (nonatomic, retain) WDEmotion *emotion;
 
 @end

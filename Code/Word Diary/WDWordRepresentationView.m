@@ -19,7 +19,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 @interface WDWordRepresentationView()
 
 @property (weak, nonatomic) IBOutlet UIView               *drawTextBox;
-@property (nonatomic) UIColor                             *actualColorOfCursor;
+@property (nonatomic, strong) UIColor                     *actualColorOfCursor;
 @property (nonatomic, readonly) CGPoint                   startDrawingPosition;
 @property (nonatomic, strong) WDWordTextWithCursorView    *wordTextWithCursorView;
 @property (nonatomic, strong) WDWordTextWithoutCursorView *wordTextWithoutCursorView;
@@ -46,9 +46,10 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 #pragma mark - Properties
 
-- (UIColor *)getActualColorOfCursor
+- (UIColor *)actualColorOfCursor
 {
     if (nil == actualColorOfCursor_) {
+        actualColorOfCursor_ = [[self.dataSource actualSelectedWordAccessoriesWordRepresentation:self] copy];
     }
 
     return actualColorOfCursor_;
@@ -83,9 +84,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 - (id)initWithCoder:(NSCoder *)decoder
 {
     self = [super initWithCoder:decoder];
-    if (self) {
-        actualColorOfCursor_ = [UIColor colorWithWhite:0.0 alpha:1.0];
-        
+    if (self) {        
         wordTextWithCursorView_ = [[WDWordTextWithCursorView alloc] initWithFrame:self.frame];
         wordTextWithCursorView_.backgroundColor = [UIColor clearColor];
         wordTextWithCursorView_.dataSource = self;
@@ -180,14 +179,14 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (void)updateCursorAnimation
 {
-    if (self.actualColorOfCursor) {
-        CGFloat whiteValue = 0.0;
-        CGFloat alphaValue = 0.0;
-        [self.actualColorOfCursor getWhite:&whiteValue alpha:&alphaValue];
-        if ([WDUtils is:alphaValue equalsTo:CURSOR_OPACITY]) {
-            self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:1.0];
+    if (self.actualColorOfCursor != nil) {
+        CGFloat colorComponents[4] = {0, 0, 0, 0};
+        [self.actualColorOfCursor getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
+        if ([WDUtils is:colorComponents[3] equalsTo:CURSOR_OPACITY]) {
+            // El getter volvera a coger el valor original
+            self.actualColorOfCursor = [UIColor colorWithRed:colorComponents[0] green:colorComponents[1] blue:colorComponents[2] alpha:1.0];
         } else {
-            self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:CURSOR_OPACITY];
+            self.actualColorOfCursor = [UIColor colorWithRed:colorComponents[0] green:colorComponents[1] blue:colorComponents[2] alpha:CURSOR_OPACITY];
         }
     }
 }
@@ -209,8 +208,6 @@ static CGFloat FONT_START_SIZE = 100.0;
         
         self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     }
-    
-    self.actualColorOfCursor = [UIColor colorWithWhite:0.0 alpha:1.0];
 }
 
 - (void)setWithoutCursor:(CGFloat)duration;
@@ -249,7 +246,9 @@ static CGFloat FONT_START_SIZE = 100.0;
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineDash(contextRef, 0, dashPattern, 2);
     CGContextSetLineWidth(contextRef, 1);
-    CGContextSetRGBStrokeColor(contextRef, 0, 0, 0, 0.9);
+    CGFloat colorComponents[4] = {0, 0, 0, 0};
+    [[self.dataSource actualSelectedWordAccessoriesWordRepresentation:self] getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
+    CGContextSetStrokeColor(contextRef, colorComponents);
     CGContextMoveToPoint(contextRef, 0.0, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, self.bounds.size.width, endPointDraw.y);
     CGContextStrokePath(contextRef);
@@ -306,11 +305,6 @@ static CGFloat FONT_START_SIZE = 100.0;
     return [self.dataSource actualFamilyFontForWordRepresentationView:self];
 }
 
-- (UIColor *)actualCursorColorForWordTextView:(WDWordTextView *)wordTextView
-{
-    return self.actualColorOfCursor ? self.actualColorOfCursor : [UIColor colorWithWhite:1.0 alpha:0.0];
-}
-
 - (CGPoint)actualStartPointDrawingForWordTextView:(WDWordTextView *)wordTextView
 {
     return self.startDrawingPosition;
@@ -326,11 +320,20 @@ static CGFloat FONT_START_SIZE = 100.0;
     return [WDUtils isIPhone5Screen] ? FONT_START_SIZE * 1.15 : FONT_START_SIZE * 0.9;
 }
 
-- (UIColor *)actualSelectedWordBackgroundColorForWordTextView:(WDWordTextView *)wordTextView
+- (UIColor *)actualCursorColorForWordTextView:(WDWordTextView *)wordTextView
 {
-    return [self.dataSource actualSelectedWordBackgroundColorForWordRepresentation:self];
+    return self.actualColorOfCursor;
 }
 
+- (UIColor *)actualSelectedWordColorForWordTextView:(WDWordTextView *)wordTextView
+{
+    return [self.dataSource actualSelectedWordColorForWordRepresentation:self];
+}
+
+- (UIColor *)actualSelectedWordAccessoriesWordTextView:(WDWordTextView *)wordTextView
+{
+    return [self.dataSource actualSelectedWordAccessoriesWordRepresentation:self];
+}
 
 #pragma mark - Motion Events
 

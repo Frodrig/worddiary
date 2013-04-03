@@ -14,11 +14,12 @@
 
 - (NSString *)actualTextValueForWordTextView:(WDWordTextView *)wordTextView;
 - (NSString *)actualFamilyFontForWordTextView:(WDWordTextView *)wordTextView;
-- (UIColor *)actualCursorColorForWordTextView:(WDWordTextView *)wordTextView;
 - (CGPoint)actualStartPointDrawingForWordTextView:(WDWordTextView *)wordTextView;
 - (CGFloat)fontStartSize;
 
-- (UIColor *)actualSelectedWordBackgroundColorForWordTextView:(WDWordTextView *)wordTextView;
+- (UIColor *)actualCursorColorForWordTextView:(WDWordTextView *)wordTextView;
+- (UIColor *)actualSelectedWordColorForWordTextView:(WDWordTextView *)wordTextView;
+- (UIColor *)actualSelectedWordAccessoriesWordTextView:(WDWordTextView *)wordTextView;
 
 - (BOOL)isInWritingModeForWordTextView:(WDWordTextView *)wordTextView;
 

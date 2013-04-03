@@ -17,4 +17,19 @@
 @dynamic palette;
 @dynamic word;
 
+#pragma mark - Actions
+
+- (WDPalette *)findPaletteOfIdName:(NSString *)idName
+{
+    WDPalette *retPalette = nil;
+    for (WDPalette *palette in self.palette) {
+        if ([palette.idName compare:idName] == NSOrderedSame) {
+            retPalette = palette;
+            break;
+        }
+    }
+    
+    return retPalette;
+}
+
 @end

@@ -12,10 +12,10 @@
 
 @implementation WDPalette
 
-@dynamic aColor;
-@dynamic bColor;
-@dynamic cColor;
-@dynamic dColor;
+@dynamic backgroundColor;
+@dynamic wordColor;
+@dynamic accessoriesColor;
+@dynamic reservedColor;
 @dynamic idName;
 @dynamic emotion;
 

@@ -6,12 +6,12 @@
         <relationship name="word" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDWord" inverseName="emotion" inverseEntity="WDWord" syncable="YES"/>
     </entity>
     <entity name="WDPalette" representedClassName="WDPalette" syncable="YES">
-        <attribute name="aColor" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="bColor" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="cColor" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dColor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="accessoriesColor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="backgroundColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="idName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="emotion" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WDEmotion" inverseName="palette" inverseEntity="WDEmotion" syncable="YES"/>
+        <attribute name="reservedColor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wordColor" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="emotion" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDEmotion" inverseName="palette" inverseEntity="WDEmotion" syncable="YES"/>
     </entity>
     <entity name="WDStyle" representedClassName="WDStyle" syncable="YES">
         <attribute name="familyFont" optional="YES" attributeType="String" syncable="YES"/>
