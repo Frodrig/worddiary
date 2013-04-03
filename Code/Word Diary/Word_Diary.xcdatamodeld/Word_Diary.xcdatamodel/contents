@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Font" representedClassName="WDFont" syncable="YES">
-        <attribute name="family" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="word" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Word" inverseName="font" inverseEntity="Word" syncable="YES"/>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="WDEmotion" representedClassName="WDEmotion" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="palette" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDPalette" inverseName="emotion" inverseEntity="WDPalette" syncable="YES"/>
+        <relationship name="word" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDWord" inverseName="emotion" inverseEntity="WDWord" syncable="YES"/>
     </entity>
-    <entity name="Word" representedClassName="WDWord" syncable="YES">
-        <attribute name="backgroundCategory" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    <entity name="WDPalette" representedClassName="WDPalette" syncable="YES">
+        <attribute name="aColor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="bColor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cColor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dColor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="idName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="emotion" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WDEmotion" inverseName="palette" inverseEntity="WDEmotion" syncable="YES"/>
+    </entity>
+    <entity name="WDStyle" representedClassName="WDStyle" syncable="YES">
+        <attribute name="familyFont" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="word" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDWord" inverseName="style" inverseEntity="WDWord" syncable="YES"/>
+    </entity>
+    <entity name="WDWord" representedClassName="WDWord" syncable="YES">
+        <attribute name="paletteIdNameOfEmotion" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeInterval" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="word" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="font" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Font" inverseName="word" inverseEntity="Font" syncable="YES"/>
+        <relationship name="emotion" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WDEmotion" inverseName="word" inverseEntity="WDEmotion" syncable="YES"/>
+        <relationship name="style" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WDStyle" inverseName="word" inverseEntity="WDStyle" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Font" positionX="160" positionY="-144" width="128" height="75"/>
-        <element name="Word" positionX="-423" positionY="-129" width="128" height="103"/>
+        <element name="WDEmotion" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="WDPalette" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="WDStyle" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="WDWord" positionX="0" positionY="0" width="128" height="120"/>
     </elements>
 </model>

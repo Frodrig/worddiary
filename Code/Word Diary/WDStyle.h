@@ -2,7 +2,7 @@
 //  WDFont.h
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 28/02/13.
+//  Created by Fernando Rodríguez Martínez on 03/04/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
@@ -11,15 +11,16 @@
 
 @class WDWord;
 
-@interface WDFont : NSManagedObject
+@interface WDStyle : NSManagedObject
 
-@property (nonatomic, retain) NSString *family;
-@property (nonatomic, retain) NSSet    *word;
+@property (nonatomic, retain) NSString  *familyFont;
+@property (nonatomic, retain) NSSet     *word;
+
+- (NSComparisonResult)compare:(WDStyle *)otherFont;
+
 @end
 
-@interface WDFont (CoreDataGeneratedAccessors)
-
-- (NSComparisonResult)compare:(WDFont *)otherFont;
+@interface WDStyle (CoreDataGeneratedAccessors)
 
 - (void)addWordObject:(WDWord *)value;
 - (void)removeWordObject:(WDWord *)value;

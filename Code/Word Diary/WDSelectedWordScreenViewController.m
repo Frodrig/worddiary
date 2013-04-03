@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "WDSelectedWordEditMenuViewController.h"
 #import "WDWord.h"
-#import "WDFont.h"
+#import "WDStyle.h"
 #import "WDWordDiary.h"
 #import "WDUtils.h"
 #import "WDWordRepresentationView.h"
@@ -367,10 +367,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     // Gradiente
     if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
-            self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
+            // ToDo: Quitar el 0 y relacionar con la paleta de colores adecuada
+            self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andGradientColorIndex:0];
             [self.view insertSubview:self.actualGradientBackground atIndex:0];
-        } else if (self.selectedWord.backgroundCategory != self.actualGradientBackground.gradientColorIndex) {
-            [self changeToGradientBackgroundOfColorIndex:self.selectedWord.backgroundCategory withDuration:0.75];
+        } else if (0 != self.actualGradientBackground.gradientColorIndex) {
+            [self changeToGradientBackgroundOfColorIndex:0 withDuration:0.75];
         }
         // self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
     }
@@ -738,7 +739,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {    
     [self endBackgroundTimer];
     
-    self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:self.selectedWord.backgroundCategory];
+    // ToDo: Quitar el 0 y relacionar con la paleta correcta de colores
+    self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:0];
     [self.view insertSubview:self.actualGradientBackground belowSubview:self.backgroundSwipeView];
     self.backgroundSwipeView.userInteractionEnabled = NO;
     self.actualGradientBackground.alpha = 0.0;
@@ -922,12 +924,12 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)changeToFontWithIndex:(NSUInteger)indexFont
 {
-    self.selectedWord.font = [[WDWordDiary sharedWordDiary].fonts objectAtIndex:indexFont];
+    self.selectedWord.style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:indexFont];
     
     [self.wordDiaryRepresentation familyFontOfSelectedWordChanged];
     [self.wordDiaryRepresentation setNeedsDisplay];
     
-    NSLog(@"Family %@", self.selectedWord.font.family);
+    //NSLog(@"Family %@", self.selectedWord.font.family);
     /*NSLog(@"PointSize %f", self.wordDiaryRepresentation.wordTextField.font.pointSize);
     NSLog(@"Acender %f", self.wordDiaryRepresentation.wordTextField.font.ascender);
     NSLog(@"Descender %f", self.wordDiaryRepresentation.wordTextField.font.descender);
@@ -941,7 +943,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)changeToBackgroundCategory:(WDBackgroundCategory)category
 {
-    self.selectedWord.backgroundCategory = category;
+    // ToDo:Cambio del color de fondo
+    //self.selectedWord.backgroundCategory = category;
     [self changeToGradientBackgroundOfColorIndex:category withDuration:1.5];
 }
 
@@ -996,7 +999,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     NSAssert(wordRepresentationView == self.wordDiaryRepresentation, @"objeto invalido");
     
-    return self.selectedWord.font.family;
+    return self.selectedWord.style.familyFont;
 }
 
 - (BOOL)isInWritingModeFoWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
@@ -1008,7 +1011,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 -(UIColor *)actualSelectedWordBackgroundColorForWordRepresentation:(WDWordRepresentationView *)wordRepresentationView
 {
-    return [[WDGradientBackground gradientColors] objectAtIndex:self.selectedWord.backgroundCategory];
+    // ToDo: Cambio del 0 al color de paleta adecuado
+    return [[WDGradientBackground gradientColors] objectAtIndex:0];
 }
 
 #pragma mark - App iOS events

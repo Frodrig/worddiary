@@ -8,7 +8,9 @@
 
 #import "WDWordDiary.h"
 #import "WDWord.h"
-#import "WDFont.h"
+#import "WDStyle.h"
+#import "WDPalette.h"
+#import "WDEmotion.h"
 #import "WDBackgroundDefs.h"
 
 @interface WDWordDiary()
@@ -17,7 +19,9 @@
 - (NSURL *)storeFileURLWithPath;
 
 - (NSArray *) fetchAllEntitiesOfType:(NSString *)entity;
-- (void)      prepareFonts;
+- (void)      prepareStyles;
+- (void)      preparePalettes;
+- (void)      prepareEmotions;
 - (void)      prepareWords;
 
 - (void)      addObserverToWord:(WDWord *)word;
@@ -30,11 +34,13 @@
 
 #pragma mark - Synthesize
 
-@synthesize model   = model_;
-@synthesize context = context_;
-@synthesize words   = words_;
-@synthesize colors  = colors_;
-@synthesize fonts   = fonts_;
+@synthesize model    = model_;
+@synthesize context  = context_;
+@synthesize words    = words_;
+@synthesize colors   = colors_;
+@synthesize styles   = styles_;
+@synthesize emotions = emotions_;
+@synthesize palettes = palettes_;
 
 #pragma mark - Singleton
 
@@ -60,7 +66,9 @@
     self = [super init];
     if (self) {
         [self configureModelAndContextOfDB];
-        [self prepareFonts];
+        [self preparePalettes];
+        [self prepareEmotions];
+        [self prepareStyles];
         [self prepareWords];
     }
     
@@ -107,62 +115,90 @@
     return result;
 }
 
-- (void)prepareFonts
+- (void)prepareStyles
 {
-    NSArray *result = [self fetchAllEntitiesOfType:@"Font"];
+    NSArray *result = [self fetchAllEntitiesOfType:@"WDStyle"];
     
     if (result.count > 0) {
-        fonts_ = [NSArray arrayWithArray:result];
-    } else {
-        NSMutableArray *fontInstances = [[NSMutableArray alloc] init];
-        
-        NSArray *fontFamilies = [NSArray arrayWithObjects:@"AcademyEngravedLetPlain",
-                                 @"AmericanTypewriter",
-                                 @"AppleColorEmoji",
-                                 @"ArialHebrew",
-                                 @"Avenir-Book",
-                                 @"AvenirNext-UltraLight",
+        styles_ = result;
+    } else {        
+        NSArray *fontFamilies = [NSArray arrayWithObjects:
                                  @"Baskerville",
-                                 @"BradleyHandITCTT-Bold",
-                                 @"ChalkboardSE-Light",
-                                 @"Chalkduster",
-                                 @"Cochin",
-                                 @"Courier",
+                                 @"Copperplate",
                                  @"CourierNewPSMT",
-                                 @"Didot",
-                                 @"Futura-CondensedMedium",
-                                 @"Georgia",
-                                 @"GillSans",
-                                 @"GurmukhiMN",
-                                 @"Helvetica",
-                                 @"HoeflerText-Regular",
-                                 @"MarkerFelt-Thin",
                                  @"Noteworthy-Light",
-                                 @"Palatino-Roman",
-                                 @"Papyrus",
                                  @"PartyLetPlain",
                                  @"SnellRoundhand",
-                                 @"TimesNewRomanPSMT",
-                                 @"TrebuchetMS",
-                                 @"Zapfino",
                                  nil];
+        NSMutableArray *styleInstances = [NSMutableArray arrayWithCapacity:fontFamilies.count];
+                                          
         for (NSString *fontFamily in fontFamilies) {
-            WDFont *font = [NSEntityDescription insertNewObjectForEntityForName:@"Font" inManagedObjectContext:self.context];
-            font.family = fontFamily;
-            [fontInstances addObject:font];
+            WDStyle *style = [NSEntityDescription insertNewObjectForEntityForName:@"WDStyle" inManagedObjectContext:self.context];
+            style.familyFont = fontFamily;
+            
+            [styleInstances addObject:style];
         }
         
-        fonts_ = [NSArray arrayWithArray:fontInstances];
+        styles_ = [NSArray arrayWithArray:styleInstances];
         
         [self saveAll];
     }
     
-    fonts_ = [fonts_ sortedArrayUsingSelector:@selector(compare:)];
+    styles_ = [styles_ sortedArrayUsingSelector:@selector(compare:)];
+}
+
+- (void)preparePalettes
+{
+    NSArray *result = [self fetchAllEntitiesOfType:@"WDPalette"];
+    if (result.count > 0) {
+        palettes_ = result;
+    } else {
+        WDPalette *palette = [NSEntityDescription insertNewObjectForEntityForName:@"WDPalette" inManagedObjectContext:self.context];
+        palette.idName = @"01";
+        palette.aColor = @"778899";
+        palette.bColor = @"556B2F";
+        palette.cColor = @"4682B4";
+        
+        palettes_ = [NSArray arrayWithObject:palette];
+        // ToDo: Por ahora una unica paleta para todas las emociones
+        
+        [self saveAll];
+    }
+}
+                                          
+- (void)prepareEmotions
+{
+    NSArray *result = [self fetchAllEntitiesOfType:@"WDEmotion"];
+    if (result.count > 0) {
+        emotions_ = result;
+    } else {
+        NSArray *emotionsNames = [NSArray arrayWithObjects:@"TAG_EMOTION_NAME_NEUTRAL",
+                                                           @"TAG_EMOTION_NAME_LOVE",
+                                                           @"TAG_EMOTION_NAME_FEAR",
+                                                           @"TAG_EMOTION_NAME_JOY",
+                                                           @"TAG_EMOTION_NAME_SADNESS",
+                                                           @"TAG_EMOTION_NAME_SURPRISE",
+                                                           @"TAG_EMOTION_NAME_DISGUST",
+                                                      nil];
+        NSMutableArray *emotionInstances = [NSMutableArray arrayWithCapacity:emotionsNames.count];
+        
+        for (NSString *emotionName in emotionsNames) {
+            WDEmotion *emotion = [NSEntityDescription insertNewObjectForEntityForName:@"WDEmotion" inManagedObjectContext:self.context];
+            emotion.name = emotionName;
+            [emotion addPaletteObject:[self.palettes objectAtIndex:0]];
+            // ToDo: Por ahora todas las emociones con las mismas paletas
+            [emotionInstances addObject:emotion];
+        }
+        
+        [self saveAll];
+        
+        emotions_ = emotionInstances;
+    }
 }
 
 - (void)prepareWords
 {
-    NSArray *result = [self fetchAllEntitiesOfType:@"Word"];
+    NSArray *result = [self fetchAllEntitiesOfType:@"WDWord"];
     
     words_ = result.count > 0 ? [NSMutableArray arrayWithArray:result] : [NSMutableArray array];
     [self cutWordsArrayAtPresentDay];
@@ -192,12 +228,14 @@
 
 - (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval
 {
-    WDWord *wordObject = [NSEntityDescription insertNewObjectForEntityForName:@"Word" inManagedObjectContext:self.context];
+    WDWord *wordObject = [NSEntityDescription insertNewObjectForEntityForName:@"WDWord" inManagedObjectContext:self.context];
     
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
-    wordObject.font = [self defaultFont];
-    wordObject.backgroundCategory = 0;
+    wordObject.style = [self defaultStyle];
+    wordObject.emotion = [self defaultEmotion];
+    // ToDo: Este valor tiene que venir de un parametro de la funcion
+    wordObject.paletteIdNameOfEmotion = @"01";
 
     [words_ addObject:wordObject];
     [self sortWords];
@@ -213,10 +251,11 @@
 {
     [word removeObserver:self forKeyPath:@"word"];
     [word removeObserver:self forKeyPath:@"timeInterval"];
-    [word removeObserver:self forKeyPath:@"backgroundCategory"];
-    [word removeObserver:self forKeyPath:@"font"];
+    [word removeObserver:self forKeyPath:@"style"];
+    [word removeObserver:self forKeyPath:@"emotion"];
     
-    [self.context refreshObject:word.font mergeChanges:NO];
+    [self.context refreshObject:word.emotion mergeChanges:NO];
+    [self.context refreshObject:word.style mergeChanges:NO];
     [self.context refreshObject:word mergeChanges:NO];
     
     [words_ removeObject:word];
@@ -296,8 +335,8 @@
 {
     [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
-    [word addObserver:self forKeyPath:@"font" options:0 context:NULL];
-    [word addObserver:self forKeyPath:@"backgroundCategory" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"style" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"emotion" options:0 context:NULL];
 }
 
 - (void)sortWords
@@ -313,12 +352,13 @@
 
 #pragma mark - Default
 
-- (WDColor *)defaultColor
+- (WDEmotion *)defaultEmotion
 {
-    return [self.colors objectAtIndex:rand() % self.colors.count];
+    // ToDo: Neutral
+    return [self.emotions objectAtIndex:0];
 }
 
-- (WDFont *)defaultFont
+- (WDStyle *)defaultStyle
 {
     /*
     NSUInteger indexOfObject = [self.fonts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
@@ -329,7 +369,7 @@
     
     NSAssert(indexOfObject != NSNotFound, @"Object index of default font not found");
     */
-    return [self.fonts objectAtIndex:0];
+    return [self.styles objectAtIndex:0];
 }
 
 #pragma mark - Key Value Observing

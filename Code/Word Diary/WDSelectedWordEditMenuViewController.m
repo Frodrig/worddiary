@@ -16,7 +16,7 @@
 #import "WDCollectionOptionsWordMenuView.h"
 #import "UIView+UIViewNibLoad.h"
 #import "WDWordDiary.h"
-#import "WDFont.h"
+#import "WDStyle.h"
 #import "WDWord.h"
 #import "WDUtils.h"
 #import "WDGradientBackground.h"
@@ -77,7 +77,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
         
         wordMenuView_ = (WDWordMenuView *)[WDWordMenuView createFromNib];
         confirmWordActionMenuView_ = (WDConfirmWordActionMenuView *)[WDConfirmWordActionMenuView createFromNib];
-        fontsMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 135.0) optionTitles:[self createTitlesForFontMenu] fontsForTitles:[self createFontFamiliesForFontMenu] optionImages:nil visibleOptions:3.5 andSelectedOption:[[WDWordDiary sharedWordDiary].fonts indexOfObject:selectedWord_.font]];
+        fontsMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 135.0) optionTitles:[self createTitlesForFontMenu] fontsForTitles:[self createFontFamiliesForFontMenu] optionImages:nil visibleOptions:3.5 andSelectedOption:0];
         backgroundColorMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:fontsMenuView_.frame notConfiguredOptions:[WDGradientBackground gradientColors].count visibleOptions:3.5 andSelectedOption:0];
     }
     
@@ -268,7 +268,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (NSArray *)createTitlesForFontMenu
 {
-    NSArray *fonts = [WDWordDiary sharedWordDiary].fonts;
+    NSArray *fonts = [WDWordDiary sharedWordDiary].styles;
     NSMutableArray *titles = [NSMutableArray arrayWithCapacity:fonts.count];
     for (NSString *fontFamily in fonts) {
         [titles addObject:@"T"];
@@ -279,10 +279,10 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (NSArray *)createFontFamiliesForFontMenu
 {
-    NSArray *fonts = [WDWordDiary sharedWordDiary].fonts;
+    NSArray *fonts = [WDWordDiary sharedWordDiary].styles;
     NSMutableArray *fontsFamilies = [NSMutableArray arrayWithCapacity:fonts.count];
-    for (WDFont *fontIt in fonts) {
-        [fontsFamilies addObject:fontIt.family];
+    for (WDStyle *fontIt in fonts) {
+        [fontsFamilies addObject:fontIt.familyFont];
     }
     
     return [NSArray arrayWithArray:fontsFamilies];

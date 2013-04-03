@@ -2,12 +2,13 @@
 //  WDWord.m
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 06/03/13.
+//  Created by Fernando Rodríguez Martínez on 03/04/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
 #import "WDWord.h"
-#import "WDFont.h"
+#import "WDEmotion.h"
+#import "WDStyle.h"
 
 @interface WDWord()
 
@@ -19,8 +20,9 @@
 
 @dynamic timeInterval;
 @dynamic word;
-@dynamic backgroundCategory;
-@dynamic font;
+@dynamic paletteIdNameOfEmotion;
+@dynamic emotion;
+@dynamic style;
 
 #pragma mark - Init
 
@@ -89,8 +91,8 @@
     NSDateComponents *dateComponentsFromWordDate = [calendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:wordDate];
     
     return dateComponentsFromToday.year == dateComponentsFromWordDate.year &&
-           dateComponentsFromToday.month == dateComponentsFromWordDate.month &&
-           dateComponentsFromToday.day == dateComponentsFromWordDate.day;
+    dateComponentsFromToday.month == dateComponentsFromWordDate.month &&
+    dateComponentsFromToday.day == dateComponentsFromWordDate.day;
     
 }
 

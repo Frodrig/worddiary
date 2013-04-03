@@ -14,7 +14,7 @@
 
 #pragma mark - Sizes
 
-+ (CGFloat) sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDFont *)font
++ (CGFloat) sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDStyle *)font
 {
     CGFloat result = 0.0;
     switch (uiType) {

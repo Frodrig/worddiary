@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @class WDWord;
-@class WDFont;
-@class WDColor;
+@class WDStyle;
+@class WDEmotion;
 
 @interface WDWordDiary : NSObject
 
@@ -18,7 +18,9 @@
 @property (nonatomic, readonly, strong) NSManagedObjectModel   *model;
 @property (nonatomic, readonly, strong) NSMutableArray         *words;
 @property (nonatomic, strong)           NSArray                *colors;
-@property (nonatomic, strong)           NSArray                *fonts;
+@property (nonatomic, strong)           NSArray                *styles;
+@property (nonatomic, strong)           NSArray                *emotions;
+@property (nonatomic, strong)           NSArray                *palettes;
 
 + (WDWordDiary *) sharedWordDiary;
 
@@ -33,8 +35,8 @@
 - (WDWord *)      findPreviousWordOf:(WDWord *)word;
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
 
-- (WDColor *)     defaultColor;
-- (WDFont *)      defaultFont;
+- (WDEmotion *)   defaultEmotion;
+- (WDStyle *)     defaultStyle;
 
 - (void)          cutWordsArrayAtPresentDay;
 

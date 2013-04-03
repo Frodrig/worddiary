@@ -50,7 +50,6 @@
 		5B6F314916DF5D1B007E4DBA /* 433-x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F314716DF5D1B007E4DBA /* 433-x@2x.png */; };
 		5B6F315816DF6026007E4DBA /* 218-trash2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F315616DF6026007E4DBA /* 218-trash2.png */; };
 		5B6F315916DF6026007E4DBA /* 218-trash2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F315716DF6026007E4DBA /* 218-trash2@2x.png */; };
-		5B6F316116DFBCF8007E4DBA /* WDFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6F316016DFBCF8007E4DBA /* WDFont.m */; };
 		5B767E8A16E90CDF00C589FC /* testcell-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8416E90CDF00C589FC /* testcell-568h@2x.png */; };
 		5B767E8B16E90CDF00C589FC /* testcell.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8516E90CDF00C589FC /* testcell.png */; };
 		5B767E8C16E90CDF00C589FC /* testcell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B767E8616E90CDF00C589FC /* testcell@2x.png */; };
@@ -75,7 +74,6 @@
 		5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840E116DCB9470005AF21 /* WDWordDiary.m */; };
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
 		5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */; };
-		5BD34CA916E7B025007B46A2 /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD34CA816E7B025007B46A2 /* WDWord.m */; };
 		5BD4B04D1702EE280091D7D6 /* WDTodayWordMenuViewPage1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BD4B04C1702EE280091D7D6 /* WDTodayWordMenuViewPage1.xib */; };
 		5BD4B04F1702EE330091D7D6 /* WDWordMenuAuxiliaryViewPage2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BD4B04E1702EE330091D7D6 /* WDWordMenuAuxiliaryViewPage2.xib */; };
 		5BE2F6E41700216400A68287 /* WDGradientBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE2F6E31700216400A68287 /* WDGradientBackground.m */; };
@@ -87,6 +85,11 @@
 		5BF834D916EE4E260080FCDF /* 39-back-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834D716EE4E260080FCDF /* 39-back-dark@2x.png */; };
 		5BF834DC16EE503D0080FCDF /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834DA16EE503C0080FCDF /* 19-gear.png */; };
 		5BF834DD16EE503D0080FCDF /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF834DB16EE503D0080FCDF /* 19-gear@2x.png */; };
+		5BFEEA69170C1BCB0048482B /* WDStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA68170C1BCB0048482B /* WDStyle.m */; };
+		5BFEEA6C170C1BCC0048482B /* WDPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA6B170C1BCC0048482B /* WDPalette.m */; };
+		5BFEEA6F170C1BCC0048482B /* WDEmotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA6E170C1BCC0048482B /* WDEmotion.m */; };
+		5BFEEA75170C1DDD0048482B /* UIColor+hexColorCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */; };
+		5BFEEA78170C312E0048482B /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA77170C312D0048482B /* WDWord.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -159,8 +162,6 @@
 		5B6F314716DF5D1B007E4DBA /* 433-x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "433-x@2x.png"; sourceTree = "<group>"; };
 		5B6F315616DF6026007E4DBA /* 218-trash2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "218-trash2.png"; sourceTree = "<group>"; };
 		5B6F315716DF6026007E4DBA /* 218-trash2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "218-trash2@2x.png"; sourceTree = "<group>"; };
-		5B6F315F16DFBCF8007E4DBA /* WDFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDFont.h; sourceTree = "<group>"; };
-		5B6F316016DFBCF8007E4DBA /* WDFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDFont.m; sourceTree = "<group>"; };
 		5B767E8416E90CDF00C589FC /* testcell-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testcell-568h@2x.png"; sourceTree = "<group>"; };
 		5B767E8516E90CDF00C589FC /* testcell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = testcell.png; sourceTree = "<group>"; };
 		5B767E8616E90CDF00C589FC /* testcell@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "testcell@2x.png"; sourceTree = "<group>"; };
@@ -197,8 +198,6 @@
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5BD34CA616E7A166007B46A2 /* WDBackgroundDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundDefs.h; sourceTree = "<group>"; };
-		5BD34CA716E7B025007B46A2 /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
-		5BD34CA816E7B025007B46A2 /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
 		5BD4B04C1702EE280091D7D6 /* WDTodayWordMenuViewPage1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDTodayWordMenuViewPage1.xib; sourceTree = "<group>"; };
 		5BD4B04E1702EE330091D7D6 /* WDWordMenuAuxiliaryViewPage2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDWordMenuAuxiliaryViewPage2.xib; sourceTree = "<group>"; };
 		5BE2F6E21700216400A68287 /* WDGradientBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDGradientBackground.h; sourceTree = "<group>"; };
@@ -211,6 +210,16 @@
 		5BF834D716EE4E260080FCDF /* 39-back-dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-dark@2x.png"; sourceTree = "<group>"; };
 		5BF834DA16EE503C0080FCDF /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
 		5BF834DB16EE503D0080FCDF /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
+		5BFEEA67170C1BCB0048482B /* WDStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDStyle.h; sourceTree = "<group>"; };
+		5BFEEA68170C1BCB0048482B /* WDStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDStyle.m; sourceTree = "<group>"; };
+		5BFEEA6A170C1BCC0048482B /* WDPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDPalette.h; sourceTree = "<group>"; };
+		5BFEEA6B170C1BCC0048482B /* WDPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDPalette.m; sourceTree = "<group>"; };
+		5BFEEA6D170C1BCC0048482B /* WDEmotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDEmotion.h; sourceTree = "<group>"; };
+		5BFEEA6E170C1BCC0048482B /* WDEmotion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDEmotion.m; sourceTree = "<group>"; };
+		5BFEEA73170C1DDD0048482B /* UIColor+hexColorCreation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+hexColorCreation.h"; sourceTree = "<group>"; };
+		5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+hexColorCreation.m"; sourceTree = "<group>"; };
+		5BFEEA76170C312D0048482B /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
+		5BFEEA77170C312D0048482B /* WDWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWord.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -277,6 +286,8 @@
 				5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */,
 				5B1193671704B61C00CAF765 /* UILabel+TopAlign.h */,
 				5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */,
+				5BFEEA73170C1DDD0048482B /* UIColor+hexColorCreation.h */,
+				5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -547,6 +558,7 @@
 		5BB840D316DCB6210005AF21 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */,
 				5BB840DF16DCB9250005AF21 /* Core Data */,
 				5BD34C9D16E799D4007B46A2 /* Word Diary */,
 				5BD34CA116E799F8007B46A2 /* OFF Background Store */,
@@ -567,11 +579,14 @@
 		5BB840DF16DCB9250005AF21 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				5BB6B31B16DBE13900394113 /* Word_Diary.xcdatamodeld */,
-				5BD34CA716E7B025007B46A2 /* WDWord.h */,
-				5BD34CA816E7B025007B46A2 /* WDWord.m */,
-				5B6F315F16DFBCF8007E4DBA /* WDFont.h */,
-				5B6F316016DFBCF8007E4DBA /* WDFont.m */,
+				5BFEEA76170C312D0048482B /* WDWord.h */,
+				5BFEEA77170C312D0048482B /* WDWord.m */,
+				5BFEEA6D170C1BCC0048482B /* WDEmotion.h */,
+				5BFEEA6E170C1BCC0048482B /* WDEmotion.m */,
+				5BFEEA6A170C1BCC0048482B /* WDPalette.h */,
+				5BFEEA6B170C1BCC0048482B /* WDPalette.m */,
+				5BFEEA67170C1BCB0048482B /* WDStyle.h */,
+				5BFEEA68170C1BCB0048482B /* WDStyle.m */,
 			);
 			name = "Core Data";
 			sourceTree = "<group>";
@@ -758,8 +773,6 @@
 				5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */,
 				5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */,
 				5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */,
-				5B6F316116DFBCF8007E4DBA /* WDFont.m in Sources */,
-				5BD34CA916E7B025007B46A2 /* WDWord.m in Sources */,
 				5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */,
 				5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */,
 				5B1AC4BD16EA0A9A00950206 /* WDSelectedWordScreenViewController.m in Sources */,
@@ -782,6 +795,11 @@
 				5B1193651704A52400CAF765 /* WDAuxiliaryScreenHelpPanelView.m in Sources */,
 				5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */,
 				5B2BB1871706364000A3882A /* WDSelectedWordScreenView.m in Sources */,
+				5BFEEA69170C1BCB0048482B /* WDStyle.m in Sources */,
+				5BFEEA6C170C1BCC0048482B /* WDPalette.m in Sources */,
+				5BFEEA6F170C1BCC0048482B /* WDEmotion.m in Sources */,
+				5BFEEA75170C1DDD0048482B /* UIColor+hexColorCreation.m in Sources */,
+				5BFEEA78170C312E0048482B /* WDWord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

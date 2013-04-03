@@ -16,12 +16,12 @@ typedef enum {
     UI_SELECTEDWORDSCREEN_FONTMENU,
 } UIWithFontType;
 
-@class WDFont;
+@class WDStyle;
 
 @interface WDUtils : NSObject
 
 + (NSString *)           abreviateMonthString:(NSInteger)monthIndex;
-+ (CGFloat)              sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDFont *)font;
++ (CGFloat)              sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDStyle *)font;
 
 + (BOOL)                 englishIsTheCurrentAppLanguage;
 + (BOOL)                 spanishIsTheCurrentAppLanguage;
