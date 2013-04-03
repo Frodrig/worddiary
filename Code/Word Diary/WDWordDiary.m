@@ -155,7 +155,7 @@
     } else {
         WDPalette *palette = [NSEntityDescription insertNewObjectForEntityForName:@"WDPalette" inManagedObjectContext:self.context];
         palette.idName = @"127";
-        palette.backgroundColor = @"0xFFDDB5";
+        palette.backgroundColor = @"0xFFA640";
         palette.wordColor = @"0xE52E39";
         palette.accessoriesColor = @"0x732800";
         
