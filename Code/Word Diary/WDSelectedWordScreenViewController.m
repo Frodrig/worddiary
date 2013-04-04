@@ -39,6 +39,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        UILongPressGestureRecognizer         *longPressGestureRecognizer;
 @property (nonatomic, strong)        NSTimer                              *longPressGestureRecognizerTimer;
 @property (nonatomic)                CGPoint                              originalCenterPositionOfSelectedWord;
+@property (nonatomic)                CGPoint                              originalCenterPositionOfEmotionLabel;
 @property (nonatomic, strong)        NSTimer                              *animateStartEndPointOfGradientTimer;
 @property (nonatomic)                BOOL                                 keyboardActive;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
@@ -121,6 +122,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize rightSwipeGesture                    = rightSwipeGesture_;
 @synthesize longPressGestureRecognizer           = longPressGestureRecognizer_;
 @synthesize longPressGestureRecognizerTimer      = longPressGestureRecognizerTimer_;
+@synthesize originalCenterPositionOfEmotionLabel = originalCenterPositionOfEmotionLabel_;
+@synthesize originalCenterPositionOfSelectedWord = originalCenterPositionOfSelectedWord_;
 @synthesize animateStartEndPointOfGradientTimer  = animateStartEndPointOfGradientTimer_;
 @synthesize delegate                             = delegate_;
 @synthesize keyboardActive                       = keyboardActive_;
@@ -248,8 +251,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.auxiliarySreenViewController.view.frame = CGRectMake(self.view.frame.origin.x + xMargin, xMargin, self.view.bounds.size.width - xMargin * 2, self.view.bounds.size.height - xMargin * 2);
     
     self.emotionLabel.center = CGPointMake(self.emotionLabel.bounds.size.width / 2,
-                                           (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height + (self.view.frame.origin.y + self.view.frame.size.height - (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height)) / 2));
-    NSLog(@"%@ - %f", NSStringFromCGPoint(self.emotionLabel.center), self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height);
+                                           (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height + (self.view.frame.size.height - (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height)) / 2));
     
     if (self.selectedWord.word.length > 0) {
         [self.wordDiaryRepresentation setWithoutCursor:0.0];
@@ -258,6 +260,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
     
     self.originalCenterPositionOfSelectedWord = self.wordDiaryRepresentation.center;
+    self.originalCenterPositionOfEmotionLabel = self.emotionLabel.center;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -545,6 +548,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [UIView animateWithDuration:duration animations:^{
         BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
         self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / (isIPhone5Screen ? 2 : 2.25)) * 0.90);
+        if (isIPhone5Screen) {
+            self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y * 0.82);
+        } else {
+            self.emotionLabel.alpha = 0.0;
+        }
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.25;
         self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.25;
         self.yearDateTopInfoLabel.alpha = 0.25;
@@ -556,6 +564,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [UIView animateWithDuration:duration animations:^{
         self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
+        if ([WDUtils isIPhone5Screen]) {
+            self.emotionLabel.center = self.originalCenterPositionOfEmotionLabel;
+        } else {
+            self.emotionLabel.alpha = 1.0;
+        }
         self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
         self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
         self.wordDiaryRepresentation.alpha = 1.0;
