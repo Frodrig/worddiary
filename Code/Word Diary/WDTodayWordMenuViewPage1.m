@@ -12,7 +12,7 @@
 
 @synthesize keyboardButton        = keyboardButton_;
 @synthesize fontButton            = fontButton_;
-@synthesize backgroundColorButton = backgroundColorButton_;
+@synthesize emotionButton = backgroundColorButton_;
 
 - (id)initWithFrame:(CGRect)frame
 {

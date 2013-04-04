@@ -12,6 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *keyboardButton;
 @property (weak, nonatomic) IBOutlet UIButton *fontButton;
-@property (weak, nonatomic) IBOutlet UIButton *backgroundColorButton;
+@property (weak, nonatomic) IBOutlet UIButton *emotionButton;
 
 @end

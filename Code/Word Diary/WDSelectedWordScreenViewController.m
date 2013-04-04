@@ -95,7 +95,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)       endBackgroundTimer;
 - (void)       backgroundTimerEnd:(NSTimer *)timer;
 
-- (void)       changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration;
+- (void)       changeToEmotionIndex:(NSUInteger)index withDuration:(CGFloat)duration;
 
 - (void)       showMainMenu;
 - (void)       hideMainMenu;
@@ -282,13 +282,16 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - WDGradientBackground
 
-- (void)changeToGradientBackgroundOfColorIndex:(NSUInteger)index withDuration:(CGFloat)duration
+- (void)changeToEmotionIndex:(NSUInteger)index withDuration:(CGFloat)duration
 {
     if (self.nextGradientBackground != nil) {
         [self.pendingBackgroundChanges addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:index], [NSNumber numberWithFloat:duration], nil]
-                                                                             forKeys:[NSArray arrayWithObjects:@"gradientIndex", @"duration",  nil]]];
+                                                                             forKeys:[NSArray arrayWithObjects:@"emotionIndex", @"duration",  nil]]];
     } else {
-        self.nextGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:index];
+        self.selectedWord.emotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:index];
+        WDPalette *palette = [[self.selectedWord.emotion.palette allObjects] objectAtIndex:0];
+        self.selectedWord.paletteIdNameOfEmotion = palette.idName;
+        self.nextGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andHexColor:palette.backgroundColor];
         self.nextGradientBackground.alpha = 0.0;
         [self.view insertSubview:self.nextGradientBackground belowSubview:self.actualGradientBackground];
         
@@ -302,14 +305,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             
             if (self.pendingBackgroundChanges.count > 0) {
                 NSDictionary *pendingGradientBackground = [self.pendingBackgroundChanges objectAtIndex:0];
-                NSNumber *pendingGradientColorIndex = [pendingGradientBackground objectForKey:@"gradientIndex"];
+                NSNumber *pendingGradientColorIndex = [pendingGradientBackground objectForKey:@"emotionIndex"];
                 NSNumber *pendingGradientDuration = [pendingGradientBackground objectForKey:@"duration"];
                 [self.pendingBackgroundChanges removeObject:pendingGradientBackground];
                 
                 // Evitamos llamadas recursivas
                 // OJO: Posible agujero si entre que se produce la llamada llega otra a changeToGradientBackground, haría que se colara frente a la que de verdad toca
                 //      Debido a este agujero decido no activar la llamada a mainqueue y aguantar la recursiva.
-                [self changeToGradientBackgroundOfColorIndex:pendingGradientColorIndex.unsignedIntegerValue withDuration:pendingGradientDuration.floatValue];
+                [self changeToEmotionIndex:pendingGradientColorIndex.unsignedIntegerValue withDuration:pendingGradientDuration.floatValue];
                 /*
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     [self changeToGradientBackgroundOfColorIndex:pendingGradientColorIndex.unsignedIntegerValue withDuration:pendingGradientDuration.floatValue];
@@ -397,7 +400,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andHexColor:palette.backgroundColor];
             [self.view insertSubview:self.actualGradientBackground atIndex:0];
         } else if (0 != self.actualGradientBackground.gradientColorIndex) {
-            [self changeToGradientBackgroundOfColorIndex:0 withDuration:0.75];
+            [self changeToEmotionIndex:0 withDuration:0.75];
         }
         // self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
     }
@@ -549,7 +552,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
         self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / (isIPhone5Screen ? 2 : 2.25)) * 0.90);
         if (isIPhone5Screen) {
-            self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y * 0.82);
+            if (self.emotionLabel.center.y == self.originalCenterPositionOfEmotionLabel.y) {
+                self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y * 0.82);
+            }
         } else {
             self.emotionLabel.alpha = 0.0;
         }
@@ -784,7 +789,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self endBackgroundTimer];
     
     // ToDo: Quitar el 0 y relacionar con la paleta correcta de colores
-    self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andGradientColorIndex:0];
+    WDPalette *palette = [[WDWordDiary sharedWordDiary] findPaletteWithIdName:self.selectedWord.paletteIdNameOfEmotion];
+    self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andHexColor:palette.backgroundColor];
     [self.view insertSubview:self.actualGradientBackground belowSubview:self.backgroundSwipeView];
     self.backgroundSwipeView.userInteractionEnabled = NO;
     self.actualGradientBackground.alpha = 0.0;
@@ -863,6 +869,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self wordDiaryRepresentationAnimateDownWithDuration:keyboardAnimationDuration.floatValue];
         [UIView animateWithDuration:keyboardAnimationDuration.doubleValue animations:^{
             self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
+            self.emotionLabel.center = self.originalCenterPositionOfEmotionLabel;
         }];
     }
     
@@ -968,11 +975,12 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)changeToFontWithIndex:(NSUInteger)indexFont
 {
-    self.selectedWord.style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:indexFont];
-    
-    [self.wordDiaryRepresentation familyFontOfSelectedWordChanged];
-    [self.wordDiaryRepresentation setNeedsDisplay];
-    
+    WDStyle *newStyle = [[WDWordDiary sharedWordDiary].styles objectAtIndex:indexFont];
+    if (newStyle != self.selectedWord.style) {
+        self.selectedWord.style = newStyle;
+        [self.wordDiaryRepresentation familyFontOfSelectedWordChanged];
+        [self.wordDiaryRepresentation setNeedsDisplay];
+    }
     //NSLog(@"Family %@", self.selectedWord.font.family);
     /*NSLog(@"PointSize %f", self.wordDiaryRepresentation.wordTextField.font.pointSize);
     NSLog(@"Acender %f", self.wordDiaryRepresentation.wordTextField.font.ascender);
@@ -981,15 +989,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     NSLog(@"Line Height %f", self.wordDiaryRepresentation.wordTextField.font.lineHeight);
     NSLog(@"xHeight %f", self.wordDiaryRepresentation.wordTextField.font.xHeight);
     NSLog(@"Leading %f", self.wordDiaryRepresentation.wordTextField.font.leading);
-    NSLog(@"\\\\\\\\\\\\\\\\\\\\\\");
+    NSLog(@"\\\changeToFontWithIndex\\\\\\\\\\\\\\\\\\\");
      */
 }
 
-- (void)changeToBackgroundCategory:(WDBackgroundCategory)category
+- (void)changeToEmotionIndex:(NSUInteger)indexEmotion
 {
     // ToDo:Cambio del color de fondo
-    //self.selectedWord.backgroundCategory = category;
-    [self changeToGradientBackgroundOfColorIndex:category withDuration:1.5];
+    [self changeToEmotionIndex:indexEmotion withDuration:1.5];
 }
 
 #pragma mark - WDWordRepresentationViewDelegate

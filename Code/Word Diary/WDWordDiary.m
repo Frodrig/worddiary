@@ -154,10 +154,10 @@
         palettes_ = result;
     } else {
         WDPalette *palette = [NSEntityDescription insertNewObjectForEntityForName:@"WDPalette" inManagedObjectContext:self.context];
-        palette.idName = @"127";
-        palette.backgroundColor = @"0xFFA640";
-        palette.wordColor = @"0xE52E39";
-        palette.accessoriesColor = @"0x732800";
+        palette.idName = @"215";
+        palette.backgroundColor = @"0xB8C3D9";
+        palette.wordColor = @"0x263940";
+        palette.accessoriesColor = @"0x263940";
         
         palettes_ = [NSArray arrayWithObject:palette];
         // ToDo: Por ahora una unica paleta para todas las emociones
@@ -237,7 +237,7 @@
     wordObject.style = [self defaultStyle];
     wordObject.emotion = [self defaultEmotion];
     // ToDo: Este valor tiene que venir de un parametro de la funcion
-    wordObject.paletteIdNameOfEmotion = @"127";
+    wordObject.paletteIdNameOfEmotion = @"215";
 
     [words_ addObject:wordObject];
     [self sortWords];
@@ -330,6 +330,19 @@
     
     return retWord;
 }
+
+- (WDPalette *)findPaletteWithIdName:(NSString *)idName
+{
+    WDPalette *retPalette = nil;
+    for (WDPalette *palette in self.palettes) {
+        if ([palette.idName compare:idName] == NSOrderedSame) {
+            retPalette = palette;
+            break;
+        }
+    }
+    return retPalette;
+}
+
 
 #pragma mark - Auxiliary
 

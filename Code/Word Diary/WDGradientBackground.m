@@ -138,36 +138,15 @@ static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
         //self.layer.borderColor = [UIColor colorWithHexadecimalValue:@"0x000000" withAlphaComponent:NO skipInitialCharacter:NO].CGColor;
         self.layer.masksToBounds = YES;
         
+        /*
         self.noiseBackground = [[UIView alloc] initWithFrame:self.frame];
         self.noiseBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_noise01"]];
         [self addSubview:self.noiseBackground];
+         */
     }
     
     return self;
 
-}
-
-
-- (id)initWithFrame:(CGRect)frame andGradientColorIndex:(NSUInteger)index
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.userInteractionEnabled = NO;
-        //[self configureLayerWithColorIndex:index];
-        
-        //animationTimer_ = [NSTimer scheduledTimerWithTimeInterval:ANIMATION_TIMER_TIME_TO_COLOR_TRANSITION target:self selector:@selector(timerUpdateAnimation:) userInfo:nil repeats:NO];
-        animationState_ = BAS_STABLE;
-        
-        NSArray *gradientColors = [WDGradientBackground gradientColors];
-        UIColor *colorOne = (UIColor *)[gradientColors objectAtIndex:index];
-        [colorOne getHue:&hueComponent_ saturation:&saturationComponent_ brightness:&brightnessComponent_ alpha:&alphaComponent_];
-        
-        self.backgroundColor = colorOne;
-        self.layer.cornerRadius = 10.0;
-        self.layer.masksToBounds = YES;
-    }
-    
-    return self;
 }
 
 // NOTA: FUNDAMENTAL sin este metodo nada funciona. Cuando al view ajusta su tamaño hay que tomar los layers y ajustar el frame

@@ -11,6 +11,7 @@
 @class WDWord;
 @class WDStyle;
 @class WDEmotion;
+@class WDPalette;
 
 @interface WDWordDiary : NSObject
 
@@ -37,6 +38,8 @@
 
 - (WDEmotion *)   defaultEmotion;
 - (WDStyle *)     defaultStyle;
+
+- (WDPalette *)   findPaletteWithIdName:(NSString *)idName;
 
 - (void)          cutWordsArrayAtPresentDay;
 

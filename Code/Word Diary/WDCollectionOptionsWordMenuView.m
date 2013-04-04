@@ -80,7 +80,7 @@
 {
     // Backbutton
     self.backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.backButton setImage:[UIImage imageNamed:@"39-back-dark"] forState:UIControlStateNormal];
+    [self.backButton setImage:[UIImage imageNamed:@"36-circle-west"] forState:UIControlStateNormal];
     self.backButton.frame = CGRectMake(0.0, 0.0, 44.0, self.bounds.size.height);
     [self.backButton addTarget:self action:@selector(backButtonSelected:) forControlEvents:UIControlEventTouchDown];
     [self addSubview:self.backButton];
@@ -93,11 +93,12 @@
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(scrollViewStartPosition.x, scrollViewStartPosition.y, scrollViewWidth, self.bounds.size.height)];
     scrollView.contentSize = CGSizeMake(buttonOptionsWidth * self.numOptions, self.bounds.size.height);
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    scrollView.contentInset = UIEdgeInsetsMake(0, 5.0, 0, 5.0);
+    scrollView.contentInset = UIEdgeInsetsMake(0, 0.0, 0.0, 0.0);
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.directionalLockEnabled = NO;
-    [scrollView scrollRectToVisible:CGRectMake(buttonOptionsWidth * selectedOptionIndex, 10.0, scrollView.bounds.size.width, scrollView.bounds.size.height - 20.0) animated:NO];
+    scrollView.clipsToBounds = YES;
+  //  [scrollView scrollRectToVisible:CGRectMake(buttonOptionsWidth * selectedOptionIndex, 10.0, scrollView.bounds.size.width, scrollView.bounds.size.height - 20.0) animated:NO];
     self.optionsScrollView = scrollView;
     [self addSubview:scrollView];
     
@@ -112,7 +113,7 @@
         option.frame = CGRectMake(optionIt * buttonOptionsWidth, 10.0, buttonOptionsWidth, scrollView.bounds.size.height - 20.0);
         if (title) {
             [option setTitle:title forState:UIControlStateNormal];
-            option.titleLabel.font = [UIFont fontWithName:titleFont size:98.0];
+            option.titleLabel.font = [UIFont fontWithName:titleFont size:58.0];
             [option setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
             [option setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
         }
@@ -162,7 +163,5 @@
 {
     [self.delegate collectionOptionsMenuBackOptionSelected:self];
 }
-
-
 
 @end

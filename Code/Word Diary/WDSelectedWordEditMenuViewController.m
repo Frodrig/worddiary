@@ -18,6 +18,7 @@
 #import "WDWordDiary.h"
 #import "WDStyle.h"
 #import "WDWord.h"
+#import "WDEmotion.h"
 #import "WDUtils.h"
 #import "WDGradientBackground.h"
 
@@ -32,15 +33,15 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 @property (nonatomic, strong) WDWordMenuView                  *wordMenuView;
 @property (nonatomic, strong) WDConfirmWordActionMenuView     *confirmWordActionMenuView;
-@property (nonatomic, strong) WDCollectionOptionsWordMenuView *fontsMenuView;
-@property (nonatomic, strong) WDCollectionOptionsWordMenuView *backgroundColorMenuView;
+@property (nonatomic, strong) WDCollectionOptionsWordMenuView *styleMenuView;
+@property (nonatomic, strong) WDCollectionOptionsWordMenuView *emotionMenuView;
 
 - (UIView *)  findActualMenuViewAdded;
 
 - (void)      showMenuView:(UIView *)menuView inInmediateMode:(BOOL)inmediate;
 - (void)      showDeletePreviousWordConfirmationMenu;
 - (void)      showFontWordMenu;
-- (void)      showBackgroundColorWordMenu;
+- (void)      showEmotionWordMenu;
 
 - (NSArray *) createTitlesForFontMenu;
 - (NSArray *) createFontFamiliesForFontMenu;
@@ -60,10 +61,10 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 @synthesize wordMenuView                  = wordMenuView_;
 @synthesize delegate                      = delegate_;
 @synthesize confirmWordActionMenuView     = confirmWordActionMenuView_;
-@synthesize fontsMenuView                 = fontsMenuView_;
+@synthesize styleMenuView                 = styleMenuView_;
 @synthesize selectedWord                  = selectedWord_;
 @synthesize backgroundColorScheme         = backgroundColorScheme_;
-@synthesize backgroundColorMenuView       = backgroundColorMenuView_;
+@synthesize emotionMenuView               = emotionMenuView_;
 
 #pragma mark - 
 
@@ -77,8 +78,17 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
         
         wordMenuView_ = (WDWordMenuView *)[WDWordMenuView createFromNib];
         confirmWordActionMenuView_ = (WDConfirmWordActionMenuView *)[WDConfirmWordActionMenuView createFromNib];
-        fontsMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 135.0) optionTitles:[self createTitlesForFontMenu] fontsForTitles:[self createFontFamiliesForFontMenu] optionImages:nil visibleOptions:3.5 andSelectedOption:0];
-        backgroundColorMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:fontsMenuView_.frame notConfiguredOptions:[WDGradientBackground gradientColors].count visibleOptions:3.5 andSelectedOption:0];
+        styleMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, 135.0)
+                                                                   optionTitles:[self createTitlesForFontMenu]
+                                                                 fontsForTitles:[self createFontFamiliesForFontMenu]
+                                                                   optionImages:nil
+                                                                 visibleOptions:3.65
+                                                              andSelectedOption:0];
+        
+        emotionMenuView_ = [[WDCollectionOptionsWordMenuView alloc] initWithFrame:styleMenuView_.frame
+                                                             notConfiguredOptions:[WDWordDiary sharedWordDiary].emotions.count
+                                                                   visibleOptions:2.65
+                                                                andSelectedOption:0];
     }
     
     return self;
@@ -108,8 +118,8 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     [self.wordMenuView.page1TodayWord.keyboardButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.wordMenuView.page1TodayWord.fontButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_FONTOPTION", @"") forState:UIControlStateNormal];
     [self.wordMenuView.page1TodayWord.fontButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.wordMenuView.page1TodayWord.backgroundColorButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_COLOROPTION", @"") forState:UIControlStateNormal];
-    [self.wordMenuView.page1TodayWord.backgroundColorButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.wordMenuView.page1TodayWord.emotionButton setTitle:NSLocalizedString(@"TAG_TODAYWORDMENU_COLOROPTION", @"") forState:UIControlStateNormal];
+    [self.wordMenuView.page1TodayWord.emotionButton addTarget:self action:@selector(todayWordMenuOptionPressed:) forControlEvents:UIControlEventTouchUpInside];
     self.wordMenuView.page1TodayWord.hidden = YES;
     
     // Page 1 Previous Day Word
@@ -135,23 +145,24 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     [self.confirmWordActionMenuView.yesButton addTarget:self action:@selector(confirmWordActionAcceptPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     // Menu de fuentes
-    self.fontsMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
-    self.fontsMenuView.delegate = self;
+    self.styleMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
+    self.styleMenuView.delegate = self;
     
-    // Menu de colores
-    NSArray *pickerColorArray = [WDGradientBackground gradientColors];
-    NSArray *backgroundColorsOptions = self.backgroundColorMenuView.buttonOptions;
-    for (NSUInteger optionIndex = 0; optionIndex < backgroundColorsOptions.count; ++optionIndex) {
-        UIButton *buttonOption = [backgroundColorsOptions objectAtIndex:optionIndex];
-        UIColor *colorValue = [pickerColorArray objectAtIndex:optionIndex];
-        buttonOption.backgroundColor = colorValue;
+    // Menu de emociones
+    NSArray *emotions = [WDWordDiary sharedWordDiary].emotions;
+    NSArray *emotionOptions = self.emotionMenuView.buttonOptions;
+    for (NSUInteger optionIndex = 0; optionIndex < emotionOptions.count; ++optionIndex) {
+        WDEmotion *emotionIt = [emotions objectAtIndex:optionIndex];
+        UIButton *buttonOption = [emotionOptions objectAtIndex:optionIndex];
+        buttonOption.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:24];
+        [buttonOption setTitle:NSLocalizedString(emotionIt.name, @"") forState:UIControlStateNormal];
     }
-    self.backgroundColorMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
+    self.emotionMenuView.layer.cornerRadius = [WDUtils viewsCornerRadius];
     
     // Esquemas de color
     [self configureColorSchemes];
     
-    self.backgroundColorMenuView.delegate = self;
+    self.emotionMenuView.delegate = self;
  }
 
 - (void)didReceiveMemoryWarning
@@ -172,7 +183,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     
     [self configureButton:self.wordMenuView.page1TodayWord.keyboardButton withColorScheme:self.backgroundColorScheme];
     [self configureButton:self.wordMenuView.page1TodayWord.fontButton withColorScheme:self.backgroundColorScheme];
-    [self configureButton:self.wordMenuView.page1TodayWord.backgroundColorButton withColorScheme:self.backgroundColorScheme];
+    [self configureButton:self.wordMenuView.page1TodayWord.emotionButton withColorScheme:self.backgroundColorScheme];
     [self configureButton:self.wordMenuView.page1PreviousDayWord.deleteButton withColorScheme:self.backgroundColorScheme];
     [self configureButton:self.wordMenuView.page2.tipsButton withColorScheme:self.backgroundColorScheme];
     [self configureButton:self.wordMenuView.page2.aboutButton withColorScheme:self.backgroundColorScheme];
@@ -186,10 +197,10 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     [self configureButton:self.confirmWordActionMenuView.yesButton withColorScheme:self.backgroundColorScheme];
     
     // Menu de fuentes
-    self.fontsMenuView.backgroundColor = [self.view.backgroundColor copy];
+    self.styleMenuView.backgroundColor = [self.view.backgroundColor copy];
     
     // Menu de colores
-    self.backgroundColorMenuView.backgroundColor = [self.view.backgroundColor copy];
+    self.emotionMenuView.backgroundColor = [self.view.backgroundColor copy];
 }
 
 - (void)configureButton:(UIButton *)button withColorScheme:(WDColorScheme)scheme
@@ -201,7 +212,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 - (UIView *)findActualMenuViewAdded
 {
     UIView *menu = nil;
-    NSSet *menus = [NSSet setWithObjects:self.wordMenuView, self.fontsMenuView, self.backgroundColorMenuView, self.confirmWordActionMenuView, nil];
+    NSSet *menus = [NSSet setWithObjects:self.wordMenuView, self.styleMenuView, self.emotionMenuView, self.confirmWordActionMenuView, nil];
     for (UIView *viewIt in menus) {
         if (viewIt.superview == self.view) {
             menu = viewIt;
@@ -271,7 +282,7 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
     NSArray *fonts = [WDWordDiary sharedWordDiary].styles;
     NSMutableArray *titles = [NSMutableArray arrayWithCapacity:fonts.count];
     for (NSString *fontFamily in fonts) {
-        [titles addObject:@"T"];
+        [titles addObject:@"H"];
     }
     
     return [NSArray arrayWithArray:titles];
@@ -325,12 +336,12 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 
 - (void)showFontWordMenu
 {
-    [self showMenuView:self.fontsMenuView inInmediateMode:NO];
+    [self showMenuView:self.styleMenuView inInmediateMode:NO];
 }
 
-- (void)showBackgroundColorWordMenu
+- (void)showEmotionWordMenu
 {
-    [self showMenuView:self.backgroundColorMenuView inInmediateMode:NO];
+    [self showMenuView:self.emotionMenuView inInmediateMode:NO];
 }
 
 #pragma mark - Eventos de controles de menu
@@ -341,8 +352,8 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
         [self.delegate writeSelectedWordOption];
     } else if (button == self.wordMenuView.page1TodayWord.fontButton) {
         [self showFontWordMenu];
-    } else if (button == self.wordMenuView.page1TodayWord.backgroundColorButton) {
-        [self showBackgroundColorWordMenu];
+    } else if (button == self.wordMenuView.page1TodayWord.emotionButton) {
+        [self showEmotionWordMenu];
     } else if (button == self.wordMenuView.page2.supportButton) {
         [self.delegate supportOptionSelected];
     } else if (button == self.wordMenuView.page2.tipsButton) {
@@ -373,25 +384,24 @@ static const NSUInteger TAG_CONTROL_PREVIOUSWORDMENU_DELETE = 30;
 {
 }
 
-#pragma mark - Fonts Menu Controls Delegate
+#pragma mark - CollectionOptionsWordMenu
 
 - (void)collectionOptionsMenuBackOptionSelected:(WDCollectionOptionsWordMenuView *)menu
 {
     // Nota: Se retorna llamando al metodo de bajo nivel directamente con el fin de que haya animacion
-    if (self.fontsMenuView == menu) {
+    if (self.styleMenuView == menu) {
         [self showMenuView:self.wordMenuView inInmediateMode:NO];
-    } else if (self.backgroundColorMenuView == menu) {
+    } else if (self.emotionMenuView == menu) {
         [self showMenuView:self.wordMenuView inInmediateMode:NO];
     }
 }
 
 - (void)collectionOptionsMenu:(WDCollectionOptionsWordMenuView *)menu optionSelected:(NSUInteger)indexOption
 {
-    if (self.fontsMenuView == menu) {
+    if (self.styleMenuView == menu) {
         [self.delegate changeToFontWithIndex:indexOption];
-    } else if (self.backgroundColorMenuView == menu) {
-        WDBackgroundCategory category = [WDUtils convertPickerColorIndexToBackgroundCategory:indexOption];
-        [self.delegate changeToBackgroundCategory:category];
+    } else if (self.emotionMenuView == menu) {
+        [self.delegate changeToEmotionIndex:indexOption];
     }
 }
 

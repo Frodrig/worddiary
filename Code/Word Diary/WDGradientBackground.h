@@ -15,7 +15,6 @@
 + (NSArray *)gradientColors;
 + (NSArray *)coupleGradientColors;
 
-- (id)initWithFrame:(CGRect)frame andGradientColorIndex:(NSUInteger)index;
 - (id)initWithFrame:(CGRect)frame andHexColor:(NSString *)hexColor;
 
 @end

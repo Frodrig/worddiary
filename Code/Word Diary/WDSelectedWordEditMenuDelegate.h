@@ -16,7 +16,7 @@
 - (void)cancelDeleteWordFromConfirmationMenu;
 - (void)acceptDeleteWordFromConfirmationMenu;
 - (void)changeToFontWithIndex:(NSUInteger)indexFont;
-- (void)changeToBackgroundCategory:(WDBackgroundCategory)category;
+- (void)changeToEmotionIndex:(NSUInteger)indexEmotion;
 - (void)supportOptionSelected;
 - (void)tipsOptionSelected;
 - (void)infoOptionSelected;
