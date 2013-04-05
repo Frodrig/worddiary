@@ -35,6 +35,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (weak, nonatomic) IBOutlet UIView                               *yearDateAndDayMonthContainerView;
 @property (nonatomic, strong)        UITapGestureRecognizer               *doubleTapGestureRecognizer;
 @property (nonatomic, strong)        UITapGestureRecognizer               *tapKeyboardGesture;
+@property (nonatomic, strong)        UITapGestureRecognizer               *tapEmotionGesture;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *leftSwipeGesture;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *rightSwipeGesture;
 @property (nonatomic, strong)        UILongPressGestureRecognizer         *longPressGestureRecognizer;
@@ -51,6 +52,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (weak, nonatomic) IBOutlet UIView                               *emotionLabelContainerView;
 @property (nonatomic, strong)        UILabel                              *emotionLabel;
 @property (nonatomic, strong)        UIView                               *styleMenuView;
+@property (nonatomic, strong)        UIView                               *emotionMenuView;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
 @property (nonatomic)                BOOL                                 dayChangePendingToResolve;
@@ -61,6 +63,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        UIView                               *backgroundSwipeView;
 @property (nonatomic)                BOOL                                 hideKeyboardWithTap;
 @property (nonatomic)                BOOL                                 appWasResigned;
+@property (nonatomic)                BOOL                                 emotionMenuVisible;
 @property (nonatomic, strong)        WDAuxiliaryScreenViewController      *auxiliarySreenViewController;
 
 - (WDWord *)   selectWordOfWordDiaryAtLaunchOrResume;
@@ -114,6 +117,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)       prepareViewToShowAuxiliaryScreen;
 
+- (void)       showEmotionMenu;
+- (void)       hideEmotionMenu;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -127,6 +133,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize yearDateAndDayMonthContainerView                     = yearDateAndDayMonthContainerView_;
 @synthesize doubleTapGestureRecognizer                           = doubleTapGestureRecognizer_;
 @synthesize tapKeyboardGesture                                   = tapKeyboardGesture_;
+@synthesize tapEmotionGesture                                    = tapEmotionGesture_;
 @synthesize leftSwipeGesture                                     = leftSwipeGesture_;
 @synthesize rightSwipeGesture                                    = rightSwipeGesture_;
 @synthesize longPressGestureRecognizer                           = longPressGestureRecognizer_;
@@ -142,6 +149,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize dayOfTheWeekLabel                                    = dayOfTheWeekLabel_;
 @synthesize emotionLabel                                         = emotionLabel_;
 @synthesize styleMenuView                                        = styleMenuView_;
+@synthesize emotionMenuView                                      = emotionMenuView_;
 @synthesize cursorUpdateTimer                                    = cursorUpdateTimer_;
 @synthesize dayChecker                                           = dayChecker_;
 @synthesize dayChangePendingToResolve                            = dayChangePendingToResolve_;
@@ -155,6 +163,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize auxiliarySreenViewController                         = auxiliaryScreenViewController_;
 @synthesize dayDiaryAndDayOfWeekContainerView                    = dayDiaryAndDayOfWeekContainerView_;
 @synthesize emotionLabelContainerView                            = emotionLabelContainerView_;
+@synthesize emotionMenuVisible                                   = emotionMenuVisible_;
 
 #pragma mark Init
 
@@ -173,17 +182,41 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         wordDiaryRepresentation_.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         auxiliaryScreenViewController_ = [[WDAuxiliaryScreenViewController alloc] initWithNibName:nil bundle:nil];
         
+        // Style Menu View
         styleMenuView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 54.0)];
         NSArray *styles = [WDWordDiary sharedWordDiary].styles;
-        CGFloat areaPerButton = (styleMenuView_.bounds.size.width - (10.0 * 2)) / styles.count;
+        CGFloat areaPerButton = styleMenuView_.bounds.size.width / styles.count;
         for (NSUInteger styleIt = 0; styleIt < styles.count; ++styleIt) {
             UIButton *styleButtonIt = [UIButton buttonWithType:UIButtonTypeCustom];
-            styleButtonIt.frame = CGRectMake(10.0 + areaPerButton * styleIt, 0.0, areaPerButton, self.styleMenuView.bounds.size.height);
+            styleButtonIt.frame = CGRectMake(areaPerButton * styleIt, 0.0, areaPerButton, self.styleMenuView.bounds.size.height);
             [styleButtonIt setTitle:[NSString stringWithFormat:@"%d", styleIt] forState:UIControlStateNormal];
             styleButtonIt.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.2];
             styleButtonIt.tag = styleIt;
             [styleButtonIt addTarget:self action:@selector(styleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             [styleMenuView_ addSubview:styleButtonIt];
+        }
+        
+        // Emotion Menu View
+        emotionMenuView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 44.0 * 3)];
+        emotionMenuView_.backgroundColor = [UIColor clearColor];
+        NSArray *emotions = [WDWordDiary sharedWordDiary].emotions;
+        for (NSUInteger emotionIt = 0, itemIt = 0, columnIt = 0; emotionIt < emotions.count; ++emotionIt) {
+            WDEmotion *emotion = [emotions objectAtIndex:emotionIt];
+            if (emotion != selectedWord_.emotion) {
+                UIButton *emotionButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                CGFloat emotionButtonWidth = emotionMenuView_.bounds.size.width / 2;
+                emotionButton.frame = CGRectMake(emotionButtonWidth * columnIt, 44.0 * (itemIt / 2), emotionButtonWidth, 44.0);
+                emotionButton.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.1/* + (itemIt / 2) * 0.1*/];
+                emotionButton.tag = emotionIt;
+                NSLog(@"%@ - %@", NSLocalizedString(emotion.name, @""), NSStringFromCGRect(emotionButton.frame));
+                [emotionButton setTitle:NSLocalizedString(emotion.name, @"") forState:UIControlStateNormal];
+                [emotionMenuView_ addSubview:emotionButton];
+                columnIt++;
+                if (columnIt == 2) {
+                    columnIt = 0;
+                }
+                ++itemIt;
+            }
         }
         
         // Gesture Recognizer
@@ -200,6 +233,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         tapKeyboardGesture_.delegate = self;
         [self.wordDiaryRepresentation addGestureRecognizer:tapKeyboardGesture_];
         [tapKeyboardGesture_ requireGestureRecognizerToFail:doubleTapGestureRecognizer_];
+        
+        tapEmotionGesture_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
+        tapEmotionGesture_.numberOfTapsRequired = 1;
+        tapEmotionGesture_.numberOfTouchesRequired = 1;
+        tapEmotionGesture_.delegate = self;
+        [self.emotionLabelContainerView addGestureRecognizer:self.tapEmotionGesture];
+        [self.tapEmotionGesture requireGestureRecognizerToFail:self.doubleTapGestureRecognizer];
 
         longPressGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressureHandle:)];
         longPressGestureRecognizer_.numberOfTouchesRequired = 1;
@@ -291,7 +331,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     self.originalCenterPositionYearDateAndMonthContainerView = self.yearDateAndDayMonthContainerView.center;
     self.originalCenterPositionOfSelectedWord = self.wordDiaryRepresentation.center;
-    self.originalCenterPositionOfEmotionLabel = self.emotionLabel.center;
+    self.originalCenterPositionOfEmotionLabel = self.emotionLabelContainerView.center;
 }
 
 - (void)didReceiveMemoryWarning
@@ -674,6 +714,34 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 }
 
+- (void)showEmotionMenu
+{
+    self.emotionMenuView.frame = CGRectMake(self.emotionMenuView.frame.origin.x, self.view.bounds.size.height, self.emotionMenuView.frame.size.width, self.emotionMenuView.frame.size.height);
+    [self.view addSubview:self.emotionMenuView];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        self.dayDiaryAndDayOfWeekContainerView.alpha = 0;
+        self.emotionLabelContainerView.center = self.dayDiaryAndDayOfWeekContainerView.center;
+        self.emotionMenuView.frame = CGRectMake(self.emotionMenuView.frame.origin.x, self.view.bounds.size.height - self.emotionMenuView.frame.size.height, self.emotionMenuView.frame.size.width, self.emotionMenuView.frame.size.height);
+    } completion:^(BOOL finished) {
+    }];
+    
+    self.emotionMenuVisible = YES;
+}
+
+- (void)hideEmotionMenu
+{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.dayDiaryAndDayOfWeekContainerView.alpha = 1.0;
+        self.emotionLabelContainerView.center = self.originalCenterPositionOfEmotionLabel;
+         self.emotionMenuView.frame = CGRectMake(self.emotionMenuView.frame.origin.x, self.view.bounds.size.height, self.emotionMenuView.frame.size.width, self.emotionMenuView.frame.size.height);
+    } completion:^(BOOL finished) {
+        [self.emotionMenuView removeFromSuperview];
+    }];
+    
+    self.emotionMenuVisible = NO;
+}
+
 #pragma mark - UIGestureRecognizer
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -706,9 +774,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
                 [self.wordDiaryRepresentation resignFirstResponder];
             }
         }
+    } else if (gestureRecognizer == self.tapEmotionGesture) {
+        if (self.emotionMenuVisible) {
+            [self hideEmotionMenu];
+        } else {
+            [self showEmotionMenu];
+        }
     }
-    
-    
 }
 
 - (void)doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer
