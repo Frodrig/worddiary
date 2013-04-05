@@ -58,7 +58,6 @@
         CFRelease(fontRef);
         
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:wordTextWithCursor attributes:attrDictionary];
-        //[attString addAttribute:(NSString *)kCTForegroundColorAttributeName value:[UIColor colorWithWhite:1.0 alpha:1.0] range:NSMakeRange(wordTextWithCursor.length - 1, 1)];
         [attString addAttribute:(NSString *)kCTForegroundColorAttributeName value:[UIColor colorWithWhite:1.0 alpha:0.0] range:NSMakeRange(wordTextWithCursor.length - 1, 1)];
         
         line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attString));

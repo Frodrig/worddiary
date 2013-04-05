@@ -85,35 +85,7 @@
     // nota: creamos un string con cursor como caracter de referencia a la hora de hallar los bounds
     NSString *wordText = self.gosthWordText != nil ? self.gosthWordText : [self.dataSource actualTextValueForWordTextView:self];
     NSString *wordTextWithCursor = [wordText stringByAppendingString:@"|"];
-    /*
-    if (self.gosthWordText == nil && self.lastWordText != nil) {
-        if ([self.lastWordText compare:wordText] != NSOrderedSame) {
-            WDWordTextWithoutCursorView *gosthView = [self copy];
-            gosthView.dataSource = self.dataSource;
-            gosthView.gosthWordText = self.lastWordText;
-            gosthView.userInteractionEnabled = NO;
-            [self.superview insertSubview:gosthView aboveSubview:self];
-            [UIView animateWithDuration:0.55 animations:^{
-                gosthView.alpha = 0;
-            }];
-        }
-    }*/
-    /*
-    if (self.gosthWordText == nil && self.lastWordText != nil) {
-        if ([self.lastWordText compare:wordText] != NSOrderedSame) {
-            self.alpha = 0.0;
-            [UIView animateWithDuration:4 animations:^{
-                self.alpha = 1.0;
-            }];
-        }
-    }
-    */
-    /*
-    UIColor *textColor = [self.dataSource actualSelectedWordBackgroundColorForWordTextView:self];
-    CGFloat hue, saturation, brightness, alpha;
-    [textColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha];
-    textColor = [UIColor colorWithHue:hue saturation:saturation brightness:brightness * 0.35 alpha:alpha];
-    */
+   
     self.lastWordText = wordText;
 
     NSString *familyFont = self.familyFont;

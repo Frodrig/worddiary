@@ -55,7 +55,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (CGPoint)startDrawingPosition
 {
-    return CGPointMake(10.0, self.frame.size.height * ([WDUtils isIPhone5Screen] ? 0.45 : 0.37));
+    return CGPointMake(10.0, self.frame.size.height * 0.3);
 }
 
 - (NSMutableArray *)wordTextWithoutCursorFontTransitionsView
@@ -83,15 +83,15 @@ static CGFloat FONT_START_SIZE = 100.0;
 {
     self = [super initWithCoder:decoder];
     if (self) {        
-        wordTextWithCursorView_ = [[WDWordTextWithCursorView alloc] initWithFrame:self.frame];
+        wordTextWithCursorView_ = [[WDWordTextWithCursorView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         wordTextWithCursorView_.backgroundColor = [UIColor clearColor];
         wordTextWithCursorView_.dataSource = self;
         wordTextWithCursorView_.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
-        wordTextWithoutCursorView_ = [[WDWordTextWithoutCursorView alloc] initWithFrame:self.frame];
+        wordTextWithoutCursorView_ = [[WDWordTextWithoutCursorView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
         wordTextWithoutCursorView_.backgroundColor = [UIColor clearColor];
         wordTextWithoutCursorView_.dataSource = self;
-        wordTextWithCursorView_.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        wordTextWithoutCursorView_.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         //timeFrom_ = [NSDate timeIntervalSinceReferenceDate];
         //acumulateTime_ = 0;
@@ -206,7 +206,7 @@ static CGFloat FONT_START_SIZE = 100.0;
         } else {
             [self setWordTextView:self.wordTextWithCursorView andQuitWordTextView:self.wordTextWithoutCursorView withDuration:duration];
         }
-        
+        self.wordTextWithCursorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);        
         self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     }
 }
@@ -222,6 +222,7 @@ static CGFloat FONT_START_SIZE = 100.0;
         [self setWordTextView:self.wordTextWithoutCursorView andQuitWordTextView:self.wordTextWithCursorView withDuration:duration];
     }
     
+    self.wordTextWithoutCursorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
     self.wordTextWithoutCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     self.actualColorOfCursor = nil;
 }
