@@ -47,7 +47,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, weak) IBOutlet UILabel                              *dayDiaryLabel;
 @property (nonatomic, weak) IBOutlet UILabel                              *dayOfTheWeekLabel;
 @property (weak, nonatomic) IBOutlet UIView                               *dayDiaryAndDayOfWeekContainerView;
-@property (nonatomic, weak) IBOutlet UILabel                              *emotionLabel;
+@property (weak, nonatomic) IBOutlet UIView                               *emotionLabelContainerView;
+@property (nonatomic, strong)        UILabel                              *emotionLabel;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
 @property (nonatomic)                BOOL                                 dayChangePendingToResolve;
@@ -148,6 +149,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize appWasResigned                       = appWasResigned_;
 @synthesize auxiliarySreenViewController         = auxiliaryScreenViewController_;
 @synthesize dayDiaryAndDayOfWeekContainerView    = dayDiaryAndDayOfWeekContainerView_;
+@synthesize emotionLabelContainerView            = emotionLabelContainerView_;
 
 #pragma mark Init
 
@@ -169,6 +171,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         
         // Gesture Recognizer
         doubleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapHandle:)];
+
         doubleTapGestureRecognizer_.numberOfTapsRequired = 2;
         doubleTapGestureRecognizer_.numberOfTouchesRequired = 1;
         doubleTapGestureRecognizer_.delegate = self;
@@ -220,12 +223,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.wordDiaryRepresentation.dataSource = self;
     [self.view addSubview:self.wordDiaryRepresentation];
     
-    // Emotion label
-    self.emotionLabel.attributedText = [[NSAttributedString alloc] initWithString:@""
-                                                                       attributes:@{
-                                                              NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:14],
-                                                   NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:[self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion].wordColor withAlphaComponent:NO skipInitialCharacter:NO],
-                                                              NSKernAttributeName: [NSNumber numberWithInt:10]}];
+    // Emotion
+    self.emotionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.emotionLabelContainerView.bounds.size.width, self.emotionLabelContainerView.bounds.size.height)];
+    self.emotionLabel.textAlignment = NSTextAlignmentCenter;
+    self.emotionLabel.backgroundColor = [UIColor clearColor];
+    [self.emotionLabelContainerView addSubview:self.emotionLabel];
     
     // Menu de edicion
     self.editMenuViewController = [[WDSelectedWordEditMenuViewController alloc] initWithSelectedWord:self.selectedWord];
@@ -246,23 +248,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [super viewWillAppear:animated];
     
-    // Muy importante: - El diseño esta hecho para una altura 480 pixeles. Si la dimension en altura del dispositivo es superior, la diferencia se añadira a la
-    // view que representa la palabra y se extendera por el resto de componentes hacia abajo.
-    CGFloat screenSizeHeight = [UIScreen mainScreen].bounds.size.height;
-    CGFloat heightDiferenceWithOriginal480Design = screenSizeHeight - 480.0;
-   
-    /*
-    NSLog(@"%@", NSStringFromCGRect(self.view.frame));
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, screenSizeHeight);
-    NSLog(@"%@", NSStringFromCGRect(self.view.frame));
-    */
-    
     // Representación de la palabra.
     self.wordDiaryRepresentation.frame = CGRectMake(0.0,
                                                     self.yearDateAndDayMonthContainerView.frame.origin.y + self.yearDateAndDayMonthContainerView.frame.size.height,
                                                     self.view.bounds.size.width,
-                                                    self.dayDiaryAndDayOfWeekContainerView.frame.origin.y - (self.yearDateAndDayMonthContainerView.frame.origin.y + self.yearDateAndDayMonthContainerView.frame.size.height) + heightDiferenceWithOriginal480Design);
+                                                    self.dayDiaryAndDayOfWeekContainerView.frame.origin.y - (self.yearDateAndDayMonthContainerView.frame.origin.y + self.yearDateAndDayMonthContainerView.frame.size.height));
     
     // Se centran las views correctamente
     // Esto desaparecera....
@@ -272,14 +262,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
                                                         self.editMenuViewController.view.bounds.size.width,
                                                         self.editMenuViewController.view.bounds.size.height);
     self.auxiliarySreenViewController.view.frame = CGRectMake(self.view.frame.origin.x + xMargin, xMargin, self.view.bounds.size.width - xMargin * 2, self.view.bounds.size.height - xMargin * 2);
-    
-    // Dia del diario y la semana
-
-    self.dayDiaryAndDayOfWeekContainerView.center = CGPointMake(self.dayDiaryAndDayOfWeekContainerView.center.x,
-                                                                self.dayDiaryAndDayOfWeekContainerView.center.y);
-
-    // Emotion label
-    self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y);
     
     if (self.selectedWord.word.length > 0) {
         [self.wordDiaryRepresentation setWithoutCursor:0.0];
@@ -417,7 +399,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
 
     // Emotion
-    self.emotionLabel.text = [NSLocalizedString(self.selectedWord.emotion.name, @"") uppercaseString];
+    self.emotionLabel.attributedText = [[NSAttributedString alloc] initWithString:[NSLocalizedString(self.selectedWord.emotion.name, @"") uppercaseString]
+                                                                       attributes:@{
+                                                              NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:21.0],
+                                                   NSForegroundColorAttributeName:  [UIColor colorWithHexadecimalValue:[self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion].wordColor withAlphaComponent:NO skipInitialCharacter:NO],
+                                                              NSKernAttributeName: [NSNumber numberWithFloat:2]}];
     if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
             // ToDo: Quitar el 0 y relacionar con la paleta de colores adecuada
