@@ -145,6 +145,9 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (void)familyFontOfSelectedWordChanged
 {
+    self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
+    
+    /*
     // Nota: - Las transiciones se guardan en un array para soportar multiples pulsaciones
     if ([self.dataSource actualTextValueForWordRepresentationView:self].length > 0) {
         WDWordTextWithoutCursorView *oldWordTextView = self.wordTextWithoutCursorFontTransitionsView.count > 0 ? self.wordTextWithoutCursorFontTransitionsView.lastObject : self.wordTextWithoutCursorView;
@@ -173,6 +176,7 @@ static CGFloat FONT_START_SIZE = 100.0;
     } else {
         self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     }
+     */
 }
 
 #pragma mark - Updates

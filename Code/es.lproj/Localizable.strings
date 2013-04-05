@@ -17,7 +17,7 @@
 "TAG_ERRORSAVING" = "Fallo grabando";
 "TAG_ERRORSAVING_REASON" = "Razón %@";
 
-"TAG_TODAYSECTION" = "Hoy";
+"TAG_TODAYSECTION" = "hoy";
 
 "TAG_EMOTION_NAME_NEUTRAL" = "Neutral";
 "TAG_EMOTION_NAME_LOVE" = "Amor";

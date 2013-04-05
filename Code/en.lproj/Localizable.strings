@@ -17,7 +17,7 @@
 "TAG_ERRORSAVING" = "Error saving";
 "TAG_ERRORSAVING_REASON" = "Reason %@";
 
-"TAG_TODAYSECTION" = "Today";
+"TAG_TODAYSECTION" = "today";
 
 "TAG_EMOTION_NAME_NEUTRAL" = "Neutral";
 "TAG_EMOTION_NAME_LOVE" = "Love";
