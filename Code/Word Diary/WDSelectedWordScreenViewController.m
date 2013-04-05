@@ -32,6 +32,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        WDSelectedWordEditMenuViewController *editMenuViewController;
 @property (weak, nonatomic) IBOutlet UILabel                              *yearDateTopInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel                              *dayMonthDateTopInfoLabel;
+@property (weak, nonatomic) IBOutlet UIView                               *yearDateAndDayMonthContainerView;
 @property (nonatomic, strong)        UITapGestureRecognizer               *tapGestureRecognizer;
 @property (nonatomic, strong)        UITapGestureRecognizer               *doubleTapGestureRecognizer;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *leftSwipeGesture;
@@ -43,7 +44,10 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        NSTimer                              *animateStartEndPointOfGradientTimer;
 @property (nonatomic)                BOOL                                 keyboardActive;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
-@property (nonatomic, strong)        UILabel                              *emotionLabel;
+@property (nonatomic, weak) IBOutlet UILabel                              *dayDiaryLabel;
+@property (nonatomic, weak) IBOutlet UILabel                              *dayOfTheWeekLabel;
+@property (weak, nonatomic) IBOutlet UIView                               *dayDiaryAndDayOfWeekContainerView;
+@property (nonatomic, weak) IBOutlet UILabel                              *emotionLabel;
 @property (nonatomic, strong)        NSTimer                              *cursorUpdateTimer;
 @property (nonatomic, strong)        WDDayChecker                         *dayChecker;
 @property (nonatomic)                BOOL                                 dayChangePendingToResolve;
@@ -116,6 +120,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize editMenuViewController               = editMenuViewController_;
 @synthesize yearDateTopInfoLabel                 = yearDateTopInfoLabel_;
 @synthesize dayMonthDateTopInfoLabel             = dayMonthDateTopInfoLabel_;
+@synthesize yearDateAndDayMonthContainerView     = yearDateAndDayMonthContainerView_;
 @synthesize tapGestureRecognizer                 = tapGestureRecognizer_;
 @synthesize doubleTapGestureRecognizer           = doubleTapGestureRecognizer_;
 @synthesize leftSwipeGesture                     = leftSwipeGesture_;
@@ -128,6 +133,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize delegate                             = delegate_;
 @synthesize keyboardActive                       = keyboardActive_;
 @synthesize wordDiaryRepresentation              = wordDiaryRepresentation_;
+@synthesize dayDiaryLabel                        = dayDiaryLabel_;
+@synthesize dayOfTheWeekLabel                    = dayOfTheWeekLabel_;
 @synthesize emotionLabel                         = emotionLabel_;
 @synthesize cursorUpdateTimer                    = cursorUpdateTimer_;
 @synthesize dayChecker                           = dayChecker_;
@@ -140,6 +147,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize hideKeyboardWithTap                  = hideKeyboardWithTap_;
 @synthesize appWasResigned                       = appWasResigned_;
 @synthesize auxiliarySreenViewController         = auxiliaryScreenViewController_;
+@synthesize dayDiaryAndDayOfWeekContainerView    = dayDiaryAndDayOfWeekContainerView_;
 
 #pragma mark Init
 
@@ -155,6 +163,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         
         // Views fuera del xib propio
         wordDiaryRepresentation_ = (WDWordRepresentationView *)[WDWordRepresentationView createFromNib];
+        wordDiaryRepresentation_.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
         auxiliaryScreenViewController_ = [[WDAuxiliaryScreenViewController alloc] initWithNibName:nil bundle:nil];
         
         // Gesture Recognizer
@@ -204,24 +214,18 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-        
+     
     // Palabra
-    BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
-    self.wordDiaryRepresentation.center = CGPointMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / (isIPhone5Screen ? 2.50 : 3.5));
     self.wordDiaryRepresentation.delegate = self;
     self.wordDiaryRepresentation.dataSource = self;
     [self.view addSubview:self.wordDiaryRepresentation];
     
     // Emotion label
-    self.emotionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44.0)];
-    self.emotionLabel.textAlignment = NSTextAlignmentCenter;
-    self.emotionLabel.attributedText = [[NSAttributedString alloc] initWithString:[NSLocalizedString(self.selectedWord.emotion.name,@"") uppercaseString]
-                                                                       attributes:@{ NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:14],
-                                                                                     NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:[self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion].wordColor withAlphaComponent:NO skipInitialCharacter:NO],
-                                                                                     NSKernAttributeName: [NSNumber numberWithInteger:2] }];
-    
-    self.emotionLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.emotionLabel];
+    self.emotionLabel.attributedText = [[NSAttributedString alloc] initWithString:@""
+                                                                       attributes:@{
+                                                              NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:14],
+                                                   NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:[self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion].wordColor withAlphaComponent:NO skipInitialCharacter:NO],
+                                                              NSKernAttributeName: [NSNumber numberWithInt:10]}];
     
     // Menu de edicion
     self.editMenuViewController = [[WDSelectedWordEditMenuViewController alloc] initWithSelectedWord:self.selectedWord];
@@ -242,7 +246,26 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [super viewWillAppear:animated];
     
+    // Muy importante: - El diseño esta hecho para una altura 480 pixeles. Si la dimension en altura del dispositivo es superior, la diferencia se añadira a la
+    // view que representa la palabra y se extendera por el resto de componentes hacia abajo.
+    CGFloat screenSizeHeight = [UIScreen mainScreen].bounds.size.height;
+    CGFloat heightDiferenceWithOriginal480Design = screenSizeHeight - 480.0;
+   
+    /*
+    NSLog(@"%@", NSStringFromCGRect(self.view.frame));
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, screenSizeHeight);
+    NSLog(@"%@", NSStringFromCGRect(self.view.frame));
+    */
+    
+    // Representación de la palabra.
+    self.wordDiaryRepresentation.frame = CGRectMake(0.0,
+                                                    self.yearDateAndDayMonthContainerView.frame.origin.y + self.yearDateAndDayMonthContainerView.frame.size.height,
+                                                    self.view.bounds.size.width,
+                                                    self.dayDiaryAndDayOfWeekContainerView.frame.origin.y - (self.yearDateAndDayMonthContainerView.frame.origin.y + self.yearDateAndDayMonthContainerView.frame.size.height) + heightDiferenceWithOriginal480Design);
+    
     // Se centran las views correctamente
+    // Esto desaparecera....
     const CGFloat xMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
     self.editMenuViewController.view.frame = CGRectMake(xMargin,
                                                         self.view.bounds.size.height - self.editMenuViewController.view.bounds.size.height - xMargin,
@@ -250,8 +273,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
                                                         self.editMenuViewController.view.bounds.size.height);
     self.auxiliarySreenViewController.view.frame = CGRectMake(self.view.frame.origin.x + xMargin, xMargin, self.view.bounds.size.width - xMargin * 2, self.view.bounds.size.height - xMargin * 2);
     
-    self.emotionLabel.center = CGPointMake(self.emotionLabel.bounds.size.width / 2,
-                                           (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height + (self.view.frame.size.height - (self.wordDiaryRepresentation.frame.origin.y + self.wordDiaryRepresentation.frame.size.height)) / 2));
+    // Dia del diario y la semana
+
+    self.dayDiaryAndDayOfWeekContainerView.center = CGPointMake(self.dayDiaryAndDayOfWeekContainerView.center.x,
+                                                                self.dayDiaryAndDayOfWeekContainerView.center.y);
+
+    // Emotion label
+    self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y);
     
     if (self.selectedWord.word.length > 0) {
         [self.wordDiaryRepresentation setWithoutCursor:0.0];
@@ -261,11 +289,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     self.originalCenterPositionOfSelectedWord = self.wordDiaryRepresentation.center;
     self.originalCenterPositionOfEmotionLabel = self.emotionLabel.center;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-   // self.animateStartEndPointOfGradientTimer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(animateStartEndPointOfGradient:) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -332,8 +355,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.yearDateTopInfoLabel.alpha = 0.0;
         self.dayMonthDateTopInfoLabel.alpha = 0.0;
         self.wordDiaryRepresentation.alpha = 0.0;
-        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+        self.dayDiaryLabel.alpha = 1.0;
+        self.dayOfTheWeekLabel.alpha = 1.0;
     } completion:^(BOOL finished) {
         // Quitamos este componente, que es el verdaderamente pesado
         [self.wordDiaryRepresentation removeFromSuperview];
@@ -393,7 +416,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
 
-    // Gradiente
+    // Emotion
+    self.emotionLabel.text = [NSLocalizedString(self.selectedWord.emotion.name, @"") uppercaseString];
     if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
             // ToDo: Quitar el 0 y relacionar con la paleta de colores adecuada
@@ -409,17 +433,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     UIColor *accessoriesColor = [UIColor colorWithHexadecimalValue:palette.accessoriesColor withAlphaComponent:NO skipInitialCharacter:NO];
     self.yearDateTopInfoLabel.textColor = [accessoriesColor copy];
     self.dayMonthDateTopInfoLabel.textColor = [accessoriesColor copy];
-    self.wordDiaryRepresentation.dayOfTheWeekLabel.textColor = [accessoriesColor copy];
+    self.dayOfTheWeekLabel.textColor = [accessoriesColor copy];
     
     [self setDateInfo];
     
     // Palabra
     //UIColor *wordColor = [UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
-    self.wordDiaryRepresentation.dayDiaryLabel.textColor = [accessoriesColor copy];
+    self.dayDiaryLabel.textColor = [accessoriesColor copy];
     
     NSUInteger indexPositionOfSelectedWord = [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord];
     NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:indexPositionOfSelectedWord]];
-    self.wordDiaryRepresentation.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
+    self.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
     if ([self.selectedWord isEmpty]) {
         NSAssert([self.selectedWord isTodayWord], @"Solo PUEDE estar vacia la palabra del dia de hoy");
         [self.wordDiaryRepresentation setWithCursor:0];
@@ -471,11 +495,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     NSDate *dateFromWordTimeInterval = [NSDate dateWithTimeIntervalSince1970:self.selectedWord.timeInterval];
     NSDateComponents *dateComponents = [calendar components:NSWeekdayCalendarUnit fromDate:dateFromWordTimeInterval];
     NSString *dayOfTheWeekLabel = [[WDUtils stringFromWeekday:dateComponents.weekday] lowercaseStringWithLocale:[NSLocale currentLocale]];
-    if ([dayMonthDateText compare:self.wordDiaryRepresentation.dayOfTheWeekLabel.text] != NSOrderedSame) {
-        if (self.wordDiaryRepresentation.dayOfTheWeekLabel.text.length > 0) {
-            [WDUtils destroyViewGosthEffect:self.wordDiaryRepresentation.dayOfTheWeekLabel withDuration:gosthEffectTime andDisplacement:0];
+    if ([dayMonthDateText compare:self.dayOfTheWeekLabel.text] != NSOrderedSame) {
+        if (self.dayOfTheWeekLabel.text.length > 0) {
+            [WDUtils destroyViewGosthEffect:self.dayOfTheWeekLabel withDuration:gosthEffectTime andDisplacement:0];
         }
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.text = dayOfTheWeekLabel;
+        self.dayOfTheWeekLabel.text = dayOfTheWeekLabel;
     }
 
 }
@@ -550,16 +574,16 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     CGRect newArea = CGRectMake(0.0, 0.0, self.view.frame.size.width,  self.editMenuViewController.view.frame.origin.y);
     [UIView animateWithDuration:duration animations:^{
         BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
-        self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / (isIPhone5Screen ? 2 : 2.25)) * 0.90);
+        //self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / (isIPhone5Screen ? 2 : 2.25)) * 0.90);
         if (isIPhone5Screen) {
             if (self.emotionLabel.center.y == self.originalCenterPositionOfEmotionLabel.y) {
-                self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y * 0.82);
+                //self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y * 0.82);
             }
         } else {
             self.emotionLabel.alpha = 0.0;
         }
-        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.25;
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.25;
+        self.dayDiaryLabel.alpha = 0.25;
+        self.dayOfTheWeekLabel.alpha = 0.25;
         self.yearDateTopInfoLabel.alpha = 0.25;
         self.dayMonthDateTopInfoLabel.alpha = 0.25;
     }];
@@ -568,14 +592,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)wordDiaryRepresentationAnimateDownWithDuration:(CGFloat)duration
 {
     [UIView animateWithDuration:duration animations:^{
-        self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
+        //self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
         if ([WDUtils isIPhone5Screen]) {
-            self.emotionLabel.center = self.originalCenterPositionOfEmotionLabel;
+            //self.emotionLabel.center = self.originalCenterPositionOfEmotionLabel;
         } else {
             self.emotionLabel.alpha = 1.0;
         }
-        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+        self.dayDiaryLabel.alpha = 1.0;
+        self.dayOfTheWeekLabel.alpha = 1.0;
         self.wordDiaryRepresentation.alpha = 1.0;
         self.yearDateTopInfoLabel.alpha = 1.0;
         self.dayMonthDateTopInfoLabel.alpha = 1.0;
@@ -612,8 +636,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.yearDateTopInfoLabel.alpha = 1.0;
         self.dayMonthDateTopInfoLabel.alpha = 1.0;
         self.wordDiaryRepresentation.alpha = 1.0;
-        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+        self.dayDiaryLabel.alpha = 1.0;
+        self.dayOfTheWeekLabel.alpha = 1.0;
     } completion:^(BOOL finished) {
         
     }];
@@ -757,8 +781,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             self.yearDateTopInfoLabel.alpha = 0.2;
             self.dayMonthDateTopInfoLabel.alpha = 0.2;
             self.wordDiaryRepresentation.alpha = 0.8;
-            self.wordDiaryRepresentation.dayDiaryLabel.alpha = 0.4;
-            self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 0.2;
+            self.dayDiaryLabel.alpha = 0.4;
+            self.dayOfTheWeekLabel.alpha = 0.2;
         }];
     }
     
@@ -800,8 +824,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.actualGradientBackground.alpha = 1.0;
         self.yearDateTopInfoLabel.alpha = 1.0;
         self.dayMonthDateTopInfoLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.dayDiaryLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.dayOfTheWeekLabel.alpha = 1.0;
+        self.dayDiaryLabel.alpha = 1.0;
+        self.dayOfTheWeekLabel.alpha = 1.0;
         self.wordDiaryRepresentation.alpha = 1.0;
     } completion:^(BOOL finished) {
         if (finished) {

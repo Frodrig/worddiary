@@ -33,12 +33,10 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 #pragma mark - Syntehsize
 
-@synthesize dayDiaryLabel                            = dayDiaryLabel_;
 @synthesize drawTextBox                              = drawTextBox_;
 @synthesize delegate                                 = delegate_;
 @synthesize dataSource                               = dataSource_;
 @synthesize actualColorOfCursor                      = actualColorOfCursor_;
-@synthesize dayOfTheWeekLabel                        = dayOfTheWeekLabel_;
 @synthesize startDrawingPosition                     = startDrawingPosition_;
 @synthesize wordTextWithCursorView                   = wordTextWithCursorView_;
 @synthesize wordTextWithoutCursorView                = wordTextWithoutCursorView_;
@@ -88,10 +86,12 @@ static CGFloat FONT_START_SIZE = 100.0;
         wordTextWithCursorView_ = [[WDWordTextWithCursorView alloc] initWithFrame:self.frame];
         wordTextWithCursorView_.backgroundColor = [UIColor clearColor];
         wordTextWithCursorView_.dataSource = self;
+        wordTextWithCursorView_.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         wordTextWithoutCursorView_ = [[WDWordTextWithoutCursorView alloc] initWithFrame:self.frame];
         wordTextWithoutCursorView_.backgroundColor = [UIColor clearColor];
         wordTextWithoutCursorView_.dataSource = self;
+        wordTextWithCursorView_.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         //timeFrom_ = [NSDate timeIntervalSinceReferenceDate];
         //acumulateTime_ = 0;
@@ -200,6 +200,7 @@ static CGFloat FONT_START_SIZE = 100.0;
     if (self.wordTextWithCursorView.superview == nil) {
         if ([WDUtils is:duration equalsTo:0.0]) {
             [self.wordTextWithoutCursorView removeFromSuperview];
+            self.wordTextWithCursorView.frame = self.frame;
             [self insertSubview:self.wordTextWithCursorView atIndex:0];
             self.wordTextWithCursorView.alpha = 1.0;
         } else {
@@ -214,6 +215,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 {
     if ([WDUtils is:duration equalsTo:0.0]) {
         [self.wordTextWithCursorView removeFromSuperview];
+        self.wordTextWithoutCursorView.frame = self.frame;
         [self insertSubview:self.wordTextWithoutCursorView atIndex:0];
         self.wordTextWithoutCursorView.alpha = 1.0;
     } else {
@@ -245,10 +247,10 @@ static CGFloat FONT_START_SIZE = 100.0;
     CGContextSaveGState(contextRef);
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineDash(contextRef, 0, dashPattern, 2);
-    CGContextSetLineWidth(contextRef, 1);
+    CGContextSetLineWidth(contextRef, 1.5);
     CGFloat colorComponents[4] = {0, 0, 0, 0};
     [[self.dataSource actualSelectedWordAccessoriesWordRepresentation:self] getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
-    colorComponents[3] *= 0.5;
+    //colorComponents[3] *= 0.5;
     CGContextSetStrokeColor(contextRef, colorComponents);
     CGContextMoveToPoint(contextRef, 0.0, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, self.bounds.size.width, endPointDraw.y);

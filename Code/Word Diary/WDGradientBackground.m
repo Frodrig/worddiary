@@ -133,9 +133,18 @@ static CGFloat        MODULATION_COLOR_LOW                     = 0.65;
         
         self.backgroundColor = [UIColor colorWithHexadecimalValue:hexColor withAlphaComponent:NO skipInitialCharacter:NO];
         [self.backgroundColor getHue:&hueComponent_ saturation:&saturationComponent_ brightness:&brightnessComponent_ alpha:&alphaComponent_];
-        self.layer.cornerRadius = 15.0;
+        //self.layer.cornerRadius = 15.0;
         //self.layer.borderWidth = 1.0;
         //self.layer.borderColor = [UIColor colorWithHexadecimalValue:@"0x000000" withAlphaComponent:NO skipInitialCharacter:NO].CGColor;
+        
+        UIBezierPath *bezierPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                         byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight
+                                                               cornerRadii:CGSizeMake(15.0, 15.0)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.bounds;
+        maskLayer.path = bezierPath.CGPath;
+        self.layer.mask = maskLayer;
+         
         self.layer.masksToBounds = YES;
         
         /*

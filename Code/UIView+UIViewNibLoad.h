@@ -10,6 +10,7 @@
 
 @interface UIView (UIViewNibLoad)
 
+// ToDo: NO se lee la mascara de autoresize
 + (UIView *) createFromNib;
 
 @end
