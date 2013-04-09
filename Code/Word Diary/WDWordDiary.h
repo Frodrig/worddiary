@@ -28,6 +28,9 @@
 - (WDWord *)      createWord:(NSString *)word inTimeInterval:(double)timeInterval;
 - (void)          removeWord:(WDWord *)word;
 
+- (void)          changeToEmotion:(WDEmotion *)emotion inWord:(WDWord *)word;
+- (void)          changeToEmotionIndex:(NSUInteger)emotionIdx inWord:(WDWord *)word;
+
 - (void)          saveAll;
 
 - (WDWord *)      findTodayWord;

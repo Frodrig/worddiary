@@ -349,12 +349,17 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.pendingBackgroundChanges addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:index], [NSNumber numberWithFloat:duration], nil]
                                                                              forKeys:[NSArray arrayWithObjects:@"emotionIndex", @"duration",  nil]]];
     } else {
+        /*
         WDEmotion *nextEmotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:index];
         WDPalette *palette = [[nextEmotion.palette allObjects] objectAtIndex:0];
         if (nextEmotion != self.selectedWord.emotion) {
             self.selectedWord.emotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:index];
             self.selectedWord.paletteIdNameOfEmotion = palette.idName;
         }
+        */
+        [[WDWordDiary sharedWordDiary] changeToEmotionIndex:index inWord:self.selectedWord];
+        WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
+
         self.nextGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andHexColor:palette.backgroundColor];
         self.nextGradientBackground.alpha = 0.0;
         [self.view insertSubview:self.nextGradientBackground belowSubview:self.actualGradientBackground];
@@ -1056,9 +1061,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         newEmotionIndex = actualEmotionIndex == 0 ? lastEmotionIndex : actualEmotionIndex - 1;
     }
     
-    self.selectedWord.emotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:newEmotionIndex];
-    WDPalette *palette = [[self.selectedWord.emotion.palette allObjects] objectAtIndex:0];
-    self.selectedWord.paletteIdNameOfEmotion = palette.idName;
+    [[WDWordDiary sharedWordDiary] changeToEmotionIndex:newEmotionIndex inWord:self.selectedWord];
     [self configureViewForSelectedWord:YES];
 }
 

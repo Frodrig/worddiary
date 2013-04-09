@@ -275,7 +275,7 @@
     [word removeObserver:self forKeyPath:@"word"];
     [word removeObserver:self forKeyPath:@"timeInterval"];
     [word removeObserver:self forKeyPath:@"style"];
-    [word removeObserver:self forKeyPath:@"emotion"];
+    //[word removeObserver:self forKeyPath:@"emotion"];
     
     [self.context refreshObject:word.emotion mergeChanges:NO];
     [self.context refreshObject:word.style mergeChanges:NO];
@@ -283,6 +283,23 @@
     
     [words_ removeObject:word];
     [self.context deleteObject:word];
+    
+    [self saveAll];
+}
+
+- (void)changeToEmotionIndex:(NSUInteger)emotionIdx inWord:(WDWord *)word
+{
+    WDEmotion *emotion = [self.emotions objectAtIndex:emotionIdx];
+    [self changeToEmotion:emotion inWord:word];
+}
+
+- (void)changeToEmotion:(WDEmotion *)emotion inWord:(WDWord *)word
+{
+    NSAssert(emotion, @"Invalid emotion");
+    
+    word.emotion = emotion;
+    WDPalette *palette = [[emotion.palette allObjects] objectAtIndex:0];
+    word.paletteIdNameOfEmotion = palette.idName;
     
     [self saveAll];
 }
@@ -376,7 +393,8 @@
     [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"style" options:0 context:NULL];
-    [word addObserver:self forKeyPath:@"emotion" options:0 context:NULL];
+    // Cambiar una emocion es mas complejo que cambiar la variable. Hay que usar un metodo especifico y es desde ahi desde donde hacemos el save
+    //[word addObserver:self forKeyPath:@"emotion" options:0 context:NULL];
 }
 
 - (void)sortWords
