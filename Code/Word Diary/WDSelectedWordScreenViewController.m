@@ -878,11 +878,10 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.pendingBackgroundChanges removeAllObjects];
         
         [UIView animateWithDuration:duration animations:^{
-          //  self.yearDateTopInfoLabel.alpha = 0.2;
-          //  self.dayMonthDateTopInfoLabel.alpha = 0.2;
-            self.wordDiaryRepresentation.alpha = 0.8;
-            self.dayDiaryLabel.alpha = 0.4;
-            self.dayOfTheWeekLabel.alpha = 0.2;
+            self.dateContainerView.alpha = 0.2;
+            self.emotionLabelContainerView.alpha = 0.2;
+            self.dayDiaryContainerView.alpha = 0.4;
+
         }];
     }
     
@@ -922,11 +921,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [UIView animateWithDuration:1.5 animations:^{
         self.backgroundSwipeView.alpha = 0.0;
         self.actualGradientBackground.alpha = 1.0;
-      //  self.yearDateTopInfoLabel.alpha = 1.0;
-      //  self.dayMonthDateTopInfoLabel.alpha = 1.0;
-        self.dayDiaryLabel.alpha = 1.0;
-        self.dayOfTheWeekLabel.alpha = 1.0;
-        self.wordDiaryRepresentation.alpha = 1.0;
+        self.dateContainerView.alpha = 1.0;
+        self.emotionLabelContainerView.alpha = 1.0;
+        self.dayDiaryContainerView.alpha = 1.0;
     } completion:^(BOOL finished) {
         if (finished) {
             [self.backgroundSwipeView removeFromSuperview];
