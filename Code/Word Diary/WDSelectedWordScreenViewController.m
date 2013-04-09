@@ -610,9 +610,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             [self.view insertSubview:self.actualGradientBackground atIndex:0];
         } else {
             NSUInteger emotionIndex = [[WDWordDiary sharedWordDiary].emotions indexOfObject:self.selectedWord.emotion];
-            if (emotionIndex != self.actualGradientBackground.gradientColorIndex) {
+            //if (emotionIndex != self.actualGradientBackground.gradientColorIndex) {
                 [self changeToEmotionIndex:emotionIndex withDuration:0.75];
-            }
+            //}
         }
     }
 
