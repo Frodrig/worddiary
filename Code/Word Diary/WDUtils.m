@@ -405,7 +405,10 @@
     return [[CMMotionManager alloc] init].gyroAvailable;
 }
 
-
++ (CGFloat)degreesToRadians:(CGFloat)degrees
+{
+    return degrees * M_PI / 180.0;
+};
 
 
 @end

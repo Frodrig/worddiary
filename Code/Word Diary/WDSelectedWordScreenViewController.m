@@ -411,14 +411,51 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.view addSubview:self.editPanelForPreviousWord];
         [UIView animateWithDuration:0.5 animations:^{
             self.editPanelForPreviousWord.alpha = 1.0;
-            self.dateContainerView.alpha = 0.5;
-            self.wordDiaryRepresentation.alpha = 0.5;
-            self.dayDiaryContainerView.alpha = 0.5;
-            self.emotionLabelContainerView.alpha = 0.5;
+            self.dateContainerView.alpha = 0.2;
+            self.dayDiaryContainerView.alpha = 0.2;
+            self.emotionLabelContainerView.alpha = 0.2;
         } completion:^(BOOL finished) {
-            // ...
+            /*
+            CATransform3D left = CATransform3DRotate(CATransform3DIdentity, [WDUtils degreesToRadians:1.0], 0.0, 0.0, 1.0);
+            CATransform3D right = CATransform3DRotate(CATransform3DIdentity, [WDUtils degreesToRadians:-1.0], 0.0, 0.0, 1.0);
+            CAKeyframeAnimation *rotation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+            rotation.values = [NSArray arrayWithObjects:
+                               [NSValue valueWithCATransform3D:CATransform3DIdentity],
+                               [NSValue valueWithCATransform3D:left],
+                               [NSValue valueWithCATransform3D:right],
+                               [NSValue valueWithCATransform3D:CATransform3DIdentity],
+                               nil];
+            rotation.duration = 30.0;
+            rotation.repeatCount = HUGE_VALF;
+            rotation.removedOnCompletion = NO;
+            [self.wordDiaryRepresentation.layer addAnimation:rotation forKey:@"rotationAnimation"];
+            */
+        /*
+         CATransform3D forward = CATransform3DMakeScale(1.05, 1.05, 1);
+         CATransform3D back = CATransform3DMakeScale(0.9, 0.95, 1);
+         
+         CAKeyframeAnimation *bounce = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+         
+         bounce.values = [NSArray arrayWithObjects:
+                          [NSValue valueWithCATransform3D:CATransform3DIdentity],
+                          [NSValue valueWithCATransform3D:forward],
+                          [NSValue valueWithCATransform3D:back],
+                          [NSValue valueWithCATransform3D:CATransform3DIdentity],
+                          nil];
+         
+         bounce.duration = 30;
+         bounce.repeatCount = HUGE_VALF;
+         bounce.removedOnCompletion = NO;
+         
+         [self.wordDiaryRepresentation.layer addAnimation:bounce forKey:@"bounceAnimation"];
+         */
         }];
     }
+    
+    
+    
+    
+    
 }
 
 - (void)hideInmediateEditPanelForPreviousWord
@@ -435,7 +472,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [UIView animateWithDuration:0.5 animations:^{
             self.editPanelForPreviousWord.alpha = 0;
             self.dateContainerView.alpha = 1;
-            self.wordDiaryRepresentation.alpha = 1;
             self.dayDiaryContainerView.alpha = 1;
             self.emotionLabelContainerView.alpha = 1;
         } completion:^(BOOL finished) {

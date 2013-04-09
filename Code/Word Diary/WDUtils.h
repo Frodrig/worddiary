@@ -57,4 +57,7 @@ typedef enum {
 
 + (BOOL)                 deviceCanDetectShakeMovement;
 
++ (CGFloat)              degreesToRadians:(CGFloat)degrees;
+
+
 @end
