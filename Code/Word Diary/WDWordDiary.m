@@ -211,7 +211,9 @@
         
         emotions_ = emotionInstances;
     }
-}
+    
+    result = [result sortedArrayUsingSelector:@selector(compare:)];
+  }
 
 - (void)prepareWords
 {
@@ -223,6 +225,7 @@
     
     for (WDWord *word in words_) {
         [self addObserverToWord:word];
+        NSLog(@"Loading word %@", word.paletteIdNameOfEmotion);
     }
 }
 
@@ -252,7 +255,10 @@
     wordObject.style = [self defaultStyle];
     wordObject.emotion = [self defaultEmotion];
     // ToDo: Este valor tiene que venir de un parametro de la funcion
-    wordObject.paletteIdNameOfEmotion = @"215";
+    WDPalette *paletteOfEmotion = [wordObject.emotion.palette anyObject];
+    wordObject.paletteIdNameOfEmotion = paletteOfEmotion.idName;
+    
+    NSLog(@"createWord emotion name %@", wordObject.emotion.name);
 
     [words_ addObject:wordObject];
     [self sortWords];
@@ -286,6 +292,10 @@
     NSError *error;
     if (/*[self.context hasChanges] &&*/ ![self.context save:&error]) {
         [NSException raise:NSLocalizedString(@"TAG_ERRORSAVING", @"") format:NSLocalizedString(@"TAG_ERRORSAVING_REASON", @"")];
+    }
+    NSLog(@"SAVE");
+    for (WDWord *word in self.words) {
+        NSLog(@"idname %@", word.paletteIdNameOfEmotion);
     }
 }
 
@@ -384,7 +394,6 @@
 
 - (WDEmotion *)defaultEmotion
 {
-    // ToDo: Neutral
     return [self.emotions objectAtIndex:0];
 }
 

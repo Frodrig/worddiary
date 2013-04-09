@@ -100,7 +100,7 @@
     NSDate *todayDate = [NSDate date];
     NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit fromDate:todayDate toDate:wordDate options:0];
+    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
     
     return dateComponents.day;
 }

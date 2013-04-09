@@ -64,6 +64,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic)                BOOL                                 hideKeyboardWithTap;
 @property (nonatomic)                BOOL                                 appWasResigned;
 @property (nonatomic, strong)        WDAuxiliaryScreenViewController      *auxiliarySreenViewController;
+@property (nonatomic, strong)        UIView                               *editPanelForPreviousWord;
 
 - (void)                 createDateLabels;
 - (NSAttributedString *) createAttributedStringForDateLabelsWithText:(NSString *)text;
@@ -124,6 +125,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)                 prepareViewToShowAuxiliaryScreen;
 
+- (void)                 showEditPanelForPreviousWord;
+- (void)                 hideInmediateEditPanelForPreviousWord;
+- (void)                 hideEditPanelForPreviousWord;
+- (void)                 deleteSelectedWordAcepted:(UIButton *)button;
+
 @end
 
 @implementation WDSelectedWordScreenViewController
@@ -167,6 +173,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize auxiliarySreenViewController                         = auxiliaryScreenViewController_;
 @synthesize dayDiaryContainerView                                = dayDiaryContainerView_;
 @synthesize emotionLabelContainerView                            = emotionLabelContainerView_;
+@synthesize editPanelForPreviousWord                             = editPanelForPreviousWord_;
 
 #pragma mark Init
 
@@ -382,6 +389,70 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - Auxiliary
 
+- (void)showEditPanelForPreviousWord
+{
+    if (self.editPanelForPreviousWord == nil) {        
+        UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [deleteButton setImage:[UIImage imageNamed:@"37-circle-x"] forState:UIControlStateNormal];
+        deleteButton.backgroundColor = [UIColor clearColor];
+        deleteButton.frame = CGRectMake(deleteButton.bounds.size.width, 0.0, 44.0, 44.0);
+        [deleteButton addTarget:self action:@selector(deleteSelectedWordAcepted:) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.editPanelForPreviousWord = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x + self.view.frame.size.width - deleteButton.bounds.size.width - 20.0, 20.0, deleteButton.bounds.size.width, 44.0)];
+        self.editPanelForPreviousWord.backgroundColor = [UIColor clearColor];
+        [self.editPanelForPreviousWord addSubview:deleteButton];
+        self.editPanelForPreviousWord.alpha = 0.0;
+        
+        [self.view addSubview:self.editPanelForPreviousWord];
+        [UIView animateWithDuration:0.5 animations:^{
+            self.editPanelForPreviousWord.alpha = 1.0;
+            self.dateContainerView.alpha = 0.5;
+            self.wordDiaryRepresentation.alpha = 0.5;
+            self.dayDiaryContainerView.alpha = 0.5;
+            self.emotionLabelContainerView.alpha = 0.5;
+        } completion:^(BOOL finished) {
+            // ...
+        }];
+    }
+}
+
+- (void)hideInmediateEditPanelForPreviousWord
+{
+    if (self.editPanelForPreviousWord) {
+        [self.editPanelForPreviousWord removeFromSuperview];
+        self.editPanelForPreviousWord = nil;
+    }
+}
+
+- (void)hideEditPanelForPreviousWord
+{
+    if (self.editPanelForPreviousWord) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.editPanelForPreviousWord.alpha = 0;
+            self.dateContainerView.alpha = 1;
+            self.wordDiaryRepresentation.alpha = 1;
+            self.dayDiaryContainerView.alpha = 1;
+            self.emotionLabelContainerView.alpha = 1;
+        } completion:^(BOOL finished) {
+            [self hideInmediateEditPanelForPreviousWord];
+        }];
+    }
+}
+
+- (void)deleteSelectedWordAcepted:(UIButton *)button
+{
+    [self hideInmediateEditPanelForPreviousWord];
+    
+    WDWord *newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
+    NSAssert(newSelectedWord, @"Siempre tiene que existir una instancia de tipo palabra");
+    
+    [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
+    self.selectedWord = newSelectedWord;
+    [self hideMainMenu];
+    [self startBackgroundTimer:0];
+    [self configureViewForSelectedWord:YES];
+}
+
 - (NSAttributedString *)createAttributedStringForDateLabelsWithText:(NSString *)text
 {
     NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:text
@@ -524,6 +595,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
 
     // Emotion
+    NSLog(@"word %@", self.selectedWord.word);
+    NSLog(@"Emotion %@", self.selectedWord.emotion.name);
+    for (WDPalette *paleteIt in self.selectedWord.emotion.palette) {
+        NSLog(@"palete in emotion %@", paleteIt.idName);
+    }
+    NSLog(@"ConfigureViewForSelectedWord palete %@", self.selectedWord.paletteIdNameOfEmotion);
+    
+    
     self.emotionLabel.attributedText = [self createAttributedStringForEmotionLabelWithText:[NSLocalizedString(self.selectedWord.emotion.name, @"") uppercaseString]];
     if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
@@ -794,9 +873,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)tapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (gestureRecognizer == self.tapKeyboardGesture) {
-        if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-            if (!self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
+    BOOL canHandleTap = gestureRecognizer == self.tapKeyboardGesture &&
+                                             ![self.auxiliarySreenViewController isShowed] &&
+                                             gestureRecognizer.state == UIGestureRecognizerStateEnded;
+    
+    if (canHandleTap) {
+        if ([self.selectedWord isTodayWord]) {
+            if (!self.keyboardActive) {
                 BOOL useAsTapGesture = self.editMenuViewController.view.hidden;
                 if (!useAsTapGesture) {
                     CGPoint hitPoint = [gestureRecognizer locationInView:nil];
@@ -808,6 +891,12 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             } else {
                 self.hideKeyboardWithTap = YES;
                 [self.wordDiaryRepresentation resignFirstResponder];
+            }
+        } else {
+            if (self.editPanelForPreviousWord) {
+                [self hideEditPanelForPreviousWord];
+            } else {
+                [self showEditPanelForPreviousWord];
             }
         }
     }
@@ -999,7 +1088,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         if (gestureRecognizer == self.rightSwipeGesture || gestureRecognizer == self.leftSwipeGesture) {
             [self changeSelectedWordInSwipeDirection:gestureRecognizer.direction];
         } else if (gestureRecognizer == self.upSwipeGesture || gestureRecognizer == downSwipeGesture_) {
-            [self changeEmotionInSwipeDirection:gestureRecognizer.direction];
+            if ([self.selectedWord isTodayWord]) {
+                [self changeEmotionInSwipeDirection:gestureRecognizer.direction];                
+            }
         }
     }
 }

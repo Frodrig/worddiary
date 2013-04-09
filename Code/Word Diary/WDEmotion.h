@@ -13,11 +13,16 @@
 
 @interface WDEmotion : NSManagedObject
 
-@property (nonatomic, retain) NSString  *name;
-@property (nonatomic, retain) NSSet     *palette;
-@property (nonatomic, retain) NSSet     *word;
+@property (nonatomic, retain) NSString     *name;
+@property (nonatomic, retain) NSSet        *palette;
+@property (nonatomic, retain) NSSet        *word;
+@property (nonatomic, readonly) NSUInteger priorityOrder;
 
 - (WDPalette *)findPaletteOfIdName:(NSString *)idName;
+
+- (NSComparisonResult)compare:(WDEmotion *)otherEmotion;
+
+- (NSString *)description;
 
 @end
 
