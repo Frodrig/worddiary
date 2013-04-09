@@ -46,8 +46,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        NSTimer                              *animateStartEndPointOfGradientTimer;
 @property (nonatomic)                BOOL                                 keyboardActive;
 @property (nonatomic, strong)        WDWordRepresentationView             *wordDiaryRepresentation;
-@property (nonatomic, weak) IBOutlet UILabel                              *dayDiaryLabel;
-@property (weak, nonatomic) IBOutlet UIView                               *dayDiaryAndDayOfWeekContainerView;
+@property (nonatomic, strong)        UILabel                              *dayDiaryLabel;
+@property (weak, nonatomic) IBOutlet UIView                               *dayDiaryContainerView;
 @property (weak, nonatomic) IBOutlet UIView                               *emotionLabelContainerView;
 @property (nonatomic, strong)        UILabel                              *emotionLabel;
 @property (nonatomic, strong)        UIView                               *styleMenuView;
@@ -67,6 +67,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (NSAttributedString *) createAttributedStringForDateLabelsWithText:(NSString *)text;
 - (void)                 createEmotionLabel;
 - (NSAttributedString *) createAttributedStringForEmotionLabelWithText:(NSString *)text;
+- (void)                 createDayDiaryLabel;
+- (NSAttributedString *) createAttributedStringForDayDiaryLabelWithText:(NSString *)text;
 
 - (WDWord *)             selectWordOfWordDiaryAtLaunchOrResume;
 - (void)                 updateByDayChange;
@@ -158,7 +160,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize hideKeyboardWithTap                                  = hideKeyboardWithTap_;
 @synthesize appWasResigned                                       = appWasResigned_;
 @synthesize auxiliarySreenViewController                         = auxiliaryScreenViewController_;
-@synthesize dayDiaryAndDayOfWeekContainerView                    = dayDiaryAndDayOfWeekContainerView_;
+@synthesize dayDiaryContainerView                                = dayDiaryContainerView_;
 @synthesize emotionLabelContainerView                            = emotionLabelContainerView_;
 
 #pragma mark Init
@@ -252,6 +254,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.wordDiaryRepresentation.dataSource = self;
     [self.view addSubview:self.wordDiaryRepresentation];
     
+    // Day Diary
+    [self createDayDiaryLabel];
+    
     // Emotion
     [self createEmotionLabel];
     
@@ -278,7 +283,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.wordDiaryRepresentation.frame = CGRectMake(0.0,
                                                     self.dateContainerView.frame.origin.y + self.dateContainerView.frame.size.height,
                                                     self.view.bounds.size.width,
-                                                    self.dayDiaryAndDayOfWeekContainerView.frame.origin.y - (self.dateContainerView.frame.origin.y + self.dateContainerView.frame.size.height));
+                                                    self.dayDiaryContainerView.frame.origin.y - (self.dateContainerView.frame.origin.y + self.dateContainerView.frame.size.height));
     
     // Se centran las views correctamente
     // Esto desaparecera....
@@ -379,6 +384,19 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     return attrString;
 }
 
+
+- (NSAttributedString *)createAttributedStringForDayDiaryLabelWithText:(NSString *)text
+{
+    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:text
+                                                                     attributes:@{
+                                                            NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:32.0],
+                                                 NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:[self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion].wordColor withAlphaComponent:NO skipInitialCharacter:NO],
+                                                            NSKernAttributeName: [NSNumber numberWithInt:6]}];
+    
+    return attrString;
+    
+}
+
 - (void)createDateLabels
 {
     const NSUInteger labelSize = 39.0;
@@ -406,6 +424,15 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.emotionLabel.backgroundColor = [UIColor clearColor];
     
     [self.emotionLabelContainerView addSubview:self.emotionLabel];
+}
+
+- (void)createDayDiaryLabel
+{
+    self.dayDiaryLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, self.dayDiaryContainerView.bounds.size.width, self.dayDiaryContainerView.bounds.size.height)];
+    self.dayDiaryLabel.textAlignment = NSTextAlignmentCenter;
+    self.dayDiaryLabel.backgroundColor = [UIColor clearColor];
+    
+    [self.dayDiaryContainerView addSubview:self.dayDiaryLabel];
 }
 
 - (void)prepareViewToShowAuxiliaryScreen
@@ -497,13 +524,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     [self setDateInfo];
     
-    // Palabra
+    // Dia del diario
     //UIColor *wordColor = [UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
     self.dayDiaryLabel.textColor = [accessoriesColor copy];
+    NSNumber *dayDiaryNumber = [NSNumber numberWithUnsignedInteger:[[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]];
+    NSString *dayDiaryNumberNormalized = [WDUtils convertNumberToStringWithTwoDigitsMin:dayDiaryNumber];
+    self.dayDiaryLabel.attributedText = [self createAttributedStringForDayDiaryLabelWithText:[NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayDiaryNumberNormalized]];
     
-    NSUInteger indexPositionOfSelectedWord = [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord];
-    NSString *dayIndexOfDiary = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:indexPositionOfSelectedWord]];
-    self.dayDiaryLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayIndexOfDiary];
+    // Palabra
     if ([self.selectedWord isEmpty]) {
         NSAssert([self.selectedWord isTodayWord], @"Solo PUEDE estar vacia la palabra del dia de hoy");
         [self.wordDiaryRepresentation setWithCursor:0];
@@ -865,7 +893,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 {
     [self startBackgroundTimerWithColor:[UIColor colorWithWhite:0.70 alpha:1.0] duration:0 andDirection:direction];
     UIImageView *noIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37-circle-x"]];
-    noIcon.frame = CGRectMake((self.view.frame.size.width - noIcon.frame.size.width) / 2, (self.view.frame.origin.y + self.view.frame.size.height) - 64.0, noIcon.frame.size.width, noIcon.frame.size.height);
+    noIcon.frame = CGRectMake((self.view.frame.size.width - noIcon.frame.size.width) / 2, (self.view.frame.origin.y + self.view.frame.size.height) - 44.0, noIcon.frame.size.width, noIcon.frame.size.height);
     [self.backgroundSwipeView addSubview:noIcon];
 }
 
@@ -966,7 +994,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.dateContainerView.center = CGPointMake(self.dateContainerView.center.x, self.dateContainerView.center.y - self.dateContainerView.bounds.size.height / 2.0);
         self.dateContainerView.alpha = 0;
         self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, self.wordDiaryRepresentation.center.y - self.dateContainerView.bounds.size.height / 3.0);
-        self.dayDiaryAndDayOfWeekContainerView.alpha = 0.0;
+        self.dayDiaryContainerView.alpha = 0.0;
         //self.styleMenuView.center = CGPointMake(self.styleMenuView.bounds.size.width / 2.0, self.styleMenuView.center.y);
     }];
     
@@ -1008,7 +1036,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         self.dateContainerView.center = self.originalCenterPositionYearDateAndMonthContainerView;
         self.wordDiaryRepresentation.center = self.originalCenterPositionOfSelectedWord;
         self.dateContainerView.alpha = 1;
-        self.dayDiaryAndDayOfWeekContainerView.alpha = 1.0;
+        self.dayDiaryContainerView.alpha = 1.0;
         //self.styleMenuView.center = CGPointMake(-self.styleMenuView.bounds.size.width / 2.0, self.styleMenuView.center.y);
     } completion:^(BOOL finished) {
         // ...
