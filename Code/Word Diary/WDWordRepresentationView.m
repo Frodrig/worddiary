@@ -24,6 +24,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 @property (nonatomic, strong) WDWordTextWithCursorView    *wordTextWithCursorView;
 @property (nonatomic, strong) WDWordTextWithoutCursorView *wordTextWithoutCursorView;
 @property (nonatomic, strong) NSMutableArray              *wordTextWithoutCursorFontTransitionsView;
+@property (nonatomic)         BOOL                        inChangeWordRepresentationMode;
 
 - (void)setWordTextView:(UIView *)setView andQuitWordTextView:(UIView *)quitView withDuration:(CGFloat)duration;
 
@@ -41,6 +42,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 @synthesize wordTextWithCursorView                   = wordTextWithCursorView_;
 @synthesize wordTextWithoutCursorView                = wordTextWithoutCursorView_;
 @synthesize wordTextWithoutCursorFontTransitionsView = wordTextWithoutCursorFontTransitionsView_;
+@synthesize inChangeWordRepresentationMode           = inChangeWordRepresentationMode_;
 
 #pragma mark - Properties
 
@@ -112,6 +114,7 @@ static CGFloat FONT_START_SIZE = 100.0;
         quitView.alpha = 0.0;
     } completion:^(BOOL finished) {
         [quitView removeFromSuperview];
+        self.inChangeWordRepresentationMode = NO;
     }];
 }
 
@@ -199,36 +202,42 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (void)setWithCursor:(CGFloat)duration;
 {
-    // Nota: Puede que llegue este mensaje pese a estar con cursor ya que no haya palabra vinculada y se saque el teclado.
-    //       En este caso no hacemos nada.
-    if (self.wordTextWithCursorView.superview == nil) {
-        if ([WDUtils is:duration equalsTo:0.0]) {
-            [self.wordTextWithoutCursorView removeFromSuperview];
-            self.wordTextWithCursorView.frame = self.frame;
-            [self insertSubview:self.wordTextWithCursorView atIndex:0];
-            self.wordTextWithCursorView.alpha = 1.0;
-        } else {
-            [self setWordTextView:self.wordTextWithCursorView andQuitWordTextView:self.wordTextWithoutCursorView withDuration:duration];
+    if (!self.inChangeWordRepresentationMode) {
+        // Nota: Puede que llegue este mensaje pese a estar con cursor ya que no haya palabra vinculada y se saque el teclado.
+        //       En este caso no hacemos nada.
+        if (self.wordTextWithCursorView.superview == nil) {
+            if ([WDUtils is:duration equalsTo:0.0]) {
+                [self.wordTextWithoutCursorView removeFromSuperview];
+                self.wordTextWithCursorView.frame = self.frame;
+                [self insertSubview:self.wordTextWithCursorView atIndex:0];
+                self.wordTextWithCursorView.alpha = 1.0;
+            } else {
+                self.inChangeWordRepresentationMode = YES;
+                [self setWordTextView:self.wordTextWithCursorView andQuitWordTextView:self.wordTextWithoutCursorView withDuration:duration];
+            }
+            self.wordTextWithCursorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
+            self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
         }
-        self.wordTextWithCursorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);        
-        self.wordTextWithCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
     }
 }
 
 - (void)setWithoutCursor:(CGFloat)duration;
 {
-    if ([WDUtils is:duration equalsTo:0.0]) {
-        [self.wordTextWithCursorView removeFromSuperview];
-        self.wordTextWithoutCursorView.frame = self.frame;
-        [self insertSubview:self.wordTextWithoutCursorView atIndex:0];
-        self.wordTextWithoutCursorView.alpha = 1.0;
-    } else {
-        [self setWordTextView:self.wordTextWithoutCursorView andQuitWordTextView:self.wordTextWithCursorView withDuration:duration];
+    if (!self.inChangeWordRepresentationMode) {
+        if ([WDUtils is:duration equalsTo:0.0]) {
+            [self.wordTextWithCursorView removeFromSuperview];
+            self.wordTextWithoutCursorView.frame = self.frame;
+            [self insertSubview:self.wordTextWithoutCursorView atIndex:0];
+            self.wordTextWithoutCursorView.alpha = 1.0;
+        } else {
+            self.inChangeWordRepresentationMode = YES;
+            [self setWordTextView:self.wordTextWithoutCursorView andQuitWordTextView:self.wordTextWithCursorView withDuration:duration];
+        }
+        
+        self.wordTextWithoutCursorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
+        self.wordTextWithoutCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
+        self.actualColorOfCursor = nil;
     }
-    
-    self.wordTextWithoutCursorView.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
-    self.wordTextWithoutCursorView.familyFont = [self.dataSource actualFamilyFontForWordRepresentationView:self];
-    self.actualColorOfCursor = nil;
 }
 
 #pragma mark - Draw

@@ -206,7 +206,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         tapKeyboardGesture_.numberOfTapsRequired = 1;
         tapKeyboardGesture_.numberOfTouchesRequired = 1;
         tapKeyboardGesture_.delegate = self;
-        [self.wordDiaryRepresentation addGestureRecognizer:tapKeyboardGesture_];
+        [self.view addGestureRecognizer:tapKeyboardGesture_];
         [tapKeyboardGesture_ requireGestureRecognizerToFail:doubleTapGestureRecognizer_];
         
         longPressGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressureHandle:)];
