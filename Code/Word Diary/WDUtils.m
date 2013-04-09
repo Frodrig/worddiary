@@ -39,46 +39,46 @@
 
 #pragma mark - Text
 
-+ (NSString *)abreviateMonthString:(NSInteger)monthIndex
++ (NSString *)monthString:(NSInteger)monthIndex abreviateMode:(BOOL)abreviate;
 {
     NSString *result = nil;
     
     switch (monthIndex) {
         case 1:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_JANUARY", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_JANUARY" : @"TAG_MONTH_JANUARY", @"");
             break;
         case 2:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_FEBRUARY", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_FEBRUARY" : @"TAG_MONTH_FEBRUARY", @"");
             break;
         case 3:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_MARCH", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_MARCH" : @"TAG_MONTH_MARCH", @"");
             break;
         case 4:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_APRIL", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_APRIL" : @"TAG_MONTH_APRIL", @"");
             break;
         case 5:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_MAY", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_MAY" : @"TAG_MONTH_MAY", @"");
             break;
         case 6:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_JUNE", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_JUNE" : @"TAG_MONTH_JUNE", @"");
             break;
         case 7:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_JULY", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_JULY" : @"TAG_MONTH_JULY", @"");
             break;
         case 8:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_AUGUST", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_AUGUST" : @"TAG_MONTH_AUGUST", @"");
             break;
         case 9:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_SEPTEMBER", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_SEPTEMBER" : @"TAG_MONTH_SEPTEMBER", @"");
             break;
         case 10:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_OCTOBER", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_OCTOBER" : @"TAG_MONTH_OCTOBER", @"");
             break;
         case 11:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_NOVEMBER", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_NOVEMBER" : @"TAG_MONTH_NOVEMBER", @"");
             break;
         case 12:
-            result = NSLocalizedString(@"TAG_ABREVIATEMONTH_DECEMBER", @"");
+            result = NSLocalizedString(abreviate ? @"TAG_ABREVIATEMONTH_DECEMBER" : @"TAG_MONTH_DECEMBER", @"");
             break;
             
         default:

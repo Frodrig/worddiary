@@ -55,7 +55,7 @@ static CGFloat FONT_START_SIZE = 100.0;
 
 - (CGPoint)startDrawingPosition
 {
-    return CGPointMake(10.0, self.frame.size.height * 0.3);
+    return CGPointMake(10.0, self.frame.size.height * 0.2);
 }
 
 - (NSMutableArray *)wordTextWithoutCursorFontTransitionsView

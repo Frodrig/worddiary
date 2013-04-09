@@ -20,7 +20,7 @@ typedef enum {
 
 @interface WDUtils : NSObject
 
-+ (NSString *)           abreviateMonthString:(NSInteger)monthIndex;
++ (NSString *)           monthString:(NSInteger)monthIndex abreviateMode:(BOOL)abreviate;
 + (CGFloat)              sizeOfWordForUI:(UIWithFontType)uiType andFont:(WDStyle *)font;
 
 + (BOOL)                 englishIsTheCurrentAppLanguage;

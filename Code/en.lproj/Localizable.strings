@@ -17,7 +17,8 @@
 "TAG_ERRORSAVING" = "Error saving";
 "TAG_ERRORSAVING_REASON" = "Reason %@";
 
-"TAG_TODAYSECTION" = "today";
+"TAG_TODAY"        = "Today";
+"TAG_YESTERDAY"    = "Yesterday";
 
 "TAG_EMOTION_NAME_NEUTRAL" = "Neutral";
 "TAG_EMOTION_NAME_LOVE" = "Love";
@@ -39,6 +40,19 @@
 "TAG_ABREVIATEMONTH_OCTOBER" = "Oct";
 "TAG_ABREVIATEMONTH_NOVEMBER" = "Nov";
 "TAG_ABREVIATEMONTH_DECEMBER" = "Dec";
+
+"TAG_MONTH_JANUARY"     = "January";
+"TAG_MONTH_FEBRUARY"    = "February";
+"TAG_MONTH_MARCH"       = "March";
+"TAG_MONTH_APRIL"       = "April";
+"TAG_MONTH_MAY"         = "May";
+"TAG_MONTH_JUNE"        = "June";
+"TAG_MONTH_JULY"        = "July";
+"TAG_MONTH_AUGUST"      = "August";
+"TAG_MONTH_SEPTEMBER"   = "September";
+"TAG_MONTH_OCTOBER"     = "October";
+"TAG_MONTH_NOVEMBER"    = "November";
+"TAG_MONTH_DECEMBER"    = "December";
 
 "TAG_TODAYWORDMENU_WRITEOPTION"     = "palabra";
 "TAG_TODAYWORDMENU_FONTOPTION"      = "style";

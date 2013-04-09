@@ -21,8 +21,9 @@
 
 @property (nonatomic, strong, readonly) NSDateComponents *dateComponents;
 
-- (BOOL)isEmpty;
-- (BOOL)isTodayWord;
+- (BOOL)               isEmpty;
+- (BOOL)               isTodayWord;
+- (NSUInteger)         daysSinceTodayDate;
 
 - (NSComparisonResult) compare:(WDWord *)otherWord;
 

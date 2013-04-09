@@ -93,7 +93,16 @@
     return dateComponentsFromToday.year == dateComponentsFromWordDate.year &&
     dateComponentsFromToday.month == dateComponentsFromWordDate.month &&
     dateComponentsFromToday.day == dateComponentsFromWordDate.day;
+}
+
+- (NSUInteger)daysSinceTodayDate
+{
+    NSDate *todayDate = [NSDate date];
+    NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit fromDate:todayDate toDate:wordDate options:0];
     
+    return dateComponents.day;
 }
 
 #pragma mark - Key-Value Observing

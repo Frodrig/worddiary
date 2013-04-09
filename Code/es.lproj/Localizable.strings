@@ -17,7 +17,8 @@
 "TAG_ERRORSAVING" = "Fallo grabando";
 "TAG_ERRORSAVING_REASON" = "Razón %@";
 
-"TAG_TODAYSECTION" = "hoy";
+"TAG_TODAY"        = "Hoy";
+"TAG_YESTERDAY"    = "Ayer";
 
 "TAG_EMOTION_NAME_NEUTRAL" = "Neutral";
 "TAG_EMOTION_NAME_LOVE" = "Amor";
@@ -39,6 +40,19 @@
 "TAG_ABREVIATEMONTH_OCTOBER" = "Oct";
 "TAG_ABREVIATEMONTH_NOVEMBER" = "Nov";
 "TAG_ABREVIATEMONTH_DECEMBER" = "Dic";
+
+"TAG_MONTH_JANUARY"     = "Enero";
+"TAG_MONTH_FEBRUARY"    = "Febrero";
+"TAG_MONTH_MARCH"       = "Marzo";
+"TAG_MONTH_APRIL"       = "Abril";
+"TAG_MONTH_MAY"         = "Mayo";
+"TAG_MONTH_JUNE"        = "Junio";
+"TAG_MONTH_JULY"        = "Julio";
+"TAG_MONTH_AUGUST"      = "Agosto";
+"TAG_MONTH_SEPTEMBER"   = "Septiembre";
+"TAG_MONTH_OCTOBER"     = "Octubre";
+"TAG_MONTH_NOVEMBER"    = "Noviembre";
+"TAG_MONTH_DECEMBER"    = "Diciembre";
 
 "TAG_TODAYWORDMENU_WRITEOPTION"     = "palabra";
 "TAG_TODAYWORDMENU_FONTOPTION"      = "estilo";
