@@ -38,6 +38,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @property (nonatomic, strong)        UITapGestureRecognizer               *tapKeyboardGesture;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *leftSwipeGesture;
 @property (nonatomic, strong)        UISwipeGestureRecognizer             *rightSwipeGesture;
+@property (nonatomic, strong)        UISwipeGestureRecognizer             *upSwipeGesture;
+@property (nonatomic, strong)        UISwipeGestureRecognizer             *downSwipeGesture;
 @property (nonatomic, strong)        UILongPressGestureRecognizer         *longPressGestureRecognizer;
 @property (nonatomic, strong)        NSTimer                              *longPressGestureRecognizerTimer;
 @property (nonatomic)                CGPoint                              originalCenterPositionYearDateAndMonthContainerView;
@@ -78,6 +80,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)                 swipeHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)                 longPressureHandle:(UIGestureRecognizer *)gestureRecognizer;
 - (void)                 changeSelectedWordInSwipeDirection:(UISwipeGestureRecognizerDirection)direction;
+- (void)                 changeEmotionInSwipeDirection:(UISwipeGestureRecognizerDirection)direction;
 
 - (void)                 keyboardWillShowNotification:(NSNotification *)notification;
 - (void)                 keyboardWillHideNotification:(NSNotification *)notification;
@@ -137,6 +140,8 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @synthesize tapKeyboardGesture                                   = tapKeyboardGesture_;
 @synthesize leftSwipeGesture                                     = leftSwipeGesture_;
 @synthesize rightSwipeGesture                                    = rightSwipeGesture_;
+@synthesize upSwipeGesture                                       = upSwipeGesture_;
+@synthesize downSwipeGesture                                     = downSwipeGesture_;
 @synthesize longPressGestureRecognizer                           = longPressGestureRecognizer_;
 @synthesize longPressGestureRecognizerTimer                      = longPressGestureRecognizerTimer_;
 @synthesize originalCenterPositionYearDateAndMonthContainerView  = originalCenterPositionYearDateAndMonthContainerView_;
@@ -225,6 +230,18 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         leftSwipeGesture_.delegate = self;
         [self.view addGestureRecognizer:leftSwipeGesture_];
         
+        upSwipeGesture_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
+        upSwipeGesture_.direction = UISwipeGestureRecognizerDirectionUp;
+        upSwipeGesture_.numberOfTouchesRequired = 1;
+        upSwipeGesture_.delegate = self;
+        [self.view addGestureRecognizer:upSwipeGesture_];
+        
+        downSwipeGesture_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeHandle:)];
+        downSwipeGesture_.direction = UISwipeGestureRecognizerDirectionDown;
+        downSwipeGesture_.numberOfTouchesRequired = 1;
+        downSwipeGesture_.delegate = self;
+        [self.view addGestureRecognizer:downSwipeGesture_];
+
         // Notificaciones keyboard
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
@@ -325,9 +342,12 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.pendingBackgroundChanges addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:index], [NSNumber numberWithFloat:duration], nil]
                                                                              forKeys:[NSArray arrayWithObjects:@"emotionIndex", @"duration",  nil]]];
     } else {
-        self.selectedWord.emotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:index];
-        WDPalette *palette = [[self.selectedWord.emotion.palette allObjects] objectAtIndex:0];
-        self.selectedWord.paletteIdNameOfEmotion = palette.idName;
+        WDEmotion *nextEmotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:index];
+        WDPalette *palette = [[nextEmotion.palette allObjects] objectAtIndex:0];
+        if (nextEmotion != self.selectedWord.emotion) {
+            self.selectedWord.emotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:index];
+            self.selectedWord.paletteIdNameOfEmotion = palette.idName;
+        }
         self.nextGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.actualGradientBackground.frame andHexColor:palette.backgroundColor];
         self.nextGradientBackground.alpha = 0.0;
         [self.view insertSubview:self.nextGradientBackground belowSubview:self.actualGradientBackground];
@@ -339,7 +359,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             [self.actualGradientBackground removeFromSuperview];
             self.actualGradientBackground = self.nextGradientBackground;
             self.nextGradientBackground = nil;
-            
+                        
             if (self.pendingBackgroundChanges.count > 0) {
                 NSDictionary *pendingGradientBackground = [self.pendingBackgroundChanges objectAtIndex:0];
                 NSNumber *pendingGradientColorIndex = [pendingGradientBackground objectForKey:@"emotionIndex"];
@@ -507,25 +527,23 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     self.emotionLabel.attributedText = [self createAttributedStringForEmotionLabelWithText:[NSLocalizedString(self.selectedWord.emotion.name, @"") uppercaseString]];
     if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
-            // ToDo: Quitar el 0 y relacionar con la paleta de colores adecuada
             self.actualGradientBackground = [[WDGradientBackground alloc] initWithFrame:self.view.frame andHexColor:palette.backgroundColor];
             [self.view insertSubview:self.actualGradientBackground atIndex:0];
-        } else if (0 != self.actualGradientBackground.gradientColorIndex) {
-            [self changeToEmotionIndex:0 withDuration:0.75];
+        } else {
+            NSUInteger emotionIndex = [[WDWordDiary sharedWordDiary].emotions indexOfObject:self.selectedWord.emotion];
+            if (emotionIndex != self.actualGradientBackground.gradientColorIndex) {
+                [self changeToEmotionIndex:emotionIndex withDuration:0.75];
+            }
         }
-        // self.editMenuViewController.backgroundColorScheme = background.uiOverlayColorScheme;
     }
 
     // Fecha
     UIColor *accessoriesColor = [UIColor colorWithHexadecimalValue:palette.accessoriesColor withAlphaComponent:NO skipInitialCharacter:NO];
-    //self.yearDateTopInfoLabel.textColor = [accessoriesColor copy];
-    //self.dayMonthDateTopInfoLabel.textColor = [accessoriesColor copy];
     self.dayOfTheWeekLabel.textColor = [accessoriesColor copy];
     
     [self setDateInfo];
     
     // Dia del diario
-    //UIColor *wordColor = [UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
     self.dayDiaryLabel.textColor = [accessoriesColor copy];
     NSNumber *dayDiaryNumber = [NSNumber numberWithUnsignedInteger:[[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord]];
     NSString *dayDiaryNumberNormalized = [WDUtils convertNumberToStringWithTwoDigitsMin:dayDiaryNumber];
@@ -935,8 +953,30 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - Swipe Gesture Recognizer
 
+- (void)changeEmotionInSwipeDirection:(UISwipeGestureRecognizerDirection)direction
+{
+    NSAssert(direction == UISwipeGestureRecognizerDirectionDown || direction == UISwipeGestureRecognizerDirectionUp, @"Direccion del swipe incorrecta");
+    
+    WDEmotion *actualEmotion = self.selectedWord.emotion;
+    NSUInteger actualEmotionIndex = [[WDWordDiary sharedWordDiary].emotions indexOfObject:actualEmotion];
+    NSUInteger lastEmotionIndex = [WDWordDiary sharedWordDiary].emotions.count - 1;
+    NSUInteger newEmotionIndex = NSNotFound;
+    if (direction == UISwipeGestureRecognizerDirectionUp) {
+        newEmotionIndex = actualEmotionIndex ==  lastEmotionIndex ? 0 : actualEmotionIndex + 1;
+    } else if (direction == UISwipeGestureRecognizerDirectionDown) {
+        newEmotionIndex = actualEmotionIndex == 0 ? lastEmotionIndex : actualEmotionIndex - 1;
+    }
+    
+    self.selectedWord.emotion = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:newEmotionIndex];
+    WDPalette *palette = [[self.selectedWord.emotion.palette allObjects] objectAtIndex:0];
+    self.selectedWord.paletteIdNameOfEmotion = palette.idName;
+    [self configureViewForSelectedWord:YES];
+}
+
 - (void)changeSelectedWordInSwipeDirection:(UISwipeGestureRecognizerDirection)direction
 {
+    NSAssert(direction == UISwipeGestureRecognizerDirectionLeft || direction == UISwipeGestureRecognizerDirectionRight, @"Direccion del swipe incorrecta");
+    
     WDWord *newSelectedWord = nil;
     if (direction & UISwipeGestureRecognizerDirectionLeft) {
         newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
@@ -953,12 +993,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
 }
 
-- (void)swipeHandle:(UIGestureRecognizer *)gestureRecognizer
+- (void)swipeHandle:(UISwipeGestureRecognizer *)gestureRecognizer
 {
     if (self.editMenuViewController.view.hidden && !self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
-        UISwipeGestureRecognizerDirection swipeDirection = gestureRecognizer == self.leftSwipeGesture ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
-        
-        [self changeSelectedWordInSwipeDirection:swipeDirection];
+        if (gestureRecognizer == self.rightSwipeGesture || gestureRecognizer == self.leftSwipeGesture) {
+            [self changeSelectedWordInSwipeDirection:gestureRecognizer.direction];
+        } else if (gestureRecognizer == self.upSwipeGesture || gestureRecognizer == downSwipeGesture_) {
+            [self changeEmotionInSwipeDirection:gestureRecognizer.direction];
+        }
     }
 }
 

@@ -19,7 +19,9 @@
 - (NSURL *)storeFileURLWithPath;
 
 - (NSArray *) fetchAllEntitiesOfType:(NSString *)entity;
+
 - (void)      prepareStyles;
+- (void)      addPalette:(NSString *)idName backgroundColor:(NSString *)backColor wordColor:(NSString *)wordColor andAccesoriesColor:(NSString *)accessoriesColor;       
 - (void)      preparePalettes;
 - (void)      prepareEmotions;
 - (void)      prepareWords;
@@ -147,19 +149,31 @@
     styles_ = [styles_ sortedArrayUsingSelector:@selector(compare:)];
 }
 
+- (void)addPalette:(NSString *)idName backgroundColor:(NSString *)backColor wordColor:(NSString *)wordColor andAccesoriesColor:(NSString *)accessoriesColor
+{
+    WDPalette *palette = [NSEntityDescription insertNewObjectForEntityForName:@"WDPalette" inManagedObjectContext:self.context];
+    palette.idName = idName;
+    palette.backgroundColor = backColor;
+    palette.wordColor = wordColor;
+    palette.accessoriesColor = accessoriesColor;
+    
+    palettes_ = palettes_ == nil ? [NSArray arrayWithObject:palette] : [palettes_ arrayByAddingObject:palette];
+}
+
 - (void)preparePalettes
 {
     NSArray *result = [self fetchAllEntitiesOfType:@"WDPalette"];
     if (result.count > 0) {
         palettes_ = result;
     } else {
-        WDPalette *palette = [NSEntityDescription insertNewObjectForEntityForName:@"WDPalette" inManagedObjectContext:self.context];
-        palette.idName = @"215";
-        palette.backgroundColor = @"0xB8C3D9";
-        palette.wordColor = @"0x263940";
-        palette.accessoriesColor = @"0x263940";
-        
-        palettes_ = [NSArray arrayWithObject:palette];
+        [self addPalette:@"215" backgroundColor:@"0xB8C3D9" wordColor:@"0x263940" andAccesoriesColor:@"0x263940"];
+        [self addPalette:@"214" backgroundColor:@"0xB8E3D9" wordColor:@"0x263A40" andAccesoriesColor:@"0x2A3940"];
+        [self addPalette:@"213" backgroundColor:@"0xB8F3D9" wordColor:@"0x263C40" andAccesoriesColor:@"0x2B3940"];
+        [self addPalette:@"212" backgroundColor:@"0xB853D9" wordColor:@"0x263F40" andAccesoriesColor:@"0x2C3940"];
+        [self addPalette:@"211" backgroundColor:@"0xB823D9" wordColor:@"0x263440" andAccesoriesColor:@"0x2E3940"];
+        [self addPalette:@"210" backgroundColor:@"0xB8A3D9" wordColor:@"0x263740" andAccesoriesColor:@"0x223940"];
+        [self addPalette:@"209" backgroundColor:@"0xB8B3D9" wordColor:@"0x263E40" andAccesoriesColor:@"0x213940"];
+
         // ToDo: Por ahora una unica paleta para todas las emociones
         
         [self saveAll];
@@ -182,11 +196,12 @@
                                                       nil];
         NSMutableArray *emotionInstances = [NSMutableArray arrayWithCapacity:emotionsNames.count];
         
+        NSInteger paletteIndex = 0;
         for (NSString *emotionName in emotionsNames) {
             WDEmotion *emotion = [NSEntityDescription insertNewObjectForEntityForName:@"WDEmotion" inManagedObjectContext:self.context];
             emotion.name = emotionName;
             // ToDo: Por ahora todas las emociones con las mismas paletas
-            WDPalette *paletteOfEmotion = [self.palettes objectAtIndex:0];
+            WDPalette *paletteOfEmotion = [palettes_ objectAtIndex:paletteIndex++];
             [emotion addPaletteObject:paletteOfEmotion];
 
             [emotionInstances addObject:emotion];
