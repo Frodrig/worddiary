@@ -611,16 +611,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)configureViewForSelectedWord:(BOOL)updateBackground
 {
     WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
-
-    // Emotion
-    NSLog(@"word %@", self.selectedWord.word);
-    NSLog(@"Emotion %@", self.selectedWord.emotion.name);
-    for (WDPalette *paleteIt in self.selectedWord.emotion.palette) {
-        NSLog(@"palete in emotion %@", paleteIt.idName);
-    }
-    NSLog(@"ConfigureViewForSelectedWord palete %@", self.selectedWord.paletteIdNameOfEmotion);
-    
-    
     self.emotionLabel.attributedText = [self createAttributedStringForEmotionLabelWithText:[NSLocalizedString(self.selectedWord.emotion.name, @"") uppercaseString]];
     if (updateBackground && nil == self.backgroundTimer) {
         if (self.actualGradientBackground == nil) {
@@ -668,7 +658,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     static const CGFloat gosthEffectTime = 1.5;
    
     // Año
-    NSString *newYearDateText = [NSNumber numberWithUnsignedInteger:self.selectedWord.dateComponents.year].stringValue;
+    NSString *newYearDateText = [self.selectedWord yearAsString];
     if ([newYearDateText compare:self.yearLabel.text] != NSOrderedSame) {
         if (self.yearLabel.text.length > 0) {
             [WDUtils destroyViewGosthEffect:self.yearLabel withDuration:gosthEffectTime andDisplacement:0];
@@ -677,13 +667,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     }
     
     // Dia y Mes
-    NSString *dayMonthDateText = nil;
-    NSString *dayString = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:self.selectedWord.dateComponents.day]];
-    if ([WDUtils englishIsTheCurrentAppLanguage]) {
-        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", [WDUtils monthString:self.selectedWord.dateComponents.month abreviateMode:NO], dayString];
-    } else {
-        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils monthString:self.selectedWord.dateComponents.month abreviateMode:NO]];
-    }
+    NSString *dayMonthDateText = [self.selectedWord dayAndMonthAsString];
     if ([dayMonthDateText compare:self.dayAndMonthLabel.text] != NSOrderedSame) {
         if (self.dayAndMonthLabel.text.length > 0) {
             [WDUtils destroyViewGosthEffect:self.dayAndMonthLabel withDuration:gosthEffectTime andDisplacement:0];

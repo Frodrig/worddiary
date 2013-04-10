@@ -7,21 +7,24 @@
 //
 
 #import "WDIndexDiaryScreenViewController.h"
+#import "WDIndexDiaryCollectionViewController.h"
 
 @interface WDIndexDiaryScreenViewController ()
 
 #pragma mark - Properties
 
-@property(nonatomic, strong) UIView   *auxiliaryButtonsContainerView;
-@property(nonatomic, strong) UIButton *settingsBtn;
-@property(nonatomic, strong) UIButton *helpBtn;
-@property(nonatomic, strong) UIButton *infoBtn;
+@property(nonatomic, strong) UIView                                  *auxiliaryButtonsContainerView;
+@property(nonatomic, strong) UIButton                                *settingsBtn;
+@property(nonatomic, strong) UIButton                                *helpBtn;
+@property(nonatomic, strong) UIButton                                *infoBtn;
+@property(nonatomic, strong) WDIndexDiaryCollectionViewController    *indexDiaryCollectionViewController;
 
 - (void)auxiliaryButtonPressed:(UIButton *)button;
 
 #pragma mark - Methods definitions
 
 - (void) createAuxiliaryButtons;
+- (void) createIndexDiaryCollectionViewController;
 
 @end
 
@@ -29,10 +32,11 @@
 
 #pragma mark - Synthesize
 
-@synthesize auxiliaryButtonsContainerView = auxiliaryButtonsContainerView_;
-@synthesize settingsBtn                   = settingsBtn_;
-@synthesize helpBtn                       = helpBtn_;
-@synthesize infoBtn                       = infoBtn_;
+@synthesize auxiliaryButtonsContainerView      = auxiliaryButtonsContainerView_;
+@synthesize settingsBtn                        = settingsBtn_;
+@synthesize helpBtn                            = helpBtn_;
+@synthesize infoBtn                            = infoBtn_;
+@synthesize indexDiaryCollectionViewController = indexDiaryCollectionViewController_;
 
 #pragma mark - Init
 
@@ -56,6 +60,10 @@
     // Auxiliary Buttons
     [self createAuxiliaryButtons];
     [self.view addSubview:self.auxiliaryButtonsContainerView];
+    
+    // Collection View
+    [self createIndexDiaryCollectionViewController];
+    [self.view addSubview:self.indexDiaryCollectionViewController.view];
 }
 
 - (void)didReceiveMemoryWarning
@@ -69,20 +77,20 @@
 - (void)createAuxiliaryButtons
 {
     settingsBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    settingsBtn_.frame = CGRectMake(0.0, 20.0, 44.0, 44.0);
-    [settingsBtn_ setTitle:@"1" forState:UIControlStateNormal];
+    settingsBtn_.frame = CGRectMake(0.0, 0.0, 44.0, 44.0);
+    [settingsBtn_ setImage:[UIImage imageNamed:@"19-gear"] forState:UIControlStateNormal];
     settingsBtn_.backgroundColor = [UIColor clearColor];
     [settingsBtn_ addTarget:self action:@selector(auxiliaryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     helpBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    helpBtn_.frame = CGRectMake(settingsBtn_.frame.origin.x + 44.0, 20.0, 44.0, 44.0);
-    [helpBtn_ setTitle:@"2" forState:UIControlStateNormal];
+    helpBtn_.frame = CGRectMake(settingsBtn_.frame.origin.x + 44.0, 0.0, 44.0, 44.0);
+    [helpBtn_ setImage:[UIImage imageNamed:@"441-help-symbol1"] forState:UIControlStateNormal];
     helpBtn_.backgroundColor = [UIColor clearColor];
     [helpBtn_ addTarget:self action:@selector(auxiliaryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     infoBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    infoBtn_.frame = CGRectMake(helpBtn_.frame.origin.x + 44.0, 20.0, 44.0, 44.0);
-    [infoBtn_ setTitle:@"3" forState:UIControlStateNormal];
+    infoBtn_.frame = CGRectMake(helpBtn_.frame.origin.x + 44.0, 0.0, 44.0, 44.0);
+    [infoBtn_ setImage:[UIImage imageNamed:@"442-information-symbol1"] forState:UIControlStateNormal];
     infoBtn_.backgroundColor = [UIColor clearColor];
     [infoBtn_ addTarget:self action:@selector(auxiliaryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -95,6 +103,17 @@
     [auxiliaryButtonsContainerView_ addSubview:helpBtn_];
     [auxiliaryButtonsContainerView_ addSubview:infoBtn_];
 }
+
+- (void) createIndexDiaryCollectionViewController
+{
+    indexDiaryCollectionViewController_ = [[WDIndexDiaryCollectionViewController alloc] init];
+    indexDiaryCollectionViewController_.view.frame = CGRectMake(20.0,
+                                                                auxiliaryButtonsContainerView_.frame.origin.y + auxiliaryButtonsContainerView_.frame.size.height,
+                                                                self.view.bounds.size.width - 40.0,
+                                                                self.view.bounds.size.height - auxiliaryButtonsContainerView_.bounds.size.height - 20.0);
+    indexDiaryCollectionViewController_.collectionView.backgroundColor = [UIColor clearColor];
+}
+
 
 #pragma mark - Controls Events
 

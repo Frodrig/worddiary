@@ -25,6 +25,9 @@
 - (BOOL)               isTodayWord;
 - (NSUInteger)         daysSinceTodayDate;
 
+- (NSString *)         yearAsString;
+- (NSString *)         dayAndMonthAsString;
+
 - (NSComparisonResult) compare:(WDWord *)otherWord;
 
 @end

@@ -9,6 +9,7 @@
 #import "WDWord.h"
 #import "WDEmotion.h"
 #import "WDStyle.h"
+#import "WDUtils.h"
 
 @interface WDWord()
 
@@ -103,6 +104,26 @@
     NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
     
     return dateComponents.day;
+}
+
+#pragma mark - Obtencion
+
+- (NSString *)yearAsString
+{
+    return [NSNumber numberWithUnsignedInteger:self.dateComponents.year].stringValue;
+}
+
+- (NSString *)dayAndMonthAsString
+{
+    NSString *dayMonthDateText = nil;
+    NSString *dayString = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:self.dateComponents.day]];
+    if ([WDUtils englishIsTheCurrentAppLanguage]) {
+        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", [WDUtils monthString:self.dateComponents.month abreviateMode:NO], dayString];
+    } else {
+        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils monthString:self.dateComponents.month abreviateMode:NO]];
+    }
+    
+    return dayMonthDateText;
 }
 
 #pragma mark - Key-Value Observing

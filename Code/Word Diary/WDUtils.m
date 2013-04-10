@@ -410,5 +410,18 @@
     return degrees * M_PI / 180.0;
 };
 
++ (CAGradientLayer *)createEdgeMaskLayerWithBounds:(CGRect)bounds
+{
+    UIColor *outerColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+    UIColor *innerColor = [UIColor colorWithWhite:1.0 alpha:0.0];
+    
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = [NSArray arrayWithObjects:(id)outerColor.CGColor, (id)innerColor.CGColor, (id)innerColor.CGColor, (id)outerColor.CGColor, nil];
+    gradientLayer.locations = [NSArray arrayWithObjects:@"0.0", @"0.2", @"0.8", @"1.0", nil];
+    gradientLayer.bounds = bounds;
+    gradientLayer.anchorPoint = CGPointZero;
+    
+    return gradientLayer;
+}
 
 @end

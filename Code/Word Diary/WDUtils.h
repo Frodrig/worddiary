@@ -17,6 +17,7 @@ typedef enum {
 } UIWithFontType;
 
 @class WDStyle;
+@class CAGradientLayer;
 
 @interface WDUtils : NSObject
 
@@ -58,6 +59,8 @@ typedef enum {
 + (BOOL)                 deviceCanDetectShakeMovement;
 
 + (CGFloat)              degreesToRadians:(CGFloat)degrees;
+
++ (CAGradientLayer *)    createEdgeMaskLayerWithBounds:(CGRect)bounds;
 
 
 @end
