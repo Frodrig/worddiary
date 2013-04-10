@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WDSelectedWordEditMenuDelegate.h"
 #import "WDSelectedWordScreenDelegate.h"
 #import "WDWordRepresentationViewDelegate.h"
 #import "WDWordRepresentationViewDataSource.h"
@@ -16,8 +15,7 @@
 
 @class WDWord;
 
-@interface WDSelectedWordScreenViewController : UIViewController<WDSelectedWordEditMenuDelegate,
-                                                                 UIGestureRecognizerDelegate,
+@interface WDSelectedWordScreenViewController : UIViewController<UIGestureRecognizerDelegate,
                                                                  WDWordRepresentationViewDataSource,
                                                                  WDWordRepresentationViewDelegate,
                                                                  WDDayCheckerDelegate,

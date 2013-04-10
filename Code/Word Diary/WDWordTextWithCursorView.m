@@ -48,7 +48,7 @@
     CGFloat fontSize = [self.dataSource fontStartSize];
     
     CTLineRef line = nil;
-    CGRect lineImageBoundsWithoutCursor = CGRectNull;
+    //CGRect lineImageBoundsWithoutCursor = CGRectNull;
     CGRect lineImageBounds;
     BOOL endFindingFontSize = NO;
     do {
@@ -66,7 +66,7 @@
         // if (CGRectEqualToRect(lineImageBoundsWithoutCursor, CGRectNull)) {
         NSAttributedString *attStringWithoutCursor = [[NSAttributedString alloc] initWithString:wordText attributes:attrDictionary];
         CTLineRef lineWithoutCursor = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attStringWithoutCursor));
-        lineImageBoundsWithoutCursor = CTLineGetImageBounds(lineWithoutCursor, contextRef);
+        //lineImageBoundsWithoutCursor = CTLineGetImageBounds(lineWithoutCursor, contextRef);
         CFRelease(lineWithoutCursor);
         //}
         

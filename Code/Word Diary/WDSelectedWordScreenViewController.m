@@ -8,7 +8,6 @@
 
 #import "WDSelectedWordScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "WDSelectedWordEditMenuViewController.h"
 #import "WDWord.h"
 #import "WDStyle.h"
 #import "WDWordDiary.h"
@@ -29,7 +28,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 @interface WDSelectedWordScreenViewController ()
 
 @property (nonatomic, weak)          WDWord                               *selectedWord;
-@property (nonatomic, strong)        WDSelectedWordEditMenuViewController *editMenuViewController;
 @property (nonatomic, strong)        UILabel                              *dayOfTheWeekLabel;
 @property (nonatomic, strong)        UILabel                              *dayAndMonthLabel;
 @property (nonatomic, strong)        UILabel                              *yearLabel;
@@ -95,7 +93,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)                 updateColorScheme:(WDColorScheme)scheme;
 
-- (void)                 wordDiaryRepresentationAnimateUpWithDuration:(CGFloat)duration;
 - (void)                 wordDiaryRepresentationAnimateDownWithDuration:(CGFloat)duration;
 
 - (void)                 setDateInfo;
@@ -116,9 +113,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)                 changeToEmotionIndex:(NSUInteger)index withDuration:(CGFloat)duration;
 - (void)                 styleButtonPressed:(UIButton *)button;
 
-- (void)                 showMainMenu;
-- (void)                 hideMainMenu;
-- (void)                 hideMainMenuInmediate;
 - (void)                 hideAuxiliaryScreen;
 
 - (void)                 updateLongPressSwipe:(NSTimer *)timer;
@@ -137,7 +131,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 #pragma mark Synthesize
 
 @synthesize selectedWord                                         = selectedWord_;
-@synthesize editMenuViewController                               = editMenuViewController_;
 @synthesize dayOfTheWeekLabel                                    = dayOfTheWeekLabel_;
 @synthesize dayAndMonthLabel                                     = dayAndMonthLabel_;
 @synthesize yearLabel                                            = yearLabel_;
@@ -284,12 +277,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     // Emotion
     [self createEmotionLabel];
     
-    // Menu de edicion
-    self.editMenuViewController = [[WDSelectedWordEditMenuViewController alloc] initWithSelectedWord:self.selectedWord];
-    [self.view addSubview:self.editMenuViewController.view];
-    self.editMenuViewController.view.hidden = YES;
-    self.editMenuViewController.delegate = self;
-    
     self.auxiliarySreenViewController.delegate = self;
     
     self.view.contentMode = UIViewContentModeCenter;
@@ -309,14 +296,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
                                                     self.view.bounds.size.width,
                                                     self.dayDiaryContainerView.frame.origin.y - (self.dateContainerView.frame.origin.y + self.dateContainerView.frame.size.height));
     
-    // Se centran las views correctamente
-    // Esto desaparecera....
-    const CGFloat xMargin = (self.view.frame.size.width - self.editMenuViewController.view.frame.size.width) / 2.0;
-    self.editMenuViewController.view.frame = CGRectMake(xMargin,
-                                                        self.view.bounds.size.height - self.editMenuViewController.view.bounds.size.height - xMargin,
-                                                        self.editMenuViewController.view.bounds.size.width,
-                                                        self.editMenuViewController.view.bounds.size.height);
-    self.auxiliarySreenViewController.view.frame = CGRectMake(self.view.frame.origin.x + xMargin, xMargin, self.view.bounds.size.width - xMargin * 2, self.view.bounds.size.height - xMargin * 2);
+    self.auxiliarySreenViewController.view.frame = CGRectMake(self.view.frame.origin.x + 20, 20, self.view.bounds.size.width - 20 * 2, self.view.bounds.size.height - 20 * 2);
     
     if (self.selectedWord.word.length > 0) {
         [self.wordDiaryRepresentation setWithoutCursor:0.0];
@@ -489,7 +469,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
     self.selectedWord = newSelectedWord;
-    [self hideMainMenu];
     [self startBackgroundTimer:0];
     [self configureViewForSelectedWord:YES];
 }
@@ -569,7 +548,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)prepareViewToShowAuxiliaryScreen
 {
-    [self.editMenuViewController hideMenu];
     [UIView animateWithDuration:0.75 animations:^{
      //   self.yearDateTopInfoLabel.alpha = 0.0;
      //   self.dayMonthDateTopInfoLabel.alpha = 0.0;
@@ -631,8 +609,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)configureViewForSelectedWord:(BOOL)updateBackground
 {
-    self.editMenuViewController.selectedWord = self.selectedWord;
-    
     WDPalette *palette = [self.selectedWord.emotion findPaletteOfIdName:self.selectedWord.paletteIdNameOfEmotion];
 
     // Emotion
@@ -738,7 +714,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)updateColorScheme:(WDColorScheme)scheme
 {
     [self configureColorScheme:scheme];
-    [self.editMenuViewController updateColorScheme:scheme];
 }
 
 - (void)configureColorScheme:(WDColorScheme)scheme
@@ -800,26 +775,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     layer.endPoint = [self incGradientLayerPoint:layer.endPoint];
 }
 
-- (void)wordDiaryRepresentationAnimateUpWithDuration:(CGFloat)duration
-{
-    CGRect newArea = CGRectMake(0.0, 0.0, self.view.frame.size.width,  self.editMenuViewController.view.frame.origin.y);
-    [UIView animateWithDuration:duration animations:^{
-        BOOL isIPhone5Screen = [WDUtils isIPhone5Screen];
-        //self.wordDiaryRepresentation.center = CGPointMake(self.wordDiaryRepresentation.center.x, (newArea.origin.y + newArea.size.height / (isIPhone5Screen ? 2 : 2.25)) * 0.90);
-        if (isIPhone5Screen) {
-            if (self.emotionLabel.center.y == self.originalCenterPositionOfEmotionLabel.y) {
-                //self.emotionLabel.center = CGPointMake(self.emotionLabel.center.x, self.emotionLabel.center.y * 0.82);
-            }
-        } else {
-            self.emotionLabel.alpha = 0.0;
-        }
-        self.dayDiaryLabel.alpha = 0.25;
-        self.dayOfTheWeekLabel.alpha = 0.25;
-     //   self.yearDateTopInfoLabel.alpha = 0.25;
-    //    self.dayMonthDateTopInfoLabel.alpha = 0.25;
-    }];
-}
-
 - (void)wordDiaryRepresentationAnimateDownWithDuration:(CGFloat)duration
 {
     [UIView animateWithDuration:duration animations:^{
@@ -835,28 +790,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
       //  self.yearDateTopInfoLabel.alpha = 1.0;
       //  self.dayMonthDateTopInfoLabel.alpha = 1.0;
     }];
-}
-
-- (void)showMainMenu
-{
-    if ([self.selectedWord isTodayWord]) {
-        [self.editMenuViewController showTodayWordMenu];
-    } else {
-        [self.editMenuViewController showPreviousWordMenu];
-    }
-    [self wordDiaryRepresentationAnimateUpWithDuration:0.5];
-}
-
-- (void)hideMainMenu
-{
-    [self wordDiaryRepresentationAnimateDownWithDuration:0.5];
-    [self.editMenuViewController hideMenu];
-}
-
-- (void)hideMainMenuInmediate
-{
-    [self wordDiaryRepresentationAnimateDownWithDuration:0.0];
-    [self.editMenuViewController hideMenuInmediate];
 }
 
 - (void)hideAuxiliaryScreen
@@ -903,9 +836,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     BOOL shouldReceive = YES;
-    if (touch.view == self.editMenuViewController.view) {
-        shouldReceive = self.editMenuViewController.view.hidden;
-    }
         
     return shouldReceive;
 }
@@ -921,14 +851,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     if (canHandleTap) {
         if ([self.selectedWord isTodayWord]) {
             if (!self.keyboardActive) {
-                BOOL useAsTapGesture = self.editMenuViewController.view.hidden;
-                if (!useAsTapGesture) {
-                    CGPoint hitPoint = [gestureRecognizer locationInView:nil];
-                    useAsTapGesture = !CGRectContainsPoint(self.editMenuViewController.view.frame, hitPoint);
-                }
-                if (useAsTapGesture) {
-                    [self.wordDiaryRepresentation becomeFirstResponder];
-                }
+                [self.wordDiaryRepresentation becomeFirstResponder];
             } else {
                 self.hideKeyboardWithTap = YES;
                 [self.wordDiaryRepresentation resignFirstResponder];
@@ -946,7 +869,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-        if (!self.keyboardActive && self.editMenuViewController.view.hidden && ![self.auxiliarySreenViewController isShowed]) {
+        if (!self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
             WDWord *lastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
             if (lastWord != self.selectedWord) {
                 self.selectedWord = lastWord;
@@ -1123,7 +1046,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)swipeHandle:(UISwipeGestureRecognizer *)gestureRecognizer
 {
-    if (self.editMenuViewController.view.hidden && !self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
+    if (!self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
         if (gestureRecognizer == self.rightSwipeGesture || gestureRecognizer == self.leftSwipeGesture) {
             [self changeSelectedWordInSwipeDirection:gestureRecognizer.direction];
         } else if (gestureRecognizer == self.upSwipeGesture || gestureRecognizer == downSwipeGesture_) {
@@ -1253,90 +1176,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     [self hideAuxiliaryScreen];
 }
 
-#pragma mark - WDSelectedWordEditMenuDelegate
-
-- (void)tipsOptionSelected
-{
-    [self prepareViewToShowAuxiliaryScreen];
-    [self.auxiliarySreenViewController showHelpScreenInView:self.view withDuration:1];
-}
-
-- (void)infoOptionSelected
-{
-    [self prepareViewToShowAuxiliaryScreen];
-    [self.auxiliarySreenViewController showAboutScreenInView:self.view withDuration:1];
-}
-
-- (void)supportOptionSelected
-{
-    [self prepareViewToShowAuxiliaryScreen];
-    [self.auxiliarySreenViewController showSupportScreenInView:self.view withDuration:1];
-}
-
-- (void)writeSelectedWordOption
-{
-    [self.wordDiaryRepresentation becomeFirstResponder];
-    self.editMenuViewController.view.hidden = YES;
-}
-
-- (void)clearTodaySelectedWordOption
-{
-    self.selectedWord.word = @"";
-    self.editMenuViewController.view.hidden = YES;
-    
-    //[self.delegate selectedWordChanged];
-}
-
-- (void)cancelDeleteWordFromConfirmationMenu
-{
-    [self hideMainMenu];
-}
-
-- (void)acceptDeleteWordFromConfirmationMenu
-{
-    WDWord *newSelectedWord = [[WDWordDiary sharedWordDiary] findPreviousWordOf:self.selectedWord];
-    NSAssert(newSelectedWord, @"Siempre tiene que existir una instancia de tipo palabra");
-
-    [[WDWordDiary sharedWordDiary] removeWord:self.selectedWord];
-    self.selectedWord = newSelectedWord;
-    [self hideMainMenu];
-    [self startBackgroundTimer:0];
-    [self configureViewForSelectedWord:YES];
-}
-
-- (void)menuDidHide
-{
-    if (self.dayChangePendingToResolve) {
-        [self updateByDayChange];
-    }
-}
-
-- (void)changeToFontWithIndex:(NSUInteger)indexFont
-{
-    WDStyle *newStyle = [[WDWordDiary sharedWordDiary].styles objectAtIndex:indexFont];
-    if (newStyle != self.selectedWord.style) {
-        self.selectedWord.style = newStyle;
-        [self.wordDiaryRepresentation familyFontOfSelectedWordChanged];
-        [self.wordDiaryRepresentation setNeedsDisplay];
-    }
-    //NSLog(@"Family %@", self.selectedWord.font.family);
-    /*NSLog(@"PointSize %f", self.wordDiaryRepresentation.wordTextField.font.pointSize);
-    NSLog(@"Acender %f", self.wordDiaryRepresentation.wordTextField.font.ascender);
-    NSLog(@"Descender %f", self.wordDiaryRepresentation.wordTextField.font.descender);
-    NSLog(@"Cap Height %f", self.wordDiaryRepresentation.wordTextField.font.capHeight);
-    NSLog(@"Line Height %f", self.wordDiaryRepresentation.wordTextField.font.lineHeight);
-    NSLog(@"xHeight %f", self.wordDiaryRepresentation.wordTextField.font.xHeight);
-    NSLog(@"Leading %f", self.wordDiaryRepresentation.wordTextField.font.leading);
-    NSLog(@"\\\changeToFontWithIndex\\\\\\\\\\\\\\\\\\\");
-     */
-}
-
-- (void)changeToEmotionIndex:(NSUInteger)indexEmotion
-{
-    // ToDo:Cambio del color de fondo
-    [self changeToEmotionIndex:indexEmotion withDuration:1.5];
-}
-
 #pragma mark - WDWordRepresentationViewDelegate
 
 - (void)deleteBackwardsOnWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView
@@ -1437,7 +1276,6 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
         [self.wordDiaryRepresentation.layer removeAllAnimations];
     }
 
-    [self hideMainMenuInmediate];
     [self.wordDiaryRepresentation resignFirstResponder];
 
     [[WDWordDiary sharedWordDiary] saveAll];
@@ -1477,7 +1315,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)dayCheckerOnNewDay:(WDDayChecker *)dayChecker
 {
-    if (!self.keyboardActive && self.editMenuViewController.view.hidden) {
+    if (!self.keyboardActive) {
         [self updateByDayChange];
     } else {
         self.dayChangePendingToResolve = YES;
