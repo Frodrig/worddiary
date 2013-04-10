@@ -19,6 +19,7 @@
 #import "WDAuxiliaryScreenViewController.h"
 #import "WDEmotion.h"
 #import "WDPalette.h"
+#import "WDIndexDiaryScreenViewController.h"
 #import "UIColor+hexColorCreation.h"
 
 const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
@@ -868,6 +869,11 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 - (void)doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
+    WDIndexDiaryScreenViewController *indexDiary = [[WDIndexDiaryScreenViewController alloc] initWithNibName:nil bundle:nil];
+    [self presentViewController:indexDiary animated:YES completion:^{
+        
+    }];
+    /*
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
         if (!self.keyboardActive && ![self.auxiliarySreenViewController isShowed]) {
             WDWord *lastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
@@ -878,6 +884,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
             }
         }
     }
+     */
 }
 
 #pragma mark - LongPressureRecognizer
