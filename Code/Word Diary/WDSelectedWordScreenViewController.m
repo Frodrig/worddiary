@@ -842,11 +842,13 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
                 [self.wordDiaryRepresentation resignFirstResponder];
             }
         } else {
+            /*
             if (self.editPanelForPreviousWord) {
                 [self hideEditPanelForPreviousWord];
             } else {
                 [self showEditPanelForPreviousWord];
             }
+            */
         }
     }
 }
