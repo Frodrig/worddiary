@@ -8,6 +8,11 @@
 
 #import "WDIndexDiaryScreenViewController.h"
 #import "WDIndexDiaryCollectionViewController.h"
+#import "WDWord.h"
+#import "WDEmotion.h"
+#import "WDPalette.h"
+#import "WDStyle.h"
+#import "WDWordDiary.h"
 
 @interface WDIndexDiaryScreenViewController ()
 
@@ -132,9 +137,34 @@
 
 #pragma mark - WDIndexDiaryCollectionViewControllerDelegate
 
-- (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordSelectedAtIndex:(NSUInteger)index
+- (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordDoubleTapSelectedAtIndex:(NSUInteger)index
 {
-    [self.delegate indexDiaryScreenViewController:self wordSelectedAtIndex:index];
+    [self.delegate indexDiaryScreenViewController:self wordDoubleTapSelectedAtIndex:index];
+}
+
+- (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordSingleTapSelectedAtIndex:(NSUInteger)index
+{
+    WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:index];
+    //WDPalette *palette = [word.emotion findPaletteOfIdName:word.paletteIdNameOfEmotion];
+    
+    UILabel *newWordLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 44.0, self.view.bounds.size.width - 10.0, 132.0)];
+    newWordLabel.attributedText = [[NSAttributedString alloc] initWithString:word.word
+                                                                  attributes:@{
+                                                         NSFontAttributeName: [UIFont fontWithName:word.style.familyFont size:68.0],
+                                                  NSForegroundColorAttributeName: [UIColor blackColor],
+                                                             NSKernAttributeName: [NSNumber numberWithInt:3.0]}];
+    newWordLabel.textAlignment = NSTextAlignmentCenter;
+    newWordLabel.adjustsFontSizeToFitWidth = YES;
+    newWordLabel.minimumScaleFactor = 0.1;
+    newWordLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:newWordLabel];
+    
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:1.75 animations:^{
+        newWordLabel.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [newWordLabel removeFromSuperview];
+    }];
 }
 
 #pragma mark - WDIndexDiaryCollectionViewDataSource

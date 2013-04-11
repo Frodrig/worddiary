@@ -1321,7 +1321,7 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 
 #pragma mark - WDIndexDiaryScreenViewControllerDelegate
 
-- (void)indexDiaryScreenViewController:(WDIndexDiaryScreenViewController *)controller wordSelectedAtIndex:(NSUInteger)index
+- (void)indexDiaryScreenViewController:(WDIndexDiaryScreenViewController *)controller wordDoubleTapSelectedAtIndex:(NSUInteger)index
 {
     self.selectedWord = [[WDWordDiary sharedWordDiary].words objectAtIndex:index];
     

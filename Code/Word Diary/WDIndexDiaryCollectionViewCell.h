@@ -13,9 +13,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *dayDiaryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UIView  *wordContainerView;
+@property (weak, nonatomic) IBOutlet UIView  *leftPianoDecorator;
+@property (weak, nonatomic) IBOutlet UIView  *rightPianoDecorator;
 
-- (void)showInitialLetterOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
-- (void)showAllLettersOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
-- (void)hideWord;
+- (void) showInitialLetterOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
+- (void) showAllLettersOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
+- (void) hideWord;
+
+- (void) preparePianoDecoratorRoundCorners;
 
 @end

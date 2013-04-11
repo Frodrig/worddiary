@@ -7,16 +7,18 @@
 //
 
 #import "WDIndexDiaryCollectionViewCell.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface WDIndexDiaryCollectionViewCell()
 
 #pragma mark - Properties
 
 @property(nonatomic, strong) UILabel  *wordLabel;
+@property(nonatomic) BOOL             pianoDecoratorsPrepared;
 
 #pragma mark - Methods
 
-- (void)createAndAddWordLabelWithText:(NSString *)text fontFamily:(NSString *)font size:(CGFloat)sizeFont andColor:(UIColor *)color;
+- (void)        createAndAddWordLabelWithText:(NSString *)text fontFamily:(NSString *)font size:(CGFloat)sizeFont andColor:(UIColor *)color;
 
 @end
 
@@ -24,8 +26,11 @@
 
 @synthesize dayDiaryLabel                       = dayDiaryLabel_;
 @synthesize dateLabel                           = dateLabel_;
-@synthesize wordContainerView = inicialCharacterOfWordContainerView_;
+@synthesize wordContainerView                   = inicialCharacterOfWordContainerView_;
 @synthesize wordLabel                           = wordLabel_;
+@synthesize leftPianoDecorator                  = leftPianoDecorator_;
+@synthesize rightPianoDecorator                 = rightPianoDecorator_;
+@synthesize pianoDecoratorsPrepared             = pianoDecoratorsPrepared_;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -34,6 +39,31 @@
         // Initialization code
     }
     return self;
+}
+
+#pragma mark - Auxiliary - Init
+
+- (void)preparePianoDecoratorRoundCorners
+{
+    if (!self.pianoDecoratorsPrepared) {
+        NSArray *decorators = [NSArray arrayWithObjects:self.leftPianoDecorator, self.rightPianoDecorator, nil];
+        NSArray *roundedCorners = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:UIRectCornerBottomRight], [NSNumber numberWithUnsignedInteger:UIRectCornerBottomLeft], nil];
+        
+        for (NSUInteger decoratorIt = 0; decoratorIt < decorators.count; ++decoratorIt) {
+            UIView *decoratorView = [decorators objectAtIndex:decoratorIt];
+            NSNumber *maskRoundedCorner = [roundedCorners objectAtIndex:decoratorIt];
+            
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:decoratorView.bounds
+                                                           byRoundingCorners:[maskRoundedCorner unsignedIntegerValue]
+                                                                 cornerRadii:CGSizeMake(10.0, 10.0)];
+            CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+            maskLayer.frame = decoratorView.bounds;
+            maskLayer.path = maskPath.CGPath;
+            decoratorView.layer.mask = maskLayer;
+        }
+        
+        self.pianoDecoratorsPrepared = YES;
+    }
 }
 
 /*

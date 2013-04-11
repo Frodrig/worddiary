@@ -24,9 +24,11 @@
 @property (nonatomic) CGSize                         cellsSize;
 @property (nonatomic, strong) NSIndexPath            *selectedCellIndexPath;
 @property (nonatomic, strong) UITapGestureRecognizer *dobleTapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *singleTapGestureRecognizer;
 
 - (UICollectionViewFlowLayout *)     createAndConfigureCollectionViewFlowLayout;
-- (void)                             dobleTapHandle:(UITapGestureRecognizer *)gestureRecognizer;
+
+- (void)                             tapHandle:(UITapGestureRecognizer *)gestureRecognizer;
 
 - (void)                             showWordAtSelectedCell;
 
@@ -36,11 +38,12 @@
 
 #pragma mark - Synthesize
 
-@synthesize cellsSize                 = cellsSize_;
-@synthesize selectedCellIndexPath     = selectedCellIndexPath_;
-@synthesize dobleTapGestureRecognizer = dobleTapGestureRecognizer_;
-@synthesize delegate                  = delegate_;
-@synthesize dataSource                = dataSource_;
+@synthesize cellsSize                   = cellsSize_;
+@synthesize selectedCellIndexPath       = selectedCellIndexPath_;
+@synthesize dobleTapGestureRecognizer   = dobleTapGestureRecognizer_;
+@synthesize singleTapGestureRecognizer  = singleTapGestureRecognizer_;
+@synthesize delegate                    = delegate_;
+@synthesize dataSource                  = dataSource_;
 
 #pragma mark - Init
 
@@ -59,17 +62,19 @@
 {
     self = [super initWithCollectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     if (self) {
-        // ...
-        selectedCellIndexPath_ = [NSIndexPath indexPathForRow:0 inSection:0];
-        dobleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dobleTapHandle:)];
+        // Gestures        
+        dobleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
         dobleTapGestureRecognizer_.numberOfTapsRequired = 2.0;
         dobleTapGestureRecognizer_.numberOfTouchesRequired = 1.0;
-        [self.view addGestureRecognizer:dobleTapGestureRecognizer_];
+        
+        singleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
+        singleTapGestureRecognizer_.numberOfTapsRequired = 1.0;
+        singleTapGestureRecognizer_.numberOfTouchesRequired = 1.0;
+        [singleTapGestureRecognizer_ requireGestureRecognizerToFail:dobleTapGestureRecognizer_];
     }
     
     return self;
 }
-
 
 - (void)viewDidLoad
 {
@@ -78,6 +83,11 @@
 	// Do any additional setup after loading the view.
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    
+    // Gestures
+    [self.view addGestureRecognizer:self.dobleTapGestureRecognizer];
+    [self.view addGestureRecognizer:self.singleTapGestureRecognizer];
+
     
     // Cell
     [self.collectionView registerNib:[UINib nibWithNibName:@"WDIndexDiaryCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"WDIndexDiaryCollectionViewCell"];
@@ -118,13 +128,35 @@
 
 #pragma mark - Gesture Recognizer
 
-- (void)dobleTapHandle:(UITapGestureRecognizer *)gestureRecognizer
+- (void)tapHandle:(UITapGestureRecognizer *)gestureRecognizer
 {
     CGPoint tapLocation = [gestureRecognizer locationInView:self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:tapLocation];
     if (indexPath) {
-        NSLog(@"%d %d", indexPath.row, [WDWordDiary sharedWordDiary].words.count - indexPath.row - 1);
-        [self.delegate indexDiaryScreenViewController:self wordSelectedAtIndex:[WDWordDiary sharedWordDiary].words.count - indexPath.row - 1];
+        if (gestureRecognizer == self.dobleTapGestureRecognizer) {
+            [self.delegate indexDiaryScreenViewController:self wordDoubleTapSelectedAtIndex:[WDWordDiary sharedWordDiary].words.count - indexPath.row - 1];
+        } else if (gestureRecognizer == self.singleTapGestureRecognizer) {
+            self.selectedCellIndexPath = indexPath;
+            [self.delegate indexDiaryScreenViewController:self wordSingleTapSelectedAtIndex:[WDWordDiary sharedWordDiary].words.count - indexPath.row - 1];
+            
+            /*
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+            CAGradientLayer *keyGradient = [CAGradientLayer layer];
+            keyGradient.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.0 alpha:1].CGColor, (id)[UIColor colorWithWhite:0.0 alpha:1.0].CGColor ,nil];
+            keyGradient.locations = [NSArray arrayWithObjects:@"0.0", @"1.0", nil];
+            keyGradient.bounds = cell.bounds;
+            keyGradient.anchorPoint = CGPointZero;
+            keyGradient.opacity = 0.1;
+            [cell.layer addSublayer:keyGradient];
+            
+            [UIView animateWithDuration:1.5 animations:^{
+               // keyGradient.opacity = 0.0;
+            } completion:^(BOOL finished) {
+                //[keyGradient removeFromSuperlayer];
+            }];
+            */
+            //[self showWordAtSelectedCell];
+        }
     }
 }
 
@@ -166,6 +198,7 @@
     cell.dateLabel.text = [[word yearAsString] stringByAppendingFormat:@"\n%@", isTodayWord ? NSLocalizedString(@"TAG_TODAY", @"") : [word dayAndMonthAbreviateAsString]];
     cell.dateLabel.textColor = [cell.dayDiaryLabel.textColor copy];
     cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:palette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+    [cell preparePianoDecoratorRoundCorners];
     
     return cell;
 }
@@ -187,13 +220,6 @@
 }
 
 #pragma mark - UICollectionViewDelegate
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    self.selectedCellIndexPath = indexPath;
-    
-    [self showWordAtSelectedCell];
-}
 
 #pragma mark - Auxiliary - Actions
 

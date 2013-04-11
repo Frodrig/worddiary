@@ -12,6 +12,7 @@
 
 @protocol WDIndexDiaryCollectionViewControllerDelegate <NSObject>
 
-- (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordSelectedAtIndex:(NSUInteger)index;
+- (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordDoubleTapSelectedAtIndex:(NSUInteger)index;
+- (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordSingleTapSelectedAtIndex:(NSUInteger)index;
 
 @end
