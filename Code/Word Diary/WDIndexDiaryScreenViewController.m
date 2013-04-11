@@ -37,6 +37,8 @@
 @synthesize helpBtn                            = helpBtn_;
 @synthesize infoBtn                            = infoBtn_;
 @synthesize indexDiaryCollectionViewController = indexDiaryCollectionViewController_;
+@synthesize delegate                           = delegate_;
+@synthesize dataSource                         = dataSource_;
 
 #pragma mark - Init
 
@@ -59,7 +61,7 @@
     
     // Auxiliary Buttons
     [self createAuxiliaryButtons];
-    [self.view addSubview:self.auxiliaryButtonsContainerView];
+    //[self.view addSubview:self.auxiliaryButtonsContainerView];
     
     // Collection View
     [self createIndexDiaryCollectionViewController];
@@ -104,16 +106,20 @@
     [auxiliaryButtonsContainerView_ addSubview:infoBtn_];
 }
 
-- (void) createIndexDiaryCollectionViewController
+- (void)createIndexDiaryCollectionViewController
 {
     indexDiaryCollectionViewController_ = [[WDIndexDiaryCollectionViewController alloc] init];
-    indexDiaryCollectionViewController_.view.frame = CGRectMake(20.0,
-                                                                auxiliaryButtonsContainerView_.frame.origin.y + auxiliaryButtonsContainerView_.frame.size.height,
-                                                                self.view.bounds.size.width - 40.0,
-                                                                self.view.bounds.size.height - auxiliaryButtonsContainerView_.bounds.size.height - 20.0);
+    indexDiaryCollectionViewController_.delegate = self;
+    indexDiaryCollectionViewController_.dataSource = self;
+    
+    indexDiaryCollectionViewController_.view.frame = CGRectMake(0.0,
+                                                                0.0,//auxiliaryButtonsContainerView_.frame.origin.y + auxiliaryButtonsContainerView_.frame.size.height,
+                                                                self.view.bounds.size.width - 0.0,
+                                                                self.view.bounds.size.height);//self.view.bounds.size.height - auxiliaryButtonsContainerView_.bounds.size.height - 0.0);
     indexDiaryCollectionViewController_.collectionView.backgroundColor = [UIColor clearColor];
-}
+    
 
+}
 
 #pragma mark - Controls Events
 
@@ -124,5 +130,18 @@
     }];
 }
 
+#pragma mark - WDIndexDiaryCollectionViewControllerDelegate
+
+- (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordSelectedAtIndex:(NSUInteger)index
+{
+    [self.delegate indexDiaryScreenViewController:self wordSelectedAtIndex:index];
+}
+
+#pragma mark - WDIndexDiaryCollectionViewDataSource
+
+- (NSUInteger)selectedIndexWordForIndexDiaryCollectionViewController:(WDIndexDiaryCollectionViewController *)controller
+{
+    return [self.dataSource selectedIndexWordForIndexDiaryScreenViewController:self];
+}
 
 @end

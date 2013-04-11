@@ -27,6 +27,7 @@
 
 - (NSString *)         yearAsString;
 - (NSString *)         dayAndMonthAsString;
+- (NSString *)         dayAndMonthAbreviateAsString;
 
 - (NSComparisonResult) compare:(WDWord *)otherWord;
 

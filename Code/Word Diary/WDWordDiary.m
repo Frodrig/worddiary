@@ -310,10 +310,6 @@
     if (/*[self.context hasChanges] &&*/ ![self.context save:&error]) {
         [NSException raise:NSLocalizedString(@"TAG_ERRORSAVING", @"") format:NSLocalizedString(@"TAG_ERRORSAVING_REASON", @"")];
     }
-    NSLog(@"SAVE");
-    for (WDWord *word in self.words) {
-        NSLog(@"idname %@", word.paletteIdNameOfEmotion);
-    }
 }
 
 #pragma mark - Find
@@ -342,7 +338,7 @@
 {
     NSUInteger retIndex = NSNotFound;
     
-    retIndex = self.words.count - [self.words indexOfObject:word];
+    retIndex = self.words.count - [self.words indexOfObject:word] - 1;
     
     return retIndex;
 }

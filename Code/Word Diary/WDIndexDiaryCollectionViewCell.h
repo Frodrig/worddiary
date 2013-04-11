@@ -12,6 +12,10 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *dayDiaryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
-@property (weak, nonatomic) IBOutlet UIView *inicialCharacterOfWordContainerView;
+@property (weak, nonatomic) IBOutlet UIView  *wordContainerView;
+
+- (void)showInitialLetterOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
+- (void)showAllLettersOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
+- (void)hideWord;
 
 @end

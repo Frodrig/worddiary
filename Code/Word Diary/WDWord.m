@@ -15,6 +15,8 @@
 
 - (void)KVCRegister;
 
+- (NSString *)createDayAndMonthAbreviateAsString:(BOOL)abreviate;
+
 @end
 
 @implementation WDWord
@@ -113,17 +115,27 @@
     return [NSNumber numberWithUnsignedInteger:self.dateComponents.year].stringValue;
 }
 
-- (NSString *)dayAndMonthAsString
+- (NSString *)createDayAndMonthAbreviateAsString:(BOOL)abreviate
 {
     NSString *dayMonthDateText = nil;
     NSString *dayString = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:self.dateComponents.day]];
     if ([WDUtils englishIsTheCurrentAppLanguage]) {
-        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", [WDUtils monthString:self.dateComponents.month abreviateMode:NO], dayString];
+        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate], dayString];
     } else {
-        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils monthString:self.dateComponents.month abreviateMode:NO]];
+        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate]];
     }
     
     return dayMonthDateText;
+}
+
+- (NSString *)dayAndMonthAbreviateAsString
+{
+    return [self createDayAndMonthAbreviateAsString:YES];
+}
+
+- (NSString *)dayAndMonthAsString
+{
+    return [self createDayAndMonthAbreviateAsString:NO];
 }
 
 #pragma mark - Key-Value Observing

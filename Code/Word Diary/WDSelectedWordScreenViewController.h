@@ -12,6 +12,8 @@
 #import "WDWordRepresentationViewDataSource.h"
 #import "WDDayCheckerDelegate.h"
 #import "WDAuxiliaryScreenViewControllerDelegate.h"
+#import "WDIndexDiaryScreenViewControllerDelegate.h"
+#import "WDIndexDiaryScreenViewControllerDataSource.h"
 
 @class WDWord;
 
@@ -19,7 +21,9 @@
                                                                  WDWordRepresentationViewDataSource,
                                                                  WDWordRepresentationViewDelegate,
                                                                  WDDayCheckerDelegate,
-                                                                 WDAuxiliaryScreenViewControllerDelegate>
+                                                                 WDAuxiliaryScreenViewControllerDelegate,
+                                                                 WDIndexDiaryScreenViewControllerDelegate,
+                                                                 WDIndexDiaryScreenViewControllerDataSource>
 
 @property (nonatomic, weak) id<WDSelectedWordScreenDelegate> delegate;
 

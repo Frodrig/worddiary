@@ -20,6 +20,7 @@
 #import "WDEmotion.h"
 #import "WDPalette.h"
 #import "WDIndexDiaryScreenViewController.h"
+#import "WDIndexDiaryScreenViewControllerDelegate.h"
 #import "UIColor+hexColorCreation.h"
 
 const static CGFloat ANIMATION_TIME_CURSOR = 0.75;
@@ -282,14 +283,14 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     
     self.view.contentMode = UIViewContentModeCenter;
     
-    [self configureViewForSelectedWord:YES];
-
     [self startCursorUpdateTimer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self configureViewForSelectedWord:YES];
     
     // Representación de la palabra.
     self.wordDiaryRepresentation.frame = CGRectMake(0.0,
@@ -856,6 +857,9 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
 - (void)doubleTapHandle:(UIGestureRecognizer *)gestureRecognizer
 {
     WDIndexDiaryScreenViewController *indexDiary = [[WDIndexDiaryScreenViewController alloc] initWithNibName:nil bundle:nil];
+    indexDiary.delegate = self;
+    indexDiary.dataSource = self;
+    
     [self presentViewController:indexDiary animated:YES completion:^{
         
     }];
@@ -1313,6 +1317,26 @@ const static CGFloat ANIMATION_TIME_WITHOUTCURSORMODE = 1.15;
     } else {
         self.dayChangePendingToResolve = YES;
     }
+}
+
+#pragma mark - WDIndexDiaryScreenViewControllerDelegate
+
+- (void)indexDiaryScreenViewController:(WDIndexDiaryScreenViewController *)controller wordSelectedAtIndex:(NSUInteger)index
+{
+    self.selectedWord = [[WDWordDiary sharedWordDiary].words objectAtIndex:index];
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self configureViewForSelectedWord:YES];
+    }];
+}
+
+#pragma mark - WDIndexDiaryScreenViewControllerDataSource
+
+- (NSUInteger)selectedIndexWordForIndexDiaryScreenViewController:(WDIndexDiaryScreenViewController *)controller
+{
+    NSAssert(self.selectedWord, @"La palabra a retornar el indice no esta vinculada");
+    
+    return [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord];
 }
 
 @end

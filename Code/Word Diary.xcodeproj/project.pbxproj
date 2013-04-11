@@ -164,6 +164,10 @@
 		5B9A7EBD1715645A00A0A51C /* WDIndexDiaryCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDIndexDiaryCollectionViewCell.xib; sourceTree = "<group>"; };
 		5B9A7EBF1715650600A0A51C /* WDIndexDiaryCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDIndexDiaryCollectionViewCell.h; sourceTree = "<group>"; };
 		5B9A7EC01715650600A0A51C /* WDIndexDiaryCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDIndexDiaryCollectionViewCell.m; sourceTree = "<group>"; };
+		5B9D3FEF1716C070007EEF5C /* WDIndexDiaryCollectionViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDIndexDiaryCollectionViewControllerDelegate.h; sourceTree = "<group>"; };
+		5B9D3FF01716C5E3007EEF5C /* WDIndexDiaryScreenViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDIndexDiaryScreenViewControllerDelegate.h; sourceTree = "<group>"; };
+		5B9D3FF11716C81E007EEF5C /* WDIndexDiaryScreenViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDIndexDiaryScreenViewControllerDataSource.h; sourceTree = "<group>"; };
+		5B9D3FF21716C9FC007EEF5C /* WDIndexDiaryCollectionViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDIndexDiaryCollectionViewControllerDataSource.h; sourceTree = "<group>"; };
 		5BB42261170EC19B0081B5CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5BB42263170EC1B40081B5CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		5BB42265170EC1B80081B5CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -604,6 +608,8 @@
 				5BEC305817155D5100EE8D72 /* Index Diary Collection View */,
 				5BEC305517154E7A00EE8D72 /* WDIndexDiaryScreenViewController.h */,
 				5BEC305617154E7A00EE8D72 /* WDIndexDiaryScreenViewController.m */,
+				5B9D3FF01716C5E3007EEF5C /* WDIndexDiaryScreenViewControllerDelegate.h */,
+				5B9D3FF11716C81E007EEF5C /* WDIndexDiaryScreenViewControllerDataSource.h */,
 			);
 			name = "Index Screen";
 			sourceTree = "<group>";
@@ -614,6 +620,8 @@
 				5B9A7EBC1715644F00A0A51C /* Cell */,
 				5BEC306117155DE800EE8D72 /* WDIndexDiaryCollectionViewController.h */,
 				5BEC306217155DE800EE8D72 /* WDIndexDiaryCollectionViewController.m */,
+				5B9D3FEF1716C070007EEF5C /* WDIndexDiaryCollectionViewControllerDelegate.h */,
+				5B9D3FF21716C9FC007EEF5C /* WDIndexDiaryCollectionViewControllerDataSource.h */,
 			);
 			name = "Index Diary Collection View";
 			sourceTree = "<group>";

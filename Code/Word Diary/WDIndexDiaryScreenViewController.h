@@ -1,4 +1,4 @@
-//
+;//
 //  WDIndexDiaryScreenViewController.h
 //  Word Diary
 //
@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDIndexDiaryCollectionViewControllerDelegate.h"
+#import "WDIndexDiaryCollectionViewControllerDataSource.h"
+#import "WDIndexDiaryScreenViewControllerDelegate.h"
+#import "WDIndexDiaryScreenViewControllerDataSource.h"
 
-@interface WDIndexDiaryScreenViewController : UIViewController
+@interface WDIndexDiaryScreenViewController : UIViewController<WDIndexDiaryCollectionViewControllerDelegate,
+                                                            WDIndexDiaryCollectionViewControllerDataSource>
+
+@property(nonatomic, weak)id<WDIndexDiaryScreenViewControllerDelegate>   delegate;
+@property(nonatomic, weak)id<WDIndexDiaryScreenViewControllerDataSource> dataSource;
 
 @end
