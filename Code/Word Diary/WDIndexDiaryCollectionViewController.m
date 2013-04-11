@@ -29,6 +29,7 @@
 @property (nonatomic, strong) UISwipeGestureRecognizer     *swipeCellUpRecognizer;
 @property (nonatomic, strong) UISwipeGestureRecognizer     *swipeCellDownRecognizer;
 @property (nonatomic, strong) NSIndexPath                  *indexPathOfCellInRemoveMode;
+@property (nonatomic, strong) NSMutableDictionary          *pendingRemoveMenus;
 
 - (UICollectionViewFlowLayout *)     createAndConfigureCollectionViewFlowLayout;
 
@@ -38,7 +39,7 @@
 
 - (void)                             showWordAtSelectedCell;
 
-- (void)                             moveCellInRemoveModeWithUpDirection:(BOOL)up;
+- (void)                             prepareCellInRemoveModeWithUpDirection:(BOOL)up;
 
 @end
 
@@ -56,6 +57,18 @@
 @synthesize indexPathOfCellInRemoveMode = indexPathOfCellInRemoveMode_;
 @synthesize swipeCellUpRecognizer       = swipeCellUpRecognizer_;
 @synthesize swipeCellDownRecognizer     = swipeCellDownRecognizer_;
+@synthesize pendingRemoveMenus          = pendingRemoveMenus_;
+
+#pragma mark - Properties
+
+- (NSMutableDictionary *)pendingRemoveMenus
+{
+    if (nil == pendingRemoveMenus_) {
+        pendingRemoveMenus_ = [[NSMutableDictionary alloc] init];
+    }
+    
+    return pendingRemoveMenus_;
+}
 
 #pragma mark - Init
 
@@ -126,6 +139,9 @@
     self.collectionView.layer.masksToBounds = YES;
     self.collectionView.opaque = YES;
     self.collectionView.bounces = NO;
+    self.collectionView.backgroundColor = [UIColor clearColor];
+    
+    self.view.backgroundColor = [UIColor clearColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -153,16 +169,44 @@
 
 #pragma mark - Auxiliary Gesture Recognizer
 
-- (void)moveCellInRemoveModeWithUpDirection:(BOOL)up
+- (void)prepareCellInRemoveModeWithUpDirection:(BOOL)up
 {
     if (self.indexPathOfCellInRemoveMode) {
         const CGFloat moveDistance = 122.0;
         UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
+
+        // Menu
+        if (up) {
+            UIView *removeMenu = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, 44.0)];
+            removeMenu.backgroundColor = [UIColor redColor];
+            NSLog(@"%@", NSStringFromCGRect(removeMenu.frame));
+
+            [self.view.superview addSubview:removeMenu];
+            removeMenu.frame = CGRectMake(cell.frame.origin.x, self.collectionView.frame.origin.y + self.collectionView.frame.size.height - moveDistance, cell.frame.size.width, moveDistance);
+
+            UIButton *removeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            removeMenu.frame = CGRectMake(0.0, 0.0, 44.0, 44.0);
+            [removeBtn setImage:[UIImage imageNamed:@"37-circle-x"] forState:UIControlStateNormal];
+            [removeMenu addSubview:removeBtn];
+            //removeBtn.center = CGPointMake(removeBtn.center.x, (removeMenu.center.y - removeBtn.center.y) / 2.0);
+            
+            NSLog(@"%@", NSStringFromCGRect(removeMenu.frame));
+            
+            [self.pendingRemoveMenus setObject:removeMenu forKey:[NSNumber numberWithUnsignedInteger:self.indexPathOfCellInRemoveMode.row]];
+        }
+        
+        // Animacion subida
         [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
         [UIView animateWithDuration:0.25 animations:^{
             cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, up ? cell.frame.size.height - moveDistance : cell.frame.size.height + moveDistance);
         } completion:^(BOOL finished) {
-            // ...
+            if (!up) {
+                // Destruimos el menu
+                NSIndexPath *indexPathOfCell = [self.collectionView indexPathForCell:cell];
+                UIView *removeMenu = [self.pendingRemoveMenus objectForKey:[NSNumber numberWithUnsignedInteger:indexPathOfCell.row]];
+                [self.pendingRemoveMenus removeObjectForKey:removeMenu];
+                [removeMenu removeFromSuperview];
+            }
         }];
     }
 }
@@ -234,13 +278,13 @@
     
     if (gestureRecognizer == self.swipeCellUpRecognizer) {
         if (newCellIndexPathToRemove != self.indexPathOfCellInRemoveMode) {
-            [self moveCellInRemoveModeWithUpDirection:NO];
+            [self prepareCellInRemoveModeWithUpDirection:NO];
         }
         self.indexPathOfCellInRemoveMode = [self.collectionView indexPathForItemAtPoint:tapLocation];
-        [self moveCellInRemoveModeWithUpDirection:YES];
+        [self prepareCellInRemoveModeWithUpDirection:YES];
     } else if (gestureRecognizer == self.swipeCellDownRecognizer) {
         if (newCellIndexPathToRemove == self.indexPathOfCellInRemoveMode) {
-            [self moveCellInRemoveModeWithUpDirection:NO];
+            [self prepareCellInRemoveModeWithUpDirection:NO];
             self.indexPathOfCellInRemoveMode = nil;
         }
     }
