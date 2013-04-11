@@ -21,16 +21,24 @@
 
 #pragma mark - Properties
 
-@property (nonatomic) CGSize                         cellsSize;
-@property (nonatomic, strong) NSIndexPath            *selectedCellIndexPath;
-@property (nonatomic, strong) UITapGestureRecognizer *dobleTapGestureRecognizer;
-@property (nonatomic, strong) UITapGestureRecognizer *singleTapGestureRecognizer;
+@property (nonatomic) CGSize                               cellsSize;
+@property (nonatomic, strong) NSIndexPath                  *selectedCellIndexPath;
+@property (nonatomic, strong) UITapGestureRecognizer       *dobleTapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer       *singleTapGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressRecognizer;
+@property (nonatomic, strong) UISwipeGestureRecognizer     *swipeCellUpRecognizer;
+@property (nonatomic, strong) UISwipeGestureRecognizer     *swipeCellDownRecognizer;
+@property (nonatomic, strong) NSIndexPath                  *indexPathOfCellInRemoveMode;
 
 - (UICollectionViewFlowLayout *)     createAndConfigureCollectionViewFlowLayout;
 
 - (void)                             tapHandle:(UITapGestureRecognizer *)gestureRecognizer;
+- (void)                             longTapPressHandle:(UITapGestureRecognizer *)gestureRecognizer;
+- (void)                             swipeCellRecognizer:(UISwipeGestureRecognizer *)gestureRecognizer;
 
 - (void)                             showWordAtSelectedCell;
+
+- (void)                             moveCellInRemoveModeWithUpDirection:(BOOL)up;
 
 @end
 
@@ -43,7 +51,11 @@
 @synthesize dobleTapGestureRecognizer   = dobleTapGestureRecognizer_;
 @synthesize singleTapGestureRecognizer  = singleTapGestureRecognizer_;
 @synthesize delegate                    = delegate_;
+@synthesize longPressRecognizer         = longPressRecognizer_;
 @synthesize dataSource                  = dataSource_;
+@synthesize indexPathOfCellInRemoveMode = indexPathOfCellInRemoveMode_;
+@synthesize swipeCellUpRecognizer       = swipeCellUpRecognizer_;
+@synthesize swipeCellDownRecognizer     = swipeCellDownRecognizer_;
 
 #pragma mark - Init
 
@@ -51,7 +63,6 @@
 {
     return [self init];
 }
-
 
 - (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout
 {
@@ -62,7 +73,7 @@
 {
     self = [super initWithCollectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     if (self) {
-        // Gestures        
+        // Gestures - Solo creacion
         dobleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
         dobleTapGestureRecognizer_.numberOfTapsRequired = 2.0;
         dobleTapGestureRecognizer_.numberOfTouchesRequired = 1.0;
@@ -71,6 +82,18 @@
         singleTapGestureRecognizer_.numberOfTapsRequired = 1.0;
         singleTapGestureRecognizer_.numberOfTouchesRequired = 1.0;
         [singleTapGestureRecognizer_ requireGestureRecognizerToFail:dobleTapGestureRecognizer_];
+        
+        longPressRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapPressHandle:)];
+        longPressRecognizer_.numberOfTouchesRequired = 1.0;
+        longPressRecognizer_.minimumPressDuration = 0.5;
+        
+        swipeCellUpRecognizer_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeCellRecognizer:)];
+        swipeCellUpRecognizer_.numberOfTouchesRequired = 1.0;
+        swipeCellUpRecognizer_.direction = UISwipeGestureRecognizerDirectionUp;
+        
+        swipeCellDownRecognizer_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeCellRecognizer:)];
+        swipeCellDownRecognizer_.numberOfTouchesRequired = 1.0;
+        swipeCellDownRecognizer_.direction = UISwipeGestureRecognizerDirectionDown;
     }
     
     return self;
@@ -85,9 +108,11 @@
     self.collectionView.dataSource = self;
     
     // Gestures
+    [self.view addGestureRecognizer:self.longPressRecognizer];
     [self.view addGestureRecognizer:self.dobleTapGestureRecognizer];
     [self.view addGestureRecognizer:self.singleTapGestureRecognizer];
-
+    [self.view addGestureRecognizer:self.swipeCellUpRecognizer];
+    [self.view addGestureRecognizer:self.swipeCellDownRecognizer];
     
     // Cell
     [self.collectionView registerNib:[UINib nibWithNibName:@"WDIndexDiaryCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"WDIndexDiaryCollectionViewCell"];
@@ -126,6 +151,22 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Auxiliary Gesture Recognizer
+
+- (void)moveCellInRemoveModeWithUpDirection:(BOOL)up
+{
+    if (self.indexPathOfCellInRemoveMode) {
+        const CGFloat moveDistance = 122.0;
+        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+        [UIView animateWithDuration:0.25 animations:^{
+            cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, up ? cell.frame.size.height - moveDistance : cell.frame.size.height + moveDistance);
+        } completion:^(BOOL finished) {
+            // ...
+        }];
+    }
+}
+
 #pragma mark - Gesture Recognizer
 
 - (void)tapHandle:(UITapGestureRecognizer *)gestureRecognizer
@@ -160,6 +201,51 @@
     }
 }
 
+- (void)longTapPressHandle:(UITapGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint tapLocation = [gestureRecognizer locationInView:self.collectionView];
+        self.indexPathOfCellInRemoveMode = [self.collectionView indexPathForItemAtPoint:tapLocation];
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
+            //cell.center = CGPointMake(cell.center.x, cell.center.y - 88);
+            cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y + 88, cell.frame.size.width, cell.frame.size.height - 88);
+        }];
+        
+        self.collectionView.scrollEnabled = NO;
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        [UIView animateWithDuration:0.5 animations:^{
+            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
+           // cell.center = CGPointMake(cell.center.x, cell.center.y + 88);
+            cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y - 88, cell.frame.size.width, cell.frame.size.height + 88);
+        }];
+        
+        self.indexPathOfCellInRemoveMode = nil;
+        
+        self.collectionView.scrollEnabled = YES;
+    }
+}
+
+- (void)swipeCellRecognizer:(UISwipeGestureRecognizer *)gestureRecognizer
+{
+    CGPoint tapLocation = [gestureRecognizer locationInView:self.collectionView];
+    NSIndexPath *newCellIndexPathToRemove = [self.collectionView indexPathForItemAtPoint:tapLocation];
+    
+    if (gestureRecognizer == self.swipeCellUpRecognizer) {
+        if (newCellIndexPathToRemove != self.indexPathOfCellInRemoveMode) {
+            [self moveCellInRemoveModeWithUpDirection:NO];
+        }
+        self.indexPathOfCellInRemoveMode = [self.collectionView indexPathForItemAtPoint:tapLocation];
+        [self moveCellInRemoveModeWithUpDirection:YES];
+    } else if (gestureRecognizer == self.swipeCellDownRecognizer) {
+        if (newCellIndexPathToRemove == self.indexPathOfCellInRemoveMode) {
+            [self moveCellInRemoveModeWithUpDirection:NO];
+            self.indexPathOfCellInRemoveMode = nil;
+        }
+    }
+}
+
 #pragma mark - Auxiliary Init
 
 - (UICollectionViewFlowLayout *) createAndConfigureCollectionViewFlowLayout
@@ -173,7 +259,6 @@
     CGFloat widthOfItems = self.collectionView.bounds.size.width / numItemsPerRow;//(self.collectionView.bounds.size.width / numItemsPerRow) - (xSeparator * numItemsPerRow);
     CGFloat heightOfItems =  self.collectionView.bounds.size.height;//self.collectionView.bounds.size.height / 3.0;
     self.cellsSize = CGSizeMake(widthOfItems, heightOfItems);
-    
     
     collectionViewFlow.itemSize = self.cellsSize;
     collectionViewFlow.minimumInteritemSpacing = xSeparator;
