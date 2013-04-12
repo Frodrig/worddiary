@@ -123,16 +123,24 @@
 
 - (void)createDisplayView
 {
-    displayView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 125.0)];
+    displayView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height * 0.55)];
   //  [displayView_ addRoundedCorners:UIRectCornerTopLeft | UIRectCornerTopRight withRadius:10.0];
 
-    displayView_.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
-    //displayView_.layer.borderColor = [UIColor blackColor].CGColor;
-    //displayView_.layer.borderWidth = 1;
-  //  displayView_.layer.shadowColor = [UIColor blackColor].CGColor;
-    displayView_.layer.shadowOffset = CGSizeMake(0, 2);
+    displayView_.backgroundColor = [UIColor colorWithWhite:0 alpha:1.0];
+    displayView_.opaque = YES;
+    displayView_.layer.shadowOffset = CGSizeMake(0.0, 5.0);
     displayView_.layer.shadowRadius = 2;
     displayView_.layer.shadowOpacity = 0.5;
+    displayView_.layer.cornerRadius = 15.0;
+    
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.1 alpha:1].CGColor, (id)[UIColor colorWithWhite:1.0 alpha:0.7].CGColor, (id)[UIColor colorWithWhite:1.0 alpha:0.7].CGColor, (id)[UIColor colorWithWhite:1.0 alpha:0.7].CGColor, (id)[UIColor colorWithWhite:0.1 alpha:1].CGColor, nil];
+    gradientLayer.locations = [NSArray arrayWithObjects:@"0.0", @"0.45", @"0.5", @"0.55", @"1.0", nil];
+    gradientLayer.startPoint = CGPointMake(0.0, 0.5);
+    gradientLayer.endPoint = CGPointMake(1.0, 0.5);
+    gradientLayer.frame = displayView_.frame;
+    gradientLayer.opacity = 0.4;
+    [displayView_.layer addSublayer:gradientLayer];
 }
 
 - (void)createIndexDiaryCollectionViewController
@@ -147,6 +155,7 @@
                                                                 self.view.bounds.size.width - 0.0,
                                                                 self.view.bounds.size.height - yOrigin);//self.view.bounds.size.height - auxiliaryButtonsContainerView_.bounds.size.height - 0.0);
     indexDiaryCollectionViewController_.collectionView.backgroundColor = [UIColor clearColor];
+    indexDiaryCollectionViewController_.collectionView.layer.cornerRadius = 10.0;
     
 
 }
@@ -172,7 +181,7 @@
     WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:index];
     WDPalette *palette = [word.emotion findPaletteOfIdName:word.paletteIdNameOfEmotion];
     
-    UILabel *newWordLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 0.0, self.view.bounds.size.width - 10.0, 125.0)];
+    UILabel *newWordLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 0.0, self.view.bounds.size.width - 10.0, self.displayView.bounds.size.height)];
     newWordLabel.attributedText = [[NSAttributedString alloc] initWithString:word.word
                                                                   attributes:@{
                                                          NSFontAttributeName: [UIFont fontWithName:word.style.familyFont size:68.0],

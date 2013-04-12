@@ -386,8 +386,9 @@
     cell.dayDiaryLabel.textColor = [UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
     cell.dateLabel.text = [[word yearAsString] stringByAppendingFormat:@"\n%@", isTodayWord ? NSLocalizedString(@"TAG_TODAY", @"") : [word dayAndMonthAbreviateAsString]];
     cell.dateLabel.textColor = [cell.dayDiaryLabel.textColor copy];
+    cell.layer.borderWidth = 0.5;
+    cell.layer.borderColor = [UIColor blackColor].CGColor;
     cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:palette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
-    NSLog(@"color %@", cell.contentView.backgroundColor.description);
 
     [cell configureRoundedCorners];
     
