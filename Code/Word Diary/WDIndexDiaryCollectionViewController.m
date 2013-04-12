@@ -37,6 +37,9 @@
 - (void)                             longTapPressHandle:(UITapGestureRecognizer *)gestureRecognizer;
 - (void)                             swipeCellRecognizer:(UISwipeGestureRecognizer *)gestureRecognizer;
 
+- (void)                             removeMenuFromPendingRemoveMenusWithIndexPath:(NSIndexPath *)indexPath;
+- (void)                             removeButtonPressed:(UIButton *)button;
+
 - (void)                             showWordAtSelectedCell;
 
 - (void)                             prepareCellInRemoveModeWithUpDirection:(BOOL)up;
@@ -90,23 +93,28 @@
         dobleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
         dobleTapGestureRecognizer_.numberOfTapsRequired = 2.0;
         dobleTapGestureRecognizer_.numberOfTouchesRequired = 1.0;
+        dobleTapGestureRecognizer_.delegate = self;
         
         singleTapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandle:)];
         singleTapGestureRecognizer_.numberOfTapsRequired = 1.0;
         singleTapGestureRecognizer_.numberOfTouchesRequired = 1.0;
         [singleTapGestureRecognizer_ requireGestureRecognizerToFail:dobleTapGestureRecognizer_];
+        singleTapGestureRecognizer_.delegate = self;
         
         longPressRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTapPressHandle:)];
         longPressRecognizer_.numberOfTouchesRequired = 1.0;
         longPressRecognizer_.minimumPressDuration = 0.5;
+        longPressRecognizer_.delegate = self;
         
         swipeCellUpRecognizer_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeCellRecognizer:)];
         swipeCellUpRecognizer_.numberOfTouchesRequired = 1.0;
         swipeCellUpRecognizer_.direction = UISwipeGestureRecognizerDirectionUp;
+        swipeCellUpRecognizer_.delegate = self;
         
         swipeCellDownRecognizer_ = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeCellRecognizer:)];
         swipeCellDownRecognizer_.numberOfTouchesRequired = 1.0;
         swipeCellDownRecognizer_.direction = UISwipeGestureRecognizerDirectionDown;
+        swipeCellDownRecognizer_.delegate = self;
     }
     
     return self;
@@ -176,39 +184,68 @@
         UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
 
         // Menu
+        UIView *removeMenuView = nil;
         if (up) {
-            UIView *removeMenu = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, 44.0)];
-            removeMenu.backgroundColor = [UIColor redColor];
-            NSLog(@"%@", NSStringFromCGRect(removeMenu.frame));
-
-            [self.view.superview addSubview:removeMenu];
-            removeMenu.frame = CGRectMake(cell.frame.origin.x, self.collectionView.frame.origin.y + self.collectionView.frame.size.height - moveDistance, cell.frame.size.width, moveDistance);
-
+            UICollectionViewLayoutAttributes *cellAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
+            CGRect cellFrameInGlobalView = CGRectMake(cellAttributes.frame.origin.x - self.collectionView.contentOffset.x, cellAttributes.frame.origin.y, cellAttributes.frame.size.width, cellAttributes.frame.size.height);
+           
+            removeMenuView = [[UIView alloc] initWithFrame:CGRectMake(cellFrameInGlobalView.origin.x,
+                                                                      cellFrameInGlobalView.origin.y + cellFrameInGlobalView.size.height - moveDistance,
+                                                                      cellFrameInGlobalView.size.width,
+                                                                      cellFrameInGlobalView.origin.y + cellFrameInGlobalView.size.height)];
+            removeMenuView.backgroundColor = [UIColor clearColor];
+            removeMenuView.opaque = NO;
+            removeMenuView.userInteractionEnabled = YES;
+            [self.view.superview insertSubview:removeMenuView belowSubview:self.view];
+            
             UIButton *removeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            removeMenu.frame = CGRectMake(0.0, 0.0, 44.0, 44.0);
-            [removeBtn setImage:[UIImage imageNamed:@"37-circle-x"] forState:UIControlStateNormal];
-            [removeMenu addSubview:removeBtn];
-            //removeBtn.center = CGPointMake(removeBtn.center.x, (removeMenu.center.y - removeBtn.center.y) / 2.0);
-            
-            NSLog(@"%@", NSStringFromCGRect(removeMenu.frame));
-            
-            [self.pendingRemoveMenus setObject:removeMenu forKey:[NSNumber numberWithUnsignedInteger:self.indexPathOfCellInRemoveMode.row]];
+            removeBtn.frame = CGRectMake(0.0, 0.0, cellFrameInGlobalView.size.width, moveDistance);
+            [removeBtn setImage:[UIImage imageNamed:@"37-white-circle-x"] forState:UIControlStateNormal];
+            removeBtn.backgroundColor = [UIColor clearColor];
+            [removeBtn addTarget:self action:@selector(removeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            removeBtn.userInteractionEnabled = YES;
+            removeBtn.tag = self.indexPathOfCellInRemoveMode.row;
+            [removeMenuView addSubview:removeBtn];
+                        
+            [self.pendingRemoveMenus setObject:removeMenuView forKey:[NSNumber numberWithUnsignedInteger:self.indexPathOfCellInRemoveMode.row]];
+        } else {
+            // Mandamos el menu atras para conseguir efecto persiana
+           removeMenuView = [self.pendingRemoveMenus objectForKey:[NSNumber numberWithUnsignedInteger:self.indexPathOfCellInRemoveMode.row]];
+            [self.view.superview insertSubview:removeMenuView belowSubview:self.view];
         }
         
-        // Animacion subida
+        // Animacion 
         [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
         [UIView animateWithDuration:0.25 animations:^{
             cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, up ? cell.frame.size.height - moveDistance : cell.frame.size.height + moveDistance);
         } completion:^(BOOL finished) {
-            if (!up) {
+            NSIndexPath *indexPathForCell = [self.collectionView indexPathForCell:cell];
+            if (up) {
+                // Cambiamos posicion menu para poder aceptar los eventos sobre el boton. En caso contrario estara detras del collectionview y no recibira
+                // Nota: Inicialmente se pone detras para consegir el efecto persiana
+                [self.view.superview insertSubview:removeMenuView aboveSubview:self.view];
+            } else {
                 // Destruimos el menu
-                NSIndexPath *indexPathOfCell = [self.collectionView indexPathForCell:cell];
-                UIView *removeMenu = [self.pendingRemoveMenus objectForKey:[NSNumber numberWithUnsignedInteger:indexPathOfCell.row]];
-                [self.pendingRemoveMenus removeObjectForKey:removeMenu];
-                [removeMenu removeFromSuperview];
+                [self removeMenuFromPendingRemoveMenusWithIndexPath:indexPathForCell];
+                if (self.pendingRemoveMenus.count == 0) {
+                    self.view.userInteractionEnabled = YES;
+                }
             }
         }];
     }
+}
+
+#pragma mark - Gesture Recognizer Delegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    BOOL retShouldReceive = YES;
+    
+    if (self.indexPathOfCellInRemoveMode != nil) {
+        retShouldReceive = gestureRecognizer == self.swipeCellDownRecognizer || gestureRecognizer == self.swipeCellUpRecognizer ? YES : NO;
+    }
+    
+    return retShouldReceive;
 }
 
 #pragma mark - Gesture Recognizer
@@ -225,21 +262,21 @@
             [self.delegate indexDiaryScreenViewController:self wordSingleTapSelectedAtIndex:[WDWordDiary sharedWordDiary].words.count - indexPath.row - 1];
             
             /*
-            UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-            CAGradientLayer *keyGradient = [CAGradientLayer layer];
-            keyGradient.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.0 alpha:1].CGColor, (id)[UIColor colorWithWhite:0.0 alpha:1.0].CGColor ,nil];
-            keyGradient.locations = [NSArray arrayWithObjects:@"0.0", @"1.0", nil];
-            keyGradient.bounds = cell.bounds;
-            keyGradient.anchorPoint = CGPointZero;
-            keyGradient.opacity = 0.1;
-            [cell.layer addSublayer:keyGradient];
-            
-            [UIView animateWithDuration:1.5 animations:^{
-               // keyGradient.opacity = 0.0;
-            } completion:^(BOOL finished) {
-                //[keyGradient removeFromSuperlayer];
-            }];
-            */
+             UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+             CAGradientLayer *keyGradient = [CAGradientLayer layer];
+             keyGradient.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.0 alpha:1].CGColor, (id)[UIColor colorWithWhite:0.0 alpha:1.0].CGColor ,nil];
+             keyGradient.locations = [NSArray arrayWithObjects:@"0.0", @"1.0", nil];
+             keyGradient.bounds = cell.bounds;
+             keyGradient.anchorPoint = CGPointZero;
+             keyGradient.opacity = 0.1;
+             [cell.layer addSublayer:keyGradient];
+             
+             [UIView animateWithDuration:1.5 animations:^{
+             // keyGradient.opacity = 0.0;
+             } completion:^(BOOL finished) {
+             //[keyGradient removeFromSuperlayer];
+             }];
+             */
             //[self showWordAtSelectedCell];
         }
     }
@@ -358,7 +395,27 @@
     WDWord *selectedWord = [[WDWordDiary sharedWordDiary].words objectAtIndex:[WDWordDiary sharedWordDiary].words.count - self.selectedCellIndexPath.row - 1];
     WDPalette* palette = [selectedWord.emotion findPaletteOfIdName:selectedWord.paletteIdNameOfEmotion];
     [cell showInitialLetterOfWord:selectedWord.word fontFamily:selectedWord.style.familyFont andColor:[UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO]];
+}
 
+- (void)removeMenuFromPendingRemoveMenusWithIndexPath:(NSIndexPath *)indexPath
+{
+    UIView *removeMenu = [self.pendingRemoveMenus objectForKey:[NSNumber numberWithUnsignedInteger:indexPath.row]];
+    [self.pendingRemoveMenus removeObjectForKey:removeMenu];
+    [removeMenu removeFromSuperview];
+}
+
+- (void)removeButtonPressed:(UIButton *)button
+{
+    // En el tag se hallara el row de la celda
+    NSLog(@"Llega evento");
+    return;
+    [self.collectionView performBatchUpdates:^{
+        NSAssert(self.indexPathOfCellInRemoveMode.row == button.tag, @"Problemas de corcondancia entre el boton para borrar celda y la celda seleccionada a borrar");
+        [self.collectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject:self.indexPathOfCellInRemoveMode]];
+        [self removeMenuFromPendingRemoveMenusWithIndexPath:self.indexPathOfCellInRemoveMode];
+        self.indexPathOfCellInRemoveMode = nil;
+    } completion:^(BOOL finished) {
+    }];
 }
 
 @end

@@ -10,7 +10,7 @@
 #import "WDIndexDiaryCollectionViewControllerDelegate.h"
 #import "WDIndexDiaryCollectionViewControllerDataSource.h"
 
-@interface WDIndexDiaryCollectionViewController : UICollectionViewController
+@interface WDIndexDiaryCollectionViewController : UICollectionViewController<UIGestureRecognizerDelegate>
 
 @property(nonatomic, weak)id<WDIndexDiaryCollectionViewControllerDelegate>   delegate;
 @property(nonatomic, weak)id<WDIndexDiaryCollectionViewControllerDataSource> dataSource;

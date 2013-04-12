@@ -225,7 +225,6 @@
     
     for (WDWord *word in words_) {
         [self addObserverToWord:word];
-        NSLog(@"Loading word %@", word.paletteIdNameOfEmotion);
     }
 }
 
