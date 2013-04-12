@@ -32,6 +32,7 @@
 		5B5FB856170361E300A11A56 /* 32-circle-south@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5FB854170361E300A11A56 /* 32-circle-south@2x.png */; };
 		5B6987E31717F8E200046FE0 /* 37-white-circle-x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6987E11717F8E200046FE0 /* 37-white-circle-x.png */; };
 		5B6987E41717F8E200046FE0 /* 37-white-circle-x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6987E21717F8E200046FE0 /* 37-white-circle-x@2x.png */; };
+		5B6987E7171816D100046FE0 /* UIView+RoundedCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */; };
 		5B6F313C16DF5CEB007E4DBA /* 341-keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */; };
 		5B6F313D16DF5CEB007E4DBA /* 341-keyboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313B16DF5CEB007E4DBA /* 341-keyboard@2x.png */; };
 		5B6F314016DF5D00007E4DBA /* 350-text.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6F313E16DF5D00007E4DBA /* 350-text.png */; };
@@ -140,6 +141,8 @@
 		5B5FB854170361E300A11A56 /* 32-circle-south@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "32-circle-south@2x.png"; sourceTree = "<group>"; };
 		5B6987E11717F8E200046FE0 /* 37-white-circle-x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-white-circle-x.png"; sourceTree = "<group>"; };
 		5B6987E21717F8E200046FE0 /* 37-white-circle-x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-white-circle-x@2x.png"; sourceTree = "<group>"; };
+		5B6987E5171816D100046FE0 /* UIView+RoundedCorners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RoundedCorners.h"; sourceTree = "<group>"; };
+		5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RoundedCorners.m"; sourceTree = "<group>"; };
 		5B6F313A16DF5CEB007E4DBA /* 341-keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "341-keyboard.png"; sourceTree = "<group>"; };
 		5B6F313B16DF5CEB007E4DBA /* 341-keyboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "341-keyboard@2x.png"; sourceTree = "<group>"; };
 		5B6F313E16DF5D00007E4DBA /* 350-text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "350-text.png"; sourceTree = "<group>"; };
@@ -294,6 +297,8 @@
 				5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */,
 				5BFEEA73170C1DDD0048482B /* UIColor+hexColorCreation.h */,
 				5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */,
+				5B6987E5171816D100046FE0 /* UIView+RoundedCorners.h */,
+				5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */,
 			);
 			name = Categories;
 			path = ..;
@@ -773,6 +778,7 @@
 				5BEC305717154E7A00EE8D72 /* WDIndexDiaryScreenViewController.m in Sources */,
 				5BEC306317155DE800EE8D72 /* WDIndexDiaryCollectionViewController.m in Sources */,
 				5B9A7EC11715650600A0A51C /* WDIndexDiaryCollectionViewCell.m in Sources */,
+				5B6987E7171816D100046FE0 /* UIView+RoundedCorners.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

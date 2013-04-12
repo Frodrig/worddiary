@@ -15,11 +15,15 @@
 @property (weak, nonatomic) IBOutlet UIView  *wordContainerView;
 @property (weak, nonatomic) IBOutlet UIView  *leftPianoDecorator;
 @property (weak, nonatomic) IBOutlet UIView  *rightPianoDecorator;
+@property (weak, nonatomic) IBOutlet UIView *keyContainerView;
 
 - (void) showInitialLetterOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
 - (void) showAllLettersOfWord:(NSString *)word fontFamily:(NSString *)font andColor:(UIColor *)color;
 - (void) hideWord;
 
-- (void) preparePianoDecoratorRoundCorners;
+- (void) configureRoundedCorners;
+
+- (void) disableResizePianoDecorators;
+- (void) enableResizePianoDecorators;
 
 @end

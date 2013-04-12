@@ -7,14 +7,17 @@
 //
 
 #import "WDIndexDiaryCollectionViewCell.h"
+#import "UIView+RoundedCorners.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface WDIndexDiaryCollectionViewCell()
 
 #pragma mark - Properties
 
-@property(nonatomic, strong) UILabel  *wordLabel;
-@property(nonatomic) BOOL             pianoDecoratorsPrepared;
+@property(nonatomic, strong) UILabel    *wordLabel;
+@property(nonatomic) BOOL               roundedCornersConfigured;
+@property(nonatomic) UIViewAutoresizing leftPianoDecoratorAutoresizingMask;
+@property(nonatomic) UIViewAutoresizing rightPianoDecoratorAutoresizingMask;
 
 #pragma mark - Methods
 
@@ -30,7 +33,10 @@
 @synthesize wordLabel                           = wordLabel_;
 @synthesize leftPianoDecorator                  = leftPianoDecorator_;
 @synthesize rightPianoDecorator                 = rightPianoDecorator_;
-@synthesize pianoDecoratorsPrepared             = pianoDecoratorsPrepared_;
+@synthesize roundedCornersConfigured            = roundedCornersConfigured_;
+@synthesize leftPianoDecoratorAutoresizingMask  = leftPianoDecoratorAutoresizingMask_;
+@synthesize rightPianoDecoratorAutoresizingMask = rightPianoDecoratorAutoresizingMask_;
+@synthesize keyContainerView                    = keyContainerView_;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -43,26 +49,16 @@
 
 #pragma mark - Auxiliary - Init
 
-- (void)preparePianoDecoratorRoundCorners
+- (void)configureRoundedCorners
 {
-    if (!self.pianoDecoratorsPrepared) {
-        NSArray *decorators = [NSArray arrayWithObjects:self.leftPianoDecorator, self.rightPianoDecorator, nil];
-        NSArray *roundedCorners = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:UIRectCornerBottomRight], [NSNumber numberWithUnsignedInteger:UIRectCornerBottomLeft], nil];
-        
-        for (NSUInteger decoratorIt = 0; decoratorIt < decorators.count; ++decoratorIt) {
-            UIView *decoratorView = [decorators objectAtIndex:decoratorIt];
-            NSNumber *maskRoundedCorner = [roundedCorners objectAtIndex:decoratorIt];
-            
-            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:decoratorView.bounds
-                                                           byRoundingCorners:[maskRoundedCorner unsignedIntegerValue]
-                                                                 cornerRadii:CGSizeMake(10.0, 10.0)];
-            CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-            maskLayer.frame = decoratorView.bounds;
-            maskLayer.path = maskPath.CGPath;
-            decoratorView.layer.mask = maskLayer;
+    if (!self.roundedCornersConfigured) {
+        if (self.leftPianoDecorator.autoresizingMask != 0) {
+            [self.leftPianoDecorator addRoundedCorners:UIRectCornerBottomRight withRadius:10.0];
+            [self.rightPianoDecorator addRoundedCorners:UIRectCornerBottomLeft withRadius:10.0];
         }
+        [self addRoundedCorners:UIRectCornerBottomRight | UIRectCornerBottomLeft withRadius:15.0];
         
-        self.pianoDecoratorsPrepared = YES;
+        self.roundedCornersConfigured = YES;
     }
 }
 
@@ -74,7 +70,13 @@
     // Drawing code
 }
 */
-
+/*
+-(void)layoutSubviews
+{
+    self.roundedCornersConfigured = NO;
+    [self configureRoundedCorners];
+}
+*/
 #pragma mark - Auxiliary - Actions
 
 - (void)createAndAddWordLabelWithText:(NSString *)text fontFamily:(NSString *)font size:(CGFloat)sizeFont andColor:(UIColor *)color
@@ -121,6 +123,24 @@
 {
     [self.wordLabel removeFromSuperview];
     self.wordLabel = nil;
+}
+
+- (void) disableResizePianoDecorators
+{
+    if (self.leftPianoDecorator.autoresizingMask != 0) {
+        self.leftPianoDecoratorAutoresizingMask = self.leftPianoDecorator.autoresizingMask;
+        self.rightPianoDecoratorAutoresizingMask = self.rightPianoDecorator.autoresizingMask;
+        self.leftPianoDecorator.autoresizingMask = 0;
+        self.rightPianoDecorator.autoresizingMask = 0;
+    }
+}
+
+- (void) enableResizePianoDecorators
+{
+    if (self.leftPianoDecorator.autoresizingMask == 0) {
+        self.leftPianoDecorator.autoresizingMask = self.leftPianoDecoratorAutoresizingMask;
+        self.rightPianoDecorator.autoresizingMask = self.rightPianoDecoratorAutoresizingMask;
+    }
 }
 
 

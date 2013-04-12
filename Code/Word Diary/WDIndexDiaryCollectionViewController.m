@@ -15,6 +15,7 @@
 #import "WDEmotion.h"
 #import "WDStyle.h"
 #import "UIColor+hexColorCreation.h"
+#import "UIView+RoundedCorners.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface WDIndexDiaryCollectionViewController ()
@@ -44,7 +45,7 @@
 
 - (void)                             showWordAtSelectedCell;
 
-- (void)                             prepareCellInRemoveModeWithUpDirection:(BOOL)up;
+- (void)                             prepareCellInRemoveModeWithUpDirection:(BOOL)up andDuration:(CGFloat)duration;
 
 @end
 
@@ -144,12 +145,12 @@
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.pagingEnabled = NO;
-    self.collectionView.layer.cornerRadius = 10.0;
     self.collectionView.clipsToBounds = YES;
     self.collectionView.layer.masksToBounds = YES;
     self.collectionView.opaque = YES;
     self.collectionView.bounces = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
+  //  [self.collectionView addRoundedCorners:UIRectCornerTopLeft | UIRectCornerTopRight withRadius:10.0];
     
     self.view.backgroundColor = [UIColor clearColor];
 }
@@ -179,11 +180,11 @@
 
 #pragma mark - Auxiliary Gesture Recognizer
 
-- (void)prepareCellInRemoveModeWithUpDirection:(BOOL)up
+- (void)prepareCellInRemoveModeWithUpDirection:(BOOL)up andDuration:(CGFloat)duration
 {
     if (self.indexPathOfCellInRemoveMode) {
         const CGFloat moveDistance = 122.0;
-        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
+        WDIndexDiaryCollectionViewCell *cell = (WDIndexDiaryCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
         NSIndexPath *indexPathOfCell = [self.indexPathOfCellInRemoveMode copy];
 
         // Menu
@@ -217,10 +218,10 @@
             [self.view.superview insertSubview:removeMenuView belowSubview:self.view];
         }
         
-        // Animacion 
+        // Animacion
         [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-        [UIView animateWithDuration:0.25 animations:^{
-            cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, up ? cell.frame.size.height - moveDistance : cell.frame.size.height + moveDistance);
+        [UIView animateWithDuration:duration animations:^{
+            cell.frame = CGRectMake(cell.frame.origin.x, up ? cell.frame.origin.y - moveDistance : cell.frame.origin.y + moveDistance, cell.frame.size.width, cell.frame.size.height);
         } completion:^(BOOL finished) {
             if (up) {
                 // Cambiamos posicion menu para poder aceptar los eventos sobre el boton. En caso contrario estara detras del collectionview y no recibira
@@ -258,11 +259,25 @@
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:tapLocation];
     if (indexPath) {
         if (gestureRecognizer == self.dobleTapGestureRecognizer) {
-            [self.delegate indexDiaryScreenViewController:self wordDoubleTapSelectedAtIndex:[WDWordDiary sharedWordDiary].words.count - indexPath.row - 1];
+            [self.delegate indexDiaryScreenViewController:self wordDoubleTapSelectedAtIndex:[self convertIndexRowToWordDiaryIndex:indexPath.row]];
         } else if (gestureRecognizer == self.singleTapGestureRecognizer) {
             self.selectedCellIndexPath = indexPath;
-            [self.delegate indexDiaryScreenViewController:self wordSingleTapSelectedAtIndex:[WDWordDiary sharedWordDiary].words.count - indexPath.row - 1];
             
+            
+            WDIndexDiaryCollectionViewCell *cell = (WDIndexDiaryCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+            const NSUInteger wordIndex = [self convertIndexRowToWordDiaryIndex:indexPath.row];
+            WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:wordIndex];
+            WDPalette* palette = [word.emotion findPaletteOfIdName:word.paletteIdNameOfEmotion];
+            
+            [cell showInitialLetterOfWord:word.word fontFamily:word.style.familyFont andColor:[UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO]];
+            [self.delegate indexDiaryScreenViewController:self wordSingleTapSelectedAtIndex:[self convertIndexRowToWordDiaryIndex:indexPath.row]];
+            
+            cell.keyContainerView.backgroundColor = [UIColor whiteColor];
+            [UIView animateWithDuration:1 animations:^{
+                cell.keyContainerView.backgroundColor = [UIColor colorWithHexadecimalValue:palette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+            } completion:^(BOOL finished) {
+                cell.keyContainerView.backgroundColor = [UIColor clearColor];
+            }];
             /*
              UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
              CAGradientLayer *keyGradient = [CAGradientLayer layer];
@@ -317,13 +332,13 @@
     
     if (gestureRecognizer == self.swipeCellUpRecognizer) {
         if (newCellIndexPathToRemove != self.indexPathOfCellInRemoveMode) {
-            [self prepareCellInRemoveModeWithUpDirection:NO];
+            [self prepareCellInRemoveModeWithUpDirection:NO andDuration:0.3];
         }
         self.indexPathOfCellInRemoveMode = [self.collectionView indexPathForItemAtPoint:tapLocation];
-        [self prepareCellInRemoveModeWithUpDirection:YES];
+        [self prepareCellInRemoveModeWithUpDirection:YES andDuration:0.3];
     } else if (gestureRecognizer == self.swipeCellDownRecognizer) {
         if (newCellIndexPathToRemove == self.indexPathOfCellInRemoveMode) {
-            [self prepareCellInRemoveModeWithUpDirection:NO];
+            [self prepareCellInRemoveModeWithUpDirection:NO andDuration:0.3];
             self.indexPathOfCellInRemoveMode = nil;
         }
     }
@@ -335,7 +350,7 @@
 {
     UICollectionViewFlowLayout *collectionViewFlow = [[UICollectionViewFlowLayout alloc] init];
     
-    const CGFloat numItemsPerRow = 5.0;
+    const CGFloat numItemsPerRow = 4.0;
     const CGFloat xSeparator = 0.0;
     const CGFloat ySeparator = 0;
     
@@ -371,7 +386,7 @@
     cell.dateLabel.text = [[word yearAsString] stringByAppendingFormat:@"\n%@", isTodayWord ? NSLocalizedString(@"TAG_TODAY", @"") : [word dayAndMonthAbreviateAsString]];
     cell.dateLabel.textColor = [cell.dayDiaryLabel.textColor copy];
     cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:palette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
-    [cell preparePianoDecoratorRoundCorners];
+    [cell configureRoundedCorners];
     
     return cell;
 }
@@ -413,6 +428,8 @@
 
 - (void)removeButtonPressed:(UIButton *)button
 {
+    [self prepareCellInRemoveModeWithUpDirection:NO andDuration:0];
+
     // Nota: en el tag TAMBIEN se halla el row de la celda
     NSAssert(self.indexPathOfCellInRemoveMode.row == button.tag, @"Problemas de corcondancia entre el boton para borrar celda y la celda seleccionada a borrar");
     NSUInteger wordDiaryIndex = [self convertIndexRowToWordDiaryIndex:self.indexPathOfCellInRemoveMode.row];
@@ -424,6 +441,7 @@
     
     [self.collectionView performBatchUpdates:^{
         [self.collectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject:self.indexPathOfCellInRemoveMode]];
+        //ToDo: Recarga de palabras
     } completion:^(BOOL finished) {
         [self removeMenuFromPendingRemoveMenusWithIndexPath:self.indexPathOfCellInRemoveMode];
         self.indexPathOfCellInRemoveMode = nil;
@@ -435,7 +453,7 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     if (self.indexPathOfCellInRemoveMode) {
-        [self prepareCellInRemoveModeWithUpDirection:NO];
+        [self prepareCellInRemoveModeWithUpDirection:NO andDuration:0];
         self.indexPathOfCellInRemoveMode = nil;
     }
 }
