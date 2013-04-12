@@ -286,6 +286,12 @@
     [self saveAll];
 }
 
+- (void)removeWordAtIndexPosition:(NSUInteger)wordIndexPosition
+{
+    WDWord *word = [self.words objectAtIndex:wordIndexPosition];
+    [self removeWord:word];
+}
+
 - (void)changeToEmotionIndex:(NSUInteger)emotionIdx inWord:(WDWord *)word
 {
     WDEmotion *emotion = [self.emotions objectAtIndex:emotionIdx];

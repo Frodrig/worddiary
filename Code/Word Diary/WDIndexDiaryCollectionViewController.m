@@ -31,6 +31,8 @@
 @property (nonatomic, strong) NSIndexPath                  *indexPathOfCellInRemoveMode;
 @property (nonatomic, strong) NSMutableDictionary          *pendingRemoveMenus;
 
+- (NSUInteger)                       convertIndexRowToWordDiaryIndex:(NSUInteger)indexRow;
+
 - (UICollectionViewFlowLayout *)     createAndConfigureCollectionViewFlowLayout;
 
 - (void)                             tapHandle:(UITapGestureRecognizer *)gestureRecognizer;
@@ -182,6 +184,7 @@
     if (self.indexPathOfCellInRemoveMode) {
         const CGFloat moveDistance = 122.0;
         UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.indexPathOfCellInRemoveMode];
+        NSIndexPath *indexPathOfCell = [self.indexPathOfCellInRemoveMode copy];
 
         // Menu
         UIView *removeMenuView = nil;
@@ -203,7 +206,7 @@
             [removeBtn setImage:[UIImage imageNamed:@"37-white-circle-x"] forState:UIControlStateNormal];
             removeBtn.backgroundColor = [UIColor clearColor];
             [removeBtn addTarget:self action:@selector(removeButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            removeBtn.userInteractionEnabled = YES;
+            removeBtn.enabled = ![[[WDWordDiary sharedWordDiary].words objectAtIndex:[self convertIndexRowToWordDiaryIndex:self.indexPathOfCellInRemoveMode.row]] isTodayWord];
             removeBtn.tag = self.indexPathOfCellInRemoveMode.row;
             [removeMenuView addSubview:removeBtn];
                         
@@ -219,14 +222,13 @@
         [UIView animateWithDuration:0.25 animations:^{
             cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, up ? cell.frame.size.height - moveDistance : cell.frame.size.height + moveDistance);
         } completion:^(BOOL finished) {
-            NSIndexPath *indexPathForCell = [self.collectionView indexPathForCell:cell];
             if (up) {
                 // Cambiamos posicion menu para poder aceptar los eventos sobre el boton. En caso contrario estara detras del collectionview y no recibira
                 // Nota: Inicialmente se pone detras para consegir el efecto persiana
                 [self.view.superview insertSubview:removeMenuView aboveSubview:self.view];
             } else {
                 // Destruimos el menu
-                [self removeMenuFromPendingRemoveMenusWithIndexPath:indexPathForCell];
+                [self removeMenuFromPendingRemoveMenusWithIndexPath:indexPathOfCell];
                 if (self.pendingRemoveMenus.count == 0) {
                     self.view.userInteractionEnabled = YES;
                 }
@@ -327,7 +329,7 @@
     }
 }
 
-#pragma mark - Auxiliary Init
+#pragma mark - Auxiliary 
 
 - (UICollectionViewFlowLayout *) createAndConfigureCollectionViewFlowLayout
 {
@@ -349,13 +351,18 @@
     return collectionViewFlow;
 }
 
+- (NSUInteger)convertIndexRowToWordDiaryIndex:(NSUInteger)indexRow
+{
+    return [WDWordDiary sharedWordDiary].words.count - indexRow - 1;
+}
+
 #pragma mark - UICollectionViewDataSource
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     WDIndexDiaryCollectionViewCell *cell = [self.collectionView dequeueReusableCellWithReuseIdentifier:@"WDIndexDiaryCollectionViewCell" forIndexPath:indexPath];    
    
-    WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:[WDWordDiary sharedWordDiary].words.count - indexPath.row - 1];
+    WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:[self convertIndexRowToWordDiaryIndex:indexPath.row]];
     const BOOL isTodayWord = [word isTodayWord];
     WDPalette* palette = [word.emotion findPaletteOfIdName:word.paletteIdNameOfEmotion];
     
@@ -406,16 +413,31 @@
 
 - (void)removeButtonPressed:(UIButton *)button
 {
-    // En el tag se hallara el row de la celda
-    NSLog(@"Llega evento");
-    return;
+    // Nota: en el tag TAMBIEN se halla el row de la celda
+    NSAssert(self.indexPathOfCellInRemoveMode.row == button.tag, @"Problemas de corcondancia entre el boton para borrar celda y la celda seleccionada a borrar");
+    NSUInteger wordDiaryIndex = [self convertIndexRowToWordDiaryIndex:self.indexPathOfCellInRemoveMode.row];
+    [[WDWordDiary sharedWordDiary] removeWordAtIndexPosition:wordDiaryIndex];
+    
+    // Nota: El borrado logico del menu se hace tras el borrado de las celdas, para que todo este correcto visualmente, ponemos el boton detras de la view
+    UIView *removeMenuView = [self.pendingRemoveMenus objectForKey:[NSNumber numberWithUnsignedInteger:self.indexPathOfCellInRemoveMode.row]];
+    [self.view.superview insertSubview:removeMenuView belowSubview:self.view];
+    
     [self.collectionView performBatchUpdates:^{
-        NSAssert(self.indexPathOfCellInRemoveMode.row == button.tag, @"Problemas de corcondancia entre el boton para borrar celda y la celda seleccionada a borrar");
         [self.collectionView deleteItemsAtIndexPaths:[NSArray arrayWithObject:self.indexPathOfCellInRemoveMode]];
+    } completion:^(BOOL finished) {
         [self removeMenuFromPendingRemoveMenusWithIndexPath:self.indexPathOfCellInRemoveMode];
         self.indexPathOfCellInRemoveMode = nil;
-    } completion:^(BOOL finished) {
     }];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (self.indexPathOfCellInRemoveMode) {
+        [self prepareCellInRemoveModeWithUpDirection:NO];
+        self.indexPathOfCellInRemoveMode = nil;
+    }
 }
 
 @end
