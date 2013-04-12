@@ -13,6 +13,9 @@
 #import "WDPalette.h"
 #import "WDStyle.h"
 #import "WDWordDiary.h"
+#import "UIView+RoundedCorners.h"
+#import "UIColor+hexColorCreation.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface WDIndexDiaryScreenViewController ()
 
@@ -23,6 +26,7 @@
 @property(nonatomic, strong) UIButton                                *helpBtn;
 @property(nonatomic, strong) UIButton                                *infoBtn;
 @property(nonatomic, strong) WDIndexDiaryCollectionViewController    *indexDiaryCollectionViewController;
+@property(nonatomic, strong) UIView                                  *displayView;
 
 - (void)auxiliaryButtonPressed:(UIButton *)button;
 
@@ -30,6 +34,7 @@
 
 - (void) createAuxiliaryButtons;
 - (void) createIndexDiaryCollectionViewController;
+- (void) createDisplayView;
 
 @end
 
@@ -44,6 +49,7 @@
 @synthesize indexDiaryCollectionViewController = indexDiaryCollectionViewController_;
 @synthesize delegate                           = delegate_;
 @synthesize dataSource                         = dataSource_;
+@synthesize displayView                        = displayView_;
 
 #pragma mark - Init
 
@@ -68,9 +74,13 @@
     [self createAuxiliaryButtons];
     //[self.view addSubview:self.auxiliaryButtonsContainerView];
     
+    // Display
+    [self createDisplayView];
+    [self.view addSubview:self.displayView];
+
     // Collection View
     [self createIndexDiaryCollectionViewController];
-    [self.view addSubview:self.indexDiaryCollectionViewController.view];
+    [self.view insertSubview:self.indexDiaryCollectionViewController.view belowSubview:self.displayView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -111,16 +121,31 @@
     [auxiliaryButtonsContainerView_ addSubview:infoBtn_];
 }
 
+- (void)createDisplayView
+{
+    displayView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 125.0)];
+  //  [displayView_ addRoundedCorners:UIRectCornerTopLeft | UIRectCornerTopRight withRadius:10.0];
+
+    displayView_.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
+    //displayView_.layer.borderColor = [UIColor blackColor].CGColor;
+    //displayView_.layer.borderWidth = 1;
+  //  displayView_.layer.shadowColor = [UIColor blackColor].CGColor;
+    displayView_.layer.shadowOffset = CGSizeMake(0, 2);
+    displayView_.layer.shadowRadius = 2;
+    displayView_.layer.shadowOpacity = 0.5;
+}
+
 - (void)createIndexDiaryCollectionViewController
 {
     indexDiaryCollectionViewController_ = [[WDIndexDiaryCollectionViewController alloc] init];
     indexDiaryCollectionViewController_.delegate = self;
     indexDiaryCollectionViewController_.dataSource = self;
     
+    const CGFloat yOrigin = displayView_.frame.origin.y + displayView_.frame.size.height;
     indexDiaryCollectionViewController_.view.frame = CGRectMake(0.0,
-                                                                0.0,//auxiliaryButtonsContainerView_.frame.origin.y + auxiliaryButtonsContainerView_.frame.size.height,
+                                                                yOrigin,//auxiliaryButtonsContainerView_.frame.origin.y + auxiliaryButtonsContainerView_.frame.size.height,
                                                                 self.view.bounds.size.width - 0.0,
-                                                                self.view.bounds.size.height);//self.view.bounds.size.height - auxiliaryButtonsContainerView_.bounds.size.height - 0.0);
+                                                                self.view.bounds.size.height - yOrigin);//self.view.bounds.size.height - auxiliaryButtonsContainerView_.bounds.size.height - 0.0);
     indexDiaryCollectionViewController_.collectionView.backgroundColor = [UIColor clearColor];
     
 
@@ -145,13 +170,13 @@
 - (void)indexDiaryScreenViewController:(WDIndexDiaryCollectionViewController *)controller wordSingleTapSelectedAtIndex:(NSUInteger)index
 {
     WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:index];
-    //WDPalette *palette = [word.emotion findPaletteOfIdName:word.paletteIdNameOfEmotion];
+    WDPalette *palette = [word.emotion findPaletteOfIdName:word.paletteIdNameOfEmotion];
     
-    UILabel *newWordLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 44.0, self.view.bounds.size.width - 10.0, 132.0)];
+    UILabel *newWordLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, 0.0, self.view.bounds.size.width - 10.0, 125.0)];
     newWordLabel.attributedText = [[NSAttributedString alloc] initWithString:word.word
                                                                   attributes:@{
                                                          NSFontAttributeName: [UIFont fontWithName:word.style.familyFont size:68.0],
-                                                  NSForegroundColorAttributeName: [UIColor blackColor],
+                                                  NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO],
                                                              NSKernAttributeName: [NSNumber numberWithInt:3.0]}];
     newWordLabel.textAlignment = NSTextAlignmentCenter;
     newWordLabel.adjustsFontSizeToFitWidth = YES;
@@ -159,11 +184,17 @@
     newWordLabel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:newWordLabel];
     
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView animateWithDuration:1.75 animations:^{
+    self.displayView.backgroundColor = [UIColor colorWithHexadecimalValue:palette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView animateWithDuration:2.75 animations:^{
         newWordLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
         [newWordLabel removeFromSuperview];
+    }];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:5 animations:^{
+        self.displayView.backgroundColor = [UIColor colorWithWhite:0 alpha:1.0];
+    } completion:^(BOOL finished) {
     }];
 }
 

@@ -9,6 +9,9 @@
 #import "WDAppDelegate.h"
 #import "WDWordDiary.h"
 #import "WDWord.h"
+#import "WDPalette.h"
+#import "WDEmotion.h"
+#import "WDStyle.h"
 //#import "WDAllWordsScreenViewController.h"
 #import "WDSelectedWordScreenViewController.h"
 
@@ -84,7 +87,24 @@
         NSString *wordIt = [words objectAtIndex:index];
         NSTimeInterval timeInterval = ((NSNumber *)[timeIntervalSince1970 objectAtIndex:index]).doubleValue;
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
-        [[WDWordDiary sharedWordDiary] createWord:wordIt inTimeInterval:date.timeIntervalSince1970];
+        
+        WDWord *word = [[WDWordDiary sharedWordDiary] createWord:wordIt inTimeInterval:date.timeIntervalSince1970];
+        
+        NSUInteger emotionIdx = rand() % [WDWordDiary sharedWordDiary].emotions.count;
+        WDEmotion *emotionObj = [[WDWordDiary sharedWordDiary].emotions objectAtIndex:emotionIdx];
+        NSAssert(emotionObj, @"emotion unknow");
+        word.emotion = emotionObj;
+        WDPalette *palette = [[emotionObj.palette allObjects] objectAtIndex:0];
+        NSAssert(palette, @"palette unknow");
+        word.paletteIdNameOfEmotion = palette.idName;
+        
+        NSUInteger styleIdx = rand() % [WDWordDiary sharedWordDiary].styles.count;
+        word.style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:styleIdx];
+        NSAssert(word.style, @"style unknow");
+
+        NSLog(@"word %@ emotion %@ palette %@ style %@", word.word, word.emotion.name, word.paletteIdNameOfEmotion, word.style.familyFont);
+
+        [[WDWordDiary sharedWordDiary] saveAll];
     }
 }
 

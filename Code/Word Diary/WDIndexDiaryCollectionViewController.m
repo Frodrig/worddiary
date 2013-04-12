@@ -150,7 +150,8 @@
     self.collectionView.opaque = YES;
     self.collectionView.bounces = NO;
     self.collectionView.backgroundColor = [UIColor clearColor];
-  //  [self.collectionView addRoundedCorners:UIRectCornerTopLeft | UIRectCornerTopRight withRadius:10.0];
+    
+    //[self.collectionView addRoundedCorners:UIRectCornerTopLeft | UIRectCornerTopRight withRadius:10.0];
     
     self.view.backgroundColor = [UIColor clearColor];
 }
@@ -386,6 +387,8 @@
     cell.dateLabel.text = [[word yearAsString] stringByAppendingFormat:@"\n%@", isTodayWord ? NSLocalizedString(@"TAG_TODAY", @"") : [word dayAndMonthAbreviateAsString]];
     cell.dateLabel.textColor = [cell.dayDiaryLabel.textColor copy];
     cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:palette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+    NSLog(@"color %@", cell.contentView.backgroundColor.description);
+
     [cell configureRoundedCorners];
     
     return cell;
