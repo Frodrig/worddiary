@@ -2,20 +2,20 @@
 //  WDWord.m
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 03/04/13.
+//  Created by Fernando Rodríguez Martínez on 15/04/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
 #import "WDWord.h"
-#import "WDEmotion.h"
+#import "WDPalette.h"
 #import "WDStyle.h"
 #import "WDUtils.h"
 
 @interface WDWord()
 
-- (void)KVCRegister;
+- (void)      KVCRegister;
 
-- (NSString *)createDayAndMonthAbreviateAsString:(BOOL)abreviate;
+- (NSString *) createDayAndMonthAbreviateAsString:(BOOL)abreviate;
 
 @end
 
@@ -23,9 +23,8 @@
 
 @dynamic timeInterval;
 @dynamic word;
-@dynamic paletteIdNameOfEmotion;
-@dynamic emotion;
 @dynamic style;
+@dynamic palette;
 
 #pragma mark - Init
 

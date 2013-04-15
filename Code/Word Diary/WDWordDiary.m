@@ -10,20 +10,18 @@
 #import "WDWord.h"
 #import "WDStyle.h"
 #import "WDPalette.h"
-#import "WDEmotion.h"
 #import "WDBackgroundDefs.h"
 
 @interface WDWordDiary()
 
-- (void)configureModelAndContextOfDB;
-- (NSURL *)storeFileURLWithPath;
+- (void)      configureModelAndContextOfDB;
+- (NSURL *)   storeFileURLWithPath;
 
 - (NSArray *) fetchAllEntitiesOfType:(NSString *)entity;
 
 - (void)      prepareStyles;
 - (void)      addPalette:(NSString *)idName backgroundColor:(NSString *)backColor wordColor:(NSString *)wordColor andAccesoriesColor:(NSString *)accessoriesColor;       
 - (void)      preparePalettes;
-- (void)      prepareEmotions;
 - (void)      prepareWords;
 
 - (void)      addObserverToWord:(WDWord *)word;
@@ -41,7 +39,6 @@
 @synthesize words    = words_;
 @synthesize colors   = colors_;
 @synthesize styles   = styles_;
-@synthesize emotions = emotions_;
 @synthesize palettes = palettes_;
 
 #pragma mark - Singleton
@@ -69,7 +66,6 @@
     if (self) {
         [self configureModelAndContextOfDB];
         [self preparePalettes];
-        [self prepareEmotions];
         [self prepareStyles];
         [self prepareWords];
     }
@@ -179,41 +175,6 @@
         [self saveAll];
     }
 }
-                                          
-- (void)prepareEmotions
-{
-    NSArray *result = [self fetchAllEntitiesOfType:@"WDEmotion"];
-    if (result.count > 0) {
-        emotions_ = result;
-    } else {
-        NSArray *emotionsNames = [NSArray arrayWithObjects:@"TAG_EMOTION_NAME_NEUTRAL",
-                                                           @"TAG_EMOTION_NAME_LOVE",
-                                                           @"TAG_EMOTION_NAME_FEAR",
-                                                           @"TAG_EMOTION_NAME_JOY",
-                                                           @"TAG_EMOTION_NAME_SADNESS",
-                                                           @"TAG_EMOTION_NAME_SURPRISE",
-                                                           @"TAG_EMOTION_NAME_DISGUST",
-                                                      nil];
-        NSMutableArray *emotionInstances = [NSMutableArray arrayWithCapacity:emotionsNames.count];
-        
-        NSInteger paletteIndex = 0;
-        for (NSString *emotionName in emotionsNames) {
-            WDEmotion *emotion = [NSEntityDescription insertNewObjectForEntityForName:@"WDEmotion" inManagedObjectContext:self.context];
-            emotion.name = emotionName;
-            // ToDo: Por ahora todas las emociones con las mismas paletas
-            WDPalette *paletteOfEmotion = [palettes_ objectAtIndex:paletteIndex++];
-            [emotion addPaletteObject:paletteOfEmotion];
-
-            [emotionInstances addObject:emotion];
-        }
-        
-        [self saveAll];
-        
-        emotions_ = emotionInstances;
-    }
-    
-    result = [result sortedArrayUsingSelector:@selector(compare:)];
-  }
 
 - (void)prepareWords
 {
@@ -252,13 +213,8 @@
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
     wordObject.style = [self defaultStyle];
-    wordObject.emotion = [self defaultEmotion];
-    // ToDo: Este valor tiene que venir de un parametro de la funcion
-    WDPalette *paletteOfEmotion = [wordObject.emotion.palette anyObject];
-    wordObject.paletteIdNameOfEmotion = paletteOfEmotion.idName;
+    wordObject.palette = [self defaultPalette];
     
-    NSLog(@"createWord emotion name %@", wordObject.emotion.name);
-
     [words_ addObject:wordObject];
     [self sortWords];
     
@@ -274,10 +230,10 @@
     [word removeObserver:self forKeyPath:@"word"];
     [word removeObserver:self forKeyPath:@"timeInterval"];
     [word removeObserver:self forKeyPath:@"style"];
-    //[word removeObserver:self forKeyPath:@"emotion"];
+    [word removeObserver:self forKeyPath:@"palette"];
     
-    [self.context refreshObject:word.emotion mergeChanges:NO];
     [self.context refreshObject:word.style mergeChanges:NO];
+    [self.context refreshObject:word.palette mergeChanges:NO];
     [self.context refreshObject:word mergeChanges:NO];
     
     [words_ removeObject:word];
@@ -290,23 +246,6 @@
 {
     WDWord *word = [self.words objectAtIndex:wordIndexPosition];
     [self removeWord:word];
-}
-
-- (void)changeToEmotionIndex:(NSUInteger)emotionIdx inWord:(WDWord *)word
-{
-    WDEmotion *emotion = [self.emotions objectAtIndex:emotionIdx];
-    [self changeToEmotion:emotion inWord:word];
-}
-
-- (void)changeToEmotion:(WDEmotion *)emotion inWord:(WDWord *)word
-{
-    NSAssert(emotion, @"Invalid emotion");
-    
-    word.emotion = emotion;
-    WDPalette *palette = [[emotion.palette allObjects] objectAtIndex:0];
-    word.paletteIdNameOfEmotion = palette.idName;
-    
-    [self saveAll];
 }
 
 - (void)saveAll
@@ -394,8 +333,7 @@
     [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"style" options:0 context:NULL];
-    // Cambiar una emocion es mas complejo que cambiar la variable. Hay que usar un metodo especifico y es desde ahi desde donde hacemos el save
-    //[word addObserver:self forKeyPath:@"emotion" options:0 context:NULL];
+    [word addObserver:self forKeyPath:@"palette" options:0 context:NULL];
 }
 
 - (void)sortWords
@@ -411,23 +349,14 @@
 
 #pragma mark - Default
 
-- (WDEmotion *)defaultEmotion
-{
-    return [self.emotions objectAtIndex:0];
-}
-
 - (WDStyle *)defaultStyle
 {
-    /*
-    NSUInteger indexOfObject = [self.fonts indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        WDFont *font = obj;
-        *stop = [font.family compare:@"SnellRoundhand"] == NSOrderedSame;
-        return *stop;
-    }];
-    
-    NSAssert(indexOfObject != NSNotFound, @"Object index of default font not found");
-    */
     return [self.styles objectAtIndex:0];
+}
+
+- (WDPalette *)defaultPalette
+{
+    return [self.palettes objectAtIndex:0];
 }
 
 #pragma mark - Key Value Observing

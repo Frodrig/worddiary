@@ -10,7 +10,6 @@
 
 @class WDWord;
 @class WDStyle;
-@class WDEmotion;
 @class WDPalette;
 
 @interface WDWordDiary : NSObject
@@ -20,7 +19,6 @@
 @property (nonatomic, readonly, strong) NSMutableArray         *words;
 @property (nonatomic, strong)           NSArray                *colors;
 @property (nonatomic, strong)           NSArray                *styles;
-@property (nonatomic, strong)           NSArray                *emotions;
 @property (nonatomic, strong)           NSArray                *palettes;
 
 + (WDWordDiary *) sharedWordDiary;
@@ -28,9 +26,6 @@
 - (WDWord *)      createWord:(NSString *)word inTimeInterval:(double)timeInterval;
 - (void)          removeWord:(WDWord *)word;
 - (void)          removeWordAtIndexPosition:(NSUInteger)wordIndexPosition;
-
-- (void)          changeToEmotion:(WDEmotion *)emotion inWord:(WDWord *)word;
-- (void)          changeToEmotionIndex:(NSUInteger)emotionIdx inWord:(WDWord *)word;
 
 - (void)          saveAll;
 
@@ -40,8 +35,8 @@
 - (WDWord *)      findPreviousWordOf:(WDWord *)word;
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
 
-- (WDEmotion *)   defaultEmotion;
 - (WDStyle *)     defaultStyle;
+- (WDPalette *)   defaultPalette;
 
 - (WDPalette *)   findPaletteWithIdName:(NSString *)idName;
 

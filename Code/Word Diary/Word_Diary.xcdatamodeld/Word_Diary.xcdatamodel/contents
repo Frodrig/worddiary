@@ -1,33 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="WDEmotion" representedClassName="WDEmotion" syncable="YES">
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="palette" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDPalette" inverseName="emotion" inverseEntity="WDPalette" syncable="YES"/>
-        <relationship name="word" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDWord" inverseName="emotion" inverseEntity="WDWord" syncable="YES"/>
-    </entity>
     <entity name="WDPalette" representedClassName="WDPalette" syncable="YES">
         <attribute name="accessoriesColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="backgroundColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="idName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="reservedColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wordColor" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="emotion" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDEmotion" inverseName="palette" inverseEntity="WDEmotion" syncable="YES"/>
+        <relationship name="word" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDWord" inverseName="palette" inverseEntity="WDWord" syncable="YES"/>
     </entity>
     <entity name="WDStyle" representedClassName="WDStyle" syncable="YES">
         <attribute name="familyFont" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="word" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WDWord" inverseName="style" inverseEntity="WDWord" syncable="YES"/>
     </entity>
     <entity name="WDWord" representedClassName="WDWord" syncable="YES">
-        <attribute name="paletteIdNameOfEmotion" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timeInterval" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="word" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="emotion" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WDEmotion" inverseName="word" inverseEntity="WDEmotion" syncable="YES"/>
+        <relationship name="palette" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WDPalette" inverseName="word" inverseEntity="WDPalette" syncable="YES"/>
         <relationship name="style" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WDStyle" inverseName="word" inverseEntity="WDStyle" syncable="YES"/>
     </entity>
     <elements>
-        <element name="WDEmotion" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="WDPalette" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="WDStyle" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="WDWord" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="WDPalette" positionX="-342" positionY="-549" width="128" height="133"/>
+        <element name="WDStyle" positionX="-27" positionY="-432" width="128" height="75"/>
+        <element name="WDWord" positionX="-632" positionY="-264" width="236" height="103"/>
     </elements>
 </model>

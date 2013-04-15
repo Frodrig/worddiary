@@ -2,21 +2,21 @@
 //  WDPalette.m
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 03/04/13.
+//  Created by Fernando Rodríguez Martínez on 15/04/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
 #import "WDPalette.h"
-#import "WDEmotion.h"
+#import "WDWord.h"
 
 
 @implementation WDPalette
 
-@dynamic backgroundColor;
-@dynamic wordColor;
 @dynamic accessoriesColor;
-@dynamic reservedColor;
+@dynamic backgroundColor;
 @dynamic idName;
-@dynamic emotion;
+@dynamic reservedColor;
+@dynamic wordColor;
+@dynamic word;
 
 @end
