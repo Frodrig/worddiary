@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WDWordScreenCollectionViewControllerDataSource.h"
 
-@interface WDWordScreenViewController : UIViewController<WDWordScreenCollectionViewControllerDataSource>
+@interface WDWordScreenViewController : UIViewController
 
 @end

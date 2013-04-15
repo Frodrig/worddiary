@@ -2,7 +2,7 @@
 //  WDWordRepresentationViewDataSource.h
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 14/03/13.
+//  Created by Fernando Rodríguez Martínez on 15/04/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
@@ -12,11 +12,9 @@
 
 @protocol WDWordRepresentationViewDataSource <NSObject>
 
-- (NSString *)actualTextValueForWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
-- (NSString *)actualFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
-- (BOOL)isInWritingModeFoWordRepresentationView:(WDWordRepresentationView *)wordRepresentationView;
+- (NSString *) selectedWordTextForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
+- (UIColor *)  selectedWordColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
-- (UIColor *)actualSelectedWordColorForWordRepresentation:(WDWordRepresentationView *)wordRepresentation;
-- (UIColor *)actualSelectedWordAccessoriesWordRepresentation:(WDWordRepresentationView *)wordRepresentation;
+- (BOOL)       isKeyboardActiveForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
 @end

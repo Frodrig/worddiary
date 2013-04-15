@@ -2,25 +2,15 @@
 //  WDWordRepresentationView.h
 //  Word Diary
 //
-//  Created by Fernando Rodríguez Martínez on 13/03/13.
+//  Created by Fernando Rodríguez Martínez on 15/04/13.
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "WDWordRepresentationViewDataSource.h"
-#import "WDWordRepresentationViewDelegate.h"
-#import "WDWordTextViewDataSource.h"
 
-@interface WDWordRepresentationView : UIView<UIKeyInput, WDWordTextViewDataSource>
+@interface WDWordRepresentationView : UIView
 
-@property (weak, nonatomic) id<WDWordRepresentationViewDelegate>    delegate;
-@property (weak, nonatomic) id<WDWordRepresentationViewDataSource>  dataSource;
-
-- (void)familyFontOfSelectedWordChanged;
-
-- (void)setWithCursor:(CGFloat)duration;
-- (void)setWithoutCursor:(CGFloat)duration;
-
-- (void)updateCursorAnimation;
+@property(nonatomic, weak)id<WDWordRepresentationViewDataSource> dataSource;
 
 @end

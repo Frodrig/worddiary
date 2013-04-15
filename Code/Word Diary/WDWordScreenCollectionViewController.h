@@ -7,10 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WDWordScreenCollectionViewControllerDataSource.h"
+#import "WDWordRepresentationViewDataSource.h"
 
-@interface WDWordScreenCollectionViewController : UICollectionViewController
-
-@property(nonatomic, weak)id<WDWordScreenCollectionViewControllerDataSource> dataSource;
+@interface WDWordScreenCollectionViewController : UICollectionViewController<WDWordRepresentationViewDataSource, UIKeyInput>
 
 @end

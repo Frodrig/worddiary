@@ -18,7 +18,7 @@
 @property(nonatomic, strong) WDWordScreenCollectionViewController *collectionViewController;
 @property(nonatomic, weak) WDWord                                 *selectedWord;
 
-- (void) prepareSelectedWordAtLaunchOrResume;
+- (WDWord *) prepareSelectedWordAtLaunchOrResume;
 
 @end
 
@@ -27,7 +27,6 @@
 #pragma mark - Synthesize
 
 @synthesize collectionViewController = collectionViewController_;
-@synthesize selectedWord             = selectedWord_;
 
 #pragma mark - Init
 
@@ -60,7 +59,7 @@
 
 #pragma mark - Auxiliary
 
-- (void) prepareSelectedWordAtLaunchOrResume
+- (WDWord *) prepareSelectedWordAtLaunchOrResume
 {
     NSDate *todayDate = [NSDate date];
     WDWord *selectedWordCandidate = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
@@ -79,14 +78,7 @@
         selectedWordCandidate = [[WDWordDiary sharedWordDiary] createWord:@"Hola Mundo" inTimeInterval:[todayDate timeIntervalSince1970]];
     }
     
-    self.selectedWord = selectedWordCandidate;
-}
-
-#pragma mark - WDWordScreenCollectionViewControllerDataSource
-
-- (NSUInteger)selectedWordIndexForWordScreenCollectionViewController:(WDWordScreenCollectionViewController *)controller
-{
-    return [[WDWordDiary sharedWordDiary] findIndexPositionForWord:self.selectedWord];
+    return selectedWordCandidate;
 }
 
 @end

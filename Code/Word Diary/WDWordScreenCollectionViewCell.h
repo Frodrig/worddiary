@@ -7,13 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDWordRepresentationView.h"
 
 @class WDWord;
 
 @interface WDWordScreenCollectionViewCell : UICollectionViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *wordLabelTmp;
+@property (weak, nonatomic) IBOutlet    UIView        *wordRepresentationContainerView;
+@property (weak, nonatomic) IBOutlet WDWordRepresentationView *wordRepresentationView;
 
 - (void) setWord:(WDWord *)word;
+
+- (void) fadeInDecoratorText;
+- (void) fadeOutDecoratorText;
 
 @end
