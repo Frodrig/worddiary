@@ -13,7 +13,9 @@
 @protocol WDWordRepresentationViewDataSource <NSObject>
 
 - (NSString *) selectedWordTextForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
+- (NSString *) selectedWordTextFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 - (UIColor *)  selectedWordColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
+- (CGFloat)    selectedWordFontStartSizeForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
 - (BOOL)       isKeyboardActiveForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
