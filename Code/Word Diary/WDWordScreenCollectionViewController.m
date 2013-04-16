@@ -20,10 +20,13 @@
 
 @property (nonatomic, strong) NSTimer                 *fadeDecoratorTextTimer;
 @property (nonatomic, strong) UITapGestureRecognizer  *tapGestureRecognizer;
+@property (nonatomic, strong) NSTimer                 *cursorColorTimer;
+@property (nonatomic, strong) UIColor                 *cursorColor;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    converWordIndexContainerToIndexPath:(NSUInteger)index;
 
+- (void)                             launchFadeDecoratorTextTimer;
 - (void)                             fadeInDecoratorTextOnCell:(WDWordScreenCollectionViewCell *)cell withInfiniteDuration:(BOOL)infiniteDuration;
 - (void)                             fadeDecoratorTextTimerHandle:(NSTimer *)timer;
 
@@ -31,7 +34,12 @@
 
 - (WDWordScreenCollectionViewCell *) findSelectedCell;
 - (WDWord *)                         findSelectedWord;
+- (WDWord *)                         findSelectedWordAtSectionIndex:(NSUInteger)sectionIndex;
 - (NSIndexPath *)                    indexPathForLastWord;
+
+- (void)                             launchCursorColorTimer;
+- (void)                             endCursorColorTimer;
+- (void)                             cursorColorTimerHandle:(NSTimer *)timer;
 
 @end
 
@@ -41,6 +49,10 @@
 
 @synthesize fadeDecoratorTextTimer = fadeDecoratorTextTimer_;
 @synthesize tapGestureRecognizer   = tapGestureRecognizer_;
+@synthesize cursorColorTimer       = cursorColorTimer_;
+@synthesize cursorColor            = cursorColor_;
+
+#pragma mark - Properties
 
 #pragma mark - Init
 
@@ -101,8 +113,9 @@
     // Scroll a la ultima palabra
     [self.collectionView scrollToItemAtIndexPath:[self indexPathForLastWord] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     
-    // Timer tap
+    // Timers
     [self launchFadeDecoratorTextTimer];
+    [self launchCursorColorTimer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -142,13 +155,20 @@
     return retIndexPath;
 }
 
-- (WDWord *) findSelectedWord
+- (WDWord *) findSelectedWordAtSectionIndex:(NSUInteger)sectionIndex
 {
-    UICollectionViewCell *visibleCell = [self.collectionView.visibleCells objectAtIndex:0];
-    NSIndexPath *indexPathForVisibleCell = [self.collectionView indexPathForCell:visibleCell];
-    NSUInteger wordIndexPath = [self convertIndexPathToWordIndexContainer:indexPathForVisibleCell];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:sectionIndex];
+    NSUInteger wordIndexPath = [self convertIndexPathToWordIndexContainer:indexPath];
     
     return [[WDWordDiary sharedWordDiary].words objectAtIndex:wordIndexPath];
+}
+
+- (WDWord *) findSelectedWord
+{
+    WDWordScreenCollectionViewCell *selectedCell = [self findSelectedCell];
+    WDWord *selectedWord = [self findSelectedWordAtSectionIndex:[self.collectionView indexPathForCell:selectedCell].section];
+    
+    return selectedWord;
 }
 
 - (NSIndexPath *) indexPathForLastWord
@@ -158,7 +178,10 @@
 
 - (WDWordScreenCollectionViewCell *) findSelectedCell
 {
-    return [self.collectionView.visibleCells objectAtIndex:0];
+    NSUInteger sectionIndex = (self.collectionView.contentOffset.x / self.collectionView.bounds.size.width) + 0.5;
+    WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:sectionIndex]];
+    
+    return cell;
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -167,7 +190,12 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    // Nota IMPORTANTE: En el tag del wordRepresentation guardamos la seccion del indexPath
     WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"WordScreenCell" forIndexPath:indexPath];
+    cell.wordRepresentationView.dataSource = self;
+    cell.wordRepresentationView.clearsContextBeforeDrawing = YES;
+    cell.wordRepresentationView.tag = indexPath.section;
+    
     WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:[self convertIndexPathToWordIndexContainer:indexPath]];
     [cell setWord:word];
         
@@ -200,6 +228,34 @@
     self.fadeDecoratorTextTimer = nil;
 }
 
+- (void) launchCursorColorTimer
+{
+    [self.cursorColorTimer invalidate];
+    self.cursorColorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(cursorColorTimerHandle:) userInfo:nil repeats:YES];
+}
+
+- (void) endCursorColorTimer
+{
+    [self.cursorColorTimer invalidate];
+    self.cursorColorTimer = nil;
+}
+
+- (void)cursorColorTimerHandle:(NSTimer *)timer
+{
+    WDWord *selectedWord = [self findSelectedWord];
+    if  (self.cursorColor) {
+        CGFloat colorComponents[] = {0.0, 0.0, 0.0, 0.0};
+        [self.cursorColor getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
+        colorComponents[3] = colorComponents[3] < 1.0 ? 1.0 : 0.3;
+        self.cursorColor = [UIColor colorWithRed:colorComponents[0] green:colorComponents[1] blue:colorComponents[2] alpha:colorComponents[3]];
+    } else {
+        self.cursorColor = [UIColor colorWithHexadecimalValue:selectedWord.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
+    }
+    
+    WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
+    [actualCell.wordRepresentationView setNeedsDisplay];
+}
+
 #pragma mark - Gesture Recognizer
 
 - (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
@@ -219,19 +275,19 @@
 
 - (NSString *)selectedWordTextForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
-    WDWord *selectedWord = [self findSelectedWord];
+    WDWord *selectedWord = [self findSelectedWordAtSectionIndex:wordRepresentation.tag];
     return selectedWord.word;
 }
 
 - (UIColor *)selectedWordColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
-    WDWord *selectedWord = [self findSelectedWord];
+    WDWord *selectedWord = [self findSelectedWordAtSectionIndex:wordRepresentation.tag];
     return [UIColor colorWithHexadecimalValue:selectedWord.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
 }
 
 - (NSString *) selectedWordTextFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
-    WDWord *selectedWord = [self findSelectedWord];
+    WDWord *selectedWord = [self findSelectedWordAtSectionIndex:wordRepresentation.tag];
     return selectedWord.style.familyFont;
 }
 
@@ -243,7 +299,13 @@
 
 - (BOOL)isKeyboardActiveForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
-    return [self isFirstResponder];
+    BOOL firstResponder = [self isFirstResponder];
+    return firstResponder;
+}
+
+- (UIColor *)selectedWordCursorColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
+{
+    return self.cursorColor;
 }
 
 #pragma mark - Keyboard
@@ -267,6 +329,9 @@
     WDWord *selectedWord = [self findSelectedWord];
     if (selectedWord.word.length > 0) {
         selectedWord.word = [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
+        
+        WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+        [cell.wordRepresentationView setNeedsDisplay];
     }
 }
 
@@ -285,6 +350,9 @@
         static const NSUInteger MAX_LENGHT = 40;
         if (selectedWord.word.length < MAX_LENGHT) {
             selectedWord.word = [selectedWord.word stringByAppendingString:text];
+            
+            WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+            [cell.wordRepresentationView setNeedsDisplay];
         }
     }
 }
@@ -293,15 +361,18 @@
 
 - (void)keyboardWillShowNotification:(NSNotification *)notification
 {
+    self.collectionView.scrollEnabled = NO;
+
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
     [self fadeInDecoratorTextOnCell:cell withInfiniteDuration:YES];
     
-    self.collectionView.scrollEnabled = NO;
-    
+    [cell.wordRepresentationView setNeedsDisplay];
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
 {
+    WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+    [cell.wordRepresentationView setNeedsDisplay];
 }
 
 - (void)keyboardDidHideNotification:(NSNotification *)notification

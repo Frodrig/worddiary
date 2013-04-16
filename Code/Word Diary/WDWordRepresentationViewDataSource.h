@@ -17,6 +17,8 @@
 - (UIColor *)  selectedWordColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 - (CGFloat)    selectedWordFontStartSizeForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
+- (UIColor *)  selectedWordCursorColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
+
 - (BOOL)       isKeyboardActiveForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
 @end

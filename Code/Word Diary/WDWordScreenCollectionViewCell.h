@@ -13,7 +13,7 @@
 
 @interface WDWordScreenCollectionViewCell : UICollectionViewCell
 
-@property (weak, nonatomic) IBOutlet    UIView        *wordRepresentationContainerView;
+@property (weak, nonatomic) IBOutlet UIView                   *wordRepresentationContainerView;
 @property (weak, nonatomic) IBOutlet WDWordRepresentationView *wordRepresentationView;
 
 - (void) setWord:(WDWord *)word;
