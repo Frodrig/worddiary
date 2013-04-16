@@ -11,6 +11,7 @@
 
 @interface WDWordRepresentationView : UIView
 
+@property(nonatomic) BOOL                                        keyboardMode;
 @property(nonatomic, weak)id<WDWordRepresentationViewDataSource> dataSource;
 
 @end

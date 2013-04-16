@@ -16,7 +16,6 @@
 
 @interface WDWordScreenCollectionViewCell()
 
-@property (weak, nonatomic) IBOutlet    UIView        *dateContainerView;
 @property (nonatomic, weak) IBOutlet    UILabel       *dateDayOfTheWeekLabel;
 @property (nonatomic, weak) IBOutlet    UILabel       *dateDayAndMonthLabel;
 @property (nonatomic, weak) IBOutlet    UILabel       *dateYearLabel;

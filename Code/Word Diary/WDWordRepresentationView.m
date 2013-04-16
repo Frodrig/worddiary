@@ -17,7 +17,8 @@
 
 #pragma mark - Synthesize
 
-@synthesize dataSource = dataSource_;
+@synthesize dataSource   = dataSource_;
+@synthesize keyboardMode = keyboardMode_;
 
 #pragma mark - Init
 
@@ -50,7 +51,7 @@
     const UIColor *wordColor = [self.dataSource selectedWordColorForWordRepresentationView:self];
     const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
     const BOOL isEmptyText = wordText.length == 0;
-    const BOOL showCursor = isEmptyText || [self.dataSource isKeyboardActiveForWordRepresentationView:self];
+    const BOOL showCursor = isEmptyText || self.keyboardMode;//[self.dataSource isKeyboardActiveForWordRepresentationView:self];
     const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.5);
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat wordStartPointDrawMargin = 15.0;

@@ -366,13 +366,29 @@
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
     [self fadeInDecoratorTextOnCell:cell withInfiniteDuration:YES];
     
-    [cell.wordRepresentationView setNeedsDisplay];
+    NSNumber *keyboardAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    [UIView animateWithDuration:keyboardAnimationDuration.floatValue animations:^{
+        cell.wordRepresentationView.center = CGPointMake(cell.wordRepresentationView.center.x, cell.wordRepresentationView.center.y - 0.30 * cell.wordRepresentationView.bounds.size.height);
+        cell.dateContainerView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        cell.wordRepresentationView.keyboardMode = YES;
+        [cell.wordRepresentationView setNeedsDisplay];
+    }];
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
 {
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-    [cell.wordRepresentationView setNeedsDisplay];
+    
+    NSNumber *keyboardAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    [UIView animateWithDuration:keyboardAnimationDuration.floatValue animations:^{
+        cell.wordRepresentationView.center = CGPointMake(cell.wordRepresentationView.center.x, cell.wordRepresentationView.center.y + 0.30 * cell.wordRepresentationView.bounds.size.height);
+        cell.dateContainerView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        cell.wordRepresentationView.keyboardMode = NO;
+        [cell.wordRepresentationView setNeedsDisplay];
+    }];
+    
 }
 
 - (void)keyboardDidHideNotification:(NSNotification *)notification
