@@ -7,6 +7,7 @@
 //
 
 #import "WDWordRepresentationView.h"
+#import "WDUtils.h"
 #import <CoreText/CoreText.h>
 
 @interface WDWordRepresentationView()
@@ -19,6 +20,8 @@
 
 @synthesize dataSource   = dataSource_;
 @synthesize keyboardMode = keyboardMode_;
+@synthesize isGosthView  = isGosthView_;
+@synthesize forceCursorHide   = cursorHide_;
 
 #pragma mark - Init
 
@@ -30,6 +33,53 @@
     }
     return self;
 }
+
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        keyboardMode_ = [aDecoder decodeBoolForKey:@"keyboardMode"];
+        isGosthView_ = [aDecoder decodeBoolForKey:@"gosthView"];
+        cursorHide_  = [aDecoder decodeBoolForKey:@"forceCursorHide"];
+    }
+    
+    return self;
+}
+
+-(void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeBool:self.keyboardMode forKey:@"keyboardMode"];
+    [aCoder encodeBool:self.isGosthView forKey:@"gosthView"];
+    [aCoder encodeBool:self.forceCursorHide forKey:@"forceCursorHide"];
+    
+    [super encodeWithCoder:aCoder];
+}
+
+#pragma mark - Actions
+
+- (void) generateGosthWordRepresentation
+{
+    isGosthView_ = YES;
+    
+    CGRect prevFrame = self.frame;
+    NSData *tempArchive = [NSKeyedArchiver archivedDataWithRootObject:self];
+    __block WDWordRepresentationView *gosthView = (WDWordRepresentationView *)[NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];
+    gosthView.dataSource = self.dataSource;
+    gosthView.forceCursorHide = YES;
+    
+    isGosthView_ = NO;
+    self.frame = prevFrame;
+    
+    [self.superview addSubview:gosthView];
+    
+    [UIView animateWithDuration:1 animations:^{
+        gosthView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [gosthView removeFromSuperview];
+    }];
+}
+
+#pragma mark - Draw
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -51,11 +101,11 @@
     const UIColor *wordColor = [self.dataSource selectedWordColorForWordRepresentationView:self];
     const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
     const BOOL isEmptyText = wordText.length == 0;
-    const BOOL showCursor = isEmptyText || self.keyboardMode;//[self.dataSource isKeyboardActiveForWordRepresentationView:self];
-    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.5);
+    const BOOL showCursor = (isEmptyText || self.keyboardMode);
+    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.3);
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat wordStartPointDrawMargin = 15.0;
-    
+        
     const CGFloat dashPattern[] = {2.0, 9.0};
     
     // Línea
@@ -102,7 +152,7 @@
     CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);
     
     CGRect cursorBounds = CGRectNull;
-    if (showCursor) {
+    if (showCursor && !self.forceCursorHide) {
         cursorBounds = CGRectMake(fontDrawPoint.x, fontDrawPoint.y, 0.0, lineImageBounds.size.height);
         if (wordText.length > 0) {
             CFArrayRef lineGlyphRuns = CTLineGetGlyphRuns(line);
@@ -115,7 +165,7 @@
     }
 
     // Cursor
-    if (showCursor) {
+    if (showCursor && !self.forceCursorHide) {
         CGContextSaveGState(contextRef);
         
         CGContextSetLineWidth(contextRef, 2.0);

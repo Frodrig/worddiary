@@ -19,7 +19,6 @@
 @property (nonatomic, weak) IBOutlet    UILabel       *dateDayOfTheWeekLabel;
 @property (nonatomic, weak) IBOutlet    UILabel       *dateDayAndMonthLabel;
 @property (nonatomic, weak) IBOutlet    UILabel       *dateYearLabel;
-@property (weak, nonatomic) IBOutlet    UIView        *dayDiaryContainerView;
 @property (nonatomic, weak) IBOutlet    UILabel       *dayDiaryLabel;
 
 
@@ -133,14 +132,16 @@
 
 - (void) fadeInDataAndDayText
 {
-    [UIView animateWithDuration:0.25 animations:^{
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView animateWithDuration:0.35 animations:^{
         self.dateContainerView.alpha = 1.0;
         self.dayDiaryContainerView.alpha = 1.0;
     }];
 }
 - (void) fadeOutDataAndDayText
 {
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView animateWithDuration:4.0 animations:^{
         self.dateContainerView.alpha = 0.1;
         self.dayDiaryContainerView.alpha = 0.1;
     }];

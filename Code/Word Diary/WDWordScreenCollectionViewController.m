@@ -29,6 +29,7 @@
 - (NSIndexPath *)                    converWordIndexContainerToIndexPath:(NSUInteger)index;
 
 - (void)                             launchFadeDateAndDayTextTimer;
+- (void)                             endFadeDateAndDayTextTimer;
 - (void)                             fadeInDateAndDayTextOnCell:(WDWordScreenCollectionViewCell *)cell withInfiniteDuration:(BOOL)infiniteDuration;
 - (void)                             fadeDateAndDayTextTimerHandle:(NSTimer *)timer;
 
@@ -261,6 +262,12 @@
     self.fadeDecoratorTextTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(fadeDateAndDayTextTimerHandle:) userInfo:nil repeats:NO];
 }
 
+- (void) endFadeDateAndDayTextTimer
+{
+    [self.fadeDecoratorTextTimer invalidate];
+    self.fadeDecoratorTextTimer = nil;
+}
+
 - (void)fadeDateAndDayTextTimerHandle:(NSTimer *)timer
 {
     WDWordScreenCollectionViewCell * visibleCell = [self.collectionView.visibleCells objectAtIndex:0];
@@ -305,7 +312,23 @@
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
         CGPoint hitPoint = [gesture locationInView:cell];
         if (CGRectContainsPoint(cell.wordRepresentationContainerView.frame, hitPoint)) {
-            [self becomeFirstResponder];
+            WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+            
+            // Scroll
+            self.collectionView.scrollEnabled = NO;
+            
+            // Date and Day
+            [self endFadeDateAndDayTextTimer];
+            
+            // Wordrepresentation
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+            [UIView animateWithDuration:0.5 animations:^{
+                cell.wordRepresentationContainerView.center = CGPointMake(cell.wordRepresentationContainerView.center.x, cell.wordRepresentationContainerView.center.y - 0.30 * cell.wordRepresentationContainerView.bounds.size.height);
+                cell.dateContainerView.alpha = 0.0;
+                cell.dayDiaryContainerView.alpha = 0.0;
+            } completion:^(BOOL finished) {
+                [self becomeFirstResponder];
+            }];
         } else {
             [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
         }
@@ -314,36 +337,38 @@
 
 - (void)panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture
 {
-    WDPalette *nextPalette = nil;
-    
-    if (gesture == self.panGestureRecognizer) {
-        switch (gesture.state) {
-            case UIGestureRecognizerStateBegan:
-            case UIGestureRecognizerStateChanged: {
-                CGPoint translation = [gesture translationInView:self.view];
-                if (![WDUtils is:translation.y equalsTo:0.0]) {
-                    const CGFloat minimumDistance = 25.0;
-                    WDWord *word = [self findSelectedWord];
-                    if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
-                        nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
-                    } else if (translation.y > 0.0 && translation.y > minimumDistance) {
-                        nextPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+    if (!self.isFirstResponder) {
+        WDPalette *nextPalette = nil;
+        
+        if (gesture == self.panGestureRecognizer) {
+            switch (gesture.state) {
+                case UIGestureRecognizerStateBegan:
+                case UIGestureRecognizerStateChanged: {
+                    CGPoint translation = [gesture translationInView:self.view];
+                    if (![WDUtils is:translation.y equalsTo:0.0]) {
+                        const CGFloat minimumDistance = 25.0;
+                        WDWord *word = [self findSelectedWord];
+                        if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
+                            nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
+                        } else if (translation.y > 0.0 && translation.y > minimumDistance) {
+                            nextPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+                        }
                     }
-                }
-                
-            } break;
-                
-            default:
-                break;
+                    
+                } break;
+                    
+                default:
+                    break;
+            }
         }
-    }
-    
-    if (nextPalette) {
-        WDWord *word = [self findSelectedWord];
-        word.palette = nextPalette;
-        WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-        cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:nextPalette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
-        [gesture setTranslation:CGPointZero inView:self.view];
+        
+        if (nextPalette) {
+            WDWord *word = [self findSelectedWord];
+            word.palette = nextPalette;
+            WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+            cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:nextPalette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+            [gesture setTranslation:CGPointZero inView:self.view];
+        }
     }
 }
 
@@ -437,38 +462,28 @@
 
 - (void)keyboardWillShowNotification:(NSNotification *)notification
 {
-    self.collectionView.scrollEnabled = NO;
-
-    // Date and Day
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-    //[self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:YES];
-    
-    // Wordrepresentation
-    // ToDo: Conflictos con hacer alpha a 0 en el date y la funcion anterior
-    NSNumber *keyboardAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    [UIView animateWithDuration:keyboardAnimationDuration.floatValue animations:^{
-        cell.wordRepresentationView.center = CGPointMake(cell.wordRepresentationView.center.x, cell.wordRepresentationView.center.y - 0.30 * cell.wordRepresentationView.bounds.size.height);
-        cell.dateContainerView.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        cell.wordRepresentationView.keyboardMode = YES;
-        [cell.wordRepresentationView setNeedsDisplay];
+ 
+    // Efecto fantasma
+    [cell.wordRepresentationView generateGosthWordRepresentation];
+    cell.wordRepresentationView.keyboardMode = YES;
+    cell.wordRepresentationView.alpha = 0;
+    [UIView animateWithDuration:1.0 animations:^{
+        cell.wordRepresentationView.alpha = 1.0;
     }];
+    [cell.wordRepresentationView setNeedsDisplay];
     
     // Style Menu
-    
     CGRect endFrameKeyboard = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     self.styleMenuView.frame = CGRectMake(0.0, endFrameKeyboard.origin.y - self.styleMenuView.bounds.size.height, self.styleMenuView.bounds.size.width, self.styleMenuView.bounds.size.height);
     [self.view addSubview:self.styleMenuView];
-    
     NSNumber *keybAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
-        CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.15;
-        NSLog(@"duration %f", animationDuration);
+        CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.25;
         [UIView animateWithDuration:animationDuration animations:^{
             [self.styleMenuView viewWithTag:styleIt + 1].alpha = 1.0;
         }];
     }
-    
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
@@ -476,19 +491,18 @@
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
     
     // Wordrepresentation
-    NSNumber *keyboardAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    [UIView animateWithDuration:keyboardAnimationDuration.floatValue animations:^{
-        cell.wordRepresentationView.center = CGPointMake(cell.wordRepresentationView.center.x, cell.wordRepresentationView.center.y + 0.30 * cell.wordRepresentationView.bounds.size.height);
-        cell.dateContainerView.alpha = 1.0;
-    } completion:^(BOOL finished) {
-        cell.wordRepresentationView.keyboardMode = NO;
-        [cell.wordRepresentationView setNeedsDisplay];
+    [cell.wordRepresentationView generateGosthWordRepresentation];
+    cell.wordRepresentationView.keyboardMode = NO;
+    cell.wordRepresentationView.alpha = 0;
+    [UIView animateWithDuration:1.0 animations:^{
+        cell.wordRepresentationView.alpha = 1.0;
     }];
+    [cell.wordRepresentationView setNeedsDisplay];
     
     // Stylemenu
     NSNumber *keybAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
-        CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.15;
+        CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.25;
         NSUInteger buttonIndexToChange = [WDWordDiary sharedWordDiary].styles.count - styleIt - 1;
         if (buttonIndexToChange == 0) {
             [UIView animateWithDuration:animationDuration animations:^{
@@ -497,6 +511,15 @@
                 if (!self.isFirstResponder) {
                     [self.styleMenuView removeFromSuperview];
                 }
+                // Wordrepresentation
+                [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+                [UIView animateWithDuration:0.5 animations:^{
+                    cell.wordRepresentationContainerView.center = CGPointMake(cell.wordRepresentationContainerView.center.x, cell.wordRepresentationContainerView.center.y + 0.30 * cell.wordRepresentationContainerView.bounds.size.height);
+                } completion:^(BOOL finished) {
+                    [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
+                }];
+                
+
             }];
         } else {
             [UIView animateWithDuration:animationDuration animations:^{
@@ -508,9 +531,6 @@
 
 - (void)keyboardDidHideNotification:(NSNotification *)notification
 {
-    WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-    [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
-    
     self.collectionView.scrollEnabled = YES;
 }
 

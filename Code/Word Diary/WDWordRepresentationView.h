@@ -12,6 +12,10 @@
 @interface WDWordRepresentationView : UIView
 
 @property(nonatomic) BOOL                                        keyboardMode;
+@property(nonatomic) BOOL                                        forceCursorHide;
+@property(nonatomic, readonly) BOOL                              isGosthView;
 @property(nonatomic, weak)id<WDWordRepresentationViewDataSource> dataSource;
+
+- (void) generateGosthWordRepresentation;
 
 @end
