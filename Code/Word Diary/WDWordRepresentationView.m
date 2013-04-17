@@ -102,7 +102,7 @@
     const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
     const BOOL isEmptyText = wordText.length == 0;
     const BOOL showCursor = (isEmptyText || self.keyboardMode);
-    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.3);
+    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.45);
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat wordStartPointDrawMargin = 15.0;
         
