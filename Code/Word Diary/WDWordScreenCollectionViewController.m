@@ -20,6 +20,7 @@
 
 @property (nonatomic, strong) NSTimer                 *fadeDecoratorTextTimer;
 @property (nonatomic, strong) UITapGestureRecognizer  *tapGestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer  *panGestureRecognizer;
 @property (nonatomic, strong) NSTimer                 *cursorColorTimer;
 @property (nonatomic, strong) UIColor                 *cursorColor;
 
@@ -31,6 +32,7 @@
 - (void)                             fadeDecoratorTextTimerHandle:(NSTimer *)timer;
 
 - (void)                             tapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture;
+- (void)                             panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture;
 
 - (WDWordScreenCollectionViewCell *) findSelectedCell;
 - (WDWord *)                         findSelectedWord;
@@ -49,6 +51,7 @@
 
 @synthesize fadeDecoratorTextTimer = fadeDecoratorTextTimer_;
 @synthesize tapGestureRecognizer   = tapGestureRecognizer_;
+@synthesize panGestureRecognizer   = panGestureRecognizer_;
 @synthesize cursorColorTimer       = cursorColorTimer_;
 @synthesize cursorColor            = cursorColor_;
 
@@ -85,8 +88,12 @@
 	// Do any additional setup after loading the view.
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     
+    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerHandle:)];
+    [self.view addGestureRecognizer:self.panGestureRecognizer];
+    
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
+    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.panGestureRecognizer];
     
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -268,6 +275,43 @@
         } else {
             [self fadeInDecoratorTextOnCell:cell withInfiniteDuration:NO];
         }
+    }
+}
+
+- (void)panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture
+{
+    WDPalette *nextPalette = nil;
+    
+    if (gesture == self.panGestureRecognizer) {
+        switch (gesture.state) {
+            case UIGestureRecognizerStateBegan:
+            case UIGestureRecognizerStateChanged: {
+                NSLog(@"velocity %@ translation %@", NSStringFromCGPoint([gesture velocityInView:self.view]), NSStringFromCGPoint([gesture translationInView:self.view]));
+                CGPoint translation = [gesture translationInView:self.view];
+                if (![WDUtils is:translation.y equalsTo:0.0]) {
+                    const CGFloat minimumDistance = 25.0;
+                    WDWord *word = [self findSelectedWord];
+                    if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
+                        nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
+                    } else if (translation.y > 0.0 && translation.y > minimumDistance) {
+                        nextPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+                    }
+                }
+                
+            } break;
+                
+            default:
+                break;
+        }
+    }
+    
+    if (nextPalette) {
+        NSLog(@"cambio");
+        WDWord *word = [self findSelectedWord];
+        word.palette = nextPalette;
+        WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+        cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:nextPalette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+        [gesture setTranslation:CGPointZero inView:self.view];
     }
 }
 

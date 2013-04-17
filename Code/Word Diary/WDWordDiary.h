@@ -35,6 +35,9 @@
 - (WDWord *)      findPreviousWordOf:(WDWord *)word;
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
 
+- (WDPalette *)   findNextPaletteOfPalette:(WDPalette *)palette;
+- (WDPalette *)   findPrevPaletteOfPalette:(WDPalette *)palette;
+
 - (WDStyle *)     defaultStyle;
 - (WDPalette *)   defaultPalette;
 

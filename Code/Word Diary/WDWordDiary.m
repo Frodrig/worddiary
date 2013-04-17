@@ -325,6 +325,40 @@
     return retPalette;
 }
 
+- (WDPalette *) findPrevPaletteOfPalette:(WDPalette *)palette
+{
+    WDPalette *retPalette = nil;
+    if (nil == palette) {
+        retPalette = [self.palettes objectAtIndex:self.palettes.count - 1];
+    } else {
+        NSUInteger indexOfPalette = [self.palettes indexOfObject:palette];
+        if (indexOfPalette == 0) {
+            retPalette = [self findPrevPaletteOfPalette:nil];
+        } else {
+            retPalette = [self.palettes objectAtIndex:indexOfPalette - 1];
+        }
+    }
+    
+    return retPalette;
+}
+
+- (WDPalette *) findNextPaletteOfPalette:(WDPalette *)palette
+{
+    WDPalette *retPalette = nil;
+    if (nil == palette) {
+        retPalette = [self.palettes objectAtIndex:0];
+    } else {
+        NSUInteger indexOfPalette = [self.palettes indexOfObject:palette];
+        if (indexOfPalette == self.palettes.count - 1) {
+            retPalette = [self findNextPaletteOfPalette:nil];
+        } else {
+            retPalette = [self.palettes objectAtIndex:indexOfPalette + 1];
+        }
+    }
+    
+    return retPalette;
+}
+
 
 #pragma mark - Auxiliary
 
