@@ -21,15 +21,16 @@
 @property (nonatomic, strong) NSTimer                 *fadeDecoratorTextTimer;
 @property (nonatomic, strong) UITapGestureRecognizer  *tapGestureRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer  *panGestureRecognizer;
+@property (nonatomic, strong) UIView                  *styleMenuView;
 @property (nonatomic, strong) NSTimer                 *cursorColorTimer;
 @property (nonatomic, strong) UIColor                 *cursorColor;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    converWordIndexContainerToIndexPath:(NSUInteger)index;
 
-- (void)                             launchFadeDecoratorTextTimer;
-- (void)                             fadeInDecoratorTextOnCell:(WDWordScreenCollectionViewCell *)cell withInfiniteDuration:(BOOL)infiniteDuration;
-- (void)                             fadeDecoratorTextTimerHandle:(NSTimer *)timer;
+- (void)                             launchFadeDateAndDayTextTimer;
+- (void)                             fadeInDateAndDayTextOnCell:(WDWordScreenCollectionViewCell *)cell withInfiniteDuration:(BOOL)infiniteDuration;
+- (void)                             fadeDateAndDayTextTimerHandle:(NSTimer *)timer;
 
 - (void)                             tapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture;
 - (void)                             panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture;
@@ -43,6 +44,8 @@
 - (void)                             endCursorColorTimer;
 - (void)                             cursorColorTimerHandle:(NSTimer *)timer;
 
+- (void)                             styleButtonPressed:(UIButton *)button;
+
 @end
 
 @implementation WDWordScreenCollectionViewController
@@ -54,6 +57,7 @@
 @synthesize panGestureRecognizer   = panGestureRecognizer_;
 @synthesize cursorColorTimer       = cursorColorTimer_;
 @synthesize cursorColor            = cursorColor_;
+@synthesize styleMenuView          = styleMenuView_;
 
 #pragma mark - Properties
 
@@ -88,6 +92,7 @@
 	// Do any additional setup after loading the view.
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     
+    // Gestures
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.panGestureRecognizer];
     
@@ -95,6 +100,7 @@
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
     [self.tapGestureRecognizer requireGestureRecognizerToFail:self.panGestureRecognizer];
     
+    // Collection
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerNib:[UINib nibWithNibName:@"WDWordScreenCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"WordScreenCell"];
@@ -117,11 +123,28 @@
     flowLayout.itemSize = CGSizeMake(self.view.bounds.size.width - edgeMargin * 2, self.view.bounds.size.height - edgeMargin * 2);
     flowLayout.sectionInset = UIEdgeInsetsMake(edgeMargin, edgeMargin, edgeMargin, edgeMargin);
     
+    // StyleMenu
+    self.styleMenuView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 54.0)];
+    NSArray *styles = [WDWordDiary sharedWordDiary].styles;
+    const CGFloat areaPerButton = self.styleMenuView.bounds.size.width / styles.count;
+    for (NSUInteger styleIt = 0; styleIt < styles.count; styleIt++) {
+        UIButton *styleButtonIt = [UIButton buttonWithType:UIButtonTypeCustom];
+        styleButtonIt.frame = CGRectMake(areaPerButton * styleIt, 0.0, areaPerButton, self.styleMenuView.bounds.size.height);
+        [styleButtonIt setTitle:[NSString stringWithFormat:@"%d", styleIt] forState:UIControlStateNormal];
+        styleButtonIt.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.2];
+        styleButtonIt.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        // Nota: Incremento en 1 en el tag debido a que no se permite guardar tags con valor 0
+        styleButtonIt.tag = styleIt + 1;
+        styleButtonIt.alpha = 0.0;
+        [styleButtonIt addTarget:self action:@selector(styleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.styleMenuView addSubview:styleButtonIt];
+    }
+    
     // Scroll a la ultima palabra
     [self.collectionView scrollToItemAtIndexPath:[self indexPathForLastWord] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
     
     // Timers
-    [self launchFadeDecoratorTextTimer];
+    [self launchFadeDateAndDayTextTimer];
     [self launchCursorColorTimer];
 }
 
@@ -133,17 +156,28 @@
 
 #pragma mark - Auxiliary
 
-- (void) fadeInDecoratorTextOnCell:(WDWordScreenCollectionViewCell *)cell withInfiniteDuration:(BOOL)infiniteDuration;
+- (void)styleButtonPressed:(UIButton *)button
+{
+    WDWord *word = [self findSelectedWord];
+    WDStyle *newStyle = [[WDWordDiary sharedWordDiary].styles objectAtIndex:button.tag - 1];
+    if (newStyle != word.style) {
+        word.style = newStyle;
+        WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+        [cell.wordRepresentationView setNeedsDisplay];
+    }
+}
+
+- (void) fadeInDateAndDayTextOnCell:(WDWordScreenCollectionViewCell *)cell withInfiniteDuration:(BOOL)infiniteDuration;
 {
     if (nil == self.fadeDecoratorTextTimer) {
-        [cell fadeInDecoratorText];
+        [cell fadeInDataAndDayText];
     }
     
     if (infiniteDuration) {
         [self.fadeDecoratorTextTimer invalidate];
         self.fadeDecoratorTextTimer = nil;
     } else {
-        [self launchFadeDecoratorTextTimer];
+        [self launchFadeDateAndDayTextTimer];
     }
 
 }
@@ -221,16 +255,16 @@
 
 #pragma mark - Timers
 
-- (void)launchFadeDecoratorTextTimer
+- (void)launchFadeDateAndDayTextTimer
 {
     [self.fadeDecoratorTextTimer invalidate];
-    self.fadeDecoratorTextTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(fadeDecoratorTextTimerHandle:) userInfo:nil repeats:NO];
+    self.fadeDecoratorTextTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(fadeDateAndDayTextTimerHandle:) userInfo:nil repeats:NO];
 }
 
-- (void)fadeDecoratorTextTimerHandle:(NSTimer *)timer
+- (void)fadeDateAndDayTextTimerHandle:(NSTimer *)timer
 {
     WDWordScreenCollectionViewCell * visibleCell = [self.collectionView.visibleCells objectAtIndex:0];
-    [visibleCell fadeOutDecoratorText];
+    [visibleCell fadeOutDataAndDayText];
     
     self.fadeDecoratorTextTimer = nil;
 }
@@ -273,7 +307,7 @@
         if (CGRectContainsPoint(cell.wordRepresentationContainerView.frame, hitPoint)) {
             [self becomeFirstResponder];
         } else {
-            [self fadeInDecoratorTextOnCell:cell withInfiniteDuration:NO];
+            [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
         }
     }
 }
@@ -286,7 +320,6 @@
         switch (gesture.state) {
             case UIGestureRecognizerStateBegan:
             case UIGestureRecognizerStateChanged: {
-                NSLog(@"velocity %@ translation %@", NSStringFromCGPoint([gesture velocityInView:self.view]), NSStringFromCGPoint([gesture translationInView:self.view]));
                 CGPoint translation = [gesture translationInView:self.view];
                 if (![WDUtils is:translation.y equalsTo:0.0]) {
                     const CGFloat minimumDistance = 25.0;
@@ -306,7 +339,6 @@
     }
     
     if (nextPalette) {
-        NSLog(@"cambio");
         WDWord *word = [self findSelectedWord];
         word.palette = nextPalette;
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
@@ -407,9 +439,12 @@
 {
     self.collectionView.scrollEnabled = NO;
 
+    // Date and Day
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-    [self fadeInDecoratorTextOnCell:cell withInfiniteDuration:YES];
+    //[self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:YES];
     
+    // Wordrepresentation
+    // ToDo: Conflictos con hacer alpha a 0 en el date y la funcion anterior
     NSNumber *keyboardAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     [UIView animateWithDuration:keyboardAnimationDuration.floatValue animations:^{
         cell.wordRepresentationView.center = CGPointMake(cell.wordRepresentationView.center.x, cell.wordRepresentationView.center.y - 0.30 * cell.wordRepresentationView.bounds.size.height);
@@ -418,12 +453,29 @@
         cell.wordRepresentationView.keyboardMode = YES;
         [cell.wordRepresentationView setNeedsDisplay];
     }];
+    
+    // Style Menu
+    
+    CGRect endFrameKeyboard = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.styleMenuView.frame = CGRectMake(0.0, endFrameKeyboard.origin.y - self.styleMenuView.bounds.size.height, self.styleMenuView.bounds.size.width, self.styleMenuView.bounds.size.height);
+    [self.view addSubview:self.styleMenuView];
+    
+    NSNumber *keybAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
+        CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.15;
+        NSLog(@"duration %f", animationDuration);
+        [UIView animateWithDuration:animationDuration animations:^{
+            [self.styleMenuView viewWithTag:styleIt + 1].alpha = 1.0;
+        }];
+    }
+    
 }
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
 {
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
     
+    // Wordrepresentation
     NSNumber *keyboardAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     [UIView animateWithDuration:keyboardAnimationDuration.floatValue animations:^{
         cell.wordRepresentationView.center = CGPointMake(cell.wordRepresentationView.center.x, cell.wordRepresentationView.center.y + 0.30 * cell.wordRepresentationView.bounds.size.height);
@@ -433,12 +485,31 @@
         [cell.wordRepresentationView setNeedsDisplay];
     }];
     
+    // Stylemenu
+    NSNumber *keybAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
+        CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.15;
+        NSUInteger buttonIndexToChange = [WDWordDiary sharedWordDiary].styles.count - styleIt - 1;
+        if (buttonIndexToChange == 0) {
+            [UIView animateWithDuration:animationDuration animations:^{
+                [self.styleMenuView viewWithTag:buttonIndexToChange + 1].alpha = 0.0;
+            } completion:^(BOOL finished) {
+                if (!self.isFirstResponder) {
+                    [self.styleMenuView removeFromSuperview];
+                }
+            }];
+        } else {
+            [UIView animateWithDuration:animationDuration animations:^{
+                [self.styleMenuView viewWithTag:buttonIndexToChange + 1].alpha = 0.0;
+            }];
+        }
+    }
 }
 
 - (void)keyboardDidHideNotification:(NSNotification *)notification
 {
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-    [self fadeInDecoratorTextOnCell:cell withInfiniteDuration:NO];
+    [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
     
     self.collectionView.scrollEnabled = YES;
 }

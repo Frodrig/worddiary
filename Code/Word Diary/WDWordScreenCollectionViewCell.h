@@ -19,7 +19,7 @@
 
 - (void) setWord:(WDWord *)word;
 
-- (void) fadeInDecoratorText;
-- (void) fadeOutDecoratorText;
+- (void) fadeInDataAndDayText;
+- (void) fadeOutDataAndDayText;
 
 @end

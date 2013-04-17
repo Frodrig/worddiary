@@ -131,14 +131,14 @@
                                                                NSKernAttributeName: [NSNumber numberWithInt:6]}];
 }
 
-- (void) fadeInDecoratorText
+- (void) fadeInDataAndDayText
 {
     [UIView animateWithDuration:0.25 animations:^{
         self.dateContainerView.alpha = 1.0;
         self.dayDiaryContainerView.alpha = 1.0;
     }];
 }
-- (void) fadeOutDecoratorText
+- (void) fadeOutDataAndDayText
 {
     [UIView animateWithDuration:1.0 animations:^{
         self.dateContainerView.alpha = 0.1;
