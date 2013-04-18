@@ -14,11 +14,16 @@
 @interface WDPalette : NSManagedObject
 
 @property (nonatomic, retain) NSString      *accessoriesColor;
-@property (nonatomic, retain) NSString      *backgroundColor;
+@property (nonatomic, retain) NSString      *lightBackground;
 @property (nonatomic, retain) NSString      *idName;
-@property (nonatomic, retain) NSString      *reservedColor;
+@property (nonatomic, retain) NSString      *darkBackground;
 @property (nonatomic, retain) NSString      *wordColor;
 @property (nonatomic, retain) NSSet         *word;
+
+- (UIColor *) makeLightBackgroundColorObject;
+- (UIColor *) makeDarkBackgroundColorObject;
+- (UIColor *) makeWordColorObject;
+
 @end
 
 @interface WDPalette (CoreDataGeneratedAccessors)

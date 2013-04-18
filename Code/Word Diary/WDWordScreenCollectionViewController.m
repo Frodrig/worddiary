@@ -386,7 +386,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
             WDWord *word = [self findSelectedWord];
             word.palette = nextPalette;
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-            cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:nextPalette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+            cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:nextPalette.lightBackground withAlphaComponent:NO skipInitialCharacter:NO];
             [gesture setTranslation:CGPointZero inView:self.view];
         }
     }

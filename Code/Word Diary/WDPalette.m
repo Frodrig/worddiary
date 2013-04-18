@@ -13,10 +13,27 @@
 @implementation WDPalette
 
 @dynamic accessoriesColor;
-@dynamic backgroundColor;
+@dynamic lightBackground;
 @dynamic idName;
-@dynamic reservedColor;
+@dynamic darkBackground;
 @dynamic wordColor;
 @dynamic word;
 
+- (UIColor *) makeLightBackgroundColorObject
+{
+    return [UIColor colorWithCIColor:[CIColor colorWithString:self.lightBackground]];
+}
+
+- (UIColor *) makeDarkBackgroundColorObject
+{
+    return [UIColor colorWithCIColor:[CIColor colorWithString:self.darkBackground]];
+}
+
+- (UIColor *) makeWordColorObject
+{
+    return [UIColor colorWithCIColor:[CIColor colorWithString:self.wordColor]];
+}
+
+
 @end
+                                            

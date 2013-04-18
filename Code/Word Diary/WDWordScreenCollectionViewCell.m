@@ -82,7 +82,7 @@
     [self setWordRepresentation:word];
     [self setDayDiaryLabelOfWord:word];
     
-    self.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:word.palette.backgroundColor withAlphaComponent:NO skipInitialCharacter:NO];
+    self.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:word.palette.lightBackground withAlphaComponent:NO skipInitialCharacter:NO];
     
     self.dateContainerView.alpha = 1.0;
     self.dayDiaryContainerView.alpha = 1.0;
