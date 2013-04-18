@@ -164,19 +164,20 @@
     if (result.count > 0) {
         palettes_ = result;
     } else {
-        NSArray *lighPalette = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
+        NSArray *lighPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
                                                                            @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
                                                                            @"center":@230.0F, @"amplitude":@25.0F, @"loopLenght":@50.0F }];
-        NSArray *darkPalette = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
+        NSArray *darkPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
                                                                            @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
                                                                            @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@50.0F }];
+        NSAssert(lighPalettes.count == darkPalettes.count, @"Arrays no coincidentes");
         
-        for (NSUInteger paletteIndex = 0; paletteIndex < lighPalette.count; ++paletteIndex) {
+        for (NSUInteger paletteIndex = 0; paletteIndex < lighPalettes.count; ++paletteIndex) {
             NSString *paletteId = [NSString stringWithFormat:@"%d", paletteIndex];
-            NSString *lightBackgroundColorString = ((UIColor *)[lighPalette objectAtIndex:paletteIndex]).CIColor.stringRepresentation;
-            NSString *darkBackgroundColorString = ((UIColor *)[darkPalette objectAtIndex:paletteIndex]).CIColor.stringRepresentation;
-            NSString *wordColorString = [UIColor blackColor].CIColor.stringRepresentation;
-            NSString *accesoriesColorString = [UIColor blackColor].CIColor.stringRepresentation;
+            NSString *lightBackgroundColorString = [WDUtils convertColorToString:[lighPalettes objectAtIndex:paletteIndex]];
+            NSString *darkBackgroundColorString = [WDUtils convertColorToString:[darkPalettes objectAtIndex:paletteIndex]];
+            NSString *wordColorString = [WDUtils convertColorToString:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
+            NSString *accesoriesColorString = [WDUtils convertColorToString:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
             
             [self addPalette:paletteId lightBackgroundColor:lightBackgroundColorString darkBackgroundColor:darkBackgroundColorString wordColor:wordColorString andAccesoriesColor:accesoriesColorString];
         }
@@ -366,6 +367,7 @@
         }
     }
     
+    NSLog(@"palette index %d", [self.palettes indexOfObject:retPalette]);
     return retPalette;
 }
 

@@ -31,6 +31,9 @@ typedef enum {
 
 + (BOOL)                 is568Screen;
 
++ (NSString *)           convertColorToString:(UIColor *)color;
++ (UIColor *)            convertStringToColor:(NSString *)string;
+
 + (CGFloat)              viewsCornerRadius;
 
 + (UIColor *)            darkSchemeBackgroundColor;

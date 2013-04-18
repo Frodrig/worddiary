@@ -8,6 +8,7 @@
 
 #import "WDPalette.h"
 #import "WDWord.h"
+#import "WDUtils.h"
 
 
 @implementation WDPalette
@@ -21,17 +22,17 @@
 
 - (UIColor *) makeLightBackgroundColorObject
 {
-    return [UIColor colorWithCIColor:[CIColor colorWithString:self.lightBackground]];
+    return [WDUtils convertStringToColor:self.lightBackground];
 }
 
 - (UIColor *) makeDarkBackgroundColorObject
 {
-    return [UIColor colorWithCIColor:[CIColor colorWithString:self.darkBackground]];
+    return [WDUtils convertStringToColor:self.darkBackground];
 }
 
 - (UIColor *) makeWordColorObject
 {
-    return [UIColor colorWithCIColor:[CIColor colorWithString:self.wordColor]];
+    return [WDUtils convertStringToColor:self.wordColor];
 }
 
 

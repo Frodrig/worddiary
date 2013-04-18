@@ -172,6 +172,7 @@
 		5BF1373D170DBBC100DA04A6 /* 14-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "14-gear@2x.png"; sourceTree = "<group>"; };
 		5BF13740170DD21600DA04A6 /* ?miniwhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "?miniwhite.png"; sourceTree = "<group>"; };
 		5BF13741170DD21600DA04A6 /* ?miniwhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "?miniwhite@2x.png"; sourceTree = "<group>"; };
+		5BF7B0441720809400E5B8A9 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		5BF834D216EE02950080FCDF /* 39-back-light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-light.png"; sourceTree = "<group>"; };
 		5BF834D316EE02950080FCDF /* 39-back-light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-light@2x.png"; sourceTree = "<group>"; };
 		5BF834D616EE4E260080FCDF /* 39-back-dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back-dark.png"; sourceTree = "<group>"; };
@@ -389,6 +390,7 @@
 		5BB6B2F516DBE13900394113 = {
 			isa = PBXGroup;
 			children = (
+				5BF7B0441720809400E5B8A9 /* CoreImage.framework */,
 				5B119359170489D200CAF765 /* CoreMotion.framework */,
 				5B1193571704752B00CAF765 /* MessageUI.framework */,
 				5B446F7616F22A48005A432D /* CoreText.framework */,

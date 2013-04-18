@@ -310,7 +310,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         colorComponents[3] = colorComponents[3] < 1.0 ? 1.0 : 0.3;
         self.cursorColor = [UIColor colorWithRed:colorComponents[0] green:colorComponents[1] blue:colorComponents[2] alpha:colorComponents[3]];
     } else {
-        self.cursorColor = [UIColor colorWithHexadecimalValue:selectedWord.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
+        self.cursorColor = [selectedWord.palette makeWordColorObject];
     }
     
     WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
@@ -386,7 +386,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
             WDWord *word = [self findSelectedWord];
             word.palette = nextPalette;
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-            cell.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:nextPalette.lightBackground withAlphaComponent:NO skipInitialCharacter:NO];
+            cell.contentView.backgroundColor = [nextPalette makeLightBackgroundColorObject];
             [gesture setTranslation:CGPointZero inView:self.view];
         }
     }
@@ -403,7 +403,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (UIColor *)selectedWordColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
     WDWord *selectedWord = [self findSelectedWordAtSectionIndex:wordRepresentation.tag];
-    return [UIColor colorWithHexadecimalValue:selectedWord.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO];
+    return [selectedWord.palette makeWordColorObject];
 }
 
 - (NSString *) selectedWordTextFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation

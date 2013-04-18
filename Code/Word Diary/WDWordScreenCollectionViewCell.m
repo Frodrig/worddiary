@@ -82,7 +82,7 @@
     [self setWordRepresentation:word];
     [self setDayDiaryLabelOfWord:word];
     
-    self.contentView.backgroundColor = [UIColor colorWithHexadecimalValue:word.palette.lightBackground withAlphaComponent:NO skipInitialCharacter:NO];
+    self.contentView.backgroundColor = [word.palette makeLightBackgroundColorObject];
     
     self.dateContainerView.alpha = 1.0;
     self.dayDiaryContainerView.alpha = 1.0;
@@ -92,7 +92,7 @@
 {
     NSDictionary *attributedTextProperties = @{
                                               NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:24.0],
-                                              NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:word.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO],
+                                              NSForegroundColorAttributeName: [word.palette makeWordColorObject],
                                               NSKernAttributeName: [NSNumber numberWithInt:6]};
     
     self.dateYearLabel.attributedText = [[NSAttributedString alloc] initWithString:[word yearAsString] attributes:attributedTextProperties];
@@ -126,7 +126,7 @@
     self.dayDiaryLabel.attributedText = [[NSAttributedString alloc] initWithString:dayDiaryText
                                                                         attributes:@{
                                                                NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:28.0],
-                                                    NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:word.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO],
+                                                    NSForegroundColorAttributeName: [word.palette makeWordColorObject],
                                                                NSKernAttributeName: [NSNumber numberWithInt:6]}];
 }
 

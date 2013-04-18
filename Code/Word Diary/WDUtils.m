@@ -109,6 +109,26 @@
     return [UIScreen mainScreen].bounds.size.height == 568;
 }
 
++ (NSString *) convertColorToString:(UIColor *)color
+{
+    const CGFloat *colorComponents = CGColorGetComponents(color.CGColor);
+    NSString *colorString = [NSString stringWithFormat:@"%f,%f,%f,%f", colorComponents[0], colorComponents[1], colorComponents[2], colorComponents[3]];
+    
+    return colorString;
+}
+
++ (UIColor *) convertStringToColor:(NSString *)string
+{
+    NSArray *colorComponents = [string componentsSeparatedByString:@","];
+    NSString *redComponent = [colorComponents objectAtIndex:0];
+    NSString *greenComponent = [colorComponents objectAtIndex:1];
+    NSString *blueComponent = [colorComponents objectAtIndex:2];
+    NSString *alphaComponent = [colorComponents objectAtIndex:3];
+    UIColor *color = [UIColor colorWithRed:redComponent.floatValue green:greenComponent.floatValue blue:blueComponent.floatValue alpha:alphaComponent.floatValue];
+    
+    return color;
+}
+
 + (CGFloat)viewsCornerRadius
 {
     return 10.0;
