@@ -104,7 +104,9 @@
     const BOOL showCursor = (isEmptyText || self.keyboardMode);
     const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.45);
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
-    const CGFloat wordStartPointDrawMargin = 15.0;
+    const CGFloat wordStartPointDrawMargin = showCursor ? 15.0 : 15.0;
+    const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
+    CGFloat leftMarginAdjustmentByFont = 0.0;
         
     const CGFloat dashPattern[] = {2.0, 9.0};
     
@@ -132,12 +134,16 @@
         CFRelease(fontRef);
         
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:wordText attributes:attrDictionary];
+        if (!showCursor) {
+            [attString addAttribute:NSKernAttributeName value:[NSNumber numberWithFloat:2] range:NSMakeRange(0.0, wordText.length)];
+        }
         line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attString));
     
         lineImageBounds = CTLineGetImageBounds(line, contextRef);
-        endFindingFontSize = startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + lineImageBounds.size.width + 40.0 < startPointDraw.x + wordStartPointDrawMargin +self.frame.origin.x + self.bounds.size.width;
+        leftMarginAdjustmentByFont = lineImageBounds.origin.x < 0.0 ? abs(lineImageBounds.origin.x) : -lineImageBounds.origin.x;
+        endFindingFontSize = leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + lineImageBounds.size.width + rightWidthMargin < leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin +self.frame.origin.x + self.bounds.size.width;
         if (endFindingFontSize) {
-            endFindingFontSize = lineImageBounds.size.height + 40.0 < self.bounds.size.height;
+            endFindingFontSize = lineImageBounds.size.height + rightWidthMargin < self.bounds.size.height;
         }
         if (!endFindingFontSize) {
             fontSize--;
@@ -145,8 +151,11 @@
         }
     } while (!endFindingFontSize);
     
-    CGPoint fontDrawPoint = showCursor ? CGPointMake(startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x, startPointDraw.y) :
-                                         CGPointMake((self.bounds.size.width - lineImageBounds.size.width) / 2, startPointDraw.y);
+   // NSLog(@"image bounds %@", NSStringFromCGRect(lineImageBounds));
+   // NSLog(@"self bounds %@", NSStringFromCGRect(self.bounds));
+    
+    CGPoint fontDrawPoint = showCursor ? CGPointMake(leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x, startPointDraw.y) :
+                                         CGPointMake(leftMarginAdjustmentByFont + ((self.bounds.size.width - lineImageBounds.size.width) / 2), startPointDraw.y);
     
     CGContextSaveGState(contextRef);
     CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);
@@ -168,7 +177,7 @@
     if (showCursor && !self.forceCursorHide) {
         CGContextSaveGState(contextRef);
         
-        CGContextSetLineWidth(contextRef, 2.0);
+        CGContextSetLineWidth(contextRef, 4.0);
         CGContextSetStrokeColorWithColor(contextRef, cursorColor.CGColor);
         CGContextMoveToPoint(contextRef, cursorBounds.origin.x + 1, cursorBounds.origin.y + fontSize * 0.75);
         CGContextAddLineToPoint(contextRef, cursorBounds.origin.x + 1, cursorBounds.origin.y - fontSize * 0.25);
