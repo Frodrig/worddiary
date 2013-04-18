@@ -17,7 +17,7 @@
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
-static const NSUInteger MAX_WORD_LENGHT = 40;
+static const NSUInteger MAX_WORD_LENGHT = 20;
 
 @interface WDWordScreenCollectionViewController ()
 
@@ -272,7 +272,7 @@ static const NSUInteger MAX_WORD_LENGHT = 40;
 - (void)launchFadeDateAndDayTextTimer
 {
     [self.fadeDecoratorTextTimer invalidate];
-    self.fadeDecoratorTextTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(fadeDateAndDayTextTimerHandle:) userInfo:nil repeats:NO];
+    self.fadeDecoratorTextTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(fadeDateAndDayTextTimerHandle:) userInfo:nil repeats:NO];
 }
 
 - (void) endFadeDateAndDayTextTimer

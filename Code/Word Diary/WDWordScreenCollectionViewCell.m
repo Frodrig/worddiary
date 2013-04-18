@@ -91,9 +91,9 @@
 - (void)setDateLabelOfWord:(WDWord *)word
 {
     NSDictionary *attributedTextProperties = @{
-                                              NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:28.0],
+                                              NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:24.0],
                                               NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:word.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO],
-                                              NSKernAttributeName: [NSNumber numberWithInt:2]};
+                                              NSKernAttributeName: [NSNumber numberWithInt:6]};
     
     self.dateYearLabel.attributedText = [[NSAttributedString alloc] initWithString:[word yearAsString] attributes:attributedTextProperties];
   
@@ -125,7 +125,7 @@
     NSString *dayDiaryText = [NSString stringWithFormat:NSLocalizedString(@"TAG_DIARYDAY_LABEL", @""), dayDiaryNumberNormalized];
     self.dayDiaryLabel.attributedText = [[NSAttributedString alloc] initWithString:dayDiaryText
                                                                         attributes:@{
-                                                               NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:32.0],
+                                                               NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:28.0],
                                                     NSForegroundColorAttributeName: [UIColor colorWithHexadecimalValue:word.palette.wordColor withAlphaComponent:NO skipInitialCharacter:NO],
                                                                NSKernAttributeName: [NSNumber numberWithInt:6]}];
 }

@@ -108,7 +108,7 @@
     const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
     CGFloat leftMarginAdjustmentByFont = 0.0;
         
-    const CGFloat dashPattern[] = {2.0, 9.0};
+    const CGFloat dashPattern[] = {1.0, 9.0};
     
     // Línea
     CGContextSaveGState(contextRef);
@@ -116,7 +116,7 @@
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineDash(contextRef, 0, dashPattern, 2);
     CGContextSetLineWidth(contextRef, 1.5);
-    CGContextSetStrokeColorWithColor(contextRef, wordColor.CGColor);
+    CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithWhite:0.0 alpha:wordText.length > 0 ? 0.4 : 1.0].CGColor);
     CGContextMoveToPoint(contextRef, startPointDraw.x, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, endPointDraw.x, endPointDraw.y);
     CGContextStrokePath(contextRef);
@@ -151,11 +151,8 @@
         }
     } while (!endFindingFontSize);
     
-   // NSLog(@"image bounds %@", NSStringFromCGRect(lineImageBounds));
-   // NSLog(@"self bounds %@", NSStringFromCGRect(self.bounds));
-    
     CGPoint fontDrawPoint = showCursor ? CGPointMake(leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x, startPointDraw.y) :
-                                         CGPointMake(leftMarginAdjustmentByFont + ((self.bounds.size.width - lineImageBounds.size.width) / 2), startPointDraw.y);
+                                         CGPointMake(leftMarginAdjustmentByFont + (self.bounds.size.width - lineImageBounds.size.width) / 2, startPointDraw.y);
     
     CGContextSaveGState(contextRef);
     CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);

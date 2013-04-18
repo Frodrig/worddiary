@@ -102,8 +102,6 @@
     CGContextFillPath(contextRef);
   
     CGContextRestoreGState(contextRef);
-    
-    NSLog(@"draw");
 }
 
 #pragma mark - Auxiliary
