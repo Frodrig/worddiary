@@ -13,17 +13,21 @@
 #import "WDStyle.h"
 #import "WDUtils.h"
 #import "WDWordScreenCollectionViewCell.h"
+#import "WDWordCharacterCounterView.h"
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
+static const NSUInteger MAX_WORD_LENGHT = 40;
+
 @interface WDWordScreenCollectionViewController ()
 
-@property (nonatomic, strong) NSTimer                 *fadeDecoratorTextTimer;
-@property (nonatomic, strong) UITapGestureRecognizer  *tapGestureRecognizer;
-@property (nonatomic, strong) UIPanGestureRecognizer  *panGestureRecognizer;
-@property (nonatomic, strong) UIView                  *styleMenuView;
-@property (nonatomic, strong) NSTimer                 *cursorColorTimer;
-@property (nonatomic, strong) UIColor                 *cursorColor;
+@property (nonatomic, strong) WDWordCharacterCounterView *wordCharacterCounterView;
+@property (nonatomic, strong) NSTimer                    *fadeDecoratorTextTimer;
+@property (nonatomic, strong) UITapGestureRecognizer     *tapGestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer     *panGestureRecognizer;
+@property (nonatomic, strong) UIView                     *styleMenuView;
+@property (nonatomic, strong) NSTimer                    *cursorColorTimer;
+@property (nonatomic, strong) UIColor                    *cursorColor;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    converWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -53,12 +57,13 @@
 
 #pragma mark - Synthesize
 
-@synthesize fadeDecoratorTextTimer = fadeDecoratorTextTimer_;
-@synthesize tapGestureRecognizer   = tapGestureRecognizer_;
-@synthesize panGestureRecognizer   = panGestureRecognizer_;
-@synthesize cursorColorTimer       = cursorColorTimer_;
-@synthesize cursorColor            = cursorColor_;
-@synthesize styleMenuView          = styleMenuView_;
+@synthesize wordCharacterCounterView = wordCharacterCounterView_;
+@synthesize fadeDecoratorTextTimer   = fadeDecoratorTextTimer_;
+@synthesize tapGestureRecognizer     = tapGestureRecognizer_;
+@synthesize panGestureRecognizer     = panGestureRecognizer_;
+@synthesize cursorColorTimer         = cursorColorTimer_;
+@synthesize cursorColor              = cursorColor_;
+@synthesize styleMenuView            = styleMenuView_;
 
 #pragma mark - Properties
 
@@ -86,13 +91,17 @@
     return [self init];
 }
 
+- (void) dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
 	// Do any additional setup after loading the view.
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    
+
     // Gestures
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.panGestureRecognizer];
@@ -105,10 +114,14 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerNib:[UINib nibWithNibName:@"WDWordScreenCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"WordScreenCell"];
-    
     self.collectionView.pagingEnabled = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
+    
+    // Counter
+    self.wordCharacterCounterView = [[WDWordCharacterCounterView alloc] initWithFrame:CGRectMake(0.0, 0.0, 150.0, 88.0)];
+    self.wordCharacterCounterView.dataSource = self;
+    self.wordCharacterCounterView.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -320,15 +333,22 @@
             // Date and Day
             [self endFadeDateAndDayTextTimer];
             
-            // Wordrepresentation
+            // Wordcharacter counter
+            self.wordCharacterCounterView.frame = CGRectMake((self.view.bounds.size.width - self.wordCharacterCounterView.bounds.size.width) / 2, -self.wordCharacterCounterView.bounds.size.height, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
+            [self.view addSubview:self.wordCharacterCounterView];
+            
+            // Wordrepresentation - WordCharacterCounter animation
             [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
             [UIView animateWithDuration:0.5 animations:^{
                 cell.wordRepresentationContainerView.center = CGPointMake(cell.wordRepresentationContainerView.center.x, cell.wordRepresentationContainerView.center.y - 0.30 * cell.wordRepresentationContainerView.bounds.size.height);
                 cell.dateContainerView.alpha = 0.0;
                 cell.dayDiaryContainerView.alpha = 0.0;
+                self.wordCharacterCounterView.frame = CGRectMake(self.wordCharacterCounterView.frame.origin.x, 0.0, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
             } completion:^(BOOL finished) {
                 [self becomeFirstResponder];
             }];
+            
+            [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordWillEnterInEditMode" object:nil]];
         } else {
             [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
         }
@@ -425,7 +445,7 @@
 
 #pragma mark - UIKeyInput
 
-- (void)deleteBackward
+- (void) deleteBackward
 {
     WDWord *selectedWord = [self findSelectedWord];
     if (selectedWord.word.length > 0) {
@@ -433,34 +453,35 @@
         
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
         [cell.wordRepresentationView setNeedsDisplay];
+        [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordInEditModeRemoveLastCharacter" object:nil]];
     }
 }
 
-- (BOOL)hasText
+- (BOOL) hasText
 {
     WDWord *selectedWord = [self findSelectedWord];
     return selectedWord.word.length > 0;
 }
 
-- (void)insertText:(NSString *)text
+- (void) insertText:(NSString *)text
 {
     WDWord *selectedWord = [self findSelectedWord];
     if ([text stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]].length == 0) {
         [self resignFirstResponder];
     } else if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length > 0) {
-        static const NSUInteger MAX_LENGHT = 40;
-        if (selectedWord.word.length < MAX_LENGHT) {
+        if (selectedWord.word.length < MAX_WORD_LENGHT) {
             selectedWord.word = [selectedWord.word stringByAppendingString:text];
             
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             [cell.wordRepresentationView setNeedsDisplay];
+            [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordInEditModeAddedNewCharacter" object:nil]];
         }
     }
 }
 
 #pragma mark KeyboardNotification
 
-- (void)keyboardWillShowNotification:(NSNotification *)notification
+- (void) keyboardWillShowNotification:(NSNotification *)notification
 {
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
  
@@ -511,15 +532,15 @@
                 if (!self.isFirstResponder) {
                     [self.styleMenuView removeFromSuperview];
                 }
-                // Wordrepresentation
+                // Wordrepresentation & Wordcharacter
                 [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
                 [UIView animateWithDuration:0.5 animations:^{
                     cell.wordRepresentationContainerView.center = CGPointMake(cell.wordRepresentationContainerView.center.x, cell.wordRepresentationContainerView.center.y + 0.30 * cell.wordRepresentationContainerView.bounds.size.height);
+                    self.wordCharacterCounterView.frame = CGRectMake(self.wordCharacterCounterView.frame.origin.x, -self.wordCharacterCounterView.bounds.size.height, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
                 } completion:^(BOOL finished) {
                     [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
+                    [self.wordCharacterCounterView removeFromSuperview];
                 }];
-                
-
             }];
         } else {
             [UIView animateWithDuration:animationDuration animations:^{
@@ -532,6 +553,21 @@
 - (void)keyboardDidHideNotification:(NSNotification *)notification
 {
     self.collectionView.scrollEnabled = YES;
+}
+
+#pragma mark - WDWordCharacterCounterViewDataSource
+
+- (NSUInteger) numberOfFreeCharactersOfEditWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
+{
+    WDWord *selectedWord = [self findSelectedWord];
+    return MAX_WORD_LENGHT - selectedWord.word.length;
+}
+
+#pragma mark - WDWordCharacterCounterViewDelegate
+
+- (void) redrawNeededForWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
+{
+    [self.wordCharacterCounterView setNeedsDisplay];
 }
 
 @end

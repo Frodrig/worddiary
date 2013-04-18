@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "WDWordRepresentationViewDataSource.h"
+#import "WDWordCharacterCounterViewDataSource.h"
+#import "WDWordCharacterCounterViewDelegate.h"
 
-@interface WDWordScreenCollectionViewController : UICollectionViewController<WDWordRepresentationViewDataSource, UIKeyInput>
+@interface WDWordScreenCollectionViewController : UICollectionViewController<WDWordRepresentationViewDataSource,
+                                                                             WDWordCharacterCounterViewDataSource,
+                                                                             WDWordCharacterCounterViewDelegate,
+                                                                             UIKeyInput>
 
 @end
