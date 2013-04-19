@@ -106,6 +106,7 @@
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat wordStartPointDrawMargin = showCursor ? 15.0 : 15.0;
     const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
+    const CGFloat finalFontSizeModulator = 25.0;
     CGFloat leftMarginAdjustmentByFont = 0.0;
         
     const CGFloat dashPattern[] = {1.0, 9.0};
@@ -141,10 +142,11 @@
     
         lineImageBounds = CTLineGetImageBounds(line, contextRef);
         leftMarginAdjustmentByFont = lineImageBounds.origin.x < 0.0 ? abs(lineImageBounds.origin.x) : -lineImageBounds.origin.x;
-        endFindingFontSize = leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + lineImageBounds.size.width + rightWidthMargin < leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin +self.frame.origin.x + self.bounds.size.width;
-        if (endFindingFontSize) {
+        endFindingFontSize = leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + lineImageBounds.size.width + rightWidthMargin + finalFontSizeModulator < leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + self.bounds.size.width;
+        /*if (endFindingFontSize) {
             endFindingFontSize = lineImageBounds.size.height + rightWidthMargin < self.bounds.size.height;
         }
+        */
         if (!endFindingFontSize) {
             fontSize--;
             CFRelease(line);
