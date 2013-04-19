@@ -161,7 +161,6 @@
 		5BB840FA16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		5BD34CA616E7A166007B46A2 /* WDBackgroundDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundDefs.h; sourceTree = "<group>"; };
 		5BE2F6E21700216400A68287 /* WDGradientBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDGradientBackground.h; sourceTree = "<group>"; };
 		5BE2F6E31700216400A68287 /* WDGradientBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDGradientBackground.m; sourceTree = "<group>"; };
 		5BE2F6E91700954E00A68287 /* 37-circle-x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-circle-x.png"; sourceTree = "<group>"; };
@@ -453,7 +452,6 @@
 			children = (
 				5BB840DF16DCB9250005AF21 /* Core Data */,
 				5BD34C9D16E799D4007B46A2 /* Word Diary */,
-				5BD34CA116E799F8007B46A2 /* OFF Background Store */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -497,14 +495,6 @@
 				5BB840E116DCB9470005AF21 /* WDWordDiary.m */,
 			);
 			name = "Word Diary";
-			sourceTree = "<group>";
-		};
-		5BD34CA116E799F8007B46A2 /* OFF Background Store */ = {
-			isa = PBXGroup;
-			children = (
-				5BD34CA616E7A166007B46A2 /* WDBackgroundDefs.h */,
-			);
-			name = "OFF Background Store";
 			sourceTree = "<group>";
 		};
 		5BE2F6E1170020D300A68287 /* Gradient Background */ = {

@@ -10,7 +10,6 @@
 #import "WDWord.h"
 #import "WDStyle.h"
 #import "WDPalette.h"
-#import "WDBackgroundDefs.h"
 #import "WDUtils.h"
 
 @interface WDWordDiary()
@@ -120,10 +119,11 @@
     
     if (result.count > 0) {
         styles_ = result;
+        // ToDo: Ordenar el array
     } else {        
         NSArray *fontFamilies = [NSArray arrayWithObjects:
                                  @"Baskerville",
-                                 @"Copperplate",
+                                 @"Zapfino",
                                  @"CourierNewPSMT",
                                  @"Noteworthy-Light",
                                  @"PartyLetPlain",
@@ -162,14 +162,25 @@
 {
     NSArray *result = [self fetchAllEntitiesOfType:@"WDPalette"];
     if (result.count > 0) {
-        palettes_ = result;
+        palettes_ = [result sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            WDPalette *palette1 = obj1;
+            WDPalette *palette2 = obj2;
+            NSNumber *palette1Id = [NSNumber numberWithInteger:[palette1.idName integerValue]];
+            NSNumber *palette2Id = [NSNumber numberWithInteger:[palette2.idName integerValue]];
+            return [palette1Id compare:palette2Id];
+        }];
     } else {
-        NSArray *lighPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
+        
+        NSArray *lighPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.2F, @"gFrecuency":@0.266F, @"bFrecuency":@0.1F,
+                                 @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
+                                 @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@255.0F }];
+        
+        /*NSArray *lighPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.1F, @"gFrecuency":@0.266F, @"bFrecuency":@0.2F,
                                                                            @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
-                                                                           @"center":@230.0F, @"amplitude":@25.0F, @"loopLenght":@50.0F }];
+                                                                           @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@255.0F }];*/
         NSArray *darkPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
                                                                            @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
-                                                                           @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@50.0F }];
+                                                                           @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@255.0F }];
         NSAssert(lighPalettes.count == darkPalettes.count, @"Arrays no coincidentes");
         
         for (NSUInteger paletteIndex = 0; paletteIndex < lighPalettes.count; ++paletteIndex) {

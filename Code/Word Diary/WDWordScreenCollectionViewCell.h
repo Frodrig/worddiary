@@ -20,6 +20,8 @@
 
 - (void) setWord:(WDWord *)word;
 
+- (void) setBackgroundColorOfWord:(WDWord *)word;
+
 - (void) fadeInDataAndDayText;
 - (void) fadeOutDataAndDayText;
 

@@ -358,7 +358,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture
 {
     if (!self.isFirstResponder) {
-        WDPalette *nextPalette = nil;
+        WDPalette *newPalette = nil;
         
         if (gesture == self.panGestureRecognizer) {
             switch (gesture.state) {
@@ -369,9 +369,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                         const CGFloat minimumDistance = 25.0;
                         WDWord *word = [self findSelectedWord];
                         if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
-                            nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
+                            newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
                         } else if (translation.y > 0.0 && translation.y > minimumDistance) {
-                            nextPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+                            newPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
                         }
                     }
                     
@@ -382,11 +382,11 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
             }
         }
         
-        if (nextPalette) {
+        if (newPalette) {
             WDWord *word = [self findSelectedWord];
-            word.palette = nextPalette;
+            word.palette = newPalette;
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-            cell.contentView.backgroundColor = [nextPalette makeLightBackgroundColorObject];
+            [cell setBackgroundColorOfWord:word];
             [gesture setTranslation:CGPointZero inView:self.view];
         }
     }

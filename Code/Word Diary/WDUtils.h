@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WDBackgroundDefs.h"
 
 typedef enum {
     UI_ALLWORDSSCREEN_TODAYWORD,
@@ -40,12 +39,8 @@ typedef enum {
 + (UIColor *)            darkSchemeTextColor;
 + (UIColor *)            lightSchemeBackgroundColor;
 + (UIColor *)            lightSchemeTextColor;
-+ (UIColor *)            schemeBackgroundColor:(WDColorScheme)scheme;
-+ (UIColor *)            schemeTextColor:(WDColorScheme)scheme;
 
 + (NSArray *)            pickerColorArray;
-+ (WDBackgroundCategory) convertPickerColorIndexToBackgroundCategory:(NSUInteger)index;
-+ (NSUInteger)           convertGradientBackgroundCategoryToPickerColorIndex:(WDBackgroundCategory)backgroundCategory;
 + (NSArray *)            makeColorGradientWithParameters:(NSDictionary *)parameters;
 
 + (NSString *)           stringFromWeekday:(NSUInteger)weekDay;

@@ -154,41 +154,6 @@
     return [UIColor whiteColor];
 }
 
-+ (UIColor *)schemeBackgroundColor:(WDColorScheme)scheme
-{
-    UIColor *color = nil;
-    
-    switch (scheme) {
-        case CS_DARK:
-            color = [self darkSchemeBackgroundColor];
-            break;
-            
-        default:
-            color = [self lightSchemeBackgroundColor];
-            break;
-    }
-    
-    return color;
-}
-
-+ (UIColor *)schemeTextColor:(WDColorScheme)scheme
-{
-    UIColor *color = nil;
-    
-    switch (scheme) {
-        case CS_DARK:
-            color = [self darkSchemeTextColor];
-            break;
-            
-        case CS_LIGHT:
-            color = [self lightSchemeTextColor];
-        default:
-            break;
-    }
-    
-    return color;
-}
-
 + (NSArray *)pickerColorArray
 {
     /*
@@ -250,64 +215,6 @@
     return pickerColorArray;
 }
 
-+ (WDBackgroundCategory)convertPickerColorIndexToBackgroundCategory:(NSUInteger)index
-{
-    WDBackgroundCategory backgroundCategory = index;
-    
-    return backgroundCategory;
-    
-    /*
-    switch (index) {
-        case 0:
-            backgroundCategory = BC_GRADIENT_0;
-            break;
-        case 1:
-            backgroundCategory = BC_GRADIENT_1;
-            break;
-        case 2:
-            backgroundCategory = BC_GRADIENT_2;
-            break;
-        case 3:
-            backgroundCategory = BC_GRADIENT_3;
-            break;
-        case 4:
-            backgroundCategory = BC_GRADIENT_4;
-            break;
-        case 5:
-            backgroundCategory = BC_GRADIENT_5;
-            break;
-        case 6:
-            backgroundCategory = BC_GRADIENT_6;
-            break;
-        case 7:
-            backgroundCategory = BC_GRADIENT_7;
-            break;
-        case 8:
-            backgroundCategory = BC_GRADIENT_8;
-            break;
-        case 9:
-            backgroundCategory = BC_GRADIENT_9;
-            break;
-        case 10:
-            backgroundCategory = BC_GRADIENT_10;
-            break;
-        case 11:
-            backgroundCategory = BC_GRADIENT_11;
-            break;
-        default:
-            break;
-    };
-    */
-}
-
-+ (NSUInteger)convertGradientBackgroundCategoryToPickerColorIndex:(WDBackgroundCategory)backgroundCategory
-{
-    NSUInteger colorIndex = backgroundCategory;
-    NSAssert(colorIndex < [self pickerColorArray].count, @"Categoria recibida invalida");
-    
-    return colorIndex;
-}
-
 + (NSString *)stringFromWeekday:(NSUInteger)weekDay
 {
     NSString *retString = nil;
@@ -356,12 +263,14 @@
     NSNumber *rFrecuency = [parameters objectForKey:@"rFrecuency"];
     NSNumber *gFrecuency = [parameters objectForKey:@"gFrecuency"];
     NSNumber *bFrecuency = [parameters objectForKey:@"bFrecuency"];
+    NSNumber *bwFrecuency = [parameters objectForKey:@"bwFrecuency"];
     NSNumber *rPhase = [parameters objectForKey:@"rPhase"];
     NSNumber *gPhase = [parameters objectForKey:@"gPhase"];
     NSNumber *bPhase = [parameters objectForKey:@"bPhase"];
+    NSNumber *bwPhase = [parameters objectForKey:@"bwPhase"];
     NSNumber *center = [parameters objectForKey:@"center"];
     NSNumber *amplitude = [parameters objectForKey:@"amplitude"];
-    NSNumber *loopLenght = [parameters objectForKey:@"loopLength"];
+    NSNumber *loopLenght = [parameters objectForKey:@"loopLenght"];
     
     if (center == nil) {
         center = [NSNumber numberWithUnsignedInteger:128];
@@ -375,14 +284,28 @@
     
     NSMutableArray *colors = [NSMutableArray arrayWithCapacity:loopLenght.unsignedIntegerValue];
     for (NSUInteger inc = 0; inc < loopLenght.unsignedIntegerValue; inc++) {
-        CGFloat redComponent = sin(rFrecuency.floatValue * inc + rPhase.floatValue) * amplitude.floatValue + center.floatValue;
-        CGFloat greenComponent = sin(gFrecuency.floatValue * inc + gPhase.floatValue) * amplitude.floatValue + center.floatValue;
-        CGFloat blueComponent = sin(bFrecuency.floatValue * inc + bPhase.floatValue) * amplitude.floatValue + center.floatValue;
-        UIColor *color = [UIColor colorWithRed:redComponent/255.0 green:greenComponent/255.0 blue:blueComponent/255.0 alpha:1.0];
+        UIColor *color = nil;
+        if (bwFrecuency) {
+            CGFloat component = sin(bwFrecuency.floatValue * inc + bwPhase.floatValue) * amplitude.floatValue + center.floatValue;
+            color = [UIColor colorWithRed:component/255.0 green:component/255.0 blue:component/255.0 alpha:1.0];
+        } else {
+            CGFloat redComponent = sin(rFrecuency.floatValue * inc + rPhase.floatValue) * amplitude.floatValue + center.floatValue;
+            CGFloat greenComponent = sin(gFrecuency.floatValue * inc + gPhase.floatValue) * amplitude.floatValue + center.floatValue;
+            CGFloat blueComponent = sin(bFrecuency.floatValue * inc + bPhase.floatValue) * amplitude.floatValue + center.floatValue;
+            color = [UIColor colorWithRed:redComponent/255.0 green:greenComponent/255.0 blue:blueComponent/255.0 alpha:1.0];
+        }
         [colors addObject:color];
+        /*
+        for (UIColor *colorToCheck in colors) {
+            if (CGColorEqualToColor(color.CGColor, colorToCheck.CGColor)) {
+                NSLog(@"Color %d already present", inc);
+                break;
+            }
+        }
+        */
     }
     
-    return [NSArray arrayWithArray:colors];
+    return colors;
 }
 
 + (UIView *)destroyViewGosthEffect:(UIView *)srcView withDuration:(CGFloat)duration andDisplacement:(CGFloat)displacement

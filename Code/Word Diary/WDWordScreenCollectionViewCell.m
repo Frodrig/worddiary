@@ -13,6 +13,7 @@
 #import "WDUtils.h"
 #import "WDWordDiary.h"
 #import "UIColor+hexColorCreation.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface WDWordScreenCollectionViewCell()
 
@@ -20,6 +21,7 @@
 @property (nonatomic, weak) IBOutlet    UILabel       *dateDayAndMonthLabel;
 @property (nonatomic, weak) IBOutlet    UILabel       *dateYearLabel;
 @property (nonatomic, weak) IBOutlet    UILabel       *dayDiaryLabel;
+@property (nonatomic, strong) CAGradientLayer         *gradientLayer;
 
 
 - (void) setDateLabelOfWord:(WDWord *)word;
@@ -40,6 +42,18 @@
 @synthesize dayDiaryLabel                   = dayDiaryLabel_;
 @synthesize wordRepresentationContainerView = wordRepresentationContainerView_;
 @synthesize wordRepresentationView          = wordRepresentationView_;
+@synthesize gradientLayer                   = gradientLayer_;
+
+#pragma mark - Properties
+
+- (CAGradientLayer *)gradientLayer
+{
+    if (nil == gradientLayer_) {
+        gradientLayer_ = [CAGradientLayer layer];
+        [self.layer insertSublayer:gradientLayer_ atIndex:0];
+    }
+    return gradientLayer_;
+}
 
 #pragma mark - Init
 
@@ -74,7 +88,7 @@
     [self.wordRepresentationView setNeedsDisplay];
 }
 
-#pragma mark - SetWord
+#pragma mark - Setters
 
 - (void)setWord:(WDWord *)word
 {
@@ -82,10 +96,22 @@
     [self setWordRepresentation:word];
     [self setDayDiaryLabelOfWord:word];
     
-    self.contentView.backgroundColor = [word.palette makeLightBackgroundColorObject];
+    [self setBackgroundColorOfWord:word];
     
     self.dateContainerView.alpha = 1.0;
     self.dayDiaryContainerView.alpha = 1.0;
+}
+
+- (void) setBackgroundColorOfWord:(WDWord *)word
+{
+    WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+    WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
+    NSLog(@"prev %@ center %@ next %@", prevPalette.idName, word.palette.idName, nextPalette.idName);
+    self.gradientLayer.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
+    self.gradientLayer.colors = [[NSArray alloc] initWithObjects:(id)[prevPalette makeLightBackgroundColorObject].CGColor, (id)[word.palette makeLightBackgroundColorObject].CGColor, (id)[nextPalette makeLightBackgroundColorObject].CGColor, nil];
+    self.gradientLayer.locations = [NSArray arrayWithObjects:@0.35F, @0.65F, @1.0F, nil];
+    self.gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+    self.gradientLayer.endPoint = CGPointMake(0.5, 1.0);
 }
 
 - (void)setDateLabelOfWord:(WDWord *)word
