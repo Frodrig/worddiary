@@ -119,8 +119,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self.collectionView.showsVerticalScrollIndicator = NO;
     
     // Counter
-    self.wordCharacterCounterView = [[WDWordCharacterCounterView alloc] initWithFrame:CGRectMake(0.0, 0.0, 150.0, 88.0)];
-    self.wordCharacterCounterView.dataSource = self;
+    self.wordCharacterCounterView = [[WDWordCharacterCounterView alloc] initWithFrame:CGRectMake(0.0, 0.0, 150.0, 88.0) andDataSource:self];
     self.wordCharacterCounterView.delegate = self;
 }
 
@@ -358,6 +357,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture
 {
     if (!self.isFirstResponder) {
+        const BOOL fadeOutText = gesture.state == UIGestureRecognizerStateBegan;
+        const BOOL fadeInText = gesture.state == UIGestureRecognizerStateEnded;
         WDPalette *newPalette = nil;
         
         if (gesture == self.panGestureRecognizer) {
@@ -366,7 +367,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                 case UIGestureRecognizerStateChanged: {
                     CGPoint translation = [gesture translationInView:self.view];
                     if (![WDUtils is:translation.y equalsTo:0.0]) {
-                        const CGFloat minimumDistance = 25.0;
+                        const CGFloat minimumDistance = 5.0;
                         WDWord *word = [self findSelectedWord];
                         if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
                             newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
@@ -374,7 +375,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                             newPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
                         }
                     }
-                    
                 } break;
                     
                 default:
@@ -382,11 +382,33 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
             }
         }
         
+        if (fadeInText || fadeOutText) {
+            WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+
+            if (fadeOutText) {
+                [self endFadeDateAndDayTextTimer];
+                [cell pauseBackgroundColorAnimation];
+            }
+            
+            const CGFloat alphaValue = fadeInText ? 1.0 : 0.0;
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+            [UIView animateWithDuration:0.25 animations:^{
+                cell.dateContainerView.alpha = alphaValue;
+                cell.wordRepresentationContainerView.alpha = alphaValue;
+                cell.dayDiaryContainerView.alpha = alphaValue;
+            } completion:^(BOOL finished) {
+                if (fadeInText) {
+                    [self launchFadeDateAndDayTextTimer];
+                    [cell resumeBackgroundColorAnimation];
+                }
+            }];
+        }
+        
         if (newPalette) {
             WDWord *word = [self findSelectedWord];
             word.palette = newPalette;
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-            [cell setBackgroundColorOfWord:word];
+            [cell refreshBackgroundColorOfWord:word];
             [gesture setTranslation:CGPointZero inView:self.view];
         }
     }
@@ -402,8 +424,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (UIColor *)selectedWordColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
-    WDWord *selectedWord = [self findSelectedWordAtSectionIndex:wordRepresentation.tag];
-    return [selectedWord.palette makeWordColorObject];
+    WDWord *word = [self findSelectedWord];
+    return [word.palette makeWordColorObject];
 }
 
 - (NSString *) selectedWordTextFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
@@ -561,6 +583,12 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     WDWord *selectedWord = [self findSelectedWord];
     return MAX_WORD_LENGHT - selectedWord.word.length;
+}
+
+- (UIColor *)  colorForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
+{
+    WDWord *selectedWord = [self findSelectedWord];
+    return [selectedWord.palette makeWordColorObject];
 }
 
 #pragma mark - WDWordCharacterCounterViewDelegate

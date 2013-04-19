@@ -12,6 +12,8 @@
 
 @interface WDWordCharacterCounterView : UIView
 
+- (id) initWithFrame:(CGRect)frame andDataSource:(id<WDWordCharacterCounterViewDataSource>)dataSource;
+
 @property(nonatomic, weak) id<WDWordCharacterCounterViewDataSource> dataSource;
 @property(nonatomic, weak) id<WDWordCharacterCounterViewDelegate>   delegate;
 

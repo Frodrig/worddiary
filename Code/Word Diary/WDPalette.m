@@ -32,7 +32,7 @@
 
 - (UIColor *) makeWordColorObject
 {
-    return [WDUtils convertStringToColor:self.wordColor];
+    return [UIColor colorWithWhite:[WDUtils brightnessOfColor:[self makeLightBackgroundColorObject]] alpha:1.0];
 }
 
 

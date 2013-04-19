@@ -30,25 +30,17 @@
 @synthesize dataSource            = dataSource_;
 @synthesize delegate              = delegate_;
 @synthesize counterLabel          = counterLabel_;
-@synthesize counterDecoratorColor = counterDecoratorColor_;
 
 #pragma mark - Properties
 
--(UIColor *)counterDecoratorColor
-{
-    if (nil == counterDecoratorColor_) {
-        counterDecoratorColor_ = [UIColor blackColor];
-    }
-    return counterDecoratorColor_;
-}
-
 #pragma mark - Init
 
-- (id)initWithFrame:(CGRect)frame
+- (id) initWithFrame:(CGRect)frame andDataSource:(id<WDWordCharacterCounterViewDataSource>)dataSource
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.dataSource = dataSource;
         self.opaque = NO;
         
         // Img de fondo
@@ -57,7 +49,7 @@
         counterLabel_ = [[UILabel alloc] initWithFrame:frame];
         NSString *strCounter = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:[self.dataSource numberOfFreeCharactersOfEditWordForWordCharacterCounterView:self]]];
         NSDictionary *strParams = @{ NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:52.0],
-                                     NSForegroundColorAttributeName: [UIColor blackColor],
+                                     NSForegroundColorAttributeName: [self.dataSource colorForWordCharacterCounterView:self],
                                      NSKernAttributeName: [NSNumber numberWithInt:2.0]};
         counterLabel_.attributedText = [[NSAttributedString alloc] initWithString:strCounter attributes:strParams];
         counterLabel_.textAlignment = NSTextAlignmentCenter;
@@ -72,6 +64,12 @@
     }
     
     return self;
+
+}
+
+- (id)initWithFrame:(CGRect)frame
+{
+    return nil;
 }
 
 - (void) dealloc
@@ -86,6 +84,9 @@
     // Drawing code
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     
+    NSUInteger freeCharacters = [self.dataSource numberOfFreeCharactersOfEditWordForWordCharacterCounterView:self];
+    UIColor *dotsColor = freeCharacters == 0 ? [UIColor redColor] : [self.dataSource colorForWordCharacterCounterView:self];
+
     CGContextSaveGState(contextRef);
     
     const CGFloat twoPiRadians = 6.28318531;
@@ -93,8 +94,8 @@
     const CGFloat decoratorMargin = 20.0;
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineWidth(contextRef, 1.0);
-    CGFloat colorComponents[4] = {0.0, 0.0, 0.0, 1.0};
-    [self.counterDecoratorColor getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
+    CGFloat colorComponents[] = {0.0, 0.0, 0.0, 1.0};
+    [dotsColor getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
     CGContextSetFillColor(contextRef, colorComponents);
     CGContextAddArc(contextRef, decoratorMargin, self.bounds.size.height / 2, decoratorRadius, 0.0, twoPiRadians, 0);
     CGContextFillPath(contextRef);
@@ -114,12 +115,6 @@
                                             attributes:[self.counterLabel.attributedText attributesAtIndex:0 effectiveRange:NULL]];
     self.counterLabel.attributedText = attributedString;
     
-    if (freeCharacters == 0) {
-        self.counterDecoratorColor = [UIColor redColor];
-    } else {
-        self.counterDecoratorColor = [UIColor blackColor];
-    }
-    
     [self.delegate redrawNeededForWordForWordCharacterCounterView:self];
 }
 
@@ -127,6 +122,10 @@
 
 - (void) WDSelectedWordWillEnterInEditMode:(NSNotification *)notification
 {
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:self.counterLabel.attributedText];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[self.dataSource colorForWordCharacterCounterView:self] range:NSMakeRange(0, attributedString.length)];
+    self.counterLabel.attributedText = attributedString;
+    
     [self updateCharactersCounter];
 }
 

@@ -30,6 +30,7 @@ typedef enum {
 
 + (BOOL)                 is568Screen;
 
++ (CGFloat)              brightnessOfColor:(UIColor *)color;
 + (NSString *)           convertColorToString:(UIColor *)color;
 + (UIColor *)            convertStringToColor:(NSString *)string;
 

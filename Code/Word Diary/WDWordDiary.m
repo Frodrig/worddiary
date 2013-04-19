@@ -171,22 +171,22 @@
         }];
     } else {
         
-        NSArray *lighPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.2F, @"gFrecuency":@0.266F, @"bFrecuency":@0.1F,
+        NSArray *lighPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.366F, @"gFrecuency":@0.466F, @"bFrecuency":@0.566F,
                                  @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
-                                 @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@255.0F }];
+                                 @"center":@220.0F, @"amplitude":@35.0F, @"loopLenght":@1440.0F}];
         
         /*NSArray *lighPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.1F, @"gFrecuency":@0.266F, @"bFrecuency":@0.2F,
                                                                            @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
                                                                            @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@255.0F }];*/
-        NSArray *darkPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
-                                                                           @"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
-                                                                           @"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@255.0F }];
-        NSAssert(lighPalettes.count == darkPalettes.count, @"Arrays no coincidentes");
+        //NSArray *darkPalettes = [WDUtils makeColorGradientWithParameters:@{ @"rFrecuency":@0.3F, @"gFrecuency":@0.3F, @"bFrecuency":@0.3F,
+                                                                           //@"rPhase":@0.0F, @"gPhase":@2.0F, @"rPhase":@4.0F,
+                                                                           //@"center":@200.0F, @"amplitude":@55.0F, @"loopLenght":@122.0F }];
+        //NSAssert(lighPalettes.count == darkPalettes.count, @"Arrays no coincidentes");
         
         for (NSUInteger paletteIndex = 0; paletteIndex < lighPalettes.count; ++paletteIndex) {
             NSString *paletteId = [NSString stringWithFormat:@"%d", paletteIndex];
             NSString *lightBackgroundColorString = [WDUtils convertColorToString:[lighPalettes objectAtIndex:paletteIndex]];
-            NSString *darkBackgroundColorString = [WDUtils convertColorToString:[darkPalettes objectAtIndex:paletteIndex]];
+            NSString *darkBackgroundColorString = [lightBackgroundColorString copy];//[WDUtils convertColorToString:[darkPalettes objectAtIndex:paletteIndex]];
             NSString *wordColorString = [WDUtils convertColorToString:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
             NSString *accesoriesColorString = [WDUtils convertColorToString:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
             

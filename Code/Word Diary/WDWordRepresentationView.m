@@ -99,7 +99,9 @@
     const NSString *familyFont = [self.dataSource selectedWordTextFamilyFontForWordRepresentationView:self];
     CGFloat fontSize = [self.dataSource selectedWordFontStartSizeForWordRepresentationView:self];
     const UIColor *wordColor = [self.dataSource selectedWordColorForWordRepresentationView:self];
-    const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
+    const UIColor *cursorColor = [wordColor copy];//[self.dataSource selectedWordCursorColorForWordRepresentationView:self];
+    float wordColorRGBComponents[4];
+    [wordColor getRed:&wordColorRGBComponents[0] green:&wordColorRGBComponents[1] blue:&wordColorRGBComponents[2] alpha:&wordColorRGBComponents[3]];
     const BOOL isEmptyText = wordText.length == 0;
     const BOOL showCursor = (isEmptyText || self.keyboardMode);
     const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.45);
@@ -117,6 +119,7 @@
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineDash(contextRef, 0, dashPattern, 2);
     CGContextSetLineWidth(contextRef, 1.5);
+    CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithRed:wordColorRGBComponents[0] green:wordColorRGBComponents[1] blue:wordColorRGBComponents[2] alpha:wordText.length > 0 ? 0.4 : 1.0].CGColor);
     CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithWhite:0.0 alpha:wordText.length > 0 ? 0.4 : 1.0].CGColor);
     CGContextMoveToPoint(contextRef, startPointDraw.x, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, endPointDraw.x, endPointDraw.y);

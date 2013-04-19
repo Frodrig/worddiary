@@ -247,6 +247,18 @@
     return retString;
 }
 
++ (CGFloat) brightnessOfColor:(UIColor *)color
+{
+    CGFloat rgbComponents[4];
+    [color getRed:&rgbComponents[0] green:&rgbComponents[1] blue:&rgbComponents[2] alpha:&rgbComponents[3]];
+    rgbComponents[0] *= 255.0;
+    rgbComponents[1] *= 255.0;
+    rgbComponents[2] *= 255.0;
+    
+    CGFloat brightness = sqrt(rgbComponents[0] * rgbComponents[0] * 0.241 + rgbComponents[1] * rgbComponents[1] * 0.691 + rgbComponents[2] * rgbComponents[2] * 0.068);
+    return brightness < 130.0 ? 1 : 0;
+}
+
 + (NSString *)convertNumberToStringWithTwoDigitsMin:(NSNumber *)number
 {
     NSString *retNumber = number.unsignedIntegerValue < 10 ? [@"0" stringByAppendingString:number.stringValue] : number.stringValue;

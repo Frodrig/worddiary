@@ -13,5 +13,6 @@
 @protocol WDWordCharacterCounterViewDataSource <NSObject>
 
 - (NSUInteger) numberOfFreeCharactersOfEditWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView;
+- (UIColor *)  colorForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView;
 
 @end
