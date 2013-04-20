@@ -118,8 +118,8 @@
     if (nil == self.gradientLayerBorder) {
         self.gradientLayerBorder = [CAGradientLayer layer];
         self.gradientLayerBorder.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
-        self.gradientLayerBorder.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.0 alpha:0.3].CGColor, (id)[UIColor colorWithWhite:1.0 alpha:0.1].CGColor, (id)[UIColor colorWithWhite:1.0 alpha:0.1].CGColor, (id)[UIColor colorWithWhite:0.0 alpha:0.3].CGColor, nil];
-        self.gradientLayerBorder.locations = [NSArray arrayWithObjects:@0.0F, @0.1F, @0.9F, @1.0f, nil];
+        self.gradientLayerBorder.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.0 alpha:0.30].CGColor, (id)[UIColor colorWithWhite:0.0 alpha:0.1].CGColor, (id)[UIColor colorWithWhite:0.0 alpha:0.1].CGColor, (id)[UIColor colorWithWhite:0.0 alpha:0.30].CGColor, nil];
+        self.gradientLayerBorder.locations = [NSArray arrayWithObjects:@0.0F, @0.05F, @0.95F, @1.0f, nil];
         self.gradientLayerBorder.startPoint = CGPointMake(0.0, 0.5);
         self.gradientLayerBorder.endPoint = CGPointMake(1.0, 0.5);
     

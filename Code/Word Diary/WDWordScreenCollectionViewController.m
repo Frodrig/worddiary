@@ -21,13 +21,14 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 @interface WDWordScreenCollectionViewController ()
 
-@property (nonatomic, strong) WDWordCharacterCounterView *wordCharacterCounterView;
-@property (nonatomic, strong) NSTimer                    *fadeDecoratorTextTimer;
-@property (nonatomic, strong) UITapGestureRecognizer     *tapGestureRecognizer;
-@property (nonatomic, strong) UIPanGestureRecognizer     *panGestureRecognizer;
-@property (nonatomic, strong) UIView                     *styleMenuView;
-@property (nonatomic, strong) NSTimer                    *cursorColorTimer;
-@property (nonatomic, strong) UIColor                    *cursorColor;
+@property (nonatomic, strong) WDWordCharacterCounterView    *wordCharacterCounterView;
+@property (nonatomic, strong) NSTimer                       *fadeDecoratorTextTimer;
+@property (nonatomic, strong) UITapGestureRecognizer        *tapGestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer        *panGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer  *longPressGestureRecognizer;
+@property (nonatomic, strong) UIView                        *styleMenuView;
+@property (nonatomic, strong) NSTimer                       *cursorColorTimer;
+@property (nonatomic, strong) UIColor                       *cursorColor;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    converWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -39,6 +40,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)                             tapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture;
 - (void)                             panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture;
+- (void)                             longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture;
 
 - (WDWordScreenCollectionViewCell *) findSelectedCell;
 - (WDWord *)                         findSelectedWord;
@@ -57,13 +59,14 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark - Synthesize
 
-@synthesize wordCharacterCounterView = wordCharacterCounterView_;
-@synthesize fadeDecoratorTextTimer   = fadeDecoratorTextTimer_;
-@synthesize tapGestureRecognizer     = tapGestureRecognizer_;
-@synthesize panGestureRecognizer     = panGestureRecognizer_;
-@synthesize cursorColorTimer         = cursorColorTimer_;
-@synthesize cursorColor              = cursorColor_;
-@synthesize styleMenuView            = styleMenuView_;
+@synthesize wordCharacterCounterView   = wordCharacterCounterView_;
+@synthesize fadeDecoratorTextTimer     = fadeDecoratorTextTimer_;
+@synthesize tapGestureRecognizer       = tapGestureRecognizer_;
+@synthesize panGestureRecognizer       = panGestureRecognizer_;
+@synthesize longPressGestureRecognizer = longPressGestureRecognizer_;
+@synthesize cursorColorTimer           = cursorColorTimer_;
+@synthesize cursorColor                = cursorColor_;
+@synthesize styleMenuView              = styleMenuView_;
 
 #pragma mark - Properties
 
@@ -109,6 +112,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
     [self.tapGestureRecognizer requireGestureRecognizerToFail:self.panGestureRecognizer];
+    
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerHandle:)];
+    [self.view addGestureRecognizer:self.longPressGestureRecognizer];
+    [self.longPressGestureRecognizer requireGestureRecognizerToFail:self.tapGestureRecognizer];
     
     // Collection
     self.collectionView.delegate = self;
@@ -412,6 +419,15 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
             [gesture setTranslation:CGPointZero inView:self.view];
         }
     }
+}
+
+- (void) longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        
+    }
+    
+    NSLog(@"longpress");
 }
 
 #pragma mark - WDWordRepresentatonViewDataSource
