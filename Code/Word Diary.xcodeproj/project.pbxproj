@@ -119,6 +119,7 @@
 		5BA9FC7E1723EFB400DAB6A5 /* 442-information-symbol1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "442-information-symbol1@2x.png"; sourceTree = "<group>"; };
 		5BA9FC871723F0B300DAB6A5 /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
 		5BA9FC881723F0B300DAB6A5 /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
+		5BA9FC8B17241C0600DAB6A5 /* WDMainMenuViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDMainMenuViewControllerDataSource.h; sourceTree = "<group>"; };
 		5BB42261170EC19B0081B5CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5BB42263170EC1B40081B5CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		5BB42265170EC1B80081B5CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -328,6 +329,7 @@
 				5BA9FC5E1723D9A700DAB6A5 /* WDMainMenuViewController.m */,
 				5BA9FC5F1723D9A700DAB6A5 /* WDMainMenuViewController.xib */,
 				5BA9FC621723D9C900DAB6A5 /* WDMainMenuViewControllerDelegate.h */,
+				5BA9FC8B17241C0600DAB6A5 /* WDMainMenuViewControllerDataSource.h */,
 			);
 			name = "Main Menu View Controller";
 			sourceTree = "<group>";

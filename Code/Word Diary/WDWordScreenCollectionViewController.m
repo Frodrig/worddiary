@@ -34,7 +34,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) WDMainMenuViewController      *mainMenuViewController;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
-- (NSIndexPath *)                    converWordIndexContainerToIndexPath:(NSUInteger)index;
+- (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
+
+- (void)                             dissmisMainMenuViewController;
 
 - (void)                             launchFadeDateAndDayTextTimer;
 - (void)                             endFadeDateAndDayTextTimer;
@@ -48,7 +50,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (WDWordScreenCollectionViewCell *) findSelectedCell;
 - (WDWord *)                         findSelectedWord;
 - (WDWord *)                         findSelectedWordAtSectionIndex:(NSUInteger)sectionIndex;
+
 - (NSIndexPath *)                    indexPathForLastWord;
+- (NSIndexPath *)                    indexPathForWord:(WDWord *)word;
 
 - (void)                             launchCursorColorTimer;
 - (void)                             endCursorColorTimer;
@@ -78,6 +82,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (WDMainMenuViewController *)mainMenuViewController {
     if (nil == mainMenuViewController_) {
         mainMenuViewController_ = [[WDMainMenuViewController alloc] initWithNibName:nil bundle:nil];
+        mainMenuViewController_.delegate = self;
+        mainMenuViewController_.dataSource  = self;
+        
     }
     return mainMenuViewController_;
 }
@@ -134,6 +141,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     [self.tapGestureRecognizer requireGestureRecognizerToFail:self.panGestureRecognizer];
     
     self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerHandle:)];
+    self.longPressGestureRecognizer.minimumPressDuration = 0.15;
+    self.longPressGestureRecognizer.allowableMovement = NO;
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
     [self.longPressGestureRecognizer requireGestureRecognizerToFail:self.tapGestureRecognizer];
     
@@ -229,7 +238,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     return retValue;
 }
 
-- (NSIndexPath *) converWordIndexContainerToIndexPath:(NSUInteger)index
+- (NSIndexPath *) convertWordIndexContainerToIndexPath:(NSUInteger)index
 {
     NSIndexPath *retIndexPath = [NSIndexPath indexPathForRow:0 inSection:[WDWordDiary sharedWordDiary].words.count - index - 1];
     
@@ -257,12 +266,34 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     return [NSIndexPath indexPathForRow:0 inSection:[WDWordDiary sharedWordDiary].words.count - 1];
 }
 
+- (NSIndexPath *)indexPathForWord:(WDWord *)word
+{
+    NSUInteger indexOfWord = [[WDWordDiary sharedWordDiary].words indexOfObject:word];
+    NSIndexPath *indexPathOfWord = [self convertWordIndexContainerToIndexPath:indexOfWord];
+    
+    return indexPathOfWord;
+}
+
 - (WDWordScreenCollectionViewCell *) findSelectedCell
 {
     NSUInteger sectionIndex = (self.collectionView.contentOffset.x / self.collectionView.bounds.size.width) + 0.5;
     WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:sectionIndex]];
     
     return cell;
+}
+
+- (void)dissmisMainMenuViewController
+{
+    if (self.mainMenuViewController.view.superview != nil) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.pannelBackgroundView.alpha = 0.0;
+            self.mainMenuViewController.view.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self.pannelBackgroundView removeFromSuperview];
+            [self.mainMenuViewController.view removeFromSuperview];
+        }];
+        [self.mainMenuViewController.view removeFromSuperview];
+    }
 }
 
 #pragma mark - UICollectionViewDelegate
@@ -349,14 +380,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     if (gesture == self.tapGestureRecognizer) {
         if (self.mainMenuViewController.view.superview != nil) {
-            [UIView animateWithDuration:0.25 animations:^{
-                self.pannelBackgroundView.alpha = 0.0;
-                self.mainMenuViewController.view.alpha = 0.0;
-            } completion:^(BOOL finished) {
-                [self.pannelBackgroundView removeFromSuperview];
-                [self.mainMenuViewController.view removeFromSuperview];
-            }];
-            [self.mainMenuViewController.view removeFromSuperview];
+            [self dissmisMainMenuViewController];
         } else {
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             CGPoint hitPoint = [gesture locationInView:cell];
@@ -656,7 +680,13 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void) removeOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
-    
+    WDWord *selectedWord = [self findSelectedWord];
+    if (![selectedWord isTodayWord]) {
+        NSIndexPath *selectedWordIndexPath = [self indexPathForWord:selectedWord];
+        [[WDWordDiary sharedWordDiary] removeWord:selectedWord];
+        [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
+        [self dissmisMainMenuViewController];
+    }    
 }
 
 - (void) addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
@@ -679,5 +709,13 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     
 }
 
+#pragma mark - WDWordMainMenuViewControllerDataSource
+
+- (BOOL)removeOptionAvailableForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+{
+    return ![[self findSelectedWord] isTodayWord];
+}
+
 
 @end
+    

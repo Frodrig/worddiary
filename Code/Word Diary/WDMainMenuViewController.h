@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "WDMainMenuViewControllerDelegate.h"
+#import "WDMainMenuViewControllerDataSource.h"
 
 @interface WDMainMenuViewController : UIViewController
 
 @property(nonatomic, weak)id<WDMainMenuViewControllerDelegate> delegate;
+@property(nonatomic, weak)id<WDMainMenuViewControllerDataSource> dataSource;
 
 @end

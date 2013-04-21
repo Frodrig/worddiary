@@ -10,9 +10,17 @@
 
 @interface WDMainMenuViewController ()
 
+@property (weak, nonatomic) IBOutlet UIButton *removeOption;
+
 @end
 
 @implementation WDMainMenuViewController
+
+#pragma mark - Synthesize
+
+@synthesize removeOption = removeOption_;
+
+#pragma mark - Init
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,6 +35,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    self.removeOption.enabled = [self.dataSource removeOptionAvailableForMainMenuViewController:self];
 }
 
 - (void)didReceiveMemoryWarning
