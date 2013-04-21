@@ -38,8 +38,9 @@
 					<object class="IBUIButton" id="723188727">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{40, 20}, {44, 44}}</string>
+						<string key="NSFrame">{{20, 20}, {88, 88}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="13907992"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -60,7 +61,7 @@
 						</object>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">50-plus.png</string>
+							<string key="NSResourceName">addicon.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="5898662">
 							<int key="type">2</int>
@@ -75,8 +76,9 @@
 					<object class="IBUIButton" id="13907992">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">289</int>
-						<string key="NSFrame">{{93, 19}, {44, 45}}</string>
+						<string key="NSFrame">{{135, 20}, {88, 88}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="46385223"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -88,7 +90,7 @@
 						<reference key="IBUINormalTitleShadowColor" ref="885541256"/>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">60-x.png</string>
+							<string key="NSResourceName">removeicon.png</string>
 						</object>
 						<reference key="IBUIFontDescription" ref="5898662"/>
 						<reference key="IBUIFont" ref="805979907"/>
@@ -96,8 +98,9 @@
 					<object class="IBUIButton" id="46385223">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">269</int>
-						<string key="NSFrame">{{20, 72}, {44, 43}}</string>
+						<string key="NSFrame">{{42, 130}, {44, 43}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="915420554"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -117,8 +120,9 @@
 					<object class="IBUIButton" id="915420554">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">261</int>
-						<string key="NSFrame">{{72, 72}, {45, 43}}</string>
+						<string key="NSFrame">{{99, 130}, {45, 43}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="308334585"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -138,8 +142,9 @@
 					<object class="IBUIButton" id="308334585">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">269</int>
-						<string key="NSFrame">{{125, 73}, {43, 42}}</string>
+						<string key="NSFrame">{{152, 131}, {43, 42}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -156,8 +161,9 @@
 						<reference key="IBUIFont" ref="805979907"/>
 					</object>
 				</array>
-				<string key="NSFrameSize">{188, 135}</string>
+				<string key="NSFrameSize">{243, 193}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="723188727"/>
 				<object class="IBUISimulatedSizeMetrics" key="IBUISimulatedDestinationMetrics">
 					<string key="IBUISimulatedSizeMetricsClass">IBUISimulatedFreeformSizeMetricsSentinel</string>
@@ -242,11 +248,11 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="46385223"/>
 							<reference ref="723188727"/>
-							<reference ref="13907992"/>
+							<reference ref="46385223"/>
 							<reference ref="915420554"/>
 							<reference ref="308334585"/>
+							<reference ref="13907992"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -311,7 +317,29 @@
 			<nil key="sourceID"/>
 			<int key="maxID">89</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">WDMainMenuViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">removeOption</string>
+						<string key="NS.object.0">UIButton</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">removeOption</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">removeOption</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/WDMainMenuViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
@@ -320,8 +348,8 @@
 			<string key="19-gear.png">{26, 26}</string>
 			<string key="441-help-symbol1.png">{28, 28}</string>
 			<string key="442-information-symbol1.png">{28, 28}</string>
-			<string key="50-plus.png">{14, 14}</string>
-			<string key="60-x.png">{14, 14}</string>
+			<string key="addicon.png">{88, 88}</string>
+			<string key="removeicon.png">{88, 88}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
