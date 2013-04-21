@@ -14,6 +14,7 @@
 #import "WDUtils.h"
 #import "WDWordScreenCollectionViewCell.h"
 #import "WDWordCharacterCounterView.h"
+#import "WDMainMenuViewController.h"
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -29,6 +30,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) UIView                        *styleMenuView;
 @property (nonatomic, strong) NSTimer                       *cursorColorTimer;
 @property (nonatomic, strong) UIColor                       *cursorColor;
+@property (nonatomic, strong) UIView                        *pannelBackgroundView;
+@property (nonatomic, strong) WDMainMenuViewController      *mainMenuViewController;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    converWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -67,8 +70,25 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize cursorColorTimer           = cursorColorTimer_;
 @synthesize cursorColor                = cursorColor_;
 @synthesize styleMenuView              = styleMenuView_;
+@synthesize pannelBackgroundView       = pannelBackgroundView_;
+@synthesize mainMenuViewController     = mainMenuViewController_;
 
 #pragma mark - Properties
+
+- (WDMainMenuViewController *)mainMenuViewController {
+    if (nil == mainMenuViewController_) {
+        mainMenuViewController_ = [[WDMainMenuViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    return mainMenuViewController_;
+}
+
+- (UIView *)pannelBackgroundView {
+    if (nil == pannelBackgroundView_) {
+        pannelBackgroundView_ = [[UIView alloc] initWithFrame:self.view.frame];
+        pannelBackgroundView_.backgroundColor = [UIColor blackColor];
+    }
+    return pannelBackgroundView_;
+}
 
 #pragma mark - Init
 
@@ -328,35 +348,46 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
 {
     if (gesture == self.tapGestureRecognizer) {
-        WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-        CGPoint hitPoint = [gesture locationInView:cell];
-        if (CGRectContainsPoint(cell.wordRepresentationContainerView.frame, hitPoint)) {
-            WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-            
-            // Scroll
-            self.collectionView.scrollEnabled = NO;
-            
-            // Date and Day
-            [self endFadeDateAndDayTextTimer];
-            
-            // Wordcharacter counter
-            self.wordCharacterCounterView.frame = CGRectMake((self.view.bounds.size.width - self.wordCharacterCounterView.bounds.size.width) / 2, -self.wordCharacterCounterView.bounds.size.height, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
-            [self.view addSubview:self.wordCharacterCounterView];
-            
-            // Wordrepresentation - WordCharacterCounter animation
-            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-            [UIView animateWithDuration:0.5 animations:^{
-                cell.wordRepresentationContainerView.center = CGPointMake(cell.wordRepresentationContainerView.center.x, cell.wordRepresentationContainerView.center.y - 0.30 * cell.wordRepresentationContainerView.bounds.size.height);
-                cell.dateContainerView.alpha = 0.0;
-                cell.dayDiaryContainerView.alpha = 0.0;
-                self.wordCharacterCounterView.frame = CGRectMake(self.wordCharacterCounterView.frame.origin.x, 0.0, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
+        if (self.mainMenuViewController.view.superview != nil) {
+            [UIView animateWithDuration:0.25 animations:^{
+                self.pannelBackgroundView.alpha = 0.0;
+                self.mainMenuViewController.view.alpha = 0.0;
             } completion:^(BOOL finished) {
-                [self becomeFirstResponder];
+                [self.pannelBackgroundView removeFromSuperview];
+                [self.mainMenuViewController.view removeFromSuperview];
             }];
-            
-            [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordWillEnterInEditMode" object:nil]];
+            [self.mainMenuViewController.view removeFromSuperview];
         } else {
-            [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
+            WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+            CGPoint hitPoint = [gesture locationInView:cell];
+            if (CGRectContainsPoint(cell.wordRepresentationContainerView.frame, hitPoint)) {
+                WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+                
+                // Scroll
+                self.collectionView.scrollEnabled = NO;
+                
+                // Date and Day
+                [self endFadeDateAndDayTextTimer];
+                
+                // Wordcharacter counter
+                self.wordCharacterCounterView.frame = CGRectMake((self.view.bounds.size.width - self.wordCharacterCounterView.bounds.size.width) / 2, -self.wordCharacterCounterView.bounds.size.height, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
+                [self.view addSubview:self.wordCharacterCounterView];
+                
+                // Wordrepresentation - WordCharacterCounter animation
+                [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+                [UIView animateWithDuration:0.5 animations:^{
+                    cell.wordRepresentationContainerView.center = CGPointMake(cell.wordRepresentationContainerView.center.x, cell.wordRepresentationContainerView.center.y - 0.30 * cell.wordRepresentationContainerView.bounds.size.height);
+                    cell.dateContainerView.alpha = 0.0;
+                    cell.dayDiaryContainerView.alpha = 0.0;
+                    self.wordCharacterCounterView.frame = CGRectMake(self.wordCharacterCounterView.frame.origin.x, 0.0, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
+                } completion:^(BOOL finished) {
+                    [self becomeFirstResponder];
+                }];
+                
+                [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordWillEnterInEditMode" object:nil]];
+            } else {
+                [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
+            }
         }
     }
 }
@@ -424,10 +455,17 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void) longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        
+        if (self.mainMenuViewController.view.superview == nil) {
+            [self.view addSubview:self.pannelBackgroundView];
+            [self.view addSubview:self.mainMenuViewController.view];
+            self.mainMenuViewController.view.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+            self.pannelBackgroundView.alpha = self.mainMenuViewController.view.alpha = 0.0;
+            [UIView animateWithDuration:0.25 animations:^{
+                self.pannelBackgroundView.alpha = 0.8;
+                self.mainMenuViewController.view.alpha = 1.0;
+            }];
+        }
     }
-    
-    NSLog(@"longpress");
 }
 
 #pragma mark - WDWordRepresentatonViewDataSource
@@ -613,5 +651,33 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     [self.wordCharacterCounterView setNeedsDisplay];
 }
+
+#pragma mark - WDWordMainMenuViewControllerDelegate
+
+- (void) removeOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+{
+    
+}
+
+- (void) addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+{
+    
+}
+
+- (void) settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+{
+    
+}
+
+- (void) helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+{
+    
+}
+
+- (void) infoOptionSelectedFormainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+{
+    
+}
+
 
 @end

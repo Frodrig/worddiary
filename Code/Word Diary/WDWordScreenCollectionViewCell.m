@@ -115,6 +115,7 @@
 
 - (void) addBorderGradientLayer
 {
+    /*
     if (nil == self.gradientLayerBorder) {
         self.gradientLayerBorder = [CAGradientLayer layer];
         self.gradientLayerBorder.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
@@ -125,6 +126,7 @@
     
         [self.layer insertSublayer:self.gradientLayerBorder above:self.gradientLayerBackgroundColor];
     }
+     */
 }
 
 - (void) refreshBackgroundColorOfWord:(WDWord *)word
