@@ -112,3 +112,9 @@
 "TAG_AUXILIARYHELPPANEL_6"                         = "Si estás escribiendo una palabra (con el teclado desplegado) y quieres borrarla fácilmente, agita tu iPhone.";
 "TAG_AUXILIARYHELPPANEL_7"                         = "Las palabras de días previos no se pueden cambiar. Únicamente borrar.";
 "TAG_AUXILIARYHELPPANEL_8"                         = "Recuerda:\n\nUna palabra al día.\n\nUn diario llevado a la mínima expresión.";
+
+"TAG_ADDWORDDAY_YEAR_LABEL"                         = "Year";
+"TAG_ADDWORDDAY_MONTH_LABEL"                        = "Month";
+"TAG_ADDWORDDAY_DAY_LABEL"                          = "Day";
+"TAG_ADDWORDDAY_INFO_WORDDAYALREADYEXIST"           = "There is word for this day already";
+"TAG_ADDWORDDAY_GO"                                 = "Go";

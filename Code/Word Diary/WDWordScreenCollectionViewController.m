@@ -15,6 +15,7 @@
 #import "WDWordScreenCollectionViewCell.h"
 #import "WDWordCharacterCounterView.h"
 #import "WDMainMenuViewController.h"
+#import "WDAddWordDayViewController.h"
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -36,7 +37,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
 
-- (void)                             dissmisMainMenuViewController;
+- (void)                             hideMainMenuViewController;
 
 - (void)                             launchFadeDateAndDayTextTimer;
 - (void)                             endFadeDateAndDayTextTimer;
@@ -282,7 +283,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     return cell;
 }
 
-- (void)dissmisMainMenuViewController
+- (void)hideMainMenuViewController
 {
     if (self.mainMenuViewController.view.superview != nil) {
         [UIView animateWithDuration:0.25 animations:^{
@@ -380,7 +381,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     if (gesture == self.tapGestureRecognizer) {
         if (self.mainMenuViewController.view.superview != nil) {
-            [self dissmisMainMenuViewController];
+            [self hideMainMenuViewController];
         } else {
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             CGPoint hitPoint = [gesture locationInView:cell];
@@ -476,7 +477,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }
 }
 
-- (void) longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture
+- (void)longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
         if (self.mainMenuViewController.view.superview == nil) {
@@ -685,13 +686,18 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         NSIndexPath *selectedWordIndexPath = [self indexPathForWord:selectedWord];
         [[WDWordDiary sharedWordDiary] removeWord:selectedWord];
         [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
-        [self dissmisMainMenuViewController];
+        [self hideMainMenuViewController];
     }    
 }
 
 - (void) addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
+    [self hideMainMenuViewController];
     
+    WDAddWordDayViewController *addWorDayViewController = [[WDAddWordDayViewController alloc] initWithNibName:nil bundle:nil];
+    [self presentViewController:addWorDayViewController animated:YES completion:^{
+        
+    }];
 }
 
 - (void) settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController

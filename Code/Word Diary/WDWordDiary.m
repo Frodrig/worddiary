@@ -382,6 +382,19 @@
     return retPalette;
 }
 
+- (WDWord *)findWordWithDateComponents:(NSDateComponents *)dateComponents
+{
+    NSUInteger indexOfWordObject = [self.words indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        WDWord *wordIt = obj;
+        BOOL found = wordIt.dateComponents.year == dateComponents.year &&
+                      wordIt.dateComponents.month == dateComponents.month &&
+                      wordIt.dateComponents.day == dateComponents.day;
+        *stop = found;
+        return found;
+    }];
+
+    return indexOfWordObject != NSNotFound ? [self.words objectAtIndex:indexOfWordObject] : nil;
+}
 
 #pragma mark - Auxiliary
 

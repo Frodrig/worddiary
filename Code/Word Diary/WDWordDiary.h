@@ -33,7 +33,9 @@
 - (WDWord *)      findLastCreatedWord;
 - (WDWord *)      findNextWordOf:(WDWord *)word;
 - (WDWord *)      findPreviousWordOf:(WDWord *)word;
+- (WDWord *)      findWordWithDateComponents:(NSDateComponents *)dateComponents;
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
+
 
 - (WDPalette *)   findNextPaletteOfPalette:(WDPalette *)palette;
 - (WDPalette *)   findPrevPaletteOfPalette:(WDPalette *)palette;
