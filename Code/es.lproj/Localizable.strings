@@ -126,3 +126,4 @@
 "SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM"  = "Desactivar animación sutil de fondo";
 "SETTINGS_SCREEN_YES"                               = "Sí";
 "SETTINGS_SCREEN_NO"                                = "No";
+"SETTINGS_SCREEN_NOW"                               = "Ahora";

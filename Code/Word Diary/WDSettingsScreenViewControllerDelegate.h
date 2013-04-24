@@ -15,4 +15,6 @@
 - (void) settingsScreenViewControllerWillDismiss:(WDSettingsScreenViewController *)settingsScreenViewController;
 - (void) settingsScreenViewControllerDidDismiss:(WDSettingsScreenViewController *)settingsScreenViewController;
 
+- (void) wordWithIndex:(NSArray *)index removedFromSettingsScreenViewControllerRemoveAllEmptyWordDays:(WDSettingsScreenViewController *)settingsScreenViewController;
+
 @end

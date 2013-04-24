@@ -247,6 +247,35 @@
     return wordObject;
 }
 
+- (NSArray *)findAllDaysIndexWithoutWord
+{
+    NSMutableArray *indexWordToRemove = [[NSMutableArray alloc] init];
+    for (NSUInteger indexIt = 0; indexIt < self.words.count; indexIt++) {
+        WDWord *word = [self.words objectAtIndex:indexIt];
+        if (![word isTodayWord]) {
+            if (word.word.length == 0) {
+                [indexWordToRemove addObject:[NSNumber numberWithUnsignedInteger:indexIt]];
+            }
+        }
+    }
+    
+    return [NSArray arrayWithArray:indexWordToRemove];
+}
+
+
+- (NSArray *)removeAllDaysWithoutWord
+{
+    NSArray *indexWordToRemove = [self findAllDaysIndexWithoutWord];
+    for (NSNumber *indexWordIt in indexWordToRemove) {
+        WDWord *wordToRemove = [self.words objectAtIndex:indexWordIt.unsignedIntegerValue];
+        [self removeWord:wordToRemove];
+    }
+    
+    [self saveAll];
+    
+    return indexWordToRemove;
+}
+
 - (void)removeWord:(WDWord *)word
 {
     [word removeObserver:self forKeyPath:@"word"];
@@ -378,7 +407,6 @@
         }
     }
     
-    NSLog(@"palette index %d", [self.palettes indexOfObject:retPalette]);
     return retPalette;
 }
 

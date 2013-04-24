@@ -26,6 +26,7 @@
 - (WDWord *)      createWord:(NSString *)word inTimeInterval:(double)timeInterval;
 - (void)          removeWord:(WDWord *)word;
 - (void)          removeWordAtIndexPosition:(NSUInteger)wordIndexPosition;
+- (NSArray *)     removeAllDaysWithoutWord;
 
 - (void)          saveAll;
 
@@ -35,7 +36,7 @@
 - (WDWord *)      findPreviousWordOf:(WDWord *)word;
 - (WDWord *)      findWordWithDateComponents:(NSDateComponents *)dateComponents;
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
-
+- (NSArray *)     findAllDaysIndexWithoutWord;
 
 - (WDPalette *)   findNextPaletteOfPalette:(WDPalette *)palette;
 - (WDPalette *)   findPrevPaletteOfPalette:(WDPalette *)palette;

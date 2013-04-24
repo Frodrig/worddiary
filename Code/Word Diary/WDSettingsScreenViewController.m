@@ -7,10 +7,10 @@
 //
 
 #import "WDSettingsScreenViewController.h"
+#import "WDWordDiary.h"
 
 const NSUInteger REMOVEDAYWITHOUTWORDS_OPTIONTAG                 = 1;
-const NSUInteger REMOVEDAYSWITHOUTWORDS_YES_BUTTONTAG            = 10;
-const NSUInteger REMOVEDAYSWITHOUTWORDS_NO_BUTTONTAG             = 11;
+const NSUInteger REMOVEDAYSWITHOUTWORDS_NOW_BUTTONTAG            = 10;
 const NSUInteger BLOCKPREVIOUSDAYEDIT_OPTIONTAG                  = 2;
 const NSUInteger BLOCKPREVIOUSDAYSEDIT_YES_BUTTONTAG             = 20;
 const NSUInteger BLOCKPREVIOUSDAYSEDIT_NO_BUTTONTAG              = 21;
@@ -26,6 +26,7 @@ const NSUInteger DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG   = 41;
 - (void) activeStateOfYesNoButton:(UIButton *)button;
 
 - (void) buttonYesNoPressed:(UIButton *)sender;
+- (void) buttonNowPressed:(UIButton *)sender;
 
 @end
 
@@ -51,20 +52,19 @@ const NSUInteger DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG   = 41;
 {
     [super viewDidLoad];
     
-    // Do any additional setup after loading the view from its nib.
-    [((UIButton *)[self.view viewWithTag:REMOVEDAYSWITHOUTWORDS_YES_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
+    // Targets
+    [((UIButton *)[self.view viewWithTag:REMOVEDAYSWITHOUTWORDS_NOW_BUTTONTAG]) addTarget:self action:@selector(buttonNowPressed:) forControlEvents:UIControlEventTouchUpInside];
     [((UIButton *)[self.view viewWithTag:BLOCKPREVIOUSDAYSEDIT_YES_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
     [((UIButton *)[self.view viewWithTag:CREATENEWENTRYEACHDAY_YES_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
     [((UIButton *)[self.view viewWithTag:DEACTIVATEBACKGROUNDGRADIENTANIM_YES_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-    [((UIButton *)[self.view viewWithTag:REMOVEDAYSWITHOUTWORDS_NO_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
     [((UIButton *)[self.view viewWithTag:BLOCKPREVIOUSDAYSEDIT_NO_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
     [((UIButton *)[self.view viewWithTag:CREATENEWENTRYEACHDAY_NO_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
     [((UIButton *)[self.view viewWithTag:DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG]) addTarget:self action:@selector(buttonYesNoPressed:) forControlEvents:UIControlEventTouchUpInside];
     
+    // Labels
     ((UILabel *)[self.view viewWithTag:REMOVEDAYWITHOUTWORDS_OPTIONTAG]).text = NSLocalizedString(@"SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS", @"");
-    [((UIButton *)[self.view viewWithTag:REMOVEDAYSWITHOUTWORDS_YES_BUTTONTAG]) setTitle:NSLocalizedString(@"SETTINGS_SCREEN_YES", @"") forState:UIControlStateNormal];
-    [((UIButton *)[self.view viewWithTag:REMOVEDAYSWITHOUTWORDS_NO_BUTTONTAG]) setTitle:NSLocalizedString(@"SETTINGS_SCREEN_NO", @"") forState:UIControlStateNormal];
+    [((UIButton *)[self.view viewWithTag:REMOVEDAYSWITHOUTWORDS_NOW_BUTTONTAG]) setTitle:NSLocalizedString(@"SETTINGS_SCREEN_NOW", @"") forState:UIControlStateNormal];
     ((UILabel *)[self.view viewWithTag:BLOCKPREVIOUSDAYEDIT_OPTIONTAG]).text = NSLocalizedString(@"SETTINGS_SCREEN_BLOCKPREVIOUSDAYEDIT", @"");
     [((UIButton *)[self.view viewWithTag:BLOCKPREVIOUSDAYSEDIT_YES_BUTTONTAG]) setTitle:NSLocalizedString(@"SETTINGS_SCREEN_YES", @"") forState:UIControlStateNormal];
     [((UIButton *)[self.view viewWithTag:BLOCKPREVIOUSDAYSEDIT_NO_BUTTONTAG]) setTitle:NSLocalizedString(@"SETTINGS_SCREEN_NO", @"") forState:UIControlStateNormal];
@@ -74,6 +74,12 @@ const NSUInteger DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG   = 41;
     ((UILabel *)[self.view viewWithTag:DEACTIVATEBACKGROUNDGRADIENTANIM_OPTIONTAG]).text = NSLocalizedString(@"SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM", @"");
     [((UIButton *)[self.view viewWithTag:DEACTIVATEBACKGROUNDGRADIENTANIM_YES_BUTTONTAG]) setTitle:NSLocalizedString(@"SETTINGS_SCREEN_YES", @"") forState:UIControlStateNormal];
     [((UIButton *)[self.view viewWithTag:DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG]) setTitle:NSLocalizedString(@"SETTINGS_SCREEN_NO", @"") forState:UIControlStateNormal];
+    
+    // Settings
+    [((UIButton *)[self.view viewWithTag:REMOVEDAYSWITHOUTWORDS_NOW_BUTTONTAG]) setTitleColor:[[WDWordDiary sharedWordDiary] findAllDaysIndexWithoutWord].count > 0 ? [UIColor whiteColor] : [UIColor darkGrayColor] forState:UIControlStateNormal];
+    [self activeStateOfYesNoButton:[[NSUserDefaults standardUserDefaults] boolForKey:@"BLOCK_PREVIOUS_DAYS_EDIT"] ? (UIButton *)[self.view viewWithTag:BLOCKPREVIOUSDAYSEDIT_YES_BUTTONTAG] : (UIButton *)[self.view viewWithTag:BLOCKPREVIOUSDAYSEDIT_NO_BUTTONTAG]];
+    [self activeStateOfYesNoButton:[[NSUserDefaults standardUserDefaults] boolForKey:@"CREATE_NEW_ENTRY_EACHDAY"] ? (UIButton *)[self.view viewWithTag:CREATENEWENTRYEACHDAY_YES_BUTTONTAG] : (UIButton *)[self.view viewWithTag:CREATENEWENTRYEACHDAY_NO_BUTTONTAG]];
+    [self activeStateOfYesNoButton:[[NSUserDefaults standardUserDefaults] boolForKey:@"DEACTIVATE_BACKGROUND_GRADIENT_ANIM"] ? (UIButton *)[self.view viewWithTag:DEACTIVATEBACKGROUNDGRADIENTANIM_YES_BUTTONTAG] : (UIButton *)[self.view viewWithTag:DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -107,18 +113,32 @@ const NSUInteger DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG   = 41;
 {
 }
 
+- (void)buttonNowPressed:(UIButton *)sender
+{
+    // Limpieza si procede
+    NSArray *indexWords = [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
+    [self.delegate wordWithIndex:indexWords removedFromSettingsScreenViewControllerRemoveAllEmptyWordDays:self];
+    
+    [sender setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [sender removeTarget:self action:@selector(buttonNowPressed:) forControlEvents:UIControlEventAllEvents];
+}
+
 - (void)buttonYesNoPressed:(UIButton *)sender
 {
     [self activeStateOfYesNoButton:sender];
 
-    if (sender.tag == REMOVEDAYSWITHOUTWORDS_YES_BUTTONTAG) {
-    } else if (sender.tag == REMOVEDAYSWITHOUTWORDS_NO_BUTTONTAG) {
-    } else if (sender.tag == BLOCKPREVIOUSDAYSEDIT_YES_BUTTONTAG) {
+   if (sender.tag == BLOCKPREVIOUSDAYSEDIT_YES_BUTTONTAG) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"BLOCK_PREVIOUS_DAYS_EDIT"];
     } else if (sender.tag == BLOCKPREVIOUSDAYSEDIT_NO_BUTTONTAG) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"BLOCK_PREVIOUS_DAYS_EDIT"];
     } else if (sender.tag == CREATENEWENTRYEACHDAY_YES_BUTTONTAG) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CREATE_NEW_ENTRY_EACHDAY"];
     } else if (sender.tag == CREATENEWENTRYEACHDAY_NO_BUTTONTAG) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"CREATE_NEW_ENTRY_EACHDAY"];
     } else if (sender.tag == DEACTIVATEBACKGROUNDGRADIENTANIM_YES_BUTTONTAG) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"DEACTIVATE_BACKGROUND_GRADIENT_ANIM"];
     } else if (sender.tag == DEACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"DEACTIVATE_BACKGROUND_GRADIENT_ANIM"];
     }
 }
 

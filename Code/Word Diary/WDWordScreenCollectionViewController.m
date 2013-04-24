@@ -245,7 +245,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     return retValue;
 }
 
-- (NSIndexPath *) convertWordIndexContainerToIndexPath:(NSUInteger)index
+- (NSIndexPath *)convertWordIndexContainerToIndexPath:(NSUInteger)index
 {
     NSIndexPath *retIndexPath = [NSIndexPath indexPathForRow:0 inSection:[WDWordDiary sharedWordDiary].words.count - index - 1];
     
@@ -303,8 +303,92 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }
 }
 
-#pragma mark - UICollectionViewDelegate
+/*
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+ // MUY INTERESANTE PARA HACER EFECTO OSCURECIDO 
+    NSLog(@"hey");
+}
+*/
+/*
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    NSLog(@"ops");
+    if (self.pendingDeleteIndexPath) {
+        [[WDWordDiary sharedWordDiary] removeWord:[self findSelectedWordAtSectionIndex:self.pendingDeleteIndexPath.section]];
+        [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:self.pendingDeleteIndexPath.section]];
+        
+        // Debemos de recalcular el tag para todas las celdas que se hallaran a la derecha de la que hemos borrado
+        // Trabajaremos con las celdas de la cache que tengan su tag incorrecto, lo sabremos al ir pidiendo celdas de forma
+        // secuencial y ver que su tag no corresponde con la seccion a la que pertenecen. En el momento en que casen los valores
+        // todo se habra ajustado (pues se estarán creando de nuevo celdas)
+        NSIndexPath *indexPathFixTagIt = [NSIndexPath indexPathForRow:0 inSection:self.pendingDeleteIndexPath.section > 0 ? self.pendingDeleteIndexPath.section - 1 : 0];
+        BOOL fixTagEnd = NO;
+        while (!fixTagEnd) {
+            WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPathFixTagIt];
+            if (cell.wordRepresentationView.tag != indexPathFixTagIt.section) {
+                cell.wordRepresentationView.tag = indexPathFixTagIt.section;
+                indexPathFixTagIt = [NSIndexPath indexPathForRow:indexPathFixTagIt.row inSection:self.pendingDeleteIndexPath.section + 1];
+            } else {
+                fixTagEnd = YES;
+            }
+        }
 
+        self.pendingDeleteIndexPath = nil;
+    }
+}
+*/
+#pragma mark - UICollectionViewDelegate
+/*
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"REMOVE_DAYS_WITHOUT_WORDS"]) {
+        NSUInteger wordIndexPathToCheck = [self convertIndexPathToWordIndexContainer:indexPath];
+        WDWord *wordToCheck = [[WDWordDiary sharedWordDiary].words objectAtIndex:wordIndexPathToCheck];
+        if (![wordToCheck isTodayWord] && wordToCheck.word.length == 0) {
+            self.pendingDeleteIndexPath = indexPath;
+        }
+    }
+}
+*/
+/*
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"REMOVE_DAYS_WITHOUT_WORDS"]) {
+        NSUInteger wordIndexPathToCheck = [self convertIndexPathToWordIndexContainer:indexPath];
+        WDWord *wordToCheck = [[WDWordDiary sharedWordDiary].words objectAtIndex:wordIndexPathToCheck];
+        if (![wordToCheck isTodayWord] && wordToCheck.word.length == 0) {
+            self.pendingDeleteIndexPath = indexPath;
+            BOOL scrollCollectionView = NO;
+            NSIndexPath *newIndexPathForSelectedCell = [self.collectionView indexPathForCell:[self findSelectedCell]];
+            if (newIndexPathForSelectedCell.section > indexPath.section) {
+                newIndexPathForSelectedCell = [NSIndexPath indexPathForRow:0.0 inSection:newIndexPathForSelectedCell.section - 1];
+                scrollCollectionView = YES;
+            }
+            [[WDWordDiary sharedWordDiary] removeWord:wordToCheck];
+            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section]];
+            if (scrollCollectionView) {
+                [self.collectionView scrollToItemAtIndexPath:newIndexPathForSelectedCell atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+            }
+            
+            // Debemos de recalcular el tag para todas las celdas que se hallaran a la derecha de la que hemos borrado
+            // Trabajaremos con las celdas de la cache que tengan su tag incorrecto, lo sabremos al ir pidiendo celdas de forma
+            // secuencial y ver que su tag no corresponde con la seccion a la que pertenecen. En el momento en que casen los valores
+            // todo se habra ajustado (pues se estarán creando de nuevo celdas)
+            BOOL fixTagEnd = NO;
+            while (!fixTagEnd) {
+                WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:newIndexPathForSelectedCell];
+                if (cell.wordRepresentationView.tag != newIndexPathForSelectedCell.section) {
+                    cell.wordRepresentationView.tag = newIndexPathForSelectedCell.section;
+                    newIndexPathForSelectedCell = [NSIndexPath indexPathForRow:newIndexPathForSelectedCell.row inSection:newIndexPathForSelectedCell.section + 1];
+                } else {
+                    fixTagEnd = YES;
+                }
+            }
+        }
+    }
+}
+*/
 #pragma mark - UICollectionViewDataSource
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -760,15 +844,28 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark - WDSettingsScreenViewControllerDelegate
 
-- (void) settingsScreenViewControllerWillDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
+- (void)settingsScreenViewControllerWillDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
 {
     self.otherViewControllerInDismissMode = YES;
     [self fadeInDateAndDayTextOnCell:[self findSelectedCell] withInfiniteDuration:NO];
+    
+    self.indexPathForWordWhenAppear = [self indexPathForWord:[self findSelectedWord]];
 }
 
-- (void) settingsScreenViewControllerDidDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
+- (void)settingsScreenViewControllerDidDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
 {
     self.otherViewControllerInDismissMode = NO;
+}
+
+- (void)wordWithIndex:(NSArray *)index removedFromSettingsScreenViewControllerRemoveAllEmptyWordDays:(WDSettingsScreenViewController *)settingsScreenViewController;
+{
+    [self.collectionView performBatchUpdates:^{
+        for (NSNumber *indexWordIt in index) {
+            // Nota: No se usa el metodo de conversion de indices porque en este punto ya hay desincronia: se ha borrado en el modelo pero no en el collection
+            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:[WDWordDiary sharedWordDiary].words.count - indexWordIt.unsignedIntegerValue]];
+        }
+        
+    } completion:nil];
 }
 
 
