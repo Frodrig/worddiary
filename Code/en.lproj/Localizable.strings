@@ -118,3 +118,15 @@
 "TAG_ADDWORDDAY_DAY_LABEL"                          = "Day";
 "TAG_ADDWORDDAY_INFO_WORDDAYALREADYEXIST"           = "There is word for this day already";
 "TAG_ADDWORDDAY_GO"                                 = "Go";
+
+"SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS"             = "Remove days without words automaticaly";
+"SETTINGS_SCREEN_BLOCKPREVIOUSDAYEDIT"              = "Protect edition of previous days";
+"SETTINGS_SCREEN_CREATENEWENTRYEACHDAY"             = "Automatic creation of entry each day";
+"SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM"  = "Deactivate background subtle color animation";
+"SETTINGS_SCREEN_YES"                               = "Yes";
+"SETTINGS_SCREEN_NO"                                = "No";
+
+
+
+
+

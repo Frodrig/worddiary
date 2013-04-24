@@ -16,6 +16,7 @@
 #import "WDWordCharacterCounterView.h"
 #import "WDMainMenuViewController.h"
 #import "WDAddWordDayViewController.h"
+#import "WDSettingsScreenViewController.h"
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -34,7 +35,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) UIView                        *pannelBackgroundView;
 @property (nonatomic, strong) WDMainMenuViewController      *mainMenuViewController;
 @property (nonatomic, strong) NSIndexPath                   *indexPathForWordWhenAppear;
-@property (nonatomic) BOOL                                  addWordViewControllerInDismissMode;
+@property (nonatomic) BOOL                                  otherViewControllerInDismissMode;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -80,7 +81,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize pannelBackgroundView               = pannelBackgroundView_;
 @synthesize mainMenuViewController             = mainMenuViewController_;
 @synthesize indexPathForWordWhenAppear         = indexPathForWordWhenAppear_;
-@synthesize addWordViewControllerInDismissMode = addWordViewControllerInDismissMode_;
+@synthesize otherViewControllerInDismissMode   = otherWordViewControllerInDismissMode_;
 
 #pragma mark - Properties
 
@@ -547,7 +548,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (BOOL)canBecomeFirstResponder
 {
     // Solo en caso de que no se este volviendo de la pantalla de añadir fecha
-    return !self.addWordViewControllerInDismissMode;
+    return !self.otherViewControllerInDismissMode;
 }
 
 #pragma mark - UIKeyInput
@@ -708,7 +709,12 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
+    [self hideMainMenuViewController];
     
+    WDSettingsScreenViewController *settingsScreenViewController = [[WDSettingsScreenViewController alloc] initWithNibName:nil bundle:nil];
+    settingsScreenViewController.delegate = self;
+    
+    [self presentViewController:settingsScreenViewController animated:YES completion:nil];
 }
 
 - (void)helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
@@ -743,14 +749,28 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)addWordDayViewControllerWillDismiss:(WDAddWordDayViewController *)addWordDayViewController
 {
-    self.addWordViewControllerInDismissMode = YES;
+    self.otherViewControllerInDismissMode = YES;
     [self fadeInDateAndDayTextOnCell:[self findSelectedCell] withInfiniteDuration:NO];
 }
 
 - (void)addWordDayViewControllerDidDismiss:(WDAddWordDayViewController *)addWordDayViewController
 {
-    self.addWordViewControllerInDismissMode = NO;
+    self.otherViewControllerInDismissMode = NO;
 }
+
+#pragma mark - WDSettingsScreenViewControllerDelegate
+
+- (void) settingsScreenViewControllerWillDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
+{
+    self.otherViewControllerInDismissMode = YES;
+    [self fadeInDateAndDayTextOnCell:[self findSelectedCell] withInfiniteDuration:NO];
+}
+
+- (void) settingsScreenViewControllerDidDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
+{
+    self.otherViewControllerInDismissMode = NO;
+}
+
 
 @end
     
