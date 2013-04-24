@@ -69,7 +69,6 @@
 {
     // Defaults del registration domain
     NSDictionary *defaults = @{@"BLOCK_PREVIOUS_DAYS_EDIT": [NSNumber numberWithBool:NO],
-                               @"CREATE_NEW_ENTRY_EACHDAY": [NSNumber numberWithBool:YES],
                                @"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM": [NSNumber numberWithBool:YES]};
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
     
