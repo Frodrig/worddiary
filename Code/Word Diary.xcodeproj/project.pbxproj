@@ -123,6 +123,7 @@
 		5B86DBF8171C41BA003152AB /* WDWordRepresentationViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationViewDataSource.h; sourceTree = "<group>"; };
 		5B930D761721E07400FF7AFD /* CALayer+PauseResume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+PauseResume.h"; sourceTree = "<group>"; };
 		5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+PauseResume.m"; sourceTree = "<group>"; };
+		5B9829A117279D8C00A3071C /* WDAddWordDayViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAddWordDayViewControllerDelegate.h; sourceTree = "<group>"; };
 		5BA9FC5D1723D9A700DAB6A5 /* WDMainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDMainMenuViewController.h; sourceTree = "<group>"; };
 		5BA9FC5E1723D9A700DAB6A5 /* WDMainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDMainMenuViewController.m; sourceTree = "<group>"; };
 		5BA9FC5F1723D9A700DAB6A5 /* WDMainMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDMainMenuViewController.xib; sourceTree = "<group>"; };
@@ -526,6 +527,7 @@
 				5BEB4C5C17258846005BC2D9 /* WDAddWordDayViewController.h */,
 				5BEB4C5D17258846005BC2D9 /* WDAddWordDayViewController.m */,
 				5BEB4C5E17258846005BC2D9 /* WDAddWordDayViewController.xib */,
+				5B9829A117279D8C00A3071C /* WDAddWordDayViewControllerDelegate.h */,
 			);
 			name = "Add Word Day Screen";
 			sourceTree = "<group>";

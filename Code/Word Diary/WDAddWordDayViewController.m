@@ -49,6 +49,7 @@
 
 @implementation WDAddWordDayViewController
 
+@synthesize delegate                         = delegate_;
 @synthesize closeButton                      = closeButton_;
 @synthesize yearSetterModuleViewController   = yearSetterModuleViewController_;
 @synthesize monthSetterModuleViewController  = monthDateModuleViewController_;
@@ -193,6 +194,21 @@
 
 - (IBAction)addButtonPressed:(id)sender
 {
+    NSDate *date = [[NSCalendar currentCalendar] dateFromComponents:[self dateCoponentsOfConfiguredDate]];
+    WDWord *newWord = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:date.timeIntervalSince1970];
+    
+    [self.delegate addWordDayViewController:self createdNewWord:newWord];
+    [self.delegate addWordDayViewController:self willDismissWithSelectedWord:newWord];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)goButtonPressed:(id)sender
+{
+    WDWord *word = [[WDWordDiary sharedWordDiary] findWordWithDateComponents:[self dateCoponentsOfConfiguredDate]];
+    [self.delegate addWordDayViewController:self willDismissWithSelectedWord:word];
+
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - WDValueSetterModuleViewControllerDataSource

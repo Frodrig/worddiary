@@ -33,6 +33,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) UIColor                       *cursorColor;
 @property (nonatomic, strong) UIView                        *pannelBackgroundView;
 @property (nonatomic, strong) WDMainMenuViewController      *mainMenuViewController;
+@property (nonatomic, strong) NSIndexPath                   *indexPathForWordWhenAppear;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -77,6 +78,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize styleMenuView              = styleMenuView_;
 @synthesize pannelBackgroundView       = pannelBackgroundView_;
 @synthesize mainMenuViewController     = mainMenuViewController_;
+@synthesize indexPathForWordWhenAppear = indexPathForWordWhenAppear_;
 
 #pragma mark - Properties
 
@@ -191,7 +193,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }
     
     // Scroll a la ultima palabra
-    [self.collectionView scrollToItemAtIndexPath:[self indexPathForLastWord] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    self.indexPathForWordWhenAppear = nil;
     
     // Timers
     [self launchFadeDateAndDayTextTimer];
@@ -695,9 +698,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     [self hideMainMenuViewController];
     
     WDAddWordDayViewController *addWorDayViewController = [[WDAddWordDayViewController alloc] initWithNibName:nil bundle:nil];
-    [self presentViewController:addWorDayViewController animated:YES completion:^{
-        
-    }];
+    addWorDayViewController.delegate = self;
+    
+    [self presentViewController:addWorDayViewController animated:YES completion:nil];
 }
 
 - (void) settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
@@ -722,6 +725,18 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     return ![[self findSelectedWord] isTodayWord];
 }
 
+#pragma - WDAddWordDayViewControllerDelegate
+
+- (void)addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController createdNewWord:(WDWord *)word
+{
+    NSIndexPath *indexPathForWord = [self indexPathForWord:word];
+    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:indexPathForWord.section]];
+}
+
+- (void)addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController willDismissWithSelectedWord:(WDWord *)word
+{
+    self.indexPathForWordWhenAppear = [self indexPathForWord:word];
+}
 
 @end
     

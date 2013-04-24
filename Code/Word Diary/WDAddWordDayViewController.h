@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "WDValueSetterModuleViewControllerDataSource.h"
 #import "WDValueSetterModuleViewControllerDelegate.h"
+#import "WDAddWordDayViewControllerDelegate.h"
 
 @interface WDAddWordDayViewController : UIViewController<WDValueSetterModuleViewControllerDataSource, WDValueSetterModuleViewControllerDelegate>
+
+@property(nonatomic, weak)id<WDAddWordDayViewControllerDelegate> delegate;
 
 @end
