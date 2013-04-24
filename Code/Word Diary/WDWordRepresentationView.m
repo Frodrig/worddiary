@@ -99,7 +99,7 @@
     const NSString *familyFont = [self.dataSource selectedWordTextFamilyFontForWordRepresentationView:self];
     CGFloat fontSize = [self.dataSource selectedWordFontStartSizeForWordRepresentationView:self];
     const UIColor *wordColor = [self.dataSource selectedWordColorForWordRepresentationView:self];
-    const UIColor *cursorColor = [wordColor copy];//[self.dataSource selectedWordCursorColorForWordRepresentationView:self];
+    const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
     float wordColorRGBComponents[4];
     [wordColor getRed:&wordColorRGBComponents[0] green:&wordColorRGBComponents[1] blue:&wordColorRGBComponents[2] alpha:&wordColorRGBComponents[3]];
     const BOOL isEmptyText = wordText.length == 0;

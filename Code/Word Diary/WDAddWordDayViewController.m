@@ -188,7 +188,9 @@
 
 - (IBAction)exitButtonPressed:(id)sender
 {
+    [self.delegate addWordDayViewControllerWillDismiss:self];
     [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate addWordDayViewControllerDidDismiss:self];
     }];
 }
 
@@ -199,8 +201,11 @@
     
     [self.delegate addWordDayViewController:self createdNewWord:newWord];
     [self.delegate addWordDayViewController:self willDismissWithSelectedWord:newWord];
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+ 
+    [self.delegate addWordDayViewControllerWillDismiss:self];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate addWordDayViewControllerDidDismiss:self];
+    }];
 }
 
 - (IBAction)goButtonPressed:(id)sender
@@ -208,7 +213,10 @@
     WDWord *word = [[WDWordDiary sharedWordDiary] findWordWithDateComponents:[self dateCoponentsOfConfiguredDate]];
     [self.delegate addWordDayViewController:self willDismissWithSelectedWord:word];
 
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.delegate addWordDayViewControllerWillDismiss:self];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate addWordDayViewControllerDidDismiss:self];
+    }];
 }
 
 #pragma mark - WDValueSetterModuleViewControllerDataSource

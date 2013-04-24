@@ -129,7 +129,7 @@
      */
 }
 
-- (void) refreshBackgroundColorOfWord:(WDWord *)word
+- (void)refreshBackgroundColorOfWord:(WDWord *)word
 {
     WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
     WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
@@ -185,7 +185,7 @@
                                                 [NSValue valueWithCGPoint:CGPointMake(1.0, 0.5)],
                                                 [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
                                                 nil]];
-        gradientAnimationStartPoint.duration = 4.0;
+        gradientAnimationStartPoint.duration = 8.0;
         gradientAnimationStartPoint.removedOnCompletion = NO;
         gradientAnimationStartPoint.calculationMode = kCAAnimationPaced;
         gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
@@ -203,7 +203,7 @@
                                               [NSValue valueWithCGPoint:CGPointMake(0.0, 0.5)],
                                               [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
                                               nil]];
-        gradientAnimationEndPoint.duration = 4.0;
+        gradientAnimationEndPoint.duration = 8.0;
         gradientAnimationEndPoint.removedOnCompletion = NO;
         gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
         gradientAnimationEndPoint.calculationMode = kCAAnimationPaced;

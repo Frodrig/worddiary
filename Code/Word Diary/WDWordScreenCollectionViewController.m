@@ -34,6 +34,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) UIView                        *pannelBackgroundView;
 @property (nonatomic, strong) WDMainMenuViewController      *mainMenuViewController;
 @property (nonatomic, strong) NSIndexPath                   *indexPathForWordWhenAppear;
+@property (nonatomic) BOOL                                  addWordViewControllerInDismissMode;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -68,17 +69,18 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark - Synthesize
 
-@synthesize wordCharacterCounterView   = wordCharacterCounterView_;
-@synthesize fadeDecoratorTextTimer     = fadeDecoratorTextTimer_;
-@synthesize tapGestureRecognizer       = tapGestureRecognizer_;
-@synthesize panGestureRecognizer       = panGestureRecognizer_;
-@synthesize longPressGestureRecognizer = longPressGestureRecognizer_;
-@synthesize cursorColorTimer           = cursorColorTimer_;
-@synthesize cursorColor                = cursorColor_;
-@synthesize styleMenuView              = styleMenuView_;
-@synthesize pannelBackgroundView       = pannelBackgroundView_;
-@synthesize mainMenuViewController     = mainMenuViewController_;
-@synthesize indexPathForWordWhenAppear = indexPathForWordWhenAppear_;
+@synthesize wordCharacterCounterView           = wordCharacterCounterView_;
+@synthesize fadeDecoratorTextTimer             = fadeDecoratorTextTimer_;
+@synthesize tapGestureRecognizer               = tapGestureRecognizer_;
+@synthesize panGestureRecognizer               = panGestureRecognizer_;
+@synthesize longPressGestureRecognizer         = longPressGestureRecognizer_;
+@synthesize cursorColorTimer                   = cursorColorTimer_;
+@synthesize cursorColor                        = cursorColor_;
+@synthesize styleMenuView                      = styleMenuView_;
+@synthesize pannelBackgroundView               = pannelBackgroundView_;
+@synthesize mainMenuViewController             = mainMenuViewController_;
+@synthesize indexPathForWordWhenAppear         = indexPathForWordWhenAppear_;
+@synthesize addWordViewControllerInDismissMode = addWordViewControllerInDismissMode_;
 
 #pragma mark - Properties
 
@@ -544,7 +546,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (BOOL)canBecomeFirstResponder
 {
-    return YES;
+    // Solo en caso de que no se este volviendo de la pantalla de añadir fecha
+    return !self.addWordViewControllerInDismissMode;
 }
 
 #pragma mark - UIKeyInput
@@ -661,13 +664,13 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark - WDWordCharacterCounterViewDataSource
 
-- (NSUInteger) numberOfFreeCharactersOfEditWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
+- (NSUInteger)numberOfFreeCharactersOfEditWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
 {
     WDWord *selectedWord = [self findSelectedWord];
     return MAX_WORD_LENGHT - selectedWord.word.length;
 }
 
-- (UIColor *)  colorForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
+- (UIColor *)colorForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
 {
     WDWord *selectedWord = [self findSelectedWord];
     return [selectedWord.palette makeWordColorObject];
@@ -675,14 +678,14 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark - WDWordCharacterCounterViewDelegate
 
-- (void) redrawNeededForWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
+- (void)redrawNeededForWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
 {
     [self.wordCharacterCounterView setNeedsDisplay];
 }
 
 #pragma mark - WDWordMainMenuViewControllerDelegate
 
-- (void) removeOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+- (void)removeOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
     WDWord *selectedWord = [self findSelectedWord];
     if (![selectedWord isTodayWord]) {
@@ -693,7 +696,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }    
 }
 
-- (void) addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+- (void)addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
     [self hideMainMenuViewController];
     
@@ -703,17 +706,17 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     [self presentViewController:addWorDayViewController animated:YES completion:nil];
 }
 
-- (void) settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+- (void)settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
     
 }
 
-- (void) helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+- (void)helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
     
 }
 
-- (void) infoOptionSelectedFormainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
+- (void)infoOptionSelectedFormainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
     
 }
@@ -736,6 +739,17 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController willDismissWithSelectedWord:(WDWord *)word
 {
     self.indexPathForWordWhenAppear = [self indexPathForWord:word];
+}
+
+- (void)addWordDayViewControllerWillDismiss:(WDAddWordDayViewController *)addWordDayViewController
+{
+    self.addWordViewControllerInDismissMode = YES;
+    [self fadeInDateAndDayTextOnCell:[self findSelectedCell] withInfiniteDuration:NO];
+}
+
+- (void)addWordDayViewControllerDidDismiss:(WDAddWordDayViewController *)addWordDayViewController
+{
+    self.addWordViewControllerInDismissMode = NO;
 }
 
 @end

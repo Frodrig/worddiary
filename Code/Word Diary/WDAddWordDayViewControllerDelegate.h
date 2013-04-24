@@ -16,4 +16,7 @@
 - (void) addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController createdNewWord:(WDWord *)word;
 - (void) addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController willDismissWithSelectedWord:(WDWord *)word;
 
+- (void) addWordDayViewControllerWillDismiss:(WDAddWordDayViewController *)addWordDayViewController;
+- (void) addWordDayViewControllerDidDismiss:(WDAddWordDayViewController *)addWordDayViewController;
+
 @end
