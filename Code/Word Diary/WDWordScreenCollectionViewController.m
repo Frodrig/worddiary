@@ -868,6 +868,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     } completion:nil];
 }
 
+- (void) backgroundAnimationGradientSettingsUpdateFromSettingsScreenViewController:(WDSettingsScreenViewController *)settingsScreenViewController
+{
+    [self.collectionView reloadData];
+}
 
 @end
     

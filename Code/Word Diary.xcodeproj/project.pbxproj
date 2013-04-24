@@ -35,6 +35,10 @@
 		5B9829A71727D16900A3071C /* WDSettingsScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A51727D16900A3071C /* WDSettingsScreenViewController.xib */; };
 		5B9829AA1727D25D00A3071C /* 42-info.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A81727D25D00A3071C /* 42-info.png */; };
 		5B9829AB1727D25D00A3071C /* 42-info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A91727D25D00A3071C /* 42-info@2x.png */; };
+		5B9829B1172843BB00A3071C /* 381-locked.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829AD172843BB00A3071C /* 381-locked.png */; };
+		5B9829B2172843BB00A3071C /* 381-locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829AE172843BB00A3071C /* 381-locked@2x.png */; };
+		5B9829B3172843BB00A3071C /* 382-unlocked.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829AF172843BB00A3071C /* 382-unlocked.png */; };
+		5B9829B4172843BB00A3071C /* 382-unlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829B0172843BB00A3071C /* 382-unlocked@2x.png */; };
 		5BA9FC601723D9A700DAB6A5 /* WDMainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA9FC5E1723D9A700DAB6A5 /* WDMainMenuViewController.m */; };
 		5BA9FC611723D9A700DAB6A5 /* WDMainMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BA9FC5F1723D9A700DAB6A5 /* WDMainMenuViewController.xib */; };
 		5BA9FC671723EEC500DAB6A5 /* 22-circle-minus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BA9FC631723EEC400DAB6A5 /* 22-circle-minus.png */; };
@@ -134,6 +138,10 @@
 		5B9829A81727D25D00A3071C /* 42-info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "42-info.png"; sourceTree = "<group>"; };
 		5B9829A91727D25D00A3071C /* 42-info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "42-info@2x.png"; sourceTree = "<group>"; };
 		5B9829AC1727E72E00A3071C /* WDSettingsScreenViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSettingsScreenViewControllerDelegate.h; sourceTree = "<group>"; };
+		5B9829AD172843BB00A3071C /* 381-locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "381-locked.png"; sourceTree = "<group>"; };
+		5B9829AE172843BB00A3071C /* 381-locked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "381-locked@2x.png"; sourceTree = "<group>"; };
+		5B9829AF172843BB00A3071C /* 382-unlocked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "382-unlocked.png"; sourceTree = "<group>"; };
+		5B9829B0172843BB00A3071C /* 382-unlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "382-unlocked@2x.png"; sourceTree = "<group>"; };
 		5BA9FC5D1723D9A700DAB6A5 /* WDMainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDMainMenuViewController.h; sourceTree = "<group>"; };
 		5BA9FC5E1723D9A700DAB6A5 /* WDMainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDMainMenuViewController.m; sourceTree = "<group>"; };
 		5BA9FC5F1723D9A700DAB6A5 /* WDMainMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDMainMenuViewController.xib; sourceTree = "<group>"; };
@@ -293,6 +301,10 @@
 				5B9829A81727D25D00A3071C /* 42-info.png */,
 				5B9829A91727D25D00A3071C /* 42-info@2x.png */,
 				5B77CC6D172429A300FCD96E /* addicon.png */,
+				5B9829AD172843BB00A3071C /* 381-locked.png */,
+				5B9829AE172843BB00A3071C /* 381-locked@2x.png */,
+				5B9829AF172843BB00A3071C /* 382-unlocked.png */,
+				5B9829B0172843BB00A3071C /* 382-unlocked@2x.png */,
 				5BEB4C7D1725A5F5005BC2D9 /* 298-circlex.png */,
 				5BEB4C7E1725A5F7005BC2D9 /* 298-circlex@2x.png */,
 				5BEB4C711725A1DD005BC2D9 /* 02-arrow-east.png */,
@@ -672,6 +684,10 @@
 				5B9829A71727D16900A3071C /* WDSettingsScreenViewController.xib in Resources */,
 				5B9829AA1727D25D00A3071C /* 42-info.png in Resources */,
 				5B9829AB1727D25D00A3071C /* 42-info@2x.png in Resources */,
+				5B9829B1172843BB00A3071C /* 381-locked.png in Resources */,
+				5B9829B2172843BB00A3071C /* 381-locked@2x.png in Resources */,
+				5B9829B3172843BB00A3071C /* 382-unlocked.png in Resources */,
+				5B9829B4172843BB00A3071C /* 382-unlocked@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

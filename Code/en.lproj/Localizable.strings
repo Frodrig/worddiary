@@ -122,7 +122,7 @@
 "SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS"             = "Remove days without words";
 "SETTINGS_SCREEN_BLOCKPREVIOUSDAYEDIT"              = "Protect edition of previous days";
 "SETTINGS_SCREEN_CREATENEWENTRYEACHDAY"             = "Automatic creation of entry each day";
-"SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM"  = "Deactivate background subtle color animation";
+"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM"    = "Active background subtle color animation";
 "SETTINGS_SCREEN_YES"                               = "Yes";
 "SETTINGS_SCREEN_NO"                                = "No";
 "SETTINGS_SCREEN_NOW"                               = "Now";

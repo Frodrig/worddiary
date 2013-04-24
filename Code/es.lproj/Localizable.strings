@@ -123,7 +123,7 @@
 "SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS"             = "No guardar entradas sin palabra";
 "SETTINGS_SCREEN_BLOCKPREVIOUSDAYEDIT"              = "Proteger modificación de días creados";
 "SETTINGS_SCREEN_CREATENEWENTRYEACHDAY"             = "Crear entrada automática cada nuevo día";
-"SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM"  = "Desactivar animación sutil de fondo";
+"SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM"  = "Activar animación sutil de fondo";
 "SETTINGS_SCREEN_YES"                               = "Sí";
 "SETTINGS_SCREEN_NO"                                = "No";
 "SETTINGS_SCREEN_NOW"                               = "Ahora";

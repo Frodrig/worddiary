@@ -153,65 +153,70 @@
 
 - (void) addBackgroundColorAnimation
 {
-    if (!self.backgroundColorAnimationPaused && self.gradientLayerBackgroundColor.animationKeys.count == 0) {
-        /*
-         CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"locations"];
-         anim.fromValue = self.gradientLayer.locations;
-         anim.toValue = [NSArray arrayWithObjects:@0.05F, @0.85F, @1.0F, nil];
-         anim.duration = 3.0;
-         anim.removedOnCompletion = NO;
-         anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-         anim.repeatCount = HUGE_VALF;
-         anim.autoreverses = YES;
-         [self.gradientLayer addAnimation:anim forKey:@"gradientAnimation"];
-         */
-        /*
-         CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"opacity"];
-         anim.fromValue = [NSNumber numberWithFloat:gradientLayer_.opacity];
-         anim.toValue = [NSNumber numberWithFloat:0.9];
-         anim.duration = 1.0;
-         anim.removedOnCompletion = NO;
-         anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-         anim.repeatCount = HUGE_VALF;
-         anim.autoreverses = YES;
-         [self.gradientLayer addAnimation:anim forKey:@"gradientAnimation"];
-         */
-        CAKeyframeAnimation *gradientAnimationStartPoint = [CAKeyframeAnimation animationWithKeyPath:@"startPoint"];
-        [gradientAnimationStartPoint setValues:[NSArray arrayWithObjects:
-                                                [NSValue valueWithCGPoint:CGPointMake(0.5, 0.0)],
-                                                [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
-                                                [NSValue valueWithCGPoint:CGPointMake(0.5, 0.0)],
-                                                [NSValue valueWithCGPoint:CGPointMake(1.0, 0.0)],
-                                                [NSValue valueWithCGPoint:CGPointMake(1.0, 0.5)],
-                                                [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
-                                                nil]];
-        gradientAnimationStartPoint.duration = 8.0;
-        gradientAnimationStartPoint.removedOnCompletion = NO;
-        gradientAnimationStartPoint.calculationMode = kCAAnimationPaced;
-        gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-        gradientAnimationStartPoint.repeatCount = HUGE_VALF;
-        gradientAnimationStartPoint.autoreverses = YES;
-        [self.gradientLayerBackgroundColor addAnimation:gradientAnimationStartPoint forKey:@"animateGradientChangeStartPoints"];
-        
-        
-        CAKeyframeAnimation *gradientAnimationEndPoint = [CAKeyframeAnimation animationWithKeyPath:@"endPoint"];
-        [gradientAnimationEndPoint setValues:[NSArray arrayWithObjects:
-                                              [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)],
-                                              [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
-                                              [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)],
-                                              [NSValue valueWithCGPoint:CGPointMake(0.0, 1.0)],
-                                              [NSValue valueWithCGPoint:CGPointMake(0.0, 0.5)],
-                                              [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
-                                              nil]];
-        gradientAnimationEndPoint.duration = 8.0;
-        gradientAnimationEndPoint.removedOnCompletion = NO;
-        gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-        gradientAnimationEndPoint.calculationMode = kCAAnimationPaced;
-        gradientAnimationEndPoint.repeatCount = HUGE_VALF;
-        gradientAnimationEndPoint.autoreverses = YES;
-        [self.gradientLayerBackgroundColor addAnimation:gradientAnimationEndPoint forKey:@"animateGradientChangeEndPoints"];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM"]) {
+        if (!self.backgroundColorAnimationPaused &&
+            self.gradientLayerBackgroundColor.animationKeys.count == 0) {
+            /*
+             CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"locations"];
+             anim.fromValue = self.gradientLayer.locations;
+             anim.toValue = [NSArray arrayWithObjects:@0.05F, @0.85F, @1.0F, nil];
+             anim.duration = 3.0;
+             anim.removedOnCompletion = NO;
+             anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+             anim.repeatCount = HUGE_VALF;
+             anim.autoreverses = YES;
+             [self.gradientLayer addAnimation:anim forKey:@"gradientAnimation"];
+             */
+            /*
+             CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"opacity"];
+             anim.fromValue = [NSNumber numberWithFloat:gradientLayer_.opacity];
+             anim.toValue = [NSNumber numberWithFloat:0.9];
+             anim.duration = 1.0;
+             anim.removedOnCompletion = NO;
+             anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+             anim.repeatCount = HUGE_VALF;
+             anim.autoreverses = YES;
+             [self.gradientLayer addAnimation:anim forKey:@"gradientAnimation"];
+             */
+            CAKeyframeAnimation *gradientAnimationStartPoint = [CAKeyframeAnimation animationWithKeyPath:@"startPoint"];
+            [gradientAnimationStartPoint setValues:[NSArray arrayWithObjects:
+                                                    [NSValue valueWithCGPoint:CGPointMake(0.5, 0.0)],
+                                                    [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
+                                                    [NSValue valueWithCGPoint:CGPointMake(0.5, 0.0)],
+                                                    [NSValue valueWithCGPoint:CGPointMake(1.0, 0.0)],
+                                                    [NSValue valueWithCGPoint:CGPointMake(1.0, 0.5)],
+                                                    [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
+                                                    nil]];
+            gradientAnimationStartPoint.duration = 5.0;
+            gradientAnimationStartPoint.removedOnCompletion = NO;
+            gradientAnimationStartPoint.calculationMode = kCAAnimationPaced;
+            gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+            gradientAnimationStartPoint.repeatCount = HUGE_VALF;
+            gradientAnimationStartPoint.autoreverses = YES;
+            [self.gradientLayerBackgroundColor addAnimation:gradientAnimationStartPoint forKey:@"animateGradientChangeStartPoints"];
+            
+            
+            CAKeyframeAnimation *gradientAnimationEndPoint = [CAKeyframeAnimation animationWithKeyPath:@"endPoint"];
+            [gradientAnimationEndPoint setValues:[NSArray arrayWithObjects:
+                                                  [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)],
+                                                  [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
+                                                  [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)],
+                                                  [NSValue valueWithCGPoint:CGPointMake(0.0, 1.0)],
+                                                  [NSValue valueWithCGPoint:CGPointMake(0.0, 0.5)],
+                                                  [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
+                                                  nil]];
+            gradientAnimationEndPoint.duration = 5.0;
+            gradientAnimationEndPoint.removedOnCompletion = NO;
+            gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+            gradientAnimationEndPoint.calculationMode = kCAAnimationPaced;
+            gradientAnimationEndPoint.repeatCount = HUGE_VALF;
+            gradientAnimationEndPoint.autoreverses = YES;
+            [self.gradientLayerBackgroundColor addAnimation:gradientAnimationEndPoint forKey:@"animateGradientChangeEndPoints"];
+        }
+    } else {
+        [self.gradientLayerBackgroundColor removeAllAnimations];
     }
-}
+  }
 
 - (void) pauseBackgroundColorAnimation
 {
