@@ -16,6 +16,5 @@
 - (void) addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController;
 - (void) settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController;
 - (void) helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController;
-- (void) infoOptionSelectedFormainMenuViewController:(WDMainMenuViewController *)mainMenuViewController;
 
 @end

@@ -38,7 +38,7 @@
 					<object class="IBUIButton" id="723188727">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 20}, {88, 88}}</string>
+						<string key="NSFrame">{{0, 20}, {88, 88}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="13907992"/>
@@ -76,7 +76,7 @@
 					<object class="IBUIButton" id="13907992">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">289</int>
-						<string key="NSFrame">{{135, 20}, {88, 88}}</string>
+						<string key="NSFrame">{{155, 20}, {88, 88}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="46385223"/>
@@ -98,7 +98,7 @@
 					<object class="IBUIButton" id="46385223">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">269</int>
-						<string key="NSFrame">{{42, 130}, {44, 43}}</string>
+						<string key="NSFrame">{{70, 130}, {44, 43}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="915420554"/>
@@ -120,10 +120,10 @@
 					<object class="IBUIButton" id="915420554">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">261</int>
-						<string key="NSFrame">{{99, 130}, {45, 43}}</string>
+						<string key="NSFrame">{{127, 130}, {45, 43}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="308334585"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -135,27 +135,6 @@
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">441-help-symbol1.png</string>
-						</object>
-						<reference key="IBUIFontDescription" ref="5898662"/>
-						<reference key="IBUIFont" ref="805979907"/>
-					</object>
-					<object class="IBUIButton" id="308334585">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">269</int>
-						<string key="NSFrame">{{152, 131}, {43, 42}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSWindow"/>
-						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<bool key="IBUIOpaque">NO</bool>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<int key="IBUIContentHorizontalAlignment">0</int>
-						<int key="IBUIContentVerticalAlignment">0</int>
-						<reference key="IBUIHighlightedTitleColor" ref="768091945"/>
-						<reference key="IBUINormalTitleColor" ref="98201496"/>
-						<reference key="IBUINormalTitleShadowColor" ref="885541256"/>
-						<object class="NSCustomResource" key="IBUINormalImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">442-information-symbol1.png</string>
 						</object>
 						<reference key="IBUIFontDescription" ref="5898662"/>
 						<reference key="IBUIFont" ref="805979907"/>
@@ -226,15 +205,6 @@
 					</object>
 					<int key="connectionID">87</int>
 				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">infoButtonPressed:</string>
-						<reference key="source" ref="308334585"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">88</int>
-				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -251,7 +221,6 @@
 							<reference ref="723188727"/>
 							<reference ref="46385223"/>
 							<reference ref="915420554"/>
-							<reference ref="308334585"/>
 							<reference ref="13907992"/>
 						</array>
 						<reference key="parent" ref="0"/>
@@ -291,12 +260,6 @@
 						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">39</int>
-						<reference key="object" ref="308334585"/>
-						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -308,7 +271,6 @@
 				<string key="10.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="21.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="30.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="39.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
@@ -322,6 +284,35 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">WDMainMenuViewController</string>
 					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="addButtonPressed:">id</string>
+						<string key="helpButtonPressed:">id</string>
+						<string key="infoButtonPressed:">id</string>
+						<string key="removeButtonPressed:">id</string>
+						<string key="settingsButtonPressed:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="addButtonPressed:">
+							<string key="name">addButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="helpButtonPressed:">
+							<string key="name">helpButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="infoButtonPressed:">
+							<string key="name">infoButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="removeButtonPressed:">
+							<string key="name">removeButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="settingsButtonPressed:">
+							<string key="name">settingsButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">removeOption</string>
 						<string key="NS.object.0">UIButton</string>
@@ -347,7 +338,6 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="19-gear.png">{26, 26}</string>
 			<string key="441-help-symbol1.png">{28, 28}</string>
-			<string key="442-information-symbol1.png">{28, 28}</string>
 			<string key="addicon.png">{88, 88}</string>
 			<string key="removeicon.png">{88, 88}</string>
 		</dictionary>

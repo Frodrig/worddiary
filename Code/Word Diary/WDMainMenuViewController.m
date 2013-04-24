@@ -72,9 +72,4 @@
     [self.delegate helpOptionSelectedForMainMenuViewController:self];
 }
 
-- (IBAction)infoButtonPressed:(id)sender
-{
-    [self.delegate infoOptionSelectedFormainMenuViewController:self];
-}
-
 @end

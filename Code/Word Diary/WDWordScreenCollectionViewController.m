@@ -27,8 +27,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) WDWordCharacterCounterView    *wordCharacterCounterView;
 @property (nonatomic, strong) NSTimer                       *fadeDecoratorTextTimer;
 @property (nonatomic, strong) UITapGestureRecognizer        *tapGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer        *dobleTapGestureRecognizer;
 @property (nonatomic, strong) UIPanGestureRecognizer        *panGestureRecognizer;
-@property (nonatomic, strong) UILongPressGestureRecognizer  *longPressGestureRecognizer;
+//@property (nonatomic, strong) UILongPressGestureRecognizer  *longPressGestureRecognizer;
 @property (nonatomic, strong) UIView                        *styleMenuView;
 @property (nonatomic, strong) NSTimer                       *cursorColorTimer;
 @property (nonatomic, strong) UIColor                       *cursorColor;
@@ -49,7 +50,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)                             tapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture;
 - (void)                             panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture;
-- (void)                             longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture;
+//- (void)                             longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture;
+- (void)                             dobleTapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture;
 
 - (WDWordScreenCollectionViewCell *) findSelectedCell;
 - (WDWord *)                         findSelectedWord;
@@ -73,8 +75,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize wordCharacterCounterView           = wordCharacterCounterView_;
 @synthesize fadeDecoratorTextTimer             = fadeDecoratorTextTimer_;
 @synthesize tapGestureRecognizer               = tapGestureRecognizer_;
+@synthesize dobleTapGestureRecognizer          = dobleTapGestureRecognizer_;
 @synthesize panGestureRecognizer               = panGestureRecognizer_;
-@synthesize longPressGestureRecognizer         = longPressGestureRecognizer_;
+//@synthesize longPressGestureRecognizer         = longPressGestureRecognizer_;
 @synthesize cursorColorTimer                   = cursorColorTimer_;
 @synthesize cursorColor                        = cursorColor_;
 @synthesize styleMenuView                      = styleMenuView_;
@@ -142,15 +145,22 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.panGestureRecognizer];
     
+    self.dobleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dobleTapGestureRecognizerHandle:)];
+    self.dobleTapGestureRecognizer.numberOfTapsRequired = 2;
+    self.dobleTapGestureRecognizer.numberOfTouchesRequired = 1;
+    [self.view addGestureRecognizer:self.dobleTapGestureRecognizer];
+    
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
-    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.panGestureRecognizer];
+    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.dobleTapGestureRecognizer];
     
+    /*
     self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerHandle:)];
     self.longPressGestureRecognizer.minimumPressDuration = 0.15;
     self.longPressGestureRecognizer.allowableMovement = NO;
     [self.view addGestureRecognizer:self.longPressGestureRecognizer];
     [self.longPressGestureRecognizer requireGestureRecognizerToFail:self.tapGestureRecognizer];
+    */
     
     // Collection
     self.collectionView.delegate = self;
@@ -567,6 +577,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }
 }
 
+/*
 - (void)longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
@@ -580,6 +591,21 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                 self.mainMenuViewController.view.alpha = 1.0;
             }];
         }
+    }
+}
+*/
+
+- (void)dobleTapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
+{
+    if (self.mainMenuViewController.view.superview == nil) {
+        [self.view addSubview:self.pannelBackgroundView];
+        [self.view addSubview:self.mainMenuViewController.view];
+        self.mainMenuViewController.view.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
+        self.pannelBackgroundView.alpha = self.mainMenuViewController.view.alpha = 0.0;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.pannelBackgroundView.alpha = 0.8;
+            self.mainMenuViewController.view.alpha = 1.0;
+        }];
     }
 }
 
@@ -782,31 +808,26 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 }
 
 - (void)addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
-{
-    [self hideMainMenuViewController];
-    
+{    
     WDAddWordDayViewController *addWorDayViewController = [[WDAddWordDayViewController alloc] initWithNibName:nil bundle:nil];
     addWorDayViewController.delegate = self;
     
-    [self presentViewController:addWorDayViewController animated:YES completion:nil];
+    [self presentViewController:addWorDayViewController animated:YES completion:^{
+        [self hideMainMenuViewController];
+    }];
 }
 
 - (void)settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
-    [self hideMainMenuViewController];
-    
     WDSettingsScreenViewController *settingsScreenViewController = [[WDSettingsScreenViewController alloc] initWithNibName:nil bundle:nil];
     settingsScreenViewController.delegate = self;
     
-    [self presentViewController:settingsScreenViewController animated:YES completion:nil];
+    [self presentViewController:settingsScreenViewController animated:YES completion:^{
+        [self hideMainMenuViewController];
+    }];
 }
 
 - (void)helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
-{
-    
-}
-
-- (void)infoOptionSelectedFormainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
     
 }
