@@ -78,7 +78,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize tapGestureRecognizer               = tapGestureRecognizer_;
 @synthesize dobleTapGestureRecognizer          = dobleTapGestureRecognizer_;
 @synthesize panGestureRecognizer               = panGestureRecognizer_;
-//@synthesize longPressGestureRecognizer         = longPressGestureRecognizer_;
 @synthesize cursorColorTimer                   = cursorColorTimer_;
 @synthesize cursorColor                        = cursorColor_;
 @synthesize styleMenuView                      = styleMenuView_;
@@ -160,14 +159,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
     [self.tapGestureRecognizer requireGestureRecognizerToFail:self.dobleTapGestureRecognizer];
-    
-    /*
-    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerHandle:)];
-    self.longPressGestureRecognizer.minimumPressDuration = 0.15;
-    self.longPressGestureRecognizer.allowableMovement = NO;
-    [self.view addGestureRecognizer:self.longPressGestureRecognizer];
-    [self.longPressGestureRecognizer requireGestureRecognizerToFail:self.tapGestureRecognizer];
-    */
     
     // Collection
     self.collectionView.delegate = self;
