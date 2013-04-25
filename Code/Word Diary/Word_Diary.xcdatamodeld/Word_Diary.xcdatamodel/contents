@@ -19,8 +19,8 @@
         <relationship name="style" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WDStyle" inverseName="word" inverseEntity="WDStyle" syncable="YES"/>
     </entity>
     <elements>
-        <element name="WDPalette" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WDStyle" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="WDWord" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="WDPalette" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="WDStyle" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="WDWord" positionX="0" positionY="0" width="128" height="105"/>
     </elements>
 </model>

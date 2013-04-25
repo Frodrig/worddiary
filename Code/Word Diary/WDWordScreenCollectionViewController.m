@@ -37,6 +37,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) WDMainMenuViewController      *mainMenuViewController;
 @property (nonatomic, strong) NSIndexPath                   *indexPathForWordWhenAppear;
 @property (nonatomic) BOOL                                  otherViewControllerInDismissMode;
+@property (nonatomic) BOOL                                  editWordModeActive;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -85,6 +86,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize mainMenuViewController             = mainMenuViewController_;
 @synthesize indexPathForWordWhenAppear         = indexPathForWordWhenAppear_;
 @synthesize otherViewControllerInDismissMode   = otherWordViewControllerInDismissMode_;
+@synthesize editWordModeActive                 = editWordModeActive_;
 
 #pragma mark - Properties
 
@@ -194,14 +196,18 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     flowLayout.sectionInset = UIEdgeInsetsMake(edgeMargin, edgeMargin, edgeMargin, edgeMargin);
     
     // StyleMenu
-    self.styleMenuView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 54.0)];
+    self.styleMenuView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 44.0)];
     NSArray *styles = [WDWordDiary sharedWordDiary].styles;
+    
     const CGFloat areaPerButton = self.styleMenuView.bounds.size.width / styles.count;
     for (NSUInteger styleIt = 0; styleIt < styles.count; styleIt++) {
+        WDStyle *style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:styleIt];
+        NSString *backgroundImageForIcon = [style.familyFont stringByAppendingString:@"_style_icon"];
+        backgroundImageForIcon = [backgroundImageForIcon lowercaseString];
+        
         UIButton *styleButtonIt = [UIButton buttonWithType:UIButtonTypeCustom];
         styleButtonIt.frame = CGRectMake(areaPerButton * styleIt, 0.0, areaPerButton, self.styleMenuView.bounds.size.height);
-        [styleButtonIt setTitle:[NSString stringWithFormat:@"%d", styleIt] forState:UIControlStateNormal];
-        styleButtonIt.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.2];
+        [styleButtonIt setImage:[UIImage imageNamed:backgroundImageForIcon] forState:UIControlStateNormal];
         styleButtonIt.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
         // Nota: Incremento en 1 en el tag debido a que no se permite guardar tags con valor 0
         styleButtonIt.tag = styleIt + 1;
@@ -239,6 +245,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     WDWord *word = [self findSelectedWord];
     WDStyle *newStyle = [[WDWordDiary sharedWordDiary].styles objectAtIndex:button.tag - 1];
     if (newStyle != word.style) {
+        [UIView animateWithDuration:0.25 animations:^{
+            button.alpha = 1.0;
+            [self.styleMenuView viewWithTag:[[WDWordDiary sharedWordDiary] findIndexPositionForStyle:word.style] + 1].alpha = 0.5;
+        }];
         word.style = newStyle;
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
         [cell.wordRepresentationView setNeedsDisplay];
@@ -494,7 +504,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     if (gesture == self.tapGestureRecognizer) {
         if (self.mainMenuViewController.view.superview != nil) {
             [self hideMainMenuViewController];
-        } else {
+        } else if (!self.editWordModeActive) {
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             CGPoint hitPoint = [gesture locationInView:cell];
             if (CGRectContainsPoint(cell.wordRepresentationContainerView.frame, hitPoint)) {
@@ -521,6 +531,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                     [self becomeFirstResponder];
                 }];
                 
+                self.editWordModeActive = YES;
                 [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordWillEnterInEditMode" object:nil]];
             } else {
                 [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
@@ -609,7 +620,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)dobleTapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
 {
-    if (self.mainMenuViewController.view.superview == nil) {
+    if (self.mainMenuViewController.view.superview == nil &&
+        !self.editWordModeActive) {
         [self.view addSubview:self.pannelBackgroundView];
         [self.view addSubview:self.mainMenuViewController.view];
         self.mainMenuViewController.view.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
@@ -711,7 +723,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark KeyboardNotification
 
-- (void) keyboardWillShowNotification:(NSNotification *)notification
+- (void)keyboardWillShowNotification:(NSNotification *)notification
 {
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
  
@@ -726,13 +738,28 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     
     // Style Menu
     CGRect endFrameKeyboard = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    self.styleMenuView.frame = CGRectMake(0.0, endFrameKeyboard.origin.y - self.styleMenuView.bounds.size.height, self.styleMenuView.bounds.size.width, self.styleMenuView.bounds.size.height);
+    self.styleMenuView.frame = CGRectMake(0.0,
+                                          endFrameKeyboard.origin.y - self.styleMenuView.bounds.size.height,
+                                          self.styleMenuView.bounds.size.width,
+                                          self.styleMenuView.bounds.size.height);
     [self.view addSubview:self.styleMenuView];
     NSNumber *keybAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
         CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.25;
         [UIView animateWithDuration:animationDuration animations:^{
             [self.styleMenuView viewWithTag:styleIt + 1].alpha = 1.0;
+        } completion:^(BOOL finished) {
+            if (styleIt == [WDWordDiary sharedWordDiary].styles.count - 1) {
+                WDWord *selectedWord = [self findSelectedWord];
+                NSUInteger selectedIndexOfWordStyle = [[WDWordDiary sharedWordDiary] findIndexPositionForStyle:selectedWord.style];
+                for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
+                    if (styleIt != selectedIndexOfWordStyle) {
+                        [UIView animateWithDuration:0.75 animations:^{
+                            [self.styleMenuView viewWithTag:styleIt + 1].alpha = 0.5;
+                        }];
+                    }
+                }
+            }
         }];
     }
 }
@@ -783,6 +810,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)keyboardDidHideNotification:(NSNotification *)notification
 {
     self.collectionView.scrollEnabled = YES;
+    self.editWordModeActive = NO;
 }
 
 #pragma mark - WDWordCharacterCounterViewDataSource

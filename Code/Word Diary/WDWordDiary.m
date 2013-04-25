@@ -119,13 +119,10 @@
     
     if (result.count > 0) {
         styles_ = result;
-        // ToDo: Ordenar el array
     } else {        
         NSArray *fontFamilies = [NSArray arrayWithObjects:
                                  @"Baskerville",
                                  @"Zapfino",
-                                 @"CourierNewPSMT",
-                                 @"Noteworthy-Light",
                                  @"PartyLetPlain",
                                  @"SnellRoundhand",
                                  nil];
@@ -408,6 +405,20 @@
     }
     
     return retPalette;
+}
+
+- (NSUInteger)findIndexPositionForStyle:(WDStyle *)style
+{
+    NSUInteger retIndex = NSNotFound;
+    for (NSUInteger indexIt = 0; self.styles.count; indexIt++) {
+        WDStyle *styleIt = [self.styles objectAtIndex:indexIt];
+        if (styleIt == style) {
+            retIndex = indexIt;
+            break;
+        }
+    }
+    
+    return retIndex;
 }
 
 - (WDWord *)findWordWithDateComponents:(NSDateComponents *)dateComponents

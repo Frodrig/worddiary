@@ -15,6 +15,7 @@
 
 @property (nonatomic, retain) NSString  *familyFont;
 @property (nonatomic, retain) NSSet     *word;
+@property (nonatomic, strong) NSNumber  *orderValue;
 
 - (NSComparisonResult)compare:(WDStyle *)otherFont;
 

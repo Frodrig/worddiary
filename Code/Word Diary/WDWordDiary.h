@@ -41,6 +41,8 @@
 - (WDPalette *)   findNextPaletteOfPalette:(WDPalette *)palette;
 - (WDPalette *)   findPrevPaletteOfPalette:(WDPalette *)palette;
 
+- (NSUInteger)    findIndexPositionForStyle:(WDStyle *)style;
+
 - (WDStyle *)     defaultStyle;
 - (WDPalette *)   defaultPalette;
 

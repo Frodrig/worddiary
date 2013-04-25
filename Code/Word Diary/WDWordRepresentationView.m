@@ -104,7 +104,7 @@
     [wordColor getRed:&wordColorRGBComponents[0] green:&wordColorRGBComponents[1] blue:&wordColorRGBComponents[2] alpha:&wordColorRGBComponents[3]];
     const BOOL isEmptyText = wordText.length == 0;
     const BOOL showCursor = (isEmptyText || self.keyboardMode);
-    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.45);
+    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.5);
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat wordStartPointDrawMargin = showCursor ? 15.0 : 15.0;
     const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
@@ -127,7 +127,7 @@
     
     CGContextRestoreGState(contextRef);
     
-    // Palabra
+    // Tamaño palabra
     CTLineRef line = nil;
     CGRect lineImageBounds;
     BOOL endFindingFontSize = NO;
@@ -139,17 +139,17 @@
         
         NSMutableAttributedString *attString = [[NSMutableAttributedString alloc] initWithString:wordText attributes:attrDictionary];
         if (!showCursor) {
-            [attString addAttribute:NSKernAttributeName value:[NSNumber numberWithFloat:2] range:NSMakeRange(0.0, wordText.length)];
+            [attString addAttribute:NSKernAttributeName value:[NSNumber numberWithFloat:0] range:NSMakeRange(0.0, wordText.length)];
         }
         line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attString));
     
         lineImageBounds = CTLineGetImageBounds(line, contextRef);
         leftMarginAdjustmentByFont = lineImageBounds.origin.x < 0.0 ? abs(lineImageBounds.origin.x) : -lineImageBounds.origin.x;
         endFindingFontSize = leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + lineImageBounds.size.width + rightWidthMargin + finalFontSizeModulator < leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + self.bounds.size.width;
-        /*if (endFindingFontSize) {
-            endFindingFontSize = lineImageBounds.size.height + rightWidthMargin < self.bounds.size.height;
+        if (endFindingFontSize) {
+            endFindingFontSize = lineImageBounds.size.height + ((self.frame.size.height + self.frame.origin.y) - startPointDraw.y) < self.bounds.size.height;
         }
-        */
+        
         if (!endFindingFontSize) {
             fontSize--;
             CFRelease(line);
