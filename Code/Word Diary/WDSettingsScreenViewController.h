@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "WDSettingsScreenViewControllerDelegate.h"
+#import "WDHelpScreenViewControllerDelegate.h"
 
-@interface WDSettingsScreenViewController : UIViewController
+@interface WDSettingsScreenViewController : UIViewController<WDHelpScreenViewControllerDelegate>
 
 @property(nonatomic, weak)id<WDSettingsScreenViewControllerDelegate>delegate;
 

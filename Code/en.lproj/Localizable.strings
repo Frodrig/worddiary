@@ -108,8 +108,7 @@
 "TAG_ADDWORDDAY_GO"                                 = "Go";
 
 "SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS"             = "Remove days without words";
-"SETTINGS_SCREEN_BLOCKPREVIOUSDAYEDIT"              = "Protect edition of previous days";
-"SETTINGS_SCREEN_CREATENEWENTRYEACHDAY"             = "Automatic creation of entry each day";
+"SETTINGS_SCREEN_SHOWHELPINTRO"                     = "Show help intro";
 "SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM"    = "Active background subtle color animation";
 "SETTINGS_SCREEN_YES"                               = "Yes";
 "SETTINGS_SCREEN_NO"                                = "No";
@@ -125,4 +124,11 @@
 
 "TAG_SUPPORTEMAIL_TEMPLATE_TITLE"                  = "About Word Diary";
 "TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "feedback@frodrig.com";
+
+"TAG_HELP_INFOTEXT_PAGE_0"                         = "Welcome to Word Diary";
+"TAG_HELP_INFOTEXT_PAGE_1"                         = "Tap in the line area to write";
+"TAG_HELP_INFOTEXT_PAGE_2"                         = "Pan to change the color";
+"TAG_HELP_INFOTEXT_PAGE_3"                         = "Swipe to change the day page";
+"TAG_HELP_INFOTEXT_PAGE_4"                         = "Double tap to add, remove and more";
+"TAG_HELP_INFOTEXT_PAGE_5"                         = "";
 

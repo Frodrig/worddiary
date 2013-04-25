@@ -108,9 +108,9 @@
 "TAG_ADDWORDDAY_INFO_WORDDAYALREADYEXIST"           = "Ya hay una palabra para este día";
 "TAG_ADDWORDDAY_GO"                                 = "Ir";
 
-"SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS"             = "Eliminar días sin palabras";
-"SETTINGS_SCREEN_BLOCKPREVIOUSDAYEDIT"              = "Edición protegida";
+"SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS"             = "Borrar días sin palabras";
 "SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM"  = "Animación en el color";
+"SETTINGS_SCREEN_SHOWHELPINTRO"                     = "Mostrar ayuda de introducción";
 "SETTINGS_SCREEN_YES"                               = "Sí";
 "SETTINGS_SCREEN_NO"                                = "No";
 "SETTINGS_SCREEN_NOW"                               = "Ahora";
@@ -126,4 +126,10 @@
 "TAG_SUPPORTEMAIL_TEMPLATE_TITLE"                  = "Acerca de Word Diary";
 "TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "feedback@frodrig.com";
 
+"TAG_HELP_INFOTEXT_PAGE_0"                         = "Bienvenido a Word Diary\nUn día en una palabra";
+"TAG_HELP_INFOTEXT_PAGE_1"                         = "Pulsa en el área de la línea y el cursor para escribir";
+"TAG_HELP_INFOTEXT_PAGE_2"                         = "Desliza arriba o abajo para cambiar el color de fondo";
+"TAG_HELP_INFOTEXT_PAGE_3"                         = "Desliza a izquierda o derecha para cambiar de día y palabra";
+"TAG_HELP_INFOTEXT_PAGE_4"                         = "Pulsa dos veces para añadir, borrar y ver otras opciones";
+"TAG_HELP_INFOTEXT_PAGE_5"                         = "";
 

@@ -113,6 +113,11 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self = [super initWithCollectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     if (self) {
         // Teclado
+        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        
+        // Siempe aparece por un presentViewController
+        otherWordViewControllerInDismissMode_ = YES;
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHideNotification:) name:UIKeyboardDidHideNotification object:nil];
@@ -212,6 +217,13 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     // Timers
     [self launchFadeDateAndDayTextTimer];
     [self launchCursorColorTimer];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    self.otherViewControllerInDismissMode = NO;
 }
 
 - (void)didReceiveMemoryWarning

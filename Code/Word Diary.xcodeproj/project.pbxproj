@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B01B83617292C69007CB8B8 /* WDHelpScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B01B83417292C69007CB8B8 /* WDHelpScreenViewController.m */; };
+		5B01B83717292C69007CB8B8 /* WDHelpScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B01B83517292C69007CB8B8 /* WDHelpScreenViewController.xib */; };
 		5B0764A516FB0B9B00A046BC /* WDDayChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0764A416FB0B9B00A046BC /* WDDayChecker.m */; };
 		5B07E98C172001C300D12450 /* WDWordCharacterCounterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B07E98B172001C300D12450 /* WDWordCharacterCounterView.m */; };
 		5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1193571704752B00CAF765 /* MessageUI.framework */; };
@@ -91,6 +93,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B01B83317292C69007CB8B8 /* WDHelpScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDHelpScreenViewController.h; sourceTree = "<group>"; };
+		5B01B83417292C69007CB8B8 /* WDHelpScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDHelpScreenViewController.m; sourceTree = "<group>"; };
+		5B01B83517292C69007CB8B8 /* WDHelpScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDHelpScreenViewController.xib; sourceTree = "<group>"; };
+		5B01B83817292C79007CB8B8 /* WDHelpScreenViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDHelpScreenViewControllerDelegate.h; sourceTree = "<group>"; };
 		5B0764A316FB0B9B00A046BC /* WDDayChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayChecker.h; sourceTree = "<group>"; };
 		5B0764A416FB0B9B00A046BC /* WDDayChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDayChecker.m; sourceTree = "<group>"; };
 		5B0764A716FB0D2B00A046BC /* WDDayCheckerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayCheckerDelegate.h; sourceTree = "<group>"; };
@@ -235,6 +241,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5B01B83217292C53007CB8B8 /* Help Screen */ = {
+			isa = PBXGroup;
+			children = (
+				5B01B83317292C69007CB8B8 /* WDHelpScreenViewController.h */,
+				5B01B83417292C69007CB8B8 /* WDHelpScreenViewController.m */,
+				5B01B83517292C69007CB8B8 /* WDHelpScreenViewController.xib */,
+				5B01B83817292C79007CB8B8 /* WDHelpScreenViewControllerDelegate.h */,
+			);
+			name = "Help Screen";
+			sourceTree = "<group>";
+		};
 		5B0764A116FB0B7700A046BC /* General */ = {
 			isa = PBXGroup;
 			children = (
@@ -596,6 +613,7 @@
 		5BEC305317154E0300EE8D72 /* Controller with Views */ = {
 			isa = PBXGroup;
 			children = (
+				5B01B83217292C53007CB8B8 /* Help Screen */,
 				5BE67E6B172873E000D01633 /* Info Screen */,
 				5B86DBDD171BE8C2003152AB /* Word Screen */,
 				5BA9FC5C1723D89900DAB6A5 /* Main Menu View Controller */,
@@ -705,6 +723,7 @@
 				5B9829B3172843BB00A3071C /* 382-unlocked.png in Resources */,
 				5B9829B4172843BB00A3071C /* 382-unlocked@2x.png in Resources */,
 				5BE67E70172873FD00D01633 /* WDInfoScreenViewController.xib in Resources */,
+				5B01B83717292C69007CB8B8 /* WDHelpScreenViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -741,6 +760,7 @@
 				5BEB4C951725CB78005BC2D9 /* WDValueSetterModuleViewController.m in Sources */,
 				5B9829A61727D16900A3071C /* WDSettingsScreenViewController.m in Sources */,
 				5BE67E6F172873FD00D01633 /* WDInfoScreenViewController.m in Sources */,
+				5B01B83617292C69007CB8B8 /* WDHelpScreenViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

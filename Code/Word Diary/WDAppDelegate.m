@@ -68,11 +68,11 @@
 - (void)prepareRootViewController
 {
     // Defaults del registration domain
-    NSDictionary *defaults = @{@"BLOCK_PREVIOUS_DAYS_EDIT": [NSNumber numberWithBool:NO],
+    NSDictionary *defaults = @{@"HELP_SCREEN_HAVE_LAUCH_AT_INIT": [NSNumber numberWithBool:NO],
+                               @"BLOCK_PREVIOUS_DAYS_EDIT": [NSNumber numberWithBool:NO],
                                @"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM": [NSNumber numberWithBool:YES]};
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-    
-    //WDSelectedWordScreenViewController *controller = [[WDSelectedWordScreenViewController alloc] init];
+  
     WDWordScreenViewController *controller = [[WDWordScreenViewController alloc] init];
     self.window.rootViewController = controller;
 }

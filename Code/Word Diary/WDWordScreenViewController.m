@@ -8,6 +8,7 @@
 
 #import "WDWordScreenViewController.h"
 #import "WDWordScreenCollectionViewController.h"
+#import "WDHelpScreenViewController.h"
 #import "WDWord.h"
 #import "WDWordDiary.h"
 
@@ -15,8 +16,7 @@
 
 #pragma mark - Properties
 
-@property(nonatomic, strong) WDWordScreenCollectionViewController *collectionViewController;
-@property(nonatomic, weak) WDWord                                 *selectedWord;
+@property(nonatomic, weak) WDWord   *selectedWord;
 
 - (WDWord *) prepareSelectedWordAtLaunchOrResume;
 
@@ -26,7 +26,7 @@
 
 #pragma mark - Synthesize
 
-@synthesize collectionViewController = collectionViewController_;
+@synthesize selectedWord             = selectedWord_;
 
 #pragma mark - Init
 
@@ -37,8 +37,7 @@
         // Custom initialization
         [self prepareSelectedWordAtLaunchOrResume];
         
-        collectionViewController_ = [[WDWordScreenCollectionViewController alloc] init];
-    }
+          }
     return self;
 }
 
@@ -49,8 +48,27 @@
 	// Do any additional setup after loading the view.
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 
-    collectionViewController_.view.frame = self.view.bounds;
-    [self.view addSubview:collectionViewController_.view];
+    self.view.backgroundColor = [UIColor blackColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"];
+        WDHelpScreenViewController *helpScreenViewController = [[WDHelpScreenViewController alloc] initWithNibName:nil bundle:nil];
+        helpScreenViewController.delegate = self;
+        [self presentViewController:helpScreenViewController animated:YES completion:nil];
+    } else {
+        WDWordScreenCollectionViewController *collectionViewController = [[WDWordScreenCollectionViewController alloc] init];
+        [self presentViewController:collectionViewController animated:YES completion:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -81,6 +99,15 @@
     }
     
     return selectedWordCandidate;
+}
+
+
+#pragma mark - WDHelpScreenViewControllerDelegate
+
+- (void)reachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController
+{
+    //self.collectionViewController = [[WDWordScreenCollectionViewController alloc] init];
+    //[self presentViewController:self.collectionViewController animated:YES completion:nil];
 }
 
 @end
