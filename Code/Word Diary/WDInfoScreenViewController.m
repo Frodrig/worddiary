@@ -39,7 +39,7 @@
     if (nil == mailComposerViewController_) {
         mailComposerViewController_ = [[MFMailComposeViewController alloc] init];
         mailComposerViewController_.mailComposeDelegate = self;
-    }
+    }                            
     
     return mailComposerViewController_;
 }
