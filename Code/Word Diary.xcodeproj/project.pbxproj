@@ -68,6 +68,8 @@
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
 		5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */; };
 		5BE2F6E41700216400A68287 /* WDGradientBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE2F6E31700216400A68287 /* WDGradientBackground.m */; };
+		5BE67E6F172873FD00D01633 /* WDInfoScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE67E6D172873FD00D01633 /* WDInfoScreenViewController.m */; };
+		5BE67E70172873FD00D01633 /* WDInfoScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */; };
 		5BEB4C5F17258846005BC2D9 /* WDAddWordDayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEB4C5D17258846005BC2D9 /* WDAddWordDayViewController.m */; };
 		5BEB4C6017258846005BC2D9 /* WDAddWordDayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB4C5E17258846005BC2D9 /* WDAddWordDayViewController.xib */; };
 		5BEB4C751725A1F7005BC2D9 /* 02-arrow-east.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB4C711725A1DD005BC2D9 /* 02-arrow-east.png */; };
@@ -184,6 +186,9 @@
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5BE2F6E21700216400A68287 /* WDGradientBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDGradientBackground.h; sourceTree = "<group>"; };
 		5BE2F6E31700216400A68287 /* WDGradientBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDGradientBackground.m; sourceTree = "<group>"; };
+		5BE67E6C172873FD00D01633 /* WDInfoScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDInfoScreenViewController.h; sourceTree = "<group>"; };
+		5BE67E6D172873FD00D01633 /* WDInfoScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDInfoScreenViewController.m; sourceTree = "<group>"; };
+		5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDInfoScreenViewController.xib; sourceTree = "<group>"; };
 		5BEB4C5C17258846005BC2D9 /* WDAddWordDayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAddWordDayViewController.h; sourceTree = "<group>"; };
 		5BEB4C5D17258846005BC2D9 /* WDAddWordDayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDAddWordDayViewController.m; sourceTree = "<group>"; };
 		5BEB4C5E17258846005BC2D9 /* WDAddWordDayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDAddWordDayViewController.xib; sourceTree = "<group>"; };
@@ -361,7 +366,6 @@
 		5B86DBDD171BE8C2003152AB /* Word Screen */ = {
 			isa = PBXGroup;
 			children = (
-				5BA9FC5C1723D89900DAB6A5 /* Main Menu View Controller */,
 				5B86DBE1171BEA3F003152AB /* Collection View Controller */,
 				5B86DBDE171BEA37003152AB /* WDWordScreenViewController.h */,
 				5B86DBDF171BEA37003152AB /* WDWordScreenViewController.m */,
@@ -440,9 +444,6 @@
 			children = (
 				5BF7B0441720809400E5B8A9 /* CoreImage.framework */,
 				5B119359170489D200CAF765 /* CoreMotion.framework */,
-				5B1193571704752B00CAF765 /* MessageUI.framework */,
-				5B446F7616F22A48005A432D /* CoreText.framework */,
-				5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */,
 				5BB6B30916DBE13900394113 /* Word Diary */,
 				5BB6B30016DBE13900394113 /* Frameworks */,
 				5BB6B2FF16DBE13900394113 /* Products */,
@@ -460,6 +461,9 @@
 		5BB6B30016DBE13900394113 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5B1193571704752B00CAF765 /* MessageUI.framework */,
+				5B446F7616F22A48005A432D /* CoreText.framework */,
+				5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */,
 				5BB6B30116DBE13900394113 /* UIKit.framework */,
 				5BB6B30316DBE13900394113 /* Foundation.framework */,
 				5BB6B30516DBE13900394113 /* CoreGraphics.framework */,
@@ -555,6 +559,16 @@
 			name = "Gradient Background";
 			sourceTree = "<group>";
 		};
+		5BE67E6B172873E000D01633 /* Info Screen */ = {
+			isa = PBXGroup;
+			children = (
+				5BE67E6C172873FD00D01633 /* WDInfoScreenViewController.h */,
+				5BE67E6D172873FD00D01633 /* WDInfoScreenViewController.m */,
+				5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */,
+			);
+			name = "Info Screen";
+			sourceTree = "<group>";
+		};
 		5BEB4C5617258772005BC2D9 /* Add Word Day Screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -582,7 +596,9 @@
 		5BEC305317154E0300EE8D72 /* Controller with Views */ = {
 			isa = PBXGroup;
 			children = (
+				5BE67E6B172873E000D01633 /* Info Screen */,
 				5B86DBDD171BE8C2003152AB /* Word Screen */,
+				5BA9FC5C1723D89900DAB6A5 /* Main Menu View Controller */,
 				5BEB4C5617258772005BC2D9 /* Add Word Day Screen */,
 				5B9829A21727D13D00A3071C /* Settings Screen */,
 			);
@@ -688,6 +704,7 @@
 				5B9829B2172843BB00A3071C /* 381-locked@2x.png in Resources */,
 				5B9829B3172843BB00A3071C /* 382-unlocked.png in Resources */,
 				5B9829B4172843BB00A3071C /* 382-unlocked@2x.png in Resources */,
+				5BE67E70172873FD00D01633 /* WDInfoScreenViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,6 +740,7 @@
 				5BEB4C5F17258846005BC2D9 /* WDAddWordDayViewController.m in Sources */,
 				5BEB4C951725CB78005BC2D9 /* WDValueSetterModuleViewController.m in Sources */,
 				5B9829A61727D16900A3071C /* WDSettingsScreenViewController.m in Sources */,
+				5BE67E6F172873FD00D01633 /* WDInfoScreenViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

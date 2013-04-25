@@ -8,8 +8,6 @@
 
 "TAG_LANG" = "en";
 
-"TAG_VERSION" = "1.0";
-
 "TAG_OPENDB_FAILED" = "Failed opening DB";
 "TAG_OPENDBFAILED_REASON" = "Reason %@";
 "TAG_FETCHFAILED" = "Fetch Failed";
@@ -87,22 +85,12 @@
 "TAG_AUXILIARYSCREEN_SETTINGSTITLE" = "settings";
 "TAG_AUXILIARYSCREEN_TIPSTITLE"     = "help";
 
-"TAG_AUXILIARYABOUTPANEL_WORDDIARYTITLE"           = "Word Diary";
-"TAG_AUXILIARYABOUTPANEL_WORDDIARYURL"             = "www.worddiary.frodrig.com";
-"TAG_AUXILIARYABOUTPANEL_DESIGNEDDEVELOPEDTITLE"   = "Designed and developed by";
-"TAG_AUXILIARYABOUTPANEL_DEVELOPERNAME"            = "Fernando Rodríguez";
-"TAG_AUXILIARYABOUTPANEL_DEVELOPERTWITTER"         = "@_frodrig";
-"TAG_AUXILIARYABOUTPANEL_ALLRIGHTRESERVED_TITLE"   = "(C) 2013 - All rights reserved";
-
 "TAG_WORDDIARY_URL"                                = "http://www.frodrig.com";
 "TAG_FRODRIGTWITTER_URL"                           = "https://twitter.com/_Frodrig";
 
 "TAG_AUXILIARYSUPPORTPANEL_DESCRIPTION"            = "If you have any problem with the app or you want to send me feedback (suggestions, critics, ideas, …) you can write to me.\I will very happy to take care of you.";
 "TAG_AUXILIARYSUPPORTPANEL_EMAILDESCRIPTION"       = "hello@frodrig.com";
 "TAG_AUXILIARYSUPPORTPANEL_EMAILSEND"              = "Send email";
-
-"TAG_SUPPORTEMAIL_TEMPLATE_TITLE"                  = "About Word Diary";
-"TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "hello@frodrig.com";
 
 "TAG_AUXILIARYHELPPANEL_1"                         = "Word Diary es un diario minimalista en el que podrás escribir una única palabra cada día.";
 "TAG_AUXILIARYHELPPANEL_2"                         = "Cada palabra podrá tener su propio estilo de fuente y color de fondo.";
@@ -127,7 +115,14 @@
 "SETTINGS_SCREEN_NO"                                = "No";
 "SETTINGS_SCREEN_NOW"                               = "Now";
 
+"TAG_INFO_TITLE"                                    = "Word Diary";
+"TAG_INFO_SUBTITLE"                                 = "One day in one word";
+"TAG_INFO_FEEDBACKINFO"                             = "Your feedback is welcome";
+"TAG_INFO_FEEDBACKEMAIL"                            = "feedback@frodrig.com";
+"TAG_INFO_DEVELOPEDBY"                              = "Developed by\nFernando Rodríguez Martínez";
+"TAG_INFO_VERSION"                                  = "v 1.0";
+"TAG_VERSION"                                       = "1.0";
 
-
-
+"TAG_SUPPORTEMAIL_TEMPLATE_TITLE"                  = "About Word Diary";
+"TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "feedback@frodrig.com";
 

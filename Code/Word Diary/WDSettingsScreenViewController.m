@@ -8,6 +8,7 @@
 
 #import "WDSettingsScreenViewController.h"
 #import "WDWordDiary.h"
+#import "WDInfoScreenViewController.h"
 
 const NSUInteger REMOVEDAYWITHOUTWORDS_OPTIONTAG               = 1;
 const NSUInteger REMOVEDAYSWITHOUTWORDS_NOW_BUTTONTAG          = 10;
@@ -102,6 +103,8 @@ const NSUInteger ACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG   = 41;
 
 - (IBAction)infoButtonPressed:(id)sender
 {
+    WDInfoScreenViewController *infoScreenViewController = [[WDInfoScreenViewController alloc] initWithNibName:nil bundle:nil];
+    [self presentViewController:infoScreenViewController animated:YES completion:nil];
 }
 
 - (void)buttonNowPressed:(UIButton *)sender
