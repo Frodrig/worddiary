@@ -42,6 +42,8 @@
 		5B86DBED171BEEBA003152AB /* WDWordScreenCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B86DBEC171BEEBA003152AB /* WDWordScreenCollectionViewCell.xib */; };
 		5B86DBF7171C41AA003152AB /* WDWordRepresentationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBF6171C41AA003152AB /* WDWordRepresentationView.m */; };
 		5B930D781721E07400FF7AFD /* CALayer+PauseResume.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */; };
+		5B9488A8172AE40A00FCEF2B /* 37-circle-x-bw.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9488A6172AE40900FCEF2B /* 37-circle-x-bw.png */; };
+		5B9488A9172AE40A00FCEF2B /* 37-circle-x-bw@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9488A7172AE40900FCEF2B /* 37-circle-x-bw@2x.png */; };
 		5B9829A61727D16900A3071C /* WDSettingsScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9829A41727D16900A3071C /* WDSettingsScreenViewController.m */; };
 		5B9829A71727D16900A3071C /* WDSettingsScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A51727D16900A3071C /* WDSettingsScreenViewController.xib */; };
 		5B9829AA1727D25D00A3071C /* 42-info.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A81727D25D00A3071C /* 42-info.png */; };
@@ -167,6 +169,8 @@
 		5B930D761721E07400FF7AFD /* CALayer+PauseResume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+PauseResume.h"; sourceTree = "<group>"; };
 		5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+PauseResume.m"; sourceTree = "<group>"; };
 		5B9488A5172AD1F700FCEF2B /* WDDashBoardViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDashBoardViewControllerDelegate.h; sourceTree = "<group>"; };
+		5B9488A6172AE40900FCEF2B /* 37-circle-x-bw.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-circle-x-bw.png"; sourceTree = "<group>"; };
+		5B9488A7172AE40900FCEF2B /* 37-circle-x-bw@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-circle-x-bw@2x.png"; sourceTree = "<group>"; };
 		5B9829A117279D8C00A3071C /* WDAddWordDayViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAddWordDayViewControllerDelegate.h; sourceTree = "<group>"; };
 		5B9829A31727D16900A3071C /* WDSettingsScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSettingsScreenViewController.h; sourceTree = "<group>"; };
 		5B9829A41727D16900A3071C /* WDSettingsScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSettingsScreenViewController.m; sourceTree = "<group>"; };
@@ -325,6 +329,8 @@
 				5BA9FC881723F0B300DAB6A5 /* 19-gear@2x.png */,
 				5BA9FC6D1723EF3100DAB6A5 /* 60-x.png */,
 				5BA9FC7B1723EFB200DAB6A5 /* 441-help-symbol1.png */,
+				5B9488A6172AE40900FCEF2B /* 37-circle-x-bw.png */,
+				5B9488A7172AE40900FCEF2B /* 37-circle-x-bw@2x.png */,
 				5BA9FC7C1723EFB200DAB6A5 /* 441-help-symbol1@2x.png */,
 				5BA9FC7D1723EFB200DAB6A5 /* 442-information-symbol1.png */,
 				5BA9FC7E1723EFB400DAB6A5 /* 442-information-symbol1@2x.png */,
@@ -828,6 +834,8 @@
 				5BA4D581172A75500042CFF1 /* 83-calendar@2x.png in Resources */,
 				5BA4D584172A766C0042CFF1 /* 426-calendar.png in Resources */,
 				5BA4D585172A766C0042CFF1 /* 426-calendar@2x.png in Resources */,
+				5B9488A8172AE40A00FCEF2B /* 37-circle-x-bw.png in Resources */,
+				5B9488A9172AE40A00FCEF2B /* 37-circle-x-bw@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,6 +14,7 @@
 @property (nonatomic) NSUInteger           dayOfTheActualMonthIndex;
 @property (nonatomic, strong) UILabel      *dayOfMonthLabel;
 @property (nonatomic, strong) UILabel      *initialLetterLabel;
+@property (nonatomic) BOOL                 removeMode;
 
 
 - (id)initWithIndex:(NSUInteger)index andFrame:(CGRect)frame;

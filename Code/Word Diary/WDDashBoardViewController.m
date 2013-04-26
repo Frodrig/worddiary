@@ -21,24 +21,34 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 @interface WDDashBoardViewController ()
 
-@property (nonatomic, strong) NSDateComponents       *actualDate;
-@property (weak, nonatomic) IBOutlet UILabel         *yearMonthLabel;
-@property (weak, nonatomic) IBOutlet UIView          *daysOfTheWeekTitlesContainerView;
-@property (weak, nonatomic) IBOutlet UIView          *daysOfTheMonthContainerView;
-@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+@property (nonatomic, strong) NSDateComponents             *actualDate;
+@property (weak, nonatomic) IBOutlet UILabel               *yearMonthLabel;
+@property (weak, nonatomic) IBOutlet UIView                *daysOfTheWeekTitlesContainerView;
+@property (weak, nonatomic) IBOutlet UIView                *daysOfTheMonthContainerView;
+@property (nonatomic, strong) UITapGestureRecognizer       *tapGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPresureGestureRecognizer;
+@property (nonatomic, weak) WDDayMonthView                 *dayMonthPendingToRemove;
+@property (weak, nonatomic) IBOutlet UIButton              *removeCancelButton;
+@property (weak, nonatomic) IBOutlet UIButton              *settingsButton;
 
-- (void)       createDayOfTheMonthsViews;
+- (void)             createDayOfTheMonthsViews;
 
-- (void)       configureDaysOfTheWeekTitles;
-- (void)       configureMonthAndYearLabel;
-- (void)       configureDayOfTheMonths;
+- (void)             configureDaysOfTheWeekTitles;
+- (void)             configureMonthAndYearLabel;
+- (void)             configureDayOfTheMonths;
+- (void)             configureDayMonthViewWithoutWordMode:(WDDayMonthView *)dayMonthView;
 
-- (NSUInteger) findFirstWeekdayOfTheMonth;
-- (NSUInteger) findMaxDaysOfTheMonth;
+- (NSUInteger)       findFirstWeekdayOfTheMonth;
+- (NSUInteger)       findMaxDaysOfTheMonth;
 
-- (void)       tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer;
+- (void)             tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer;
+- (void)             longPresureGestureRecognizerHandle:(UILongPressGestureRecognizer *)gestureRecognizer;
 
-- (WDWord *)   findWordForHitPoint:(CGPoint)hitPoint;
+- (WDDayMonthView *) findDayMonthViewForHitPoint:(CGPoint)hitPoint;
+- (WDWord *)         findWordForHitPoint:(CGPoint)hitPoint;
+- (WDWord *)         findWordForDayMonthView:(WDDayMonthView *)dayMonthView;
+
+- (void)             exitRemoveDayMode;
 
 @end
 
@@ -51,6 +61,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize daysOfTheWeekTitlesContainerView = daysOfTheWeekContainerView_;
 @synthesize daysOfTheMonthContainerView      = daysOfTheMonthContainerView_;
 @synthesize tapGestureRecognizer             = tapGestureRecognizer_;
+@synthesize longPresureGestureRecognizer     = longPresureGestureRecognizer_;
 @synthesize delegate                         = delegate_;
 
 #pragma mark - Init
@@ -63,6 +74,7 @@ const NSUInteger WEEKS_MONTHS = 5;
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
+        longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];
     }
     return self;
 }
@@ -78,6 +90,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     [self createDayOfTheMonthsViews];
     
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.tapGestureRecognizer];
+    [self.daysOfTheMonthContainerView addGestureRecognizer:self.longPresureGestureRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -157,7 +170,6 @@ const NSUInteger WEEKS_MONTHS = 5;
     return rangeDaysOfMonth.length;
 }
 
-
 - (void)configureDayOfTheMonths
 {
     const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
@@ -199,34 +211,59 @@ const NSUInteger WEEKS_MONTHS = 5;
                 [dayMonthViewIt.layer insertSublayer:gradientLayer atIndex:0];
                 */
             } else {
-                dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.8];
-                dayMonthViewIt.initialLetterLabel.text = @"";
-                dayMonthViewIt.backgroundColor = [UIColor blackColor];
-                dayMonthViewIt.layer.cornerRadius = 0.0;
-                dayMonthViewIt.dayOfTheActualMonthIndex = 0;
+                [self configureDayMonthViewWithoutWordMode:dayMonthViewIt];
             }
         }
     }
 }
 
-- (WDWord *)findWordForHitPoint:(CGPoint)hitPoint
+- (void)configureDayMonthViewWithoutWordMode:(WDDayMonthView *)dayMonthView
 {
-    WDDayMonthView *dayMonthViewFound = nil;
+    dayMonthView.dayOfMonthLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.8];
+    dayMonthView.initialLetterLabel.text = @"";
+    dayMonthView.backgroundColor = [UIColor blackColor];
+    dayMonthView.layer.cornerRadius = 0.0;
+    dayMonthView.dayOfTheActualMonthIndex = 0;
+}
+
+- (WDDayMonthView *)findDayMonthViewForHitPoint:(CGPoint)hitPoint
+{
+    WDDayMonthView *retDayMonthViewFound = nil;
     for (WDDayMonthView *dayMonthViewIt in self.daysOfTheMonthContainerView.subviews) {
         if ([dayMonthViewIt isKindOfClass:[WDDayMonthView class]] && CGRectContainsPoint(dayMonthViewIt.frame, hitPoint)) {
-            dayMonthViewFound = dayMonthViewIt;
+            retDayMonthViewFound = dayMonthViewIt;
             break;
         }
     }
     
+    return retDayMonthViewFound;
+}
+
+- (WDWord *)findWordForDayMonthView:(WDDayMonthView *)dayMonthView
+{
     WDWord *retWord = nil;
-    if (!dayMonthViewFound.hidden) {
+    if (!dayMonthView.hidden) {
         NSDateComponents *wordDateComponents = [self.actualDate copy];
-        wordDateComponents.day = dayMonthViewFound.dayOfTheActualMonthIndex;
+        wordDateComponents.day = dayMonthView.dayOfTheActualMonthIndex;
         retWord = [[WDWordDiary sharedWordDiary] findWordWithDateComponents:wordDateComponents];
     }
-
+    
     return retWord;
+}
+
+- (WDWord *)findWordForHitPoint:(CGPoint)hitPoint
+{
+    WDDayMonthView *dayMonthViewFound = [self findDayMonthViewForHitPoint:hitPoint];
+    
+    return [self findWordForDayMonthView:dayMonthViewFound];
+}
+
+- (void)exitRemoveDayMode
+{
+    self.dayMonthPendingToRemove.removeMode = NO;
+    self.dayMonthPendingToRemove = nil;
+    self.settingsButton.hidden = NO;
+    self.removeCancelButton.hidden = YES;
 }
 
 #pragma mark - UITapGestureRecognizer
@@ -236,10 +273,36 @@ const NSUInteger WEEKS_MONTHS = 5;
     CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
     WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
     if (wordDayOfHitPoint) {
-        [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];
-        [self dismissViewControllerAnimated:YES completion:^{
-            [self.delegate dashBoardViewControllerDidDismiss:self];
-        }];
+        if (self.dayMonthPendingToRemove) {
+            WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
+            if ([wordOfDayPendingToRemove isTodayWord]) {
+                wordOfDayPendingToRemove.word = @"";
+            } else {
+                [[WDWordDiary sharedWordDiary] removeWord:wordOfDayPendingToRemove];
+            }
+            [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
+            
+            [self exitRemoveDayMode];
+        } else {
+            [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];
+            [self dismissViewControllerAnimated:YES completion:^{
+                [self.delegate dashBoardViewControllerDidDismiss:self];
+            }];
+        }
+    }
+}
+
+- (void)longPresureGestureRecognizerHandle:(UILongPressGestureRecognizer *)gestureRecognizer
+{
+    if (nil == self.dayMonthPendingToRemove && gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
+        self.dayMonthPendingToRemove = [self findDayMonthViewForHitPoint:hitPoint];
+        if (!self.dayMonthPendingToRemove.hidden) {
+            self.dayMonthPendingToRemove.removeMode = YES;
+            self.settingsButton.hidden = YES;
+            self.removeCancelButton.hidden = NO;
+
+        }
     }
 }
 
@@ -254,6 +317,11 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (IBAction)changeMonthYearButtonPressed:(id)sender
 {
+}
+
+- (IBAction)cancelRemoveDayMode:(id)sender
+{
+    [self exitRemoveDayMode];
 }
 
 #pragma mark - WDSettingsScreenViewControllerDelegate

@@ -8,6 +8,13 @@
 
 #import "WDDayMonthView.h"
 #import "WDUtils.h"
+#import <QuartzCore/QuartzCore.h>
+
+@interface WDDayMonthView()
+
+@property (nonatomic, strong) UIImageView *removeModeImage;
+
+@end
 
 @implementation WDDayMonthView
 
@@ -17,6 +24,38 @@
 @synthesize dayOfTheActualMonthIndex = dayOfTheActualMonthIndex_;
 @synthesize dayOfMonthLabel          = dayOfTheMonthLabel_;
 @synthesize initialLetterLabel       = initialLetterLabel_;
+@synthesize removeMode               = removeMode_;
+@synthesize removeModeImage          = removeModeImage_;
+
+#pragma mark - Properties
+
+- (void)setRemoveMode:(BOOL)removeMode
+{
+    if (removeMode != removeMode_) {
+        if (removeMode) {
+            self.removeModeImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37-circle-x-bw"]];
+            self.removeModeImage.contentMode = UIViewContentModeCenter;
+            self.removeModeImage.frame = self.bounds;
+            
+            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+            animation.fromValue = [NSNumber numberWithFloat:1.0];
+            animation.toValue = [NSNumber numberWithFloat:0.5];
+            animation.removedOnCompletion = NO;
+            animation.duration = 1.0;
+            animation.repeatCount = HUGE_VALF;
+            animation.autoreverses = YES;
+            [self.removeModeImage.layer addAnimation:animation forKey:@"blink"];
+            
+            [self addSubview:self.removeModeImage];
+        } else {
+            [self.removeModeImage removeFromSuperview];
+            self.removeModeImage = nil;
+        }
+       
+        
+        removeMode_ = removeMode;
+    }
+}
 
 #pragma mark - Init
 
