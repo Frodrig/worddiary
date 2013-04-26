@@ -17,6 +17,7 @@
 #import "WDMainMenuViewController.h"
 #import "WDAddWordDayViewController.h"
 #import "WDSettingsScreenViewController.h"
+#import "WDDashBoardViewController.h"
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -611,8 +612,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)dobleTapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
 {
-    if (self.mainMenuViewController.view.superview == nil &&
-        !self.editWordModeActive) {
+    if (self.mainMenuViewController.view.superview == nil && !self.editWordModeActive) {
+        WDDashBoardViewController *dashBoardViewController = [[WDDashBoardViewController alloc] initWithNibName:nil bundle:nil];
+        [self presentViewController:dashBoardViewController animated:YES completion:nil];
+        /*
         [self.view addSubview:self.pannelBackgroundView];
         [self.view addSubview:self.mainMenuViewController.view];
         self.mainMenuViewController.view.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
@@ -621,6 +624,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
             self.pannelBackgroundView.alpha = 0.8;
             self.mainMenuViewController.view.alpha = 1.0;
         }];
+         */
     }
 }
 

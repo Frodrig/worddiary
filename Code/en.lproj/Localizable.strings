@@ -132,3 +132,5 @@
 "TAG_HELP_INFOTEXT_PAGE_4"                         = "Double tap to add, remove and more";
 "TAG_HELP_INFOTEXT_PAGE_5"                         = "";
 
+"TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL"        = "%@ %d";
+
