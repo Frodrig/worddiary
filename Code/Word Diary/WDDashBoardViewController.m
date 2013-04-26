@@ -13,6 +13,7 @@
 #import "WDStyle.h"
 #import "WDWordDiary.h"
 #import "WDUtils.h"
+#import "WDSettingsScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 const NSUInteger DAYS_OF_WEEK = 7;
@@ -20,10 +21,11 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 @interface WDDashBoardViewController ()
 
-@property(nonatomic, strong) NSDateComponents       *actualDate;
-@property (weak, nonatomic) IBOutlet UILabel        *yearMonthLabel;
-@property (weak, nonatomic) IBOutlet UIView         *daysOfTheWeekTitlesContainerView;
-@property (weak, nonatomic) IBOutlet UIView         *daysOfTheMonthContainerView;
+@property (nonatomic, strong) NSDateComponents       *actualDate;
+@property (weak, nonatomic) IBOutlet UILabel         *yearMonthLabel;
+@property (weak, nonatomic) IBOutlet UIView          *daysOfTheWeekTitlesContainerView;
+@property (weak, nonatomic) IBOutlet UIView          *daysOfTheMonthContainerView;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 
 - (void)       createDayOfTheMonthsViews;
 
@@ -33,6 +35,10 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (NSUInteger) findFirstWeekdayOfTheMonth;
 - (NSUInteger) findMaxDaysOfTheMonth;
+
+- (void)       tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer;
+
+- (WDWord *)   findWordForHitPoint:(CGPoint)hitPoint;
 
 @end
 
@@ -44,6 +50,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize yearMonthLabel                   = yearMonthLabel_;
 @synthesize daysOfTheWeekTitlesContainerView = daysOfTheWeekContainerView_;
 @synthesize daysOfTheMonthContainerView      = daysOfTheMonthContainerView_;
+@synthesize tapGestureRecognizer             = tapGestureRecognizer_;
+@synthesize delegate                         = delegate_;
 
 #pragma mark - Init
 
@@ -53,6 +61,8 @@ const NSUInteger WEEKS_MONTHS = 5;
     if (self) {
         // Custom initialization
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        
+        tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
     }
     return self;
 }
@@ -66,6 +76,8 @@ const NSUInteger WEEKS_MONTHS = 5;
     self.actualDate = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit fromDate:[NSDate date]];
     
     [self createDayOfTheMonthsViews];
+    
+    [self.daysOfTheMonthContainerView addGestureRecognizer:self.tapGestureRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -161,6 +173,7 @@ const NSUInteger WEEKS_MONTHS = 5;
         */
         dayMonthViewIt.hidden = dayMonthViewIndex < firstWeekdayOfTheMonth || dayMonthViewIndex - (firstWeekdayOfTheMonth - 1) > maxDaysOfTheMonth;
         if (!dayMonthViewIt.hidden) {
+            dayMonthViewIt.dayOfTheActualMonthIndex = dayMonthViewIndex - firstWeekdayOfTheMonth + 1;
             NSDateComponents *dateComponentOfDay = [self.actualDate copy];
             dateComponentOfDay.day = dayMonthViewIndex;
             WDWordDiary *wordDiary = [WDWordDiary sharedWordDiary];
@@ -168,7 +181,7 @@ const NSUInteger WEEKS_MONTHS = 5;
             if (wordOfCalendarDay) {
                 dayMonthViewIt.backgroundColor = [wordOfCalendarDay.palette makeLightBackgroundColorObject];
                 dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
-                dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIndex - firstWeekdayOfTheMonth + 1];
+                dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
                 dayMonthViewIt.initialLetterLabel.font = [UIFont fontWithName:wordOfCalendarDay.style.familyFont size:16];
                 dayMonthViewIt.initialLetterLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.initialLetterLabel.text = [wordOfCalendarDay.word substringWithRange:NSMakeRange(0, 1)];
@@ -190,10 +203,69 @@ const NSUInteger WEEKS_MONTHS = 5;
                 dayMonthViewIt.initialLetterLabel.text = @"";
                 dayMonthViewIt.backgroundColor = [UIColor blackColor];
                 dayMonthViewIt.layer.cornerRadius = 0.0;
+                dayMonthViewIt.dayOfTheActualMonthIndex = 0;
             }
         }
     }
 }
 
+- (WDWord *)findWordForHitPoint:(CGPoint)hitPoint
+{
+    WDDayMonthView *dayMonthViewFound = nil;
+    for (WDDayMonthView *dayMonthViewIt in self.daysOfTheMonthContainerView.subviews) {
+        if ([dayMonthViewIt isKindOfClass:[WDDayMonthView class]] && CGRectContainsPoint(dayMonthViewIt.frame, hitPoint)) {
+            dayMonthViewFound = dayMonthViewIt;
+            break;
+        }
+    }
+    
+    WDWord *retWord = nil;
+    if (!dayMonthViewFound.hidden) {
+        NSDateComponents *wordDateComponents = [self.actualDate copy];
+        wordDateComponents.day = dayMonthViewFound.dayOfTheActualMonthIndex;
+        retWord = [[WDWordDiary sharedWordDiary] findWordWithDateComponents:wordDateComponents];
+    }
+
+    return retWord;
+}
+
+#pragma mark - UITapGestureRecognizer
+
+- (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer
+{
+    CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
+    WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
+    if (wordDayOfHitPoint) {
+        [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self.delegate dashBoardViewControllerDidDismiss:self];
+        }];
+    }
+}
+
+#pragma mark - Control Events
+
+- (IBAction)settingsButtonPressed:(id)sender
+{
+    WDSettingsScreenViewController *settingsScreenViewController = [[WDSettingsScreenViewController alloc] initWithNibName:nil bundle:nil];
+    settingsScreenViewController.delegate = self;
+    [self presentViewController:settingsScreenViewController animated:YES completion:nil];
+}
+
+- (IBAction)changeMonthYearButtonPressed:(id)sender
+{
+}
+
+#pragma mark - WDSettingsScreenViewControllerDelegate
+
+- (void)wordWithIndex:(NSArray *)index removedFromSettingsScreenViewControllerRemoveAllEmptyWordDays:(WDSettingsScreenViewController *)settingsScreenViewController;
+{
+    [self.delegate wordWithIndex:index removedFromDashBoardViewControllerRemoveAllEmptyWordDays:self];
+}
+
+- (void)backgroundAnimationGradientSettingsUpdateFromSettingsScreenViewController:(WDSettingsScreenViewController *)settingsScreenViewController
+{
+    [self.delegate backgroundAnimationGradientSettingsUpdateFromDashBoardViewController:self];
+}
 
 @end

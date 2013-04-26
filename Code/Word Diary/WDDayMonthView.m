@@ -13,9 +13,10 @@
 
 #pragma mark - Synthesize
 
-@synthesize index              = index_;
-@synthesize dayOfMonthLabel    = dayOfTheMonthLabel_;
-@synthesize initialLetterLabel = initialLetterLabel_;
+@synthesize index                    = index_;
+@synthesize dayOfTheActualMonthIndex = dayOfTheActualMonthIndex_;
+@synthesize dayOfMonthLabel          = dayOfTheMonthLabel_;
+@synthesize initialLetterLabel       = initialLetterLabel_;
 
 #pragma mark - Init
 
@@ -25,6 +26,7 @@
     if (self) {
         // Initialization code
         index_ = index;
+        dayOfTheActualMonthIndex_ = 0;
         
         dayOfTheMonthLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 5.0, frame.size.width, frame.size.height * 0.4)];
         dayOfTheMonthLabel_.textAlignment = NSTextAlignmentCenter;

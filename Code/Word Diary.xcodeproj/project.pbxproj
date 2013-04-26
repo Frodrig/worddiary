@@ -166,6 +166,7 @@
 		5B86DBF8171C41BA003152AB /* WDWordRepresentationViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationViewDataSource.h; sourceTree = "<group>"; };
 		5B930D761721E07400FF7AFD /* CALayer+PauseResume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+PauseResume.h"; sourceTree = "<group>"; };
 		5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+PauseResume.m"; sourceTree = "<group>"; };
+		5B9488A5172AD1F700FCEF2B /* WDDashBoardViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDashBoardViewControllerDelegate.h; sourceTree = "<group>"; };
 		5B9829A117279D8C00A3071C /* WDAddWordDayViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAddWordDayViewControllerDelegate.h; sourceTree = "<group>"; };
 		5B9829A31727D16900A3071C /* WDSettingsScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSettingsScreenViewController.h; sourceTree = "<group>"; };
 		5B9829A41727D16900A3071C /* WDSettingsScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSettingsScreenViewController.m; sourceTree = "<group>"; };
@@ -488,6 +489,15 @@
 			name = "Word Representation View";
 			sourceTree = "<group>";
 		};
+		5B9488A4172AD1E200FCEF2B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5B4D18AE172A95110002F300 /* WDDayMonthView.h */,
+				5B4D18AF172A95110002F300 /* WDDayMonthView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		5B9829A21727D13D00A3071C /* Settings Screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,11 +512,11 @@
 		5BA4D56E172A72E40042CFF1 /* Dashboard Screen */ = {
 			isa = PBXGroup;
 			children = (
+				5B9488A4172AD1E200FCEF2B /* Views */,
 				5BA4D56F172A73000042CFF1 /* WDDashBoardViewController.h */,
 				5BA4D570172A73000042CFF1 /* WDDashBoardViewController.m */,
 				5BA4D571172A73000042CFF1 /* WDDashBoardViewController.xib */,
-				5B4D18AE172A95110002F300 /* WDDayMonthView.h */,
-				5B4D18AF172A95110002F300 /* WDDayMonthView.m */,
+				5B9488A5172AD1F700FCEF2B /* WDDashBoardViewControllerDelegate.h */,
 			);
 			name = "Dashboard Screen";
 			sourceTree = "<group>";

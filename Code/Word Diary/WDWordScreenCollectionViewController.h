@@ -13,7 +13,7 @@
 #import "WDMainMenuViewControllerDelegate.h"
 #import "WDMainMenuViewControllerDataSource.h"
 #import "WDAddWordDayViewControllerDelegate.h"
-#import "WDSettingsScreenViewControllerDelegate.h"
+#import "WDDashBoardViewControllerDelegate.h"
 
 @interface WDWordScreenCollectionViewController : UICollectionViewController<WDWordRepresentationViewDataSource,
                                                                              WDWordCharacterCounterViewDataSource,
@@ -21,7 +21,7 @@
                                                                              WDMainMenuViewControllerDelegate,
                                                                              WDMainMenuViewControllerDataSource,
                                                                              WDAddWordDayViewControllerDelegate,
-                                                                             WDSettingsScreenViewControllerDelegate,
+                                                                             WDDashBoardViewControllerDelegate,
                                                                              UIKeyInput>
 
 @end

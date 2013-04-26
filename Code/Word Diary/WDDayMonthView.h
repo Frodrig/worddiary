@@ -10,9 +10,10 @@
 
 @interface WDDayMonthView : UIView
 
-@property(nonatomic, readonly)NSUInteger index;
-@property(nonatomic, strong)UILabel      *dayOfMonthLabel;
-@property(nonatomic, strong)UILabel      *initialLetterLabel;
+@property (nonatomic, readonly )NSUInteger index;
+@property (nonatomic) NSUInteger           dayOfTheActualMonthIndex;
+@property (nonatomic, strong) UILabel      *dayOfMonthLabel;
+@property (nonatomic, strong) UILabel      *initialLetterLabel;
 
 
 - (id)initWithIndex:(NSUInteger)index andFrame:(CGRect)frame;

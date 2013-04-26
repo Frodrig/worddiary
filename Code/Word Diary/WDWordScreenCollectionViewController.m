@@ -16,7 +16,6 @@
 #import "WDWordCharacterCounterView.h"
 #import "WDMainMenuViewController.h"
 #import "WDAddWordDayViewController.h"
-#import "WDSettingsScreenViewController.h"
 #import "WDDashBoardViewController.h"
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
@@ -614,6 +613,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     if (self.mainMenuViewController.view.superview == nil && !self.editWordModeActive) {
         WDDashBoardViewController *dashBoardViewController = [[WDDashBoardViewController alloc] initWithNibName:nil bundle:nil];
+        dashBoardViewController.delegate = self;
         [self presentViewController:dashBoardViewController animated:YES completion:nil];
         /*
         [self.view addSubview:self.pannelBackgroundView];
@@ -852,16 +852,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }];
 }
 
-- (void)settingsOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
-{
-    WDSettingsScreenViewController *settingsScreenViewController = [[WDSettingsScreenViewController alloc] initWithNibName:nil bundle:nil];
-    settingsScreenViewController.delegate = self;
-    
-    [self presentViewController:settingsScreenViewController animated:YES completion:^{
-        [self hideMainMenuViewController];
-    }];
-}
-
 - (void)helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
 {
     
@@ -874,7 +864,36 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     return ![[self findSelectedWord] isTodayWord];
 }
 
-#pragma - WDAddWordDayViewControllerDelegate
+#pragma mark - WDDashBoardViewControllerDelegate
+
+- (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController willDismissWithSelectedWord:(WDWord *)word
+{
+    self.indexPathForWordWhenAppear = [self indexPathForWord:word];
+    self.otherViewControllerInDismissMode = YES;
+}
+
+- (void) dashBoardViewControllerDidDismiss:(WDDashBoardViewController *)dashBoardViewController
+{
+    self.otherViewControllerInDismissMode = NO;
+}
+
+- (void) wordWithIndex:(NSArray *)index removedFromDashBoardViewControllerRemoveAllEmptyWordDays:(WDDashBoardViewController *)dashBoardViewController;
+{
+    [self.collectionView performBatchUpdates:^{
+        for (NSNumber *indexWordIt in index) {
+            // Nota: No se usa el metodo de conversion de indices porque en este punto ya hay desincronia: se ha borrado en el modelo pero no en el collection
+            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:[WDWordDiary sharedWordDiary].words.count - indexWordIt.unsignedIntegerValue]];
+        }
+        
+    } completion:nil];
+}
+
+- (void)backgroundAnimationGradientSettingsUpdateFromDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController;
+{
+    [self.collectionView reloadData];
+}
+
+#pragma mark - WDAddWordDayViewControllerDelegate
 
 - (void)addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController createdNewWord:(WDWord *)word
 {
@@ -896,37 +915,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)addWordDayViewControllerDidDismiss:(WDAddWordDayViewController *)addWordDayViewController
 {
     self.otherViewControllerInDismissMode = NO;
-}
-
-#pragma mark - WDSettingsScreenViewControllerDelegate
-
-- (void)settingsScreenViewControllerWillDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
-{
-    self.otherViewControllerInDismissMode = YES;
-    [self fadeInDateAndDayTextOnCell:[self findSelectedCell] withInfiniteDuration:NO];
-    
-    self.indexPathForWordWhenAppear = [self indexPathForWord:[self findSelectedWord]];
-}
-
-- (void)settingsScreenViewControllerDidDismiss:(WDSettingsScreenViewController *)settingsScreenViewController
-{
-    self.otherViewControllerInDismissMode = NO;
-}
-
-- (void)wordWithIndex:(NSArray *)index removedFromSettingsScreenViewControllerRemoveAllEmptyWordDays:(WDSettingsScreenViewController *)settingsScreenViewController;
-{
-    [self.collectionView performBatchUpdates:^{
-        for (NSNumber *indexWordIt in index) {
-            // Nota: No se usa el metodo de conversion de indices porque en este punto ya hay desincronia: se ha borrado en el modelo pero no en el collection
-            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:[WDWordDiary sharedWordDiary].words.count - indexWordIt.unsignedIntegerValue]];
-        }
-        
-    } completion:nil];
-}
-
-- (void) backgroundAnimationGradientSettingsUpdateFromSettingsScreenViewController:(WDSettingsScreenViewController *)settingsScreenViewController
-{
-    [self.collectionView reloadData];
 }
 
 @end

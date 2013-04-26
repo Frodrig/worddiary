@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDDashBoardViewControllerDelegate.h"
+#import "WDSettingsScreenViewControllerDelegate.h"
 
-@interface WDDashBoardViewController : UIViewController
+@interface WDDashBoardViewController : UIViewController<WDSettingsScreenViewControllerDelegate>
+
+@property(nonatomic, weak) id<WDDashBoardViewControllerDelegate> delegate;
 
 @end

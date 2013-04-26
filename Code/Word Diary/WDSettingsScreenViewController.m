@@ -95,10 +95,7 @@ const NSUInteger ACTIVATEBACKGROUNDGRADIENTANIM_NO_BUTTONTAG   = 12;
 
 - (IBAction)closeButtonPressed:(id)sender
 {
-    [self.delegate settingsScreenViewControllerWillDismiss:self];
-    [self dismissViewControllerAnimated:YES completion:^{
-        [self.delegate settingsScreenViewControllerDidDismiss:self];
-    }];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)infoButtonPressed:(id)sender
