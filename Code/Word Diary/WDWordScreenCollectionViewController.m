@@ -14,7 +14,6 @@
 #import "WDUtils.h"
 #import "WDWordScreenCollectionViewCell.h"
 #import "WDWordCharacterCounterView.h"
-#import "WDMainMenuViewController.h"
 #import "WDAddWordDayViewController.h"
 #import "WDDashBoardViewController.h"
 #import "UIColor+hexColorCreation.h"
@@ -34,15 +33,12 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) NSTimer                       *cursorColorTimer;
 @property (nonatomic, strong) UIColor                       *cursorColor;
 @property (nonatomic, strong) UIView                        *pannelBackgroundView;
-@property (nonatomic, strong) WDMainMenuViewController      *mainMenuViewController;
 @property (nonatomic, strong) NSIndexPath                   *indexPathForWordWhenAppear;
 @property (nonatomic) BOOL                                  otherViewControllerInDismissMode;
 @property (nonatomic) BOOL                                  editWordModeActive;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
-
-- (void)                             hideMainMenuViewController;
 
 - (void)                             launchFadeDateAndDayTextTimer;
 - (void)                             endFadeDateAndDayTextTimer;
@@ -67,6 +63,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)                             styleButtonPressed:(UIButton *)button;
 
+-(void)                              fixCellWithTagsStartingAt:(NSIndexPath *)startIndexPath;
+
 @end
 
 @implementation WDWordScreenCollectionViewController
@@ -82,22 +80,11 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize cursorColor                        = cursorColor_;
 @synthesize styleMenuView                      = styleMenuView_;
 @synthesize pannelBackgroundView               = pannelBackgroundView_;
-@synthesize mainMenuViewController             = mainMenuViewController_;
 @synthesize indexPathForWordWhenAppear         = indexPathForWordWhenAppear_;
 @synthesize otherViewControllerInDismissMode   = otherWordViewControllerInDismissMode_;
 @synthesize editWordModeActive                 = editWordModeActive_;
 
 #pragma mark - Properties
-
-- (WDMainMenuViewController *)mainMenuViewController {
-    if (nil == mainMenuViewController_) {
-        mainMenuViewController_ = [[WDMainMenuViewController alloc] initWithNibName:nil bundle:nil];
-        mainMenuViewController_.delegate = self;
-        mainMenuViewController_.dataSource  = self;
-        
-    }
-    return mainMenuViewController_;
-}
 
 - (UIView *)pannelBackgroundView {
     if (nil == pannelBackgroundView_) {
@@ -231,6 +218,22 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark - Auxiliary
 
+-(void)fixCellWithTagsStartingAt:(NSIndexPath *)startIndexPath
+{
+    NSIndexPath *indexPathIt = [startIndexPath copy];
+    BOOL fixTagEnd = NO;
+    while (!fixTagEnd) {
+        WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPathIt];
+        if (cell.wordRepresentationView.tag != indexPathIt.section) {
+            cell.wordRepresentationView.tag = indexPathIt.section;
+            startIndexPath = [NSIndexPath indexPathForRow:indexPathIt.row inSection:indexPathIt.section + 1];
+        } else {
+            fixTagEnd = YES;
+        }
+    }
+    
+}
+
 - (void)styleButtonPressed:(UIButton *)button
 {
     WDWord *word = [self findSelectedWord];
@@ -310,20 +313,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:sectionIndex]];
     
     return cell;
-}
-
-- (void)hideMainMenuViewController
-{
-    if (self.mainMenuViewController.view.superview != nil) {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.pannelBackgroundView.alpha = 0.0;
-            self.mainMenuViewController.view.alpha = 0.0;
-        } completion:^(BOOL finished) {
-            [self.pannelBackgroundView removeFromSuperview];
-            [self.mainMenuViewController.view removeFromSuperview];
-        }];
-        [self.mainMenuViewController.view removeFromSuperview];
-    }
 }
 
 /*
@@ -435,6 +424,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
+    NSLog(@"sections %d", [WDWordDiary sharedWordDiary].words.count);
     return [WDWordDiary sharedWordDiary].words.count;
 }
 
@@ -493,9 +483,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
 {
     if (gesture == self.tapGestureRecognizer) {
-        if (self.mainMenuViewController.view.superview != nil) {
-            [self hideMainMenuViewController];
-        } else if (!self.editWordModeActive) {
+        if (!self.editWordModeActive) {
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             CGPoint hitPoint = [gesture locationInView:cell];
             if (CGRectContainsPoint(cell.wordRepresentationContainerView.frame, hitPoint)) {
@@ -611,10 +599,12 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)dobleTapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
 {
-    if (self.mainMenuViewController.view.superview == nil && !self.editWordModeActive) {
+    if (!self.editWordModeActive) {
         WDDashBoardViewController *dashBoardViewController = [[WDDashBoardViewController alloc] initWithNibName:nil bundle:nil];
         dashBoardViewController.delegate = self;
-        [self presentViewController:dashBoardViewController animated:YES completion:nil];
+        [self presentViewController:dashBoardViewController animated:YES completion:^{
+            [self endCursorColorTimer];
+        }];
         /*
         [self.view addSubview:self.pannelBackgroundView];
         [self.view addSubview:self.mainMenuViewController.view];
@@ -829,42 +819,17 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     [self.wordCharacterCounterView setNeedsDisplay];
 }
 
-#pragma mark - WDWordMainMenuViewControllerDelegate
-
-- (void)removeOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
-{
-    WDWord *selectedWord = [self findSelectedWord];
-    if (![selectedWord isTodayWord]) {
-        NSIndexPath *selectedWordIndexPath = [self indexPathForWord:selectedWord];
-        [[WDWordDiary sharedWordDiary] removeWord:selectedWord];
-        [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
-        [self hideMainMenuViewController];
-    }    
-}
-
-- (void)addOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
-{    
-    WDAddWordDayViewController *addWorDayViewController = [[WDAddWordDayViewController alloc] initWithNibName:nil bundle:nil];
-    addWorDayViewController.delegate = self;
-    
-    [self presentViewController:addWorDayViewController animated:YES completion:^{
-        [self hideMainMenuViewController];
-    }];
-}
-
-- (void)helpOptionSelectedForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
-{
-    
-}
-
-#pragma mark - WDWordMainMenuViewControllerDataSource
-
-- (BOOL)removeOptionAvailableForMainMenuViewController:(WDMainMenuViewController *)mainMenuViewController
-{
-    return ![[self findSelectedWord] isTodayWord];
-}
-
 #pragma mark - WDDashBoardViewControllerDelegate
+
+- (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController selectRemoveWord:(WDWord *)word
+{
+    NSIndexPath *selectedWordIndexPath = [self indexPathForWord:word];
+    NSLog(@"section a borrar %d", selectedWordIndexPath.section);
+    [[WDWordDiary sharedWordDiary] removeWord:word];
+    [self.collectionView reloadData];
+    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
+    [self fixCellWithTagsStartingAt:selectedWordIndexPath];
+}
 
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController willDismissWithSelectedWord:(WDWord *)word
 {
@@ -877,7 +842,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self.otherViewControllerInDismissMode = NO;
 }
 
-- (void) wordWithIndex:(NSArray *)index removedFromDashBoardViewControllerRemoveAllEmptyWordDays:(WDDashBoardViewController *)dashBoardViewController;
+- (void)wordWithIndex:(NSArray *)index removedFromDashBoardViewControllerRemoveAllEmptyWordDays:(WDDashBoardViewController *)dashBoardViewController;
 {
     [self.collectionView performBatchUpdates:^{
         for (NSNumber *indexWordIt in index) {

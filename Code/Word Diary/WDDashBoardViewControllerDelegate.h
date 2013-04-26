@@ -14,10 +14,13 @@
 @protocol WDDashBoardViewControllerDelegate <NSObject>
 
 - (void) dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController willDismissWithSelectedWord:(WDWord *)word;
+- (void) dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController selectRemoveWord:(WDWord *)word;
 
 - (void) dashBoardViewControllerDidDismiss:(WDDashBoardViewController *)dashBoardViewController;
 
 - (void) wordWithIndex:(NSArray *)index removedFromDashBoardViewControllerRemoveAllEmptyWordDays:(WDDashBoardViewController *)dashBoardViewController;
 - (void) backgroundAnimationGradientSettingsUpdateFromDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController;
+
+
 
 @end

@@ -275,13 +275,9 @@ const NSUInteger WEEKS_MONTHS = 5;
     if (wordDayOfHitPoint) {
         if (self.dayMonthPendingToRemove) {
             WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
-            if ([wordOfDayPendingToRemove isTodayWord]) {
-                wordOfDayPendingToRemove.word = @"";
-            } else {
-                [[WDWordDiary sharedWordDiary] removeWord:wordOfDayPendingToRemove];
-            }
-            [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
+            [[WDWordDiary sharedWordDiary] removeWord:wordOfDayPendingToRemove];
             
+            [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
             [self exitRemoveDayMode];
         } else {
             [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];

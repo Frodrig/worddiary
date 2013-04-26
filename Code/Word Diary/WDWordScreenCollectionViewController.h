@@ -10,16 +10,12 @@
 #import "WDWordRepresentationViewDataSource.h"
 #import "WDWordCharacterCounterViewDataSource.h"
 #import "WDWordCharacterCounterViewDelegate.h"
-#import "WDMainMenuViewControllerDelegate.h"
-#import "WDMainMenuViewControllerDataSource.h"
 #import "WDAddWordDayViewControllerDelegate.h"
 #import "WDDashBoardViewControllerDelegate.h"
 
 @interface WDWordScreenCollectionViewController : UICollectionViewController<WDWordRepresentationViewDataSource,
                                                                              WDWordCharacterCounterViewDataSource,
                                                                              WDWordCharacterCounterViewDelegate,
-                                                                             WDMainMenuViewControllerDelegate,
-                                                                             WDMainMenuViewControllerDataSource,
                                                                              WDAddWordDayViewControllerDelegate,
                                                                              WDDashBoardViewControllerDelegate,
                                                                              UIKeyInput>

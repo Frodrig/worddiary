@@ -20,6 +20,7 @@
 - (void) prepareWordDiaryAtLaunch;
 - (void) prepareRootViewController;
 - (void) createDebugWords;
+- (void) createDebugWords2;
 
 @end
 
@@ -37,6 +38,7 @@
   
     // Override point for customization after application launch
     //[self createDebugWords];
+    //[self createDebugWords2];
     [self prepareRootViewController];
     
     self.window.backgroundColor = [UIColor blackColor];
@@ -101,6 +103,24 @@
     }
 }
 
+- (void)createDebugWords2
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];
+    
+    NSArray *words = [NSArray arrayWithObjects:@"Triste", @"Aburrido", @"Vacaciones", @"Exámen", @"Papás", @"Lluvia", @"Catarro", @"Feliz", nil];
+    for (NSUInteger index = 0; index < words.count; ++index) {
+        dateComponents.day = dateComponents.day - (index + 1);
+        NSString *wordIt = [words objectAtIndex:index];
+        NSTimeInterval timeInterval = [calendar dateFromComponents:dateComponents].timeIntervalSince1970;
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+        WDWord *word = [[WDWordDiary sharedWordDiary] createWord:wordIt inTimeInterval:date.timeIntervalSince1970];
+        word.palette = [[WDWordDiary sharedWordDiary].palettes objectAtIndex:rand() % [WDWordDiary sharedWordDiary].palettes.count];
+        word.style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:rand() % [WDWordDiary sharedWordDiary].styles.count];
+        
+        [[WDWordDiary sharedWordDiary] saveAll];
+    }
+}
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
