@@ -410,8 +410,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     cell.wordRepresentationView.clearsContextBeforeDrawing = YES;
     cell.wordRepresentationView.tag = indexPath.section;
 
-    NSLog(@"words %d", [WDWordDiary sharedWordDiary].words.count);
-    NSLog(@"indexpath %d", indexPath.section);
     WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:[self convertIndexPathToWordIndexContainer:indexPath]];
     [cell setWord:word];
         
@@ -425,7 +423,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    NSLog(@"sections %d", [WDWordDiary sharedWordDiary].words.count);
     return [WDWordDiary sharedWordDiary].words.count;
 }
 
@@ -825,10 +822,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController selectRemoveWord:(WDWord *)word
 {
     NSIndexPath *selectedWordIndexPath = [self indexPathForWord:word];
-    NSLog(@"section a borrar %d palabras %d numero secciones %d", selectedWordIndexPath.section, [WDWordDiary sharedWordDiary].words.count, self.collectionView.numberOfSections);
     [[WDWordDiary sharedWordDiary] removeWord:word];
     [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
-    NSLog(@"palabras despues de borrar %d y numero de secciones %d", [WDWordDiary sharedWordDiary].words.count, self.collectionView.numberOfSections);
     [self fixCellWithTagsStartingAt:selectedWordIndexPath];
 }
 

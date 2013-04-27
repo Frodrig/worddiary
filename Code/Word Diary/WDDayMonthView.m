@@ -51,7 +51,6 @@
             [self.removeModeImage removeFromSuperview];
             self.removeModeImage = nil;
         }
-       
         
         removeMode_ = removeMode;
     }
@@ -80,6 +79,8 @@
         initialLetterLabel_.textColor = [UIColor whiteColor];
         initialLetterLabel_.backgroundColor = [UIColor clearColor];
         initialLetterLabel_.opaque = YES;
+        initialLetterLabel_.adjustsFontSizeToFitWidth = YES;
+        initialLetterLabel_.minimumScaleFactor = 0.5;
         [self addSubview:initialLetterLabel_];
     }
     return self;

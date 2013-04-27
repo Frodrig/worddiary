@@ -127,7 +127,6 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
 }
 
-
 - (void)configureDaysOfTheWeekTitles
 {
     NSUInteger firstWeekday = [[NSCalendar currentCalendar] firstWeekday];
@@ -153,7 +152,6 @@ const NSUInteger WEEKS_MONTHS = 5;
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDateComponents *firstDayDateComponents = [self.actualDate copy];
     firstDayDateComponents.year = 2013;
-   // firstDayDateComponents.month = 2;
     firstDayDateComponents.day = 1;
     firstDayDateComponents.week = 1;
     NSDate *date = [calendar dateFromComponents:firstDayDateComponents];
@@ -190,14 +188,14 @@ const NSUInteger WEEKS_MONTHS = 5;
             dateComponentOfDay.day = dayMonthViewIndex;
             WDWordDiary *wordDiary = [WDWordDiary sharedWordDiary];
             WDWord *wordOfCalendarDay = [wordDiary findWordWithDateComponents:dateComponentOfDay];
-            if (wordOfCalendarDay) {
+            if (wordOfCalendarDay && wordOfCalendarDay.word.length > 0) {
                 dayMonthViewIt.backgroundColor = [wordOfCalendarDay.palette makeLightBackgroundColorObject];
                 dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
                 dayMonthViewIt.initialLetterLabel.font = [UIFont fontWithName:wordOfCalendarDay.style.familyFont size:16];
                 dayMonthViewIt.initialLetterLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.initialLetterLabel.text = [wordOfCalendarDay.word substringWithRange:NSMakeRange(0, 1)];
-                dayMonthViewIt.layer.cornerRadius = 2.0;
+                dayMonthViewIt.layer.cornerRadius = 5.0;
                 dayMonthViewIt.layer.borderColor = [UIColor blackColor].CGColor;
                 dayMonthViewIt.layer.borderWidth = 0.5;
                 /*
@@ -276,9 +274,6 @@ const NSUInteger WEEKS_MONTHS = 5;
         if (self.dayMonthPendingToRemove) {
             WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
             [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
-            //[[WDWordDiary sharedWordDiary] removeWord:wordOfDayPendingToRemove];
-            //[self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
- 
             [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
             [self exitRemoveDayMode];
         } else {
