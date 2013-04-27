@@ -30,6 +30,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (nonatomic, weak) WDDayMonthView                 *dayMonthPendingToRemove;
 @property (weak, nonatomic) IBOutlet UIButton              *removeCancelButton;
 @property (weak, nonatomic) IBOutlet UIButton              *settingsButton;
+@property (nonatomic, strong) NSDate                       *normalizedRealTodayDate;
 
 - (void)             createDayOfTheMonthsViews;
 
@@ -37,6 +38,9 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (void)             configureMonthAndYearLabel;
 - (void)             configureDayOfTheMonths;
 - (void)             configureDayMonthViewWithoutWordMode:(WDDayMonthView *)dayMonthView;
+
+- (NSDate *)         createNormalizedDateForDayMonthView:(WDDayMonthView *)dayMonthView;
+
 
 - (NSUInteger)       findFirstWeekdayOfTheMonth;
 - (NSUInteger)       findMaxDaysOfTheMonth;
@@ -63,6 +67,21 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize tapGestureRecognizer             = tapGestureRecognizer_;
 @synthesize longPresureGestureRecognizer     = longPresureGestureRecognizer_;
 @synthesize delegate                         = delegate_;
+@synthesize normalizedRealTodayDate          = normalizedRealTodayDate_;
+
+#pragma mar - Properties
+
+-(NSDate *)normalizedRealTodayDate
+{
+    if (nil == normalizedRealTodayDate_) {
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDate *realTodayDate = [NSDate date];
+        NSDateComponents *realTodayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:realTodayDate];
+        normalizedRealTodayDate_ = [calendar dateFromComponents:realTodayDateComponents];
+    }
+    
+    return normalizedRealTodayDate_;
+}
 
 #pragma mark - Init
 
@@ -192,9 +211,11 @@ const NSUInteger WEEKS_MONTHS = 5;
                 dayMonthViewIt.backgroundColor = [wordOfCalendarDay.palette makeLightBackgroundColorObject];
                 dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
+                /*
                 dayMonthViewIt.initialLetterLabel.font = [UIFont fontWithName:wordOfCalendarDay.style.familyFont size:16];
                 dayMonthViewIt.initialLetterLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.initialLetterLabel.text = [wordOfCalendarDay.word substringWithRange:NSMakeRange(0, 1)];
+                 */
                 dayMonthViewIt.layer.cornerRadius = 5.0;
                 dayMonthViewIt.layer.borderColor = [UIColor blackColor].CGColor;
                 dayMonthViewIt.layer.borderWidth = 0.5;
@@ -215,9 +236,22 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
 }
 
+- (NSDate *)createNormalizedDateForDayMonthView:(WDDayMonthView *)dayMonthView
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *actualDayMonthViewDateComponents = [self.actualDate copy];
+    actualDayMonthViewDateComponents.day = dayMonthView.dayOfTheActualMonthIndex;
+    NSDate *normalizedActuayDayMonthViewDate = [calendar dateFromComponents:actualDayMonthViewDateComponents];
+
+    return normalizedActuayDayMonthViewDate;
+}
+
 - (void)configureDayMonthViewWithoutWordMode:(WDDayMonthView *)dayMonthView
 {
-    dayMonthView.dayOfMonthLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.8];
+    NSDate *normalizedActuayDayMonthViewDate = [self createNormalizedDateForDayMonthView:dayMonthView];
+    NSComparisonResult compareResult = [self.normalizedRealTodayDate compare:normalizedActuayDayMonthViewDate];
+    const BOOL actualDayMonthViewAccesible = compareResult == NSOrderedDescending || compareResult == NSOrderedSame;
+    dayMonthView.dayOfMonthLabel.textColor = actualDayMonthViewAccesible ? [UIColor lightGrayColor] : [UIColor darkGrayColor];
     dayMonthView.initialLetterLabel.text = @"";
     dayMonthView.backgroundColor = [UIColor blackColor];
     dayMonthView.layer.cornerRadius = 0.0;
