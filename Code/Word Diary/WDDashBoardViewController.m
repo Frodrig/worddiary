@@ -54,6 +54,9 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)             exitRemoveDayMode;
 
+- (void)             addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word;
+- (void)             removeGradientLayerOfDayMonthView:(WDDayMonthView *)dayMonthView;
+
 @end
 
 @implementation WDDashBoardViewController
@@ -187,6 +190,37 @@ const NSUInteger WEEKS_MONTHS = 5;
     return rangeDaysOfMonth.length;
 }
 
+- (void)removeGradientLayerOfDayMonthView:(WDDayMonthView *)dayMonthView
+{
+    for (CALayer *layerIt in dayMonthView.layer.sublayers) {
+        if ([layerIt isKindOfClass:[CAGradientLayer class]]) {
+            [layerIt removeFromSuperlayer];
+            break;
+        }
+    }
+}
+
+- (void)addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word
+{
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    const CGFloat gradientWithMargin = dayMonthView.bounds.size.width * 0.1;
+    gradient.frame = CGRectMake(gradientWithMargin, 0.0, dayMonthView.bounds.size.width
+                                - gradientWithMargin * 2, dayMonthView.bounds.size.height);
+    WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+    WDPalette *prevPrevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:prevPalette];
+    WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
+    WDPalette *nextNextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:nextPalette];
+    gradient.colors = [NSArray arrayWithObjects:(id)[prevPrevPalette makeLightBackgroundColorObject].CGColor,
+                       (id)[prevPalette makeLightBackgroundColorObject].CGColor,
+                       (id)[word.palette makeLightBackgroundColorObject].CGColor,
+                       (id)[nextPalette makeLightBackgroundColorObject].CGColor,
+                       (id)[nextNextPalette makeLightBackgroundColorObject].CGColor,nil];
+    gradient.startPoint = CGPointMake(0.5, 0.0);
+    gradient.endPoint = CGPointMake(0.5, 1.0);
+    gradient.cornerRadius = 5.0;
+    [dayMonthView.layer insertSublayer:gradient below:dayMonthView.dayOfMonthLabel.layer];
+}
+
 - (void)configureDayOfTheMonths
 {
     const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
@@ -196,10 +230,9 @@ const NSUInteger WEEKS_MONTHS = 5;
     for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
         const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
         WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
-        /*
-        CALayer *gradientLayer = [dayMonthViewIt.layer.sublayers objectAtIndex:0];
-        [gradientLayer removeFromSuperlayer];
-        */
+        
+        [self removeGradientLayerOfDayMonthView:dayMonthViewIt];
+        
         dayMonthViewIt.hidden = dayMonthViewIndex < firstWeekdayOfTheMonth || dayMonthViewIndex - (firstWeekdayOfTheMonth - 1) > maxDaysOfTheMonth;
         if (!dayMonthViewIt.hidden) {
             dayMonthViewIt.dayOfTheActualMonthIndex = dayMonthViewIndex - firstWeekdayOfTheMonth + 1;
@@ -208,7 +241,7 @@ const NSUInteger WEEKS_MONTHS = 5;
             WDWordDiary *wordDiary = [WDWordDiary sharedWordDiary];
             WDWord *wordOfCalendarDay = [wordDiary findWordWithDateComponents:dateComponentOfDay];
             if (wordOfCalendarDay && wordOfCalendarDay.word.length > 0) {
-                dayMonthViewIt.backgroundColor = [wordOfCalendarDay.palette makeLightBackgroundColorObject];
+                dayMonthViewIt.backgroundColor = [UIColor clearColor];
                 dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
                 /*
@@ -216,19 +249,8 @@ const NSUInteger WEEKS_MONTHS = 5;
                 dayMonthViewIt.initialLetterLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.initialLetterLabel.text = [wordOfCalendarDay.word substringWithRange:NSMakeRange(0, 1)];
                  */
-                dayMonthViewIt.layer.cornerRadius = 5.0;
-                dayMonthViewIt.layer.borderColor = [UIColor blackColor].CGColor;
-                dayMonthViewIt.layer.borderWidth = 0.5;
-                /*
-                CAGradientLayer *gradient = [CAGradientLayer layer];
-                gradient.frame = dayMonthViewIt.bounds
-                WDPalette *prevPalette = [wordDiary findNextPaletteOfPalette:wordOfCalendarDay.palette];
-                WDPalette *nextPalette = [wordDiary findNextPaletteOfPalette:wordOfCalendarDay.palette];
-                gradient.colors = [NSArray arrayWithObjects:(id)[prevPalette makeLightBackgroundColorObject].CGColor, (id)[wordOfCalendarDay.palette makeLightBackgroundColorObject].CGColor, (id)[nextPalette makeLightBackgroundColorObject].CGColor, nil];
-                gradient.startPoint = CGPointMake(0.5, 0.0);
-                gradient.endPoint = CGPointMake(0.5, 1.0);
-                [dayMonthViewIt.layer insertSublayer:gradientLayer atIndex:0];
-                */
+                
+                [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay];            
             } else {
                 [self configureDayMonthViewWithoutWordMode:dayMonthViewIt];
             }
