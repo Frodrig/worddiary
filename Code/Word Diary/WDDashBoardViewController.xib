@@ -102,7 +102,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{8, 0}, {304, 44}}</string>
 								<reference key="NSSuperview" ref="815424088"/>
-								<reference key="NSNextKeyView" ref="172403078"/>
+								<reference key="NSNextKeyView" ref="892935477"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -345,6 +345,7 @@
 								<array class="NSMutableArray" key="NSSubviews"/>
 								<string key="NSFrame">{{0, 67}, {320, 220}}</string>
 								<reference key="NSSuperview" ref="815424088"/>
+								<reference key="NSNextKeyView" ref="172403078"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<reference key="IBUIBackgroundColor" ref="71474707"/>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -354,7 +355,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{138, 287}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="815424088"/>
-								<reference key="NSNextKeyView" ref="892935477"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1982,7 +1983,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1393</int>
+			<int key="maxID">1398</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

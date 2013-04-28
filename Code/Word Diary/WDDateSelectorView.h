@@ -10,7 +10,7 @@
 #import "WDDateSelectorViewDataSource.h"
 #import "WDDateSelectorViewDelegate.h"
 
-@interface WDDateSelectorView : UIView
+@interface WDDateSelectorView : UIView<UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (nonatomic, weak) id<WDDateSelectorViewDataSource> dataSource;
 @property (nonatomic, weak) id<WDDateSelectorViewDelegate>   delegate;
