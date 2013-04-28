@@ -10,6 +10,13 @@
 
 @implementation WDDateSelectorView
 
+#pragma mark - Synthesize
+
+@synthesize dataSource = dataSource_;
+@synthesize delegate   = delegate_;
+
+#pragma mark - Init
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

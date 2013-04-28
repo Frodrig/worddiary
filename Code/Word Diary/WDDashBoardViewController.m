@@ -14,6 +14,7 @@
 #import "WDWordDiary.h"
 #import "WDUtils.h"
 #import "WDSettingsScreenViewController.h"
+#import "WDDateSelectorView.h"
 #import <QuartzCore/QuartzCore.h>
 
 const NSUInteger DAYS_OF_WEEK = 7;
@@ -31,6 +32,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (weak, nonatomic) IBOutlet UIButton              *removeCancelButton;
 @property (weak, nonatomic) IBOutlet UIButton              *settingsButton;
 @property (nonatomic, strong) NSDate                       *normalizedRealTodayDate;
+@property (nonatomic) BOOL                                 dateSelectorModeActive;
 
 - (void)             createDayOfTheMonthsViews;
 
@@ -71,8 +73,16 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize longPresureGestureRecognizer     = longPresureGestureRecognizer_;
 @synthesize delegate                         = delegate_;
 @synthesize normalizedRealTodayDate          = normalizedRealTodayDate_;
+@synthesize dateSelectorModeActive           = dateSelectorModeActive_;
 
 #pragma mar - Properties
+
+-(void)setDateSelectorModeActive:(BOOL)dateSelectorModeActive
+{
+    if (dateSelectorModeActive != dateSelectorModeActive_) {
+        dateSelectorModeActive_ = dateSelectorModeActive;
+    }
+}
 
 -(NSDate *)normalizedRealTodayDate
 {
@@ -366,6 +376,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (IBAction)changeMonthYearButtonPressed:(id)sender
 {
+    self.dateSelectorModeActive = !self.dateSelectorModeActive;
 }
 
 - (IBAction)cancelRemoveDayMode:(id)sender
@@ -384,5 +395,9 @@ const NSUInteger WEEKS_MONTHS = 5;
 {
     [self.delegate backgroundAnimationGradientSettingsUpdateFromDashBoardViewController:self];
 }
+
+#pragma mark - WDDateSelectorViewDataSource
+
+#pragma mark - WDDateSelectorViewDelegate
 
 @end
