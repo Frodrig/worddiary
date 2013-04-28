@@ -29,6 +29,7 @@
 		5B6987E31717F8E200046FE0 /* 37-white-circle-x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6987E11717F8E200046FE0 /* 37-white-circle-x.png */; };
 		5B6987E41717F8E200046FE0 /* 37-white-circle-x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6987E21717F8E200046FE0 /* 37-white-circle-x@2x.png */; };
 		5B6987E7171816D100046FE0 /* UIView+RoundedCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */; };
+		5B773413172D702F006ADE35 /* WDDateSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B773412172D702F006ADE35 /* WDDateSelectorView.m */; };
 		5B77CC6F172429A300FCD96E /* addicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B77CC6D172429A300FCD96E /* addicon.png */; };
 		5B77CC70172429A300FCD96E /* addicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B77CC6E172429A300FCD96E /* addicon@2x.png */; };
 		5B77CC7717242BA400FCD96E /* removeicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B77CC7517242BA400FCD96E /* removeicon.png */; };
@@ -144,6 +145,10 @@
 		5B6987E21717F8E200046FE0 /* 37-white-circle-x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-white-circle-x@2x.png"; sourceTree = "<group>"; };
 		5B6987E5171816D100046FE0 /* UIView+RoundedCorners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RoundedCorners.h"; sourceTree = "<group>"; };
 		5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RoundedCorners.m"; sourceTree = "<group>"; };
+		5B773411172D702F006ADE35 /* WDDateSelectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDateSelectorView.h; sourceTree = "<group>"; };
+		5B773412172D702F006ADE35 /* WDDateSelectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDateSelectorView.m; sourceTree = "<group>"; };
+		5B773414172D7043006ADE35 /* WDDateSelectorViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDateSelectorViewDelegate.h; sourceTree = "<group>"; };
+		5B773415172D7054006ADE35 /* WDDateSelectorViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDateSelectorViewDataSource.h; sourceTree = "<group>"; };
 		5B77CC6D172429A300FCD96E /* addicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addicon.png; sourceTree = "<group>"; };
 		5B77CC6E172429A300FCD96E /* addicon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "addicon@2x.png"; sourceTree = "<group>"; };
 		5B77CC7517242BA400FCD96E /* removeicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeicon.png; sourceTree = "<group>"; };
@@ -437,6 +442,26 @@
 			name = Backgrounds;
 			sourceTree = "<group>";
 		};
+		5B773410172D7000006ADE35 /* DayMonthView */ = {
+			isa = PBXGroup;
+			children = (
+				5B4D18AE172A95110002F300 /* WDDayMonthView.h */,
+				5B4D18AF172A95110002F300 /* WDDayMonthView.m */,
+			);
+			name = DayMonthView;
+			sourceTree = "<group>";
+		};
+		5B773416172D7064006ADE35 /* DateSelectorView */ = {
+			isa = PBXGroup;
+			children = (
+				5B773411172D702F006ADE35 /* WDDateSelectorView.h */,
+				5B773412172D702F006ADE35 /* WDDateSelectorView.m */,
+				5B773414172D7043006ADE35 /* WDDateSelectorViewDelegate.h */,
+				5B773415172D7054006ADE35 /* WDDateSelectorViewDataSource.h */,
+			);
+			name = DateSelectorView;
+			sourceTree = "<group>";
+		};
 		5B80894516DE3CCA002CD179 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -491,8 +516,8 @@
 		5B9488A4172AD1E200FCEF2B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				5B4D18AE172A95110002F300 /* WDDayMonthView.h */,
-				5B4D18AF172A95110002F300 /* WDDayMonthView.m */,
+				5B773410172D7000006ADE35 /* DayMonthView */,
+				5B773416172D7064006ADE35 /* DateSelectorView */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -853,6 +878,7 @@
 				5B01B83617292C69007CB8B8 /* WDHelpScreenViewController.m in Sources */,
 				5BA4D572172A73000042CFF1 /* WDDashBoardViewController.m in Sources */,
 				5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */,
+				5B773413172D702F006ADE35 /* WDDateSelectorView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
