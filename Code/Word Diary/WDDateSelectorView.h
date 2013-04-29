@@ -12,6 +12,7 @@
 
 @interface WDDateSelectorView : UIView<UIPickerViewDataSource, UIPickerViewDelegate>
 
+@property (nonatomic, strong, readonly) NSDateComponents     *dateComponentsSelected;
 @property (nonatomic, weak) id<WDDateSelectorViewDataSource> dataSource;
 @property (nonatomic, weak) id<WDDateSelectorViewDelegate>   delegate;
 

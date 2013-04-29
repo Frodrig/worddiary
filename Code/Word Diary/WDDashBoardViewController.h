@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "WDDashBoardViewControllerDelegate.h"
 #import "WDSettingsScreenViewControllerDelegate.h"
+#import "WDDashBoardViewControllerDataSource.h"
 #import "WDDateSelectorViewDataSource.h"
 #import "WDDateSelectorViewDelegate.h"
 
@@ -16,6 +17,7 @@
                                                         WDDateSelectorViewDataSource,
                                                         WDDateSelectorViewDelegate>
 
-@property(nonatomic, weak) id<WDDashBoardViewControllerDelegate> delegate;
+@property(nonatomic, weak) id<WDDashBoardViewControllerDelegate>   delegate;
+@property(nonatomic, weak) id<WDDashBoardViewControllerDataSource> dataSource;
 
 @end

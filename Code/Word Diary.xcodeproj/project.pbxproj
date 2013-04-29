@@ -228,6 +228,7 @@
 		5BB840F816DCC80E0005AF21 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FA16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5BCCE325172E9161001F4C52 /* WDDashBoardViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDashBoardViewControllerDataSource.h; sourceTree = "<group>"; };
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5BE2F6E21700216400A68287 /* WDGradientBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDGradientBackground.h; sourceTree = "<group>"; };
 		5BE2F6E31700216400A68287 /* WDGradientBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDGradientBackground.m; sourceTree = "<group>"; };
@@ -540,6 +541,7 @@
 				5BA4D56F172A73000042CFF1 /* WDDashBoardViewController.h */,
 				5BA4D570172A73000042CFF1 /* WDDashBoardViewController.m */,
 				5BA4D571172A73000042CFF1 /* WDDashBoardViewController.xib */,
+				5BCCE325172E9161001F4C52 /* WDDashBoardViewControllerDataSource.h */,
 				5B9488A5172AD1F700FCEF2B /* WDDashBoardViewControllerDelegate.h */,
 			);
 			name = "Dashboard Screen";

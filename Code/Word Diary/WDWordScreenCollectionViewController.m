@@ -600,6 +600,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     if (!self.editWordModeActive) {
         WDDashBoardViewController *dashBoardViewController = [[WDDashBoardViewController alloc] initWithNibName:nil bundle:nil];
         dashBoardViewController.delegate = self;
+        dashBoardViewController.dataSource = self;
         [self presentViewController:dashBoardViewController animated:YES completion:^{
             [self endCursorColorTimer];
         }];
@@ -852,6 +853,16 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)backgroundAnimationGradientSettingsUpdateFromDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController;
 {
     [self.collectionView reloadData];
+}
+
+#pragma mark - WDDashBoardViewControllerDataSource
+
+- (NSDateComponents *)dateComponentsFromWordDaySelectedForDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController
+{
+    WDWord *selectedWord = [self findSelectedWord];
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit fromDate:[NSDate dateWithTimeIntervalSince1970:selectedWord.timeInterval]];
+
+    return dateComponents;
 }
 
 #pragma mark - WDAddWordDayViewControllerDelegate

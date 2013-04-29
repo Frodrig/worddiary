@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class WDDateSelectorView;
+
 @protocol WDDateSelectorViewDelegate <NSObject>
+
+- (void) cancelButtonPressedFromDateSelectorView:(WDDateSelectorView *)dateSelectorView;
+- (void) acceptButtonPressedWithDateComponents:(NSDateComponents *)dateComponents fromDateSelectorView:(WDDateSelectorView *)dateSelectorView;
 
 @end

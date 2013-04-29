@@ -22,7 +22,9 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 @interface WDDashBoardViewController ()
 
+@property (weak, nonatomic) IBOutlet UIView                *datePannelViewContainer;
 @property (nonatomic, strong) NSDateComponents             *actualDate;
+@property (nonatomic, strong) NSDateComponents             *todayDate;
 @property (weak, nonatomic) IBOutlet UILabel               *yearMonthLabel;
 @property (weak, nonatomic) IBOutlet UIView                *daysOfTheWeekTitlesContainerView;
 @property (weak, nonatomic) IBOutlet UIView                *daysOfTheMonthContainerView;
@@ -33,6 +35,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (weak, nonatomic) IBOutlet UIButton              *settingsButton;
 @property (nonatomic, strong) NSDate                       *normalizedRealTodayDate;
 @property (nonatomic) BOOL                                 dateSelectorModeActive;
+@property (nonatomic, strong) WDDateSelectorView           *dateSelectorView;
+@property (weak, nonatomic) IBOutlet UIButton              *changeYearMonthButton;
 
 - (void)             createDayOfTheMonthsViews;
 
@@ -55,6 +59,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (WDWord *)         findWordForDayMonthView:(WDDayMonthView *)dayMonthView;
 
 - (void)             exitRemoveDayMode;
+- (void)             exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents;
 
 - (void)             addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word;
 - (void)             removeGradientLayerOfDayMonthView:(WDDayMonthView *)dayMonthView;
@@ -65,6 +70,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 #pragma mark - Synthesize
 
+@synthesize datePannelViewContainer          = datePannelViewContainer_;
 @synthesize actualDate                       = actualDate_;
 @synthesize yearMonthLabel                   = yearMonthLabel_;
 @synthesize daysOfTheWeekTitlesContainerView = daysOfTheWeekContainerView_;
@@ -72,12 +78,36 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize tapGestureRecognizer             = tapGestureRecognizer_;
 @synthesize longPresureGestureRecognizer     = longPresureGestureRecognizer_;
 @synthesize delegate                         = delegate_;
+@synthesize dataSource                       = dataSource_;
 @synthesize normalizedRealTodayDate          = normalizedRealTodayDate_;
 @synthesize dateSelectorModeActive           = dateSelectorModeActive_;
+@synthesize todayDate                        = todayDate_;
+@synthesize dateSelectorView                 = dateSelectorView_;
+@synthesize changeYearMonthButton            = changeYearMonthButton_;
 
 #pragma mar - Properties
 
--(void)setDateSelectorModeActive:(BOOL)dateSelectorModeActive
+- (WDDateSelectorView *)dateSelectorView
+{
+    if (nil == dateSelectorView_) {
+        dateSelectorView_ = [[WDDateSelectorView alloc] initWithFrame:self.datePannelViewContainer.frame];
+        dateSelectorView_.delegate = self;
+        dateSelectorView_.dataSource = self;
+    }
+    
+    return dateSelectorView_;
+}
+
+- (NSDateComponents *)todayDate
+{
+    if (todayDate_ == nil) {
+        todayDate_ = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    }
+    
+    return todayDate_;
+}
+
+- (void)setDateSelectorModeActive:(BOOL)dateSelectorModeActive
 {
     if (dateSelectorModeActive != dateSelectorModeActive_) {
         dateSelectorModeActive_ = dateSelectorModeActive;
@@ -117,7 +147,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     
     // Do any additional setup after loading the view from its nib.
     
-    self.actualDate = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit fromDate:[NSDate date]];
+    self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
     
     [self createDayOfTheMonthsViews];
     
@@ -247,19 +277,18 @@ const NSUInteger WEEKS_MONTHS = 5;
         if (!dayMonthViewIt.hidden) {
             dayMonthViewIt.dayOfTheActualMonthIndex = dayMonthViewIndex - firstWeekdayOfTheMonth + 1;
             NSDateComponents *dateComponentOfDay = [self.actualDate copy];
-            dateComponentOfDay.day = dayMonthViewIndex;
+            dateComponentOfDay.day = dayMonthViewIt.dayOfTheActualMonthIndex;
             WDWordDiary *wordDiary = [WDWordDiary sharedWordDiary];
             WDWord *wordOfCalendarDay = [wordDiary findWordWithDateComponents:dateComponentOfDay];
+            dayMonthViewIt.backgroundColor = [UIColor clearColor];
+            dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
+            dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
             if (wordOfCalendarDay && wordOfCalendarDay.word.length > 0) {
-                dayMonthViewIt.backgroundColor = [UIColor clearColor];
-                dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
-                dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
                 /*
                 dayMonthViewIt.initialLetterLabel.font = [UIFont fontWithName:wordOfCalendarDay.style.familyFont size:16];
                 dayMonthViewIt.initialLetterLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
                 dayMonthViewIt.initialLetterLabel.text = [wordOfCalendarDay.word substringWithRange:NSMakeRange(0, 1)];
                  */
-                
                 [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay];            
             } else {
                 [self configureDayMonthViewWithoutWordMode:dayMonthViewIt];
@@ -330,6 +359,32 @@ const NSUInteger WEEKS_MONTHS = 5;
     self.removeCancelButton.hidden = YES;
 }
 
+- (void)exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents
+{
+    NSAssert(self.dateSelectorModeActive, @"no estamos en el modo cambio de fecha");
+    
+    if (dateComponents != nil && (self.actualDate.year != dateComponents.year || self.actualDate.month != dateComponents.month)) {
+        self.actualDate.year = dateComponents.year;
+        self.actualDate.month = dateComponents.month;
+        [self configureMonthAndYearLabel];
+        [self configureDayOfTheMonths];
+    }
+    
+    self.dateSelectorModeActive = NO;
+    
+    const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
+    [UIView animateWithDuration:0.45 animations:^{
+        self.yearMonthLabel.alpha = 1.0;
+        self.daysOfTheWeekTitlesContainerView.alpha = 1.0;
+        self.daysOfTheMonthContainerView.alpha = 1.0;
+        self.changeYearMonthButton.alpha = 1.0;
+        self.dateSelectorView.center = CGPointMake(self.dateSelectorView.center.x, originalDateSelectorViewCenterY);
+    } completion:^(BOOL finished) {
+        [self.dateSelectorView removeFromSuperview];
+        self.dateSelectorView = nil;
+    }];
+}
+
 #pragma mark - UITapGestureRecognizer
 
 - (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer
@@ -376,7 +431,22 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (IBAction)changeMonthYearButtonPressed:(id)sender
 {
-    self.dateSelectorModeActive = !self.dateSelectorModeActive;
+    NSAssert(!self.dateSelectorModeActive, @"No deberia de estar activo el modo de cambio de fecha");
+
+    self.dateSelectorModeActive = YES;
+    
+    const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
+    if (self.dateSelectorModeActive) {
+        [self.datePannelViewContainer addSubview:self.dateSelectorView];
+        self.dateSelectorView.center = CGPointMake(self.dateSelectorView.center.x, originalDateSelectorViewCenterY);
+        [UIView animateWithDuration:0.45 animations:^{
+            self.yearMonthLabel.alpha = 0.0;
+            self.daysOfTheWeekTitlesContainerView.alpha = 0.0;
+            self.daysOfTheMonthContainerView.alpha = 0.0;
+            self.changeYearMonthButton.alpha = 0.0;
+            self.dateSelectorView.center = self.daysOfTheMonthContainerView.center;
+        }];
+    }
 }
 
 - (IBAction)cancelRemoveDayMode:(id)sender
@@ -398,6 +468,70 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 #pragma mark - WDDateSelectorViewDataSource
 
+- (NSUInteger)numberOfYearsForSelectorView:(WDDateSelectorView *)selectorView
+{
+    return self.todayDate.year;
+}
+
+- (NSUInteger)numberOfMonthsForSelectorView:(WDDateSelectorView *)selectorView
+{
+    return 12.0;
+}
+
+- (NSUInteger)numberOfMonthsForYear:(NSUInteger)yearRow forSelectorView:(WDDateSelectorView *)selectorView
+{
+    NSUInteger retNumberOfMonths = 12.0;
+    if (self.todayDate.year == self.todayDate.year - yearRow) {
+        retNumberOfMonths = self.todayDate.month;
+    }
+    
+    return retNumberOfMonths;
+}
+
+- (NSString *)yearTitleForRow:(NSUInteger)yearRow forSelectorView:(WDDateSelectorView *)selectorView
+{
+    const NSUInteger year = self.todayDate.year - yearRow;
+    NSString *retString = [NSString stringWithFormat:@"%d", year];
+    
+    return retString;
+}
+
+- (NSString *)monthTitleForRow:(NSUInteger)monthRow forSelectorView:(WDDateSelectorView *)selectorView
+{
+    return [WDUtils monthString:monthRow + 1 abreviateMode:NO];
+}
+
+- (BOOL)isMonth:(NSUInteger)monthRow inYear:(NSUInteger)yearRow availableForSelectionInfSelectorView:(WDDateSelectorView *)selectorView
+{
+    BOOL retValue = YES;
+    if (self.todayDate.year == self.actualDate.year - yearRow) {
+        retValue = self.todayDate.month > monthRow;
+    }
+    
+    return retValue;
+}
+
+- (NSUInteger)actualMonthSelectedForSelectorView:(WDDateSelectorView *)selectorView
+{
+    return self.actualDate.month;
+}
+
+- (NSUInteger)actualYearSelectedForSelectorView:(WDDateSelectorView *)selectorView
+{
+    return self.actualDate.year;
+}
+
 #pragma mark - WDDateSelectorViewDelegate
+
+- (void)cancelButtonPressedFromDateSelectorView:(WDDateSelectorView *)dateSelectorView
+{
+    [self exitChangeYearMonthModeWithSelectedDateComponents:nil];
+}
+
+- (void)acceptButtonPressedWithDateComponents:(NSDateComponents *)dateComponents fromDateSelectorView:(WDDateSelectorView *)dateSelectorView
+{
+    [self exitChangeYearMonthModeWithSelectedDateComponents:dateComponents];
+}
+
 
 @end
