@@ -134,4 +134,4 @@
 
 "TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL"        = "%@ %d";
 
-"TAG_DATESELECTOR_TITLE"                           = "Select other date";
+"TAG_DATESELECTOR_TITLE"                           = "Select date";

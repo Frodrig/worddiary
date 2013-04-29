@@ -41,6 +41,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (weak, nonatomic) IBOutlet UIButton                           *changeYearMonthButton;
 @property (nonatomic, strong) CAGradientLayer                           *gradientLayer;
 @property (weak, nonatomic) IBOutlet WDDaysOfTheMonthContainerView      *daysOfTheMonthGridView;
+@property (weak, nonatomic) IBOutlet UIButton                           *acceptChangeDate;
+@property (weak, nonatomic) IBOutlet UIButton                           *cancelAcceptDate;
 
 - (void)             createDayOfTheMonthsViews;
 
@@ -90,6 +92,9 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize changeYearMonthButton            = changeYearMonthButton_;
 @synthesize gradientLayer                    = gradientLayer_;
 @synthesize daysOfTheMonthGridView           = daysOfTheMonthGridView_;
+@synthesize acceptChangeDate                 = acceptChangeDate_;
+@synthesize cancelAcceptDate                 = cancelAcceptDate_;
+
 #pragma mar - Properties
 
 - (WDDateSelectorView *)dateSelectorView
@@ -402,13 +407,14 @@ const NSUInteger WEEKS_MONTHS = 5;
     
     self.dateSelectorModeActive = NO;
     
-    const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
+    //const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
     [UIView animateWithDuration:0.45 animations:^{
 //        self.yearMonthLabel.alpha = 1.0;
         self.daysOfTheWeekTitlesContainerView.alpha = 1.0;
         self.daysOfTheMonthContainerView.alpha = 1.0;
         self.changeYearMonthButton.alpha = 1.0;
-        self.dateSelectorView.center = CGPointMake(self.dateSelectorView.center.x, originalDateSelectorViewCenterY);
+        self.dateSelectorView.alpha = 0.0;
+        //center = CGPointMake(self.dateSelectorView.center.x, originalDateSelectorViewCenterY);
     } completion:^(BOOL finished) {
         [self.dateSelectorView removeFromSuperview];
         self.dateSelectorView = nil;
@@ -462,21 +468,34 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (IBAction)changeMonthYearButtonPressed:(id)sender
 {
     NSAssert(!self.dateSelectorModeActive, @"No deberia de estar activo el modo de cambio de fecha");
-    
-    self.dateSelectorModeActive = YES;
-    
-    const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
-    if (self.dateSelectorModeActive) {
-        [self.datePannelViewContainer addSubview:self.dateSelectorView];
-        self.dateSelectorView.center = CGPointMake(self.dateSelectorView.center.x, originalDateSelectorViewCenterY);
-        [UIView animateWithDuration:0.45 animations:^{
-            //self.yearMonthLabel.alpha = 0.0;
-            self.daysOfTheWeekTitlesContainerView.alpha = 0.0;
-            self.daysOfTheMonthContainerView.alpha = 0.0;
-            self.changeYearMonthButton.alpha = 0.0;
-            self.dateSelectorView.center = self.daysOfTheMonthContainerView.center;
+        
+  //  if (self.dateSelectorModeActive) {
+    self.changeYearMonthButton.enabled = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+           // self.daysOfTheWeekTitlesContainerView.alpha = 0.0;
+            for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
+                if ([viewIt isKindOfClass:[UILabel class]]) {
+                    viewIt.alpha = 0.0;
+                }
+            }
+            for (UIView *viewIt in self.daysOfTheMonthContainerView.subviews) {
+                if ([viewIt isKindOfClass:[WDDayMonthView class]]) {
+                    viewIt.alpha = 0.0;
+                }
+            }
+        } completion:^(BOOL finished) {
+            self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
+            self.cancelAcceptDate.hidden = self.acceptChangeDate.hidden = NO;
+            self.cancelAcceptDate.alpha = self.acceptChangeDate.alpha = 0.0;
+            [UIView animateWithDuration:0.5 animations:^{
+                self.yearMonthLabel.alpha = 1.0;
+                self.cancelAcceptDate.alpha = 1.0;
+                self.acceptChangeDate.alpha = 1.0;
+                
+            }];
+
         }];
-    }
+    //}
 }
 
 - (IBAction)cancelRemoveDayMode:(id)sender
