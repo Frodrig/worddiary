@@ -14,4 +14,6 @@
 
 - (NSDateComponents *)dateComponentsFromWordDaySelectedForDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController;
 
+- (WDWord *)selectedWordForDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController;
+
 @end

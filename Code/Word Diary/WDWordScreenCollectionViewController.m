@@ -230,7 +230,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
             break;
         }
     }
-    
 }
 
 - (void)styleButtonPressed:(UIButton *)button
@@ -863,6 +862,11 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit fromDate:[NSDate dateWithTimeIntervalSince1970:selectedWord.timeInterval]];
 
     return dateComponents;
+}
+
+- (WDWord *)selectedWordForDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController
+{
+    return [self findSelectedWord];
 }
 
 #pragma mark - WDAddWordDayViewControllerDelegate

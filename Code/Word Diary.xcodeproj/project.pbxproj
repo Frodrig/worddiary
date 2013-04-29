@@ -24,6 +24,7 @@
 		5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */; };
 		5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
+		5B3555F1172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */; };
 		5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B446F7616F22A48005A432D /* CoreText.framework */; };
 		5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D18AF172A95110002F300 /* WDDayMonthView.m */; };
 		5B6987E31717F8E200046FE0 /* 37-white-circle-x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B6987E11717F8E200046FE0 /* 37-white-circle-x.png */; };
@@ -42,6 +43,11 @@
 		5B86DBEB171BEE82003152AB /* WDWordScreenCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBEA171BEE82003152AB /* WDWordScreenCollectionViewCell.m */; };
 		5B86DBED171BEEBA003152AB /* WDWordScreenCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B86DBEC171BEEBA003152AB /* WDWordScreenCollectionViewCell.xib */; };
 		5B86DBF7171C41AA003152AB /* WDWordRepresentationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBF6171C41AA003152AB /* WDWordRepresentationView.m */; };
+		5B8B2D9C172EE0B000EF25FA /* WDDateContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8B2D9B172EE0B000EF25FA /* WDDateContainerView.m */; };
+		5B8B2D9F172EE1FF00EF25FA /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B8B2D9D172EE1FF00EF25FA /* 19-gear.png */; };
+		5B8B2DA0172EE1FF00EF25FA /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B8B2D9E172EE1FF00EF25FA /* 19-gear@2x.png */; };
+		5B8B2DA4172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8B2DA3172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.m */; };
+		5B8B2DA8172F002E00EF25FA /* WDChangeDateButtonContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8B2DA7172F002E00EF25FA /* WDChangeDateButtonContainerView.m */; };
 		5B930D781721E07400FF7AFD /* CALayer+PauseResume.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */; };
 		5B9488A8172AE40A00FCEF2B /* 37-circle-x-bw.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9488A6172AE40900FCEF2B /* 37-circle-x-bw.png */; };
 		5B9488A9172AE40A00FCEF2B /* 37-circle-x-bw@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9488A7172AE40900FCEF2B /* 37-circle-x-bw@2x.png */; };
@@ -73,8 +79,6 @@
 		5BA9FC801723EFB500DAB6A5 /* 441-help-symbol1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BA9FC7C1723EFB200DAB6A5 /* 441-help-symbol1@2x.png */; };
 		5BA9FC811723EFB500DAB6A5 /* 442-information-symbol1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BA9FC7D1723EFB200DAB6A5 /* 442-information-symbol1.png */; };
 		5BA9FC821723EFB500DAB6A5 /* 442-information-symbol1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BA9FC7E1723EFB400DAB6A5 /* 442-information-symbol1@2x.png */; };
-		5BA9FC891723F0B300DAB6A5 /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BA9FC871723F0B300DAB6A5 /* 19-gear.png */; };
-		5BA9FC8A1723F0B300DAB6A5 /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BA9FC881723F0B300DAB6A5 /* 19-gear@2x.png */; };
 		5BB42262170EC19B0081B5CB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BB42261170EC19B0081B5CB /* Default-568h@2x.png */; };
 		5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30116DBE13900394113 /* UIKit.framework */; };
 		5BB6B30416DBE13900394113 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB6B30316DBE13900394113 /* Foundation.framework */; };
@@ -138,6 +142,8 @@
 		5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundView.m; sourceTree = "<group>"; };
 		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
 		5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIViewNibLoad.m"; sourceTree = "<group>"; };
+		5B3555EF172EBB5F0033705C /* WDDaysOfTheWeekContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheWeekContainerView.h; sourceTree = "<group>"; };
+		5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDaysOfTheWeekContainerView.m; sourceTree = "<group>"; };
 		5B446F7616F22A48005A432D /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		5B4D18AE172A95110002F300 /* WDDayMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayMonthView.h; sourceTree = "<group>"; };
 		5B4D18AF172A95110002F300 /* WDDayMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDayMonthView.m; sourceTree = "<group>"; };
@@ -169,6 +175,14 @@
 		5B86DBF5171C41AA003152AB /* WDWordRepresentationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationView.h; sourceTree = "<group>"; };
 		5B86DBF6171C41AA003152AB /* WDWordRepresentationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDWordRepresentationView.m; sourceTree = "<group>"; };
 		5B86DBF8171C41BA003152AB /* WDWordRepresentationViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationViewDataSource.h; sourceTree = "<group>"; };
+		5B8B2D9A172EE0B000EF25FA /* WDDateContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDateContainerView.h; sourceTree = "<group>"; };
+		5B8B2D9B172EE0B000EF25FA /* WDDateContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDateContainerView.m; sourceTree = "<group>"; };
+		5B8B2D9D172EE1FF00EF25FA /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
+		5B8B2D9E172EE1FF00EF25FA /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
+		5B8B2DA2172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheMonthContainerView.h; sourceTree = "<group>"; };
+		5B8B2DA3172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDaysOfTheMonthContainerView.m; sourceTree = "<group>"; };
+		5B8B2DA6172F002E00EF25FA /* WDChangeDateButtonContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDChangeDateButtonContainerView.h; sourceTree = "<group>"; };
+		5B8B2DA7172F002E00EF25FA /* WDChangeDateButtonContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDChangeDateButtonContainerView.m; sourceTree = "<group>"; };
 		5B930D761721E07400FF7AFD /* CALayer+PauseResume.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+PauseResume.h"; sourceTree = "<group>"; };
 		5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+PauseResume.m"; sourceTree = "<group>"; };
 		5B9488A5172AD1F700FCEF2B /* WDDashBoardViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDashBoardViewControllerDelegate.h; sourceTree = "<group>"; };
@@ -206,8 +220,6 @@
 		5BA9FC7C1723EFB200DAB6A5 /* 441-help-symbol1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "441-help-symbol1@2x.png"; sourceTree = "<group>"; };
 		5BA9FC7D1723EFB200DAB6A5 /* 442-information-symbol1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "442-information-symbol1.png"; sourceTree = "<group>"; };
 		5BA9FC7E1723EFB400DAB6A5 /* 442-information-symbol1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "442-information-symbol1@2x.png"; sourceTree = "<group>"; };
-		5BA9FC871723F0B300DAB6A5 /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
-		5BA9FC881723F0B300DAB6A5 /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
 		5BB42261170EC19B0081B5CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5BB42263170EC1B40081B5CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		5BB42265170EC1B80081B5CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -302,7 +314,6 @@
 				5BA4D57A172A74DE0042CFF1 /* 14-gear.png */,
 				5BA4D57B172A74DE0042CFF1 /* 14-gear@2x.png */,
 				5BA9FC6C1723EF3100DAB6A5 /* 50-plus@2x.png */,
-				5BA9FC871723F0B300DAB6A5 /* 19-gear.png */,
 				5B77CC7517242BA400FCD96E /* removeicon.png */,
 				5B77CC7617242BA400FCD96E /* removeicon@2x.png */,
 				5B9829A81727D25D00A3071C /* 42-info.png */,
@@ -323,9 +334,10 @@
 				5BEB4C8C1725A726005BC2D9 /* 40-forward@2x.png */,
 				5BEB4C721725A1DF005BC2D9 /* 02-arrow-east@2x.png */,
 				5BEB4C731725A1E4005BC2D9 /* 09-arrow-west.png */,
+				5B8B2D9D172EE1FF00EF25FA /* 19-gear.png */,
+				5B8B2D9E172EE1FF00EF25FA /* 19-gear@2x.png */,
 				5BEB4C741725A1EC005BC2D9 /* 09-arrow-west@2x.png */,
 				5B77CC6E172429A300FCD96E /* addicon@2x.png */,
-				5BA9FC881723F0B300DAB6A5 /* 19-gear@2x.png */,
 				5BA9FC6D1723EF3100DAB6A5 /* 60-x.png */,
 				5BA9FC7B1723EFB200DAB6A5 /* 441-help-symbol1.png */,
 				5B9488A6172AE40900FCEF2B /* 37-circle-x-bw.png */,
@@ -413,6 +425,15 @@
 			);
 			name = Categories;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		5B3555EE172EBB390033705C /* DaysWeekContainerView */ = {
+			isa = PBXGroup;
+			children = (
+				5B3555EF172EBB5F0033705C /* WDDaysOfTheWeekContainerView.h */,
+				5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */,
+			);
+			name = DaysWeekContainerView;
 			sourceTree = "<group>";
 		};
 		5B6F313916DF5AB9007E4DBA /* Icons */ = {
@@ -514,9 +535,40 @@
 			name = "Word Representation View";
 			sourceTree = "<group>";
 		};
+		5B8B2D99172EE09C00EF25FA /* DateContainerView */ = {
+			isa = PBXGroup;
+			children = (
+				5B8B2D9A172EE0B000EF25FA /* WDDateContainerView.h */,
+				5B8B2D9B172EE0B000EF25FA /* WDDateContainerView.m */,
+			);
+			name = DateContainerView;
+			sourceTree = "<group>";
+		};
+		5B8B2DA1172EE32C00EF25FA /* DaysOfTheMonthContainerView */ = {
+			isa = PBXGroup;
+			children = (
+				5B8B2DA2172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.h */,
+				5B8B2DA3172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.m */,
+			);
+			name = DaysOfTheMonthContainerView;
+			sourceTree = "<group>";
+		};
+		5B8B2DA5172F001100EF25FA /* Change Date Button Container */ = {
+			isa = PBXGroup;
+			children = (
+				5B8B2DA6172F002E00EF25FA /* WDChangeDateButtonContainerView.h */,
+				5B8B2DA7172F002E00EF25FA /* WDChangeDateButtonContainerView.m */,
+			);
+			name = "Change Date Button Container";
+			sourceTree = "<group>";
+		};
 		5B9488A4172AD1E200FCEF2B /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5B8B2DA5172F001100EF25FA /* Change Date Button Container */,
+				5B8B2DA1172EE32C00EF25FA /* DaysOfTheMonthContainerView */,
+				5B8B2D99172EE09C00EF25FA /* DateContainerView */,
+				5B3555EE172EBB390033705C /* DaysWeekContainerView */,
 				5B773410172D7000006ADE35 /* DayMonthView */,
 				5B773416172D7064006ADE35 /* DateSelectorView */,
 			);
@@ -798,8 +850,6 @@
 				5BA9FC801723EFB500DAB6A5 /* 441-help-symbol1@2x.png in Resources */,
 				5BA9FC811723EFB500DAB6A5 /* 442-information-symbol1.png in Resources */,
 				5BA9FC821723EFB500DAB6A5 /* 442-information-symbol1@2x.png in Resources */,
-				5BA9FC891723F0B300DAB6A5 /* 19-gear.png in Resources */,
-				5BA9FC8A1723F0B300DAB6A5 /* 19-gear@2x.png in Resources */,
 				5B77CC6F172429A300FCD96E /* addicon.png in Resources */,
 				5B77CC70172429A300FCD96E /* addicon@2x.png in Resources */,
 				5B77CC7717242BA400FCD96E /* removeicon.png in Resources */,
@@ -842,6 +892,8 @@
 				5BA4D585172A766C0042CFF1 /* 426-calendar@2x.png in Resources */,
 				5B9488A8172AE40A00FCEF2B /* 37-circle-x-bw.png in Resources */,
 				5B9488A9172AE40A00FCEF2B /* 37-circle-x-bw@2x.png in Resources */,
+				5B8B2D9F172EE1FF00EF25FA /* 19-gear.png in Resources */,
+				5B8B2DA0172EE1FF00EF25FA /* 19-gear@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -881,6 +933,10 @@
 				5BA4D572172A73000042CFF1 /* WDDashBoardViewController.m in Sources */,
 				5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */,
 				5B773413172D702F006ADE35 /* WDDateSelectorView.m in Sources */,
+				5B3555F1172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m in Sources */,
+				5B8B2D9C172EE0B000EF25FA /* WDDateContainerView.m in Sources */,
+				5B8B2DA4172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.m in Sources */,
+				5B8B2DA8172F002E00EF25FA /* WDChangeDateButtonContainerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WDGridView : UIView
+@interface WDDaysOfTheWeekContainerView : UIView
 
 @end

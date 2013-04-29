@@ -15,6 +15,8 @@
 #import "WDUtils.h"
 #import "WDSettingsScreenViewController.h"
 #import "WDDateSelectorView.h"
+#import "WDDaysOfTheMonthContainerView.h"
+#import "WDDaysOfTheWeekContainerView.h"
 #import <QuartzCore/QuartzCore.h>
 
 const NSUInteger DAYS_OF_WEEK = 7;
@@ -22,21 +24,23 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 @interface WDDashBoardViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView                *datePannelViewContainer;
-@property (nonatomic, strong) NSDateComponents             *actualDate;
-@property (nonatomic, strong) NSDateComponents             *todayDate;
-@property (weak, nonatomic) IBOutlet UILabel               *yearMonthLabel;
-@property (weak, nonatomic) IBOutlet UIView                *daysOfTheWeekTitlesContainerView;
-@property (weak, nonatomic) IBOutlet UIView                *daysOfTheMonthContainerView;
-@property (nonatomic, strong) UITapGestureRecognizer       *tapGestureRecognizer;
-@property (nonatomic, strong) UILongPressGestureRecognizer *longPresureGestureRecognizer;
-@property (nonatomic, weak) WDDayMonthView                 *dayMonthPendingToRemove;
-@property (weak, nonatomic) IBOutlet UIButton              *removeCancelButton;
-@property (weak, nonatomic) IBOutlet UIButton              *settingsButton;
-@property (nonatomic, strong) NSDate                       *normalizedRealTodayDate;
-@property (nonatomic) BOOL                                 dateSelectorModeActive;
-@property (nonatomic, strong) WDDateSelectorView           *dateSelectorView;
-@property (weak, nonatomic) IBOutlet UIButton              *changeYearMonthButton;
+@property (weak, nonatomic) IBOutlet UIView                             *datePannelViewContainer;
+@property (nonatomic, strong) NSDateComponents                          *actualDate;
+@property (nonatomic, strong) NSDateComponents                          *todayDate;
+@property (weak, nonatomic) IBOutlet UILabel                            *yearMonthLabel;
+@property (weak, nonatomic) IBOutlet UIView                             *daysOfTheWeekTitlesContainerView;
+@property (weak, nonatomic) IBOutlet UIView                             *daysOfTheMonthContainerView;
+@property (nonatomic, strong) UITapGestureRecognizer                    *tapGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer              *longPresureGestureRecognizer;
+@property (nonatomic, weak) WDDayMonthView                              *dayMonthPendingToRemove;
+@property (weak, nonatomic) IBOutlet UIButton                           *removeCancelButton;
+@property (weak, nonatomic) IBOutlet UIButton                           *settingsButton;
+@property (nonatomic, strong) NSDate                                    *normalizedRealTodayDate;
+@property (nonatomic) BOOL                                              dateSelectorModeActive;
+@property (nonatomic, strong) WDDateSelectorView                        *dateSelectorView;
+@property (weak, nonatomic) IBOutlet UIButton                           *changeYearMonthButton;
+@property (nonatomic, strong) CAGradientLayer                           *gradientLayer;
+@property (weak, nonatomic) IBOutlet WDDaysOfTheMonthContainerView      *daysOfTheMonthGridView;
 
 - (void)             createDayOfTheMonthsViews;
 
@@ -84,7 +88,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize todayDate                        = todayDate_;
 @synthesize dateSelectorView                 = dateSelectorView_;
 @synthesize changeYearMonthButton            = changeYearMonthButton_;
-
+@synthesize gradientLayer                    = gradientLayer_;
+@synthesize daysOfTheMonthGridView           = daysOfTheMonthGridView_;
 #pragma mar - Properties
 
 - (WDDateSelectorView *)dateSelectorView
@@ -133,7 +138,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
         
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];
@@ -153,6 +158,25 @@ const NSUInteger WEEKS_MONTHS = 5;
     
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.tapGestureRecognizer];
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.longPresureGestureRecognizer];
+    
+    WDWord *actualSelectedWord = [self.dataSource selectedWordForDashBoardViewController:self];
+    WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:actualSelectedWord.palette];
+    WDPalette *prevPrevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:prevPalette];
+    WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:actualSelectedWord.palette];
+    WDPalette *nextNextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:nextPalette];
+    self.gradientLayer = [CAGradientLayer layer];
+    self.gradientLayer.frame = self.view.bounds;
+    self.gradientLayer.colors = [NSArray arrayWithObjects:(id)[prevPrevPalette makeLightBackgroundColorObject].CGColor, (id)[prevPalette makeLightBackgroundColorObject].CGColor, (id)[actualSelectedWord.palette makeLightBackgroundColorObject].CGColor, (id)[nextPalette makeLightBackgroundColorObject].CGColor, (id)[nextNextPalette makeLightBackgroundColorObject].CGColor, nil];
+    self.gradientLayer.startPoint = CGPointMake(0.5, 0.0);
+    self.gradientLayer.endPoint = CGPointMake(0.5, 1.0);
+    self.gradientLayer.cornerRadius = 10.0;
+    [self.view.layer insertSublayer:self.gradientLayer below:self.datePannelViewContainer.layer];
+    
+    
+    self.datePannelViewContainer.backgroundColor = [UIColor colorWithWhite:0.16 alpha:1.0];
+    //self.datePannelViewContainer.layer.borderColor = [UIColor colorWithWhite:0.24 alpha:1.0].CGColor;
+    //self.datePannelViewContainer.layer.borderWidth = 1.5;
+    //self.datePannelViewContainer.layer.cornerRadius = 10.0;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -183,7 +207,7 @@ const NSUInteger WEEKS_MONTHS = 5;
                                                44.0);
             WDDayMonthView *monthViewIt = [[WDDayMonthView alloc] initWithIndex:indexMonthView andFrame:monthViewFrame];
             monthViewIt.tag = indexMonthView;
-            [self.daysOfTheMonthContainerView addSubview:monthViewIt];
+            [self.daysOfTheMonthContainerView insertSubview:monthViewIt belowSubview:self.daysOfTheMonthGridView];
 
         }
     }
@@ -243,9 +267,12 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (void)addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word
 {
     CAGradientLayer *gradient = [CAGradientLayer layer];
-    const CGFloat gradientWithMargin = dayMonthView.bounds.size.width * 0.1;
-    gradient.frame = CGRectMake(gradientWithMargin, 0.0, dayMonthView.bounds.size.width
-                                - gradientWithMargin * 2, dayMonthView.bounds.size.height);
+    CGFloat gradientWithMargin = dayMonthView.bounds.size.width * 0.1;
+    if (dayMonthView.bounds.size.width > 44.0) {
+        gradientWithMargin += (dayMonthView.bounds.size.width - 44.0) / 2.0;
+    }
+    gradient.frame = CGRectMake(gradientWithMargin, 5.0, dayMonthView.bounds.size.width
+                                - gradientWithMargin * 2, dayMonthView.bounds.size.height - 10.0);
     WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
     WDPalette *prevPrevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:prevPalette];
     WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
@@ -258,6 +285,9 @@ const NSUInteger WEEKS_MONTHS = 5;
     gradient.startPoint = CGPointMake(0.5, 0.0);
     gradient.endPoint = CGPointMake(0.5, 1.0);
     gradient.cornerRadius = 5.0;
+    gradient.borderColor = [UIColor colorWithWhite:0.0 alpha:1].CGColor;
+    gradient.borderWidth = 1.5;
+    NSLog(@"%f", gradient.frame.size.width);
     [dayMonthView.layer insertSublayer:gradient below:dayMonthView.dayOfMonthLabel.layer];
 }
 
@@ -314,7 +344,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     const BOOL actualDayMonthViewAccesible = compareResult == NSOrderedDescending || compareResult == NSOrderedSame;
     dayMonthView.dayOfMonthLabel.textColor = actualDayMonthViewAccesible ? [UIColor lightGrayColor] : [UIColor darkGrayColor];
     dayMonthView.initialLetterLabel.text = @"";
-    dayMonthView.backgroundColor = [UIColor blackColor];
+    dayMonthView.backgroundColor = [UIColor clearColor];
     dayMonthView.layer.cornerRadius = 0.0;
     dayMonthView.dayOfTheActualMonthIndex = 0;
 }
@@ -374,7 +404,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     
     const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
     [UIView animateWithDuration:0.45 animations:^{
-        self.yearMonthLabel.alpha = 1.0;
+//        self.yearMonthLabel.alpha = 1.0;
         self.daysOfTheWeekTitlesContainerView.alpha = 1.0;
         self.daysOfTheMonthContainerView.alpha = 1.0;
         self.changeYearMonthButton.alpha = 1.0;
@@ -432,7 +462,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (IBAction)changeMonthYearButtonPressed:(id)sender
 {
     NSAssert(!self.dateSelectorModeActive, @"No deberia de estar activo el modo de cambio de fecha");
-
+    
     self.dateSelectorModeActive = YES;
     
     const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
@@ -440,7 +470,7 @@ const NSUInteger WEEKS_MONTHS = 5;
         [self.datePannelViewContainer addSubview:self.dateSelectorView];
         self.dateSelectorView.center = CGPointMake(self.dateSelectorView.center.x, originalDateSelectorViewCenterY);
         [UIView animateWithDuration:0.45 animations:^{
-            self.yearMonthLabel.alpha = 0.0;
+            //self.yearMonthLabel.alpha = 0.0;
             self.daysOfTheWeekTitlesContainerView.alpha = 0.0;
             self.daysOfTheMonthContainerView.alpha = 0.0;
             self.changeYearMonthButton.alpha = 0.0;
