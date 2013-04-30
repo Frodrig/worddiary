@@ -8,11 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "WDDashBoardViewControllerDelegate.h"
-#import "WDSettingsScreenViewControllerDelegate.h"
 #import "WDDashBoardViewControllerDataSource.h"
 
-@interface WDDashBoardViewController : UIViewController<WDSettingsScreenViewControllerDelegate,
-                                                        UIPickerViewDataSource,
+@interface WDDashBoardViewController : UIViewController<UIPickerViewDataSource,
                                                         UIPickerViewDelegate>
 
 @property(nonatomic, weak) id<WDDashBoardViewControllerDelegate>   delegate;

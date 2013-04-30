@@ -50,8 +50,6 @@
 		5B930D781721E07400FF7AFD /* CALayer+PauseResume.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */; };
 		5B9488A8172AE40A00FCEF2B /* 37-circle-x-bw.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9488A6172AE40900FCEF2B /* 37-circle-x-bw.png */; };
 		5B9488A9172AE40A00FCEF2B /* 37-circle-x-bw@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9488A7172AE40900FCEF2B /* 37-circle-x-bw@2x.png */; };
-		5B9829A61727D16900A3071C /* WDSettingsScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B9829A41727D16900A3071C /* WDSettingsScreenViewController.m */; };
-		5B9829A71727D16900A3071C /* WDSettingsScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A51727D16900A3071C /* WDSettingsScreenViewController.xib */; };
 		5B9829AA1727D25D00A3071C /* 42-info.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A81727D25D00A3071C /* 42-info.png */; };
 		5B9829AB1727D25D00A3071C /* 42-info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829A91727D25D00A3071C /* 42-info@2x.png */; };
 		5B9829B1172843BB00A3071C /* 381-locked.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B9829AD172843BB00A3071C /* 381-locked.png */; };
@@ -184,12 +182,8 @@
 		5B9488A6172AE40900FCEF2B /* 37-circle-x-bw.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-circle-x-bw.png"; sourceTree = "<group>"; };
 		5B9488A7172AE40900FCEF2B /* 37-circle-x-bw@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37-circle-x-bw@2x.png"; sourceTree = "<group>"; };
 		5B9829A117279D8C00A3071C /* WDAddWordDayViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDAddWordDayViewControllerDelegate.h; sourceTree = "<group>"; };
-		5B9829A31727D16900A3071C /* WDSettingsScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSettingsScreenViewController.h; sourceTree = "<group>"; };
-		5B9829A41727D16900A3071C /* WDSettingsScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDSettingsScreenViewController.m; sourceTree = "<group>"; };
-		5B9829A51727D16900A3071C /* WDSettingsScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDSettingsScreenViewController.xib; sourceTree = "<group>"; };
 		5B9829A81727D25D00A3071C /* 42-info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "42-info.png"; sourceTree = "<group>"; };
 		5B9829A91727D25D00A3071C /* 42-info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "42-info@2x.png"; sourceTree = "<group>"; };
-		5B9829AC1727E72E00A3071C /* WDSettingsScreenViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDSettingsScreenViewControllerDelegate.h; sourceTree = "<group>"; };
 		5B9829AD172843BB00A3071C /* 381-locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "381-locked.png"; sourceTree = "<group>"; };
 		5B9829AE172843BB00A3071C /* 381-locked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "381-locked@2x.png"; sourceTree = "<group>"; };
 		5B9829AF172843BB00A3071C /* 382-unlocked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "382-unlocked.png"; sourceTree = "<group>"; };
@@ -558,17 +552,6 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
-		5B9829A21727D13D00A3071C /* Settings Screen */ = {
-			isa = PBXGroup;
-			children = (
-				5B9829A31727D16900A3071C /* WDSettingsScreenViewController.h */,
-				5B9829A41727D16900A3071C /* WDSettingsScreenViewController.m */,
-				5B9829A51727D16900A3071C /* WDSettingsScreenViewController.xib */,
-				5B9829AC1727E72E00A3071C /* WDSettingsScreenViewControllerDelegate.h */,
-			);
-			name = "Settings Screen";
-			sourceTree = "<group>";
-		};
 		5BA4D56E172A72E40042CFF1 /* Dashboard Screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -755,7 +738,6 @@
 				5BE67E6B172873E000D01633 /* Info Screen */,
 				5B86DBDD171BE8C2003152AB /* Word Screen */,
 				5BEB4C5617258772005BC2D9 /* Add Word Day Screen OFF */,
-				5B9829A21727D13D00A3071C /* Settings Screen */,
 			);
 			name = "Controller with Views";
 			sourceTree = "<group>";
@@ -849,7 +831,6 @@
 				5BEB4C8F1725A727005BC2D9 /* 40-forward.png in Resources */,
 				5BEB4C901725A727005BC2D9 /* 40-forward@2x.png in Resources */,
 				5BEB4C961725CB78005BC2D9 /* WDValueSetterModuleViewController.xib in Resources */,
-				5B9829A71727D16900A3071C /* WDSettingsScreenViewController.xib in Resources */,
 				5B9829AA1727D25D00A3071C /* 42-info.png in Resources */,
 				5B9829AB1727D25D00A3071C /* 42-info@2x.png in Resources */,
 				5B9829B1172843BB00A3071C /* 381-locked.png in Resources */,
@@ -910,7 +891,6 @@
 				5B930D781721E07400FF7AFD /* CALayer+PauseResume.m in Sources */,
 				5BEB4C5F17258846005BC2D9 /* WDAddWordDayViewController.m in Sources */,
 				5BEB4C951725CB78005BC2D9 /* WDValueSetterModuleViewController.m in Sources */,
-				5B9829A61727D16900A3071C /* WDSettingsScreenViewController.m in Sources */,
 				5BE67E6F172873FD00D01633 /* WDInfoScreenViewController.m in Sources */,
 				5B01B83617292C69007CB8B8 /* WDHelpScreenViewController.m in Sources */,
 				5BA4D572172A73000042CFF1 /* WDDashBoardViewController.m in Sources */,
