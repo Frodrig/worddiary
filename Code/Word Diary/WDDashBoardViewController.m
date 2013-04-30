@@ -44,6 +44,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)             createDayOfTheMonthsViews;
 
+- (void)             removeEmptyWordsDays;
+
 - (void)             configureDaysOfTheWeekTitles;
 - (void)             configureMonthAndYearLabel;
 - (void)             configureDayOfTheMonths;
@@ -173,6 +175,13 @@ const NSUInteger WEEKS_MONTHS = 5;
     [self configureDayOfTheMonths];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self removeEmptyWordsDays];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -180,6 +189,14 @@ const NSUInteger WEEKS_MONTHS = 5;
 }
 
 #pragma mark - Auxiliary
+
+- (void)removeEmptyWordsDays
+{
+    NSArray *indexWords = [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
+    if (indexWords.count > 0) {
+        [self.delegate wordWithIndex:indexWords removedFromDashBoardViewControllerRemoveAllEmptyWordDays:self];
+    }
+}
 
 - (void)createDayOfTheMonthsViews
 {
