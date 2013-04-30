@@ -195,7 +195,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 {
     NSArray *indexWords = [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
     if (indexWords.count > 0) {
-        [self.delegate wordWithIndex:indexWords removedFromDashBoardViewControllerRemoveAllEmptyWordDays:self];
+        [self.delegate removeSectionsWithEmptyWordsFromDashBoardViewController:self];
     }
 }
 
@@ -290,7 +290,6 @@ const NSUInteger WEEKS_MONTHS = 5;
     gradient.cornerRadius = 5.0;
     gradient.borderColor = [UIColor colorWithWhite:0.0 alpha:1].CGColor;
     gradient.borderWidth = 1.5;
-    NSLog(@"%f", gradient.frame.size.width);
     [dayMonthView.layer insertSublayer:gradient below:dayMonthView.dayOfMonthLabel.layer];
 }
 
@@ -457,8 +456,11 @@ const NSUInteger WEEKS_MONTHS = 5;
         WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
         if (nil == wordDayOfHitPoint) {
             WDDayMonthView *dayMonthViewFound = [self findDayMonthViewForHitPoint:hitPoint];
+            NSAssert(dayMonthViewFound, @"ops");
             NSDateComponents *dateComponentsOfView = [self findDateComponentesForDayMonthView:dayMonthViewFound];
+            NSAssert(dateComponentsOfView, @"wtf");
             wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[[NSCalendar currentCalendar] dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
+            [self.delegate dashBoardViewController:self createdNewWord:wordDayOfHitPoint];
         }
         
         if (wordDayOfHitPoint) {

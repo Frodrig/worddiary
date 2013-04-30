@@ -441,10 +441,11 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)fadeDateAndDayTextTimerHandle:(NSTimer *)timer
 {
-    WDWordScreenCollectionViewCell * visibleCell = [self.collectionView.visibleCells objectAtIndex:0];
-    [visibleCell fadeOutDataAndDayText];
-    
-    self.fadeDecoratorTextTimer = nil;
+    if (self.collectionView.visibleCells.count > 0) {
+        WDWordScreenCollectionViewCell * visibleCell = [self.collectionView.visibleCells objectAtIndex:0];
+        [visibleCell fadeOutDataAndDayText];
+        self.fadeDecoratorTextTimer = nil;
+    }
 }
 
 - (void) launchCursorColorTimer
@@ -809,6 +810,15 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 #pragma mark - WDDashBoardViewControllerDelegate
 
+- (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController createdNewWord:(WDWord *)word;
+{
+    [self.collectionView reloadData];
+    /*
+    NSIndexPath *indexPathForWord = [self indexPathForWord:word];
+    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:indexPathForWord.section]];
+     */
+}
+
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController selectRemoveWord:(WDWord *)word
 {
     NSIndexPath *selectedWordIndexPath = [self indexPathForWord:word];
@@ -823,20 +833,14 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self.otherViewControllerInDismissMode = YES;
 }
 
-- (void) dashBoardViewControllerDidDismiss:(WDDashBoardViewController *)dashBoardViewController
+- (void)dashBoardViewControllerDidDismiss:(WDDashBoardViewController *)dashBoardViewController
 {
     self.otherViewControllerInDismissMode = NO;
 }
 
-- (void)wordWithIndex:(NSArray *)index removedFromDashBoardViewControllerRemoveAllEmptyWordDays:(WDDashBoardViewController *)dashBoardViewController;
+- (void)removeSectionsWithEmptyWordsFromDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController
 {
-    [self.collectionView performBatchUpdates:^{
-        for (NSNumber *indexWordIt in index) {
-            // Nota: No se usa el metodo de conversion de indices porque en este punto ya hay desincronia: se ha borrado en el modelo pero no en el collection
-            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:[WDWordDiary sharedWordDiary].words.count - indexWordIt.unsignedIntegerValue]];
-        }
-        
-    } completion:nil];
+    [self.collectionView reloadData];
 }
 
 - (void)backgroundAnimationGradientSettingsUpdateFromDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController;

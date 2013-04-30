@@ -95,7 +95,7 @@
     }
     
     if (nil == selectedWordCandidate) {
-        selectedWordCandidate = [[WDWordDiary sharedWordDiary] createWord:@"Hola" inTimeInterval:[todayDate timeIntervalSince1970]];
+        selectedWordCandidate = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[todayDate timeIntervalSince1970]];
     }
     
     return selectedWordCandidate;
