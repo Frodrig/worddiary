@@ -603,16 +603,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         [self presentViewController:dashBoardViewController animated:YES completion:^{
             [self endCursorColorTimer];
         }];
-        /*
-        [self.view addSubview:self.pannelBackgroundView];
-        [self.view addSubview:self.mainMenuViewController.view];
-        self.mainMenuViewController.view.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-        self.pannelBackgroundView.alpha = self.mainMenuViewController.view.alpha = 0.0;
-        [UIView animateWithDuration:0.25 animations:^{
-            self.pannelBackgroundView.alpha = 0.8;
-            self.mainMenuViewController.view.alpha = 1.0;
-        }];
-         */
     }
 }
 

@@ -32,15 +32,14 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (nonatomic, strong) UITapGestureRecognizer                    *tapGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer              *longPresureGestureRecognizer;
 @property (nonatomic, weak) WDDayMonthView                              *dayMonthPendingToRemove;
-@property (weak, nonatomic) IBOutlet UIButton                           *removeCancelButton;
 @property (weak, nonatomic) IBOutlet UIButton                           *settingsButton;
 @property (nonatomic, strong) NSDate                                    *normalizedRealTodayDate;
 @property (nonatomic) BOOL                                              dateSelectorModeActive;
 @property (weak, nonatomic) IBOutlet UIButton                           *changeYearMonthButton;
 @property (nonatomic, strong) CAGradientLayer                           *gradientLayer;
 @property (weak, nonatomic) IBOutlet WDDaysOfTheMonthContainerView      *daysOfTheMonthGridView;
-@property (weak, nonatomic) IBOutlet UIButton                           *acceptChangeDate;
-@property (weak, nonatomic) IBOutlet UIButton                           *cancelAcceptDate;
+@property (weak, nonatomic) IBOutlet UIButton                           *acceptButton;
+@property (weak, nonatomic) IBOutlet UIButton                           *cancelButton;
 @property (nonatomic, strong) UIPickerView                              *pickerView;
 
 - (void)             createDayOfTheMonthsViews;
@@ -90,8 +89,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize changeYearMonthButton            = changeYearMonthButton_;
 @synthesize gradientLayer                    = gradientLayer_;
 @synthesize daysOfTheMonthGridView           = daysOfTheMonthGridView_;
-@synthesize acceptChangeDate                 = acceptChangeDate_;
-@synthesize cancelAcceptDate                 = cancelAcceptDate_;
+@synthesize acceptButton                     = acceptButton_;
+@synthesize cancelButton                     = cancelButton_;
 @synthesize pickerView                       = pickerView_;
 
 #pragma mar - Properties
@@ -333,6 +332,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     dayMonthView.backgroundColor = [UIColor clearColor];
     dayMonthView.layer.cornerRadius = 0.0;
     dayMonthView.dayOfTheActualMonthIndex = 0;
+    [self removeGradientLayerOfDayMonthView:dayMonthView];
 }
 
 - (WDDayMonthView *)findDayMonthViewForHitPoint:(CGPoint)hitPoint
@@ -371,8 +371,14 @@ const NSUInteger WEEKS_MONTHS = 5;
 {
     self.dayMonthPendingToRemove.removeMode = NO;
     self.dayMonthPendingToRemove = nil;
-    self.settingsButton.hidden = NO;
-    self.removeCancelButton.hidden = YES;
+    
+    [UIView animateWithDuration:0.55 animations:^{
+        self.acceptButton.alpha = self.cancelButton.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        self.acceptButton.hidden = self.cancelButton.hidden = YES;
+        self.settingsButton.enabled = YES;
+        self.changeYearMonthButton.enabled = YES;
+    }];
 }
 
 - (void)exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents
@@ -388,12 +394,12 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
     
     [UIView animateWithDuration:0.55 animations:^{
-        self.cancelAcceptDate.alpha = self.acceptChangeDate.alpha = 0.0;
+        self.cancelButton.alpha = self.acceptButton.alpha = 0.0;
         self.yearMonthLabel.alpha = 0.0;
         self.pickerView.alpha = 0;
     } completion:^(BOOL finished) {
         [self configureMonthAndYearLabel];
-        self.acceptChangeDate.hidden = self.cancelAcceptDate.hidden = YES;
+        self.acceptButton.hidden = self.cancelButton.hidden = YES;
         [self.pickerView removeFromSuperview];
         self.pickerView = nil;
         [UIView animateWithDuration:0.5 animations:^{
@@ -419,22 +425,15 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer
 {
-    if (!self.dateSelectorModeActive) {
+    if (!self.dateSelectorModeActive && nil == self.dayMonthPendingToRemove) {
         CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
         WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
         if (wordDayOfHitPoint) {
-            if (self.dayMonthPendingToRemove) {
-                WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
-                [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
-                [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
-                [self exitRemoveDayMode];
-            } else {
-                [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];
-                [self dismissViewControllerAnimated:YES completion:^{
-                    [self.delegate dashBoardViewControllerDidDismiss:self];
-                }];
-            }
-        }        
+            [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];
+            [self dismissViewControllerAnimated:YES completion:^{
+                [self.delegate dashBoardViewControllerDidDismiss:self];
+            }];
+        }
     }
 }
 
@@ -445,9 +444,13 @@ const NSUInteger WEEKS_MONTHS = 5;
         self.dayMonthPendingToRemove = [self findDayMonthViewForHitPoint:hitPoint];
         if (!self.dayMonthPendingToRemove.hidden) {
             self.dayMonthPendingToRemove.removeMode = YES;
-            self.settingsButton.hidden = YES;
-            self.removeCancelButton.hidden = NO;
-
+            self.settingsButton.enabled = NO;
+            self.changeYearMonthButton.enabled = NO;
+            self.acceptButton.alpha = self.cancelButton.alpha = 0;
+            self.acceptButton.hidden = self.cancelButton.hidden = NO;
+            [UIView animateWithDuration:0.55 animations:^{
+                self.acceptButton.alpha = self.cancelButton.alpha = 1.0;
+            }];
         }
     }
 }
@@ -493,12 +496,12 @@ const NSUInteger WEEKS_MONTHS = 5;
         }
     } completion:^(BOOL finished) {
         self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
-        self.cancelAcceptDate.hidden = self.acceptChangeDate.hidden = NO;
-        self.cancelAcceptDate.alpha = self.acceptChangeDate.alpha = 0.0;
+        self.cancelButton.hidden = self.acceptButton.hidden = NO;
+        self.cancelButton.alpha = self.acceptButton.alpha = 0.0;
         [UIView animateWithDuration:0.5 animations:^{
             self.yearMonthLabel.alpha = 1.0;
-            self.cancelAcceptDate.alpha = 1.0;
-            self.acceptChangeDate.alpha = 1.0;
+            self.cancelButton.alpha = 1.0;
+            self.acceptButton.alpha = 1.0;
             self.pickerView.alpha = 1.0;
         }];
     }];
@@ -509,18 +512,28 @@ const NSUInteger WEEKS_MONTHS = 5;
     [self exitRemoveDayMode];
 }
 
-- (IBAction)acceptChangeMonthYearDatePressed:(id)sender
+- (IBAction)acceptButtonPressed:(id)sender
 {
-    NSDateComponents *newDateSelected = [[NSDateComponents alloc] init];
-    newDateSelected.year = self.todayDate.year - [self.pickerView selectedRowInComponent:0];
-    newDateSelected.month = [self.pickerView selectedRowInComponent:1] + 1;
-    
-    [self exitChangeYearMonthModeWithSelectedDateComponents:newDateSelected];
+    if (self.dateSelectorModeActive) {
+        NSDateComponents *newDateSelected = [[NSDateComponents alloc] init];
+        newDateSelected.year = self.todayDate.year - [self.pickerView selectedRowInComponent:0];
+        newDateSelected.month = [self.pickerView selectedRowInComponent:1] + 1;
+        [self exitChangeYearMonthModeWithSelectedDateComponents:newDateSelected];
+    } else if (self.dayMonthPendingToRemove != nil) {
+        WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
+        [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
+        [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
+        [self exitRemoveDayMode];
+    }
 }
 
-- (IBAction)cancelChangeMonthYearDatePressed:(id)sender
+- (IBAction)cancelButtonPressed:(id)sender
 {
-    [self exitChangeYearMonthModeWithSelectedDateComponents:nil];
+    if (self.dateSelectorModeActive) {
+        [self exitChangeYearMonthModeWithSelectedDateComponents:nil];
+    } else if (self.dayMonthPendingToRemove != nil) {
+        [self exitRemoveDayMode];
+    }
 }
 
 #pragma mark - WDSettingsScreenViewControllerDelegate
