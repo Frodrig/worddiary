@@ -10,12 +10,10 @@
 #import "WDDashBoardViewControllerDelegate.h"
 #import "WDSettingsScreenViewControllerDelegate.h"
 #import "WDDashBoardViewControllerDataSource.h"
-#import "WDDateSelectorViewDataSource.h"
-#import "WDDateSelectorViewDelegate.h"
 
 @interface WDDashBoardViewController : UIViewController<WDSettingsScreenViewControllerDelegate,
-                                                        WDDateSelectorViewDataSource,
-                                                        WDDateSelectorViewDelegate>
+                                                        UIPickerViewDataSource,
+                                                        UIPickerViewDelegate>
 
 @property(nonatomic, weak) id<WDDashBoardViewControllerDelegate>   delegate;
 @property(nonatomic, weak) id<WDDashBoardViewControllerDataSource> dataSource;

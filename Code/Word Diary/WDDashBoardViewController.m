@@ -14,7 +14,6 @@
 #import "WDWordDiary.h"
 #import "WDUtils.h"
 #import "WDSettingsScreenViewController.h"
-#import "WDDateSelectorView.h"
 #import "WDDaysOfTheMonthContainerView.h"
 #import "WDDaysOfTheWeekContainerView.h"
 #import <QuartzCore/QuartzCore.h>
@@ -37,12 +36,12 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (weak, nonatomic) IBOutlet UIButton                           *settingsButton;
 @property (nonatomic, strong) NSDate                                    *normalizedRealTodayDate;
 @property (nonatomic) BOOL                                              dateSelectorModeActive;
-@property (nonatomic, strong) WDDateSelectorView                        *dateSelectorView;
 @property (weak, nonatomic) IBOutlet UIButton                           *changeYearMonthButton;
 @property (nonatomic, strong) CAGradientLayer                           *gradientLayer;
 @property (weak, nonatomic) IBOutlet WDDaysOfTheMonthContainerView      *daysOfTheMonthGridView;
 @property (weak, nonatomic) IBOutlet UIButton                           *acceptChangeDate;
 @property (weak, nonatomic) IBOutlet UIButton                           *cancelAcceptDate;
+@property (nonatomic, strong) UIPickerView                              *pickerView;
 
 - (void)             createDayOfTheMonthsViews;
 
@@ -88,25 +87,14 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize normalizedRealTodayDate          = normalizedRealTodayDate_;
 @synthesize dateSelectorModeActive           = dateSelectorModeActive_;
 @synthesize todayDate                        = todayDate_;
-@synthesize dateSelectorView                 = dateSelectorView_;
 @synthesize changeYearMonthButton            = changeYearMonthButton_;
 @synthesize gradientLayer                    = gradientLayer_;
 @synthesize daysOfTheMonthGridView           = daysOfTheMonthGridView_;
 @synthesize acceptChangeDate                 = acceptChangeDate_;
 @synthesize cancelAcceptDate                 = cancelAcceptDate_;
+@synthesize pickerView                       = pickerView_;
 
 #pragma mar - Properties
-
-- (WDDateSelectorView *)dateSelectorView
-{
-    if (nil == dateSelectorView_) {
-        dateSelectorView_ = [[WDDateSelectorView alloc] initWithFrame:self.datePannelViewContainer.frame];
-        dateSelectorView_.delegate = self;
-        dateSelectorView_.dataSource = self;
-    }
-    
-    return dateSelectorView_;
-}
 
 - (NSDateComponents *)todayDate
 {
@@ -115,13 +103,6 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
     
     return todayDate_;
-}
-
-- (void)setDateSelectorModeActive:(BOOL)dateSelectorModeActive
-{
-    if (dateSelectorModeActive != dateSelectorModeActive_) {
-        dateSelectorModeActive_ = dateSelectorModeActive;
-    }
 }
 
 -(NSDate *)normalizedRealTodayDate
@@ -396,28 +377,41 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents
 {
-    NSAssert(self.dateSelectorModeActive, @"no estamos en el modo cambio de fecha");
+    NSAssert(self.dateSelectorModeActive, @"Deberia de estar activo el modo de cambio de fecha");
+   
+    self.dateSelectorModeActive = NO;
     
     if (dateComponents != nil && (self.actualDate.year != dateComponents.year || self.actualDate.month != dateComponents.month)) {
         self.actualDate.year = dateComponents.year;
         self.actualDate.month = dateComponents.month;
-        [self configureMonthAndYearLabel];
         [self configureDayOfTheMonths];
     }
     
-    self.dateSelectorModeActive = NO;
-    
-    //const CGFloat originalDateSelectorViewCenterY = self.datePannelViewContainer.frame.origin.y + self.datePannelViewContainer.frame.size.height + self.dateSelectorView.bounds.size.height / 2.0;
-    [UIView animateWithDuration:0.45 animations:^{
-//        self.yearMonthLabel.alpha = 1.0;
-        self.daysOfTheWeekTitlesContainerView.alpha = 1.0;
-        self.daysOfTheMonthContainerView.alpha = 1.0;
-        self.changeYearMonthButton.alpha = 1.0;
-        self.dateSelectorView.alpha = 0.0;
-        //center = CGPointMake(self.dateSelectorView.center.x, originalDateSelectorViewCenterY);
+    [UIView animateWithDuration:0.55 animations:^{
+        self.cancelAcceptDate.alpha = self.acceptChangeDate.alpha = 0.0;
+        self.yearMonthLabel.alpha = 0.0;
+        self.pickerView.alpha = 0;
     } completion:^(BOOL finished) {
-        [self.dateSelectorView removeFromSuperview];
-        self.dateSelectorView = nil;
+        [self configureMonthAndYearLabel];
+        self.acceptChangeDate.hidden = self.cancelAcceptDate.hidden = YES;
+        [self.pickerView removeFromSuperview];
+        self.pickerView = nil;
+        [UIView animateWithDuration:0.5 animations:^{
+            self.yearMonthLabel.alpha = 1.0;
+            for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
+                if ([viewIt isKindOfClass:[UILabel class]]) {
+                    viewIt.alpha = 1.0;
+                }
+            }
+            for (UIView *viewIt in self.daysOfTheMonthContainerView.subviews) {
+                if ([viewIt isKindOfClass:[WDDayMonthView class]]) {
+                    viewIt.alpha = 1.0;
+                }
+            }
+        } completion:^(BOOL finished) {
+            self.changeYearMonthButton.enabled = YES;
+            self.settingsButton.enabled = YES;
+        }];
     }];
 }
 
@@ -425,20 +419,22 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer
 {
-    CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
-    WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
-    if (wordDayOfHitPoint) {
-        if (self.dayMonthPendingToRemove) {
-            WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
-            [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
-            [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
-            [self exitRemoveDayMode];
-        } else {
-            [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];
-            [self dismissViewControllerAnimated:YES completion:^{
-                [self.delegate dashBoardViewControllerDidDismiss:self];
-            }];
-        }
+    if (!self.dateSelectorModeActive) {
+        CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
+        WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
+        if (wordDayOfHitPoint) {
+            if (self.dayMonthPendingToRemove) {
+                WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
+                [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
+                [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
+                [self exitRemoveDayMode];
+            } else {
+                [self.delegate dashBoardViewController:self willDismissWithSelectedWord:wordDayOfHitPoint];
+                [self dismissViewControllerAnimated:YES completion:^{
+                    [self.delegate dashBoardViewControllerDidDismiss:self];
+                }];
+            }
+        }        
     }
 }
 
@@ -468,39 +464,63 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (IBAction)changeMonthYearButtonPressed:(id)sender
 {
     NSAssert(!self.dateSelectorModeActive, @"No deberia de estar activo el modo de cambio de fecha");
-        
-  //  if (self.dateSelectorModeActive) {
+    
+    self.dateSelectorModeActive = YES;
+    
+    self.settingsButton.enabled = NO;
+    
+    NSAssert(nil == self.pickerView, @"no deberia de existir otro picker view");
+    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0.0, (self.daysOfTheMonthContainerView.bounds.size.height - 180.0) / 2.0, self.daysOfTheMonthContainerView.bounds.size.width, 180.0)];
+    self.pickerView.showsSelectionIndicator = YES;
+    self.pickerView.delegate = self;
+    self.pickerView.dataSource = self;
+    self.pickerView.alpha = 0.0;
+    [self.pickerView selectRow:self.todayDate.year - self.actualDate.year inComponent:0 animated:NO];
+    [self.pickerView selectRow:self.actualDate.month - 1 inComponent:1 animated:NO];
+    [self.daysOfTheMonthContainerView addSubview:self.pickerView];
+    
     self.changeYearMonthButton.enabled = NO;
-        [UIView animateWithDuration:0.25 animations:^{
-           // self.daysOfTheWeekTitlesContainerView.alpha = 0.0;
-            for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
-                if ([viewIt isKindOfClass:[UILabel class]]) {
-                    viewIt.alpha = 0.0;
-                }
+    [UIView animateWithDuration:0.55 animations:^{
+        for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
+            if ([viewIt isKindOfClass:[UILabel class]]) {
+                viewIt.alpha = 0.0;
             }
-            for (UIView *viewIt in self.daysOfTheMonthContainerView.subviews) {
-                if ([viewIt isKindOfClass:[WDDayMonthView class]]) {
-                    viewIt.alpha = 0.0;
-                }
+        }
+        for (UIView *viewIt in self.daysOfTheMonthContainerView.subviews) {
+            if ([viewIt isKindOfClass:[WDDayMonthView class]]) {
+                viewIt.alpha = 0.0;
             }
-        } completion:^(BOOL finished) {
-            self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
-            self.cancelAcceptDate.hidden = self.acceptChangeDate.hidden = NO;
-            self.cancelAcceptDate.alpha = self.acceptChangeDate.alpha = 0.0;
-            [UIView animateWithDuration:0.5 animations:^{
-                self.yearMonthLabel.alpha = 1.0;
-                self.cancelAcceptDate.alpha = 1.0;
-                self.acceptChangeDate.alpha = 1.0;
-                
-            }];
-
+        }
+    } completion:^(BOOL finished) {
+        self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
+        self.cancelAcceptDate.hidden = self.acceptChangeDate.hidden = NO;
+        self.cancelAcceptDate.alpha = self.acceptChangeDate.alpha = 0.0;
+        [UIView animateWithDuration:0.5 animations:^{
+            self.yearMonthLabel.alpha = 1.0;
+            self.cancelAcceptDate.alpha = 1.0;
+            self.acceptChangeDate.alpha = 1.0;
+            self.pickerView.alpha = 1.0;
         }];
-    //}
+    }];
 }
 
 - (IBAction)cancelRemoveDayMode:(id)sender
 {
     [self exitRemoveDayMode];
+}
+
+- (IBAction)acceptChangeMonthYearDatePressed:(id)sender
+{
+    NSDateComponents *newDateSelected = [[NSDateComponents alloc] init];
+    newDateSelected.year = self.todayDate.year - [self.pickerView selectedRowInComponent:0];
+    newDateSelected.month = [self.pickerView selectedRowInComponent:1] + 1;
+    
+    [self exitChangeYearMonthModeWithSelectedDateComponents:newDateSelected];
+}
+
+- (IBAction)cancelChangeMonthYearDatePressed:(id)sender
+{
+    [self exitChangeYearMonthModeWithSelectedDateComponents:nil];
 }
 
 #pragma mark - WDSettingsScreenViewControllerDelegate
@@ -515,72 +535,78 @@ const NSUInteger WEEKS_MONTHS = 5;
     [self.delegate backgroundAnimationGradientSettingsUpdateFromDashBoardViewController:self];
 }
 
-#pragma mark - WDDateSelectorViewDataSource
+#pragma mark - UIPickerViewDelegate
 
-- (NSUInteger)numberOfYearsForSelectorView:(WDDateSelectorView *)selectorView
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return self.todayDate.year;
+    return nil;
 }
 
-- (NSUInteger)numberOfMonthsForSelectorView:(WDDateSelectorView *)selectorView
+- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return 12.0;
-}
-
-- (NSUInteger)numberOfMonthsForYear:(NSUInteger)yearRow forSelectorView:(WDDateSelectorView *)selectorView
-{
-    NSUInteger retNumberOfMonths = 12.0;
-    if (self.todayDate.year == self.todayDate.year - yearRow) {
-        retNumberOfMonths = self.todayDate.month;
+    BOOL available = YES;
+    NSString *strTitle = nil;
+    if (0 == component) {
+        const NSUInteger year = self.todayDate.year - row;
+        strTitle = [NSString stringWithFormat:@"%d", year];
+    } else {
+        strTitle = [WDUtils monthString:row + 1 abreviateMode:NO];
+        if (self.todayDate.year == self.todayDate.year - [pickerView selectedRowInComponent:0]) {
+            available = self.todayDate.month > row;
+        }
     }
     
-    return retNumberOfMonths;
-}
-
-- (NSString *)yearTitleForRow:(NSUInteger)yearRow forSelectorView:(WDDateSelectorView *)selectorView
-{
-    const NSUInteger year = self.todayDate.year - yearRow;
-    NSString *retString = [NSString stringWithFormat:@"%d", year];
+    NSShadow *textShadow = [[NSShadow alloc] init];
+    textShadow.shadowOffset = CGSizeMake(0, -2.0);
+    textShadow.shadowBlurRadius = 4.0;
+    textShadow.shadowColor = [UIColor colorWithWhite:0.9 alpha:0.5];
     
-    return retString;
+    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:strTitle
+                                                                     attributes:@{
+                                                          NSShadowAttributeName: textShadow,
+                                                            NSFontAttributeName: [UIFont fontWithName:component == 0 ?  @"Helvetica-Bold" : @"Helvetica" size: component == 0 ? 28.0 : 32.0],
+                                                 NSForegroundColorAttributeName: available ? [UIColor blackColor] : [UIColor lightGrayColor],
+                                                            NSKernAttributeName: component == 0 ? @2.0f : @2.0f}];
+    
+    return attrString;
 }
 
-- (NSString *)monthTitleForRow:(NSUInteger)monthRow forSelectorView:(WDDateSelectorView *)selectorView
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
-    return [WDUtils monthString:monthRow + 1 abreviateMode:NO];
-}
-
-- (BOOL)isMonth:(NSUInteger)monthRow inYear:(NSUInteger)yearRow availableForSelectionInfSelectorView:(WDDateSelectorView *)selectorView
-{
-    BOOL retValue = YES;
-    if (self.todayDate.year == self.actualDate.year - yearRow) {
-        retValue = self.todayDate.month > monthRow;
+    CGFloat retWidth = 0.0f;
+    if (component == 0) {
+        retWidth = pickerView.frame.size.width * 0.3;
+    } else if (component == 1) {
+        retWidth = pickerView.frame.size.width * 0.7;
     }
     
-    return retValue;
+    return retWidth;
 }
 
-- (NSUInteger)actualMonthSelectedForSelectorView:(WDDateSelectorView *)selectorView
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    return self.actualDate.month;
+    if (component == 0) {
+        [pickerView reloadComponent:1];
+    }
 }
 
-- (NSUInteger)actualYearSelectedForSelectorView:(WDDateSelectorView *)selectorView
+#pragma mark - UIPickerViewDataSource
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-    return self.actualDate.year;
+    return 2.0;
 }
 
-#pragma mark - WDDateSelectorViewDelegate
-
-- (void)cancelButtonPressedFromDateSelectorView:(WDDateSelectorView *)dateSelectorView
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    [self exitChangeYearMonthModeWithSelectedDateComponents:nil];
+    NSInteger retComponents = 0;
+    if (component == 0) {
+        retComponents = self.todayDate.year;
+    } else if (component == 1) {
+        retComponents = 12.0;
+    }
+    
+    return retComponents;
 }
-
-- (void)acceptButtonPressedWithDateComponents:(NSDateComponents *)dateComponents fromDateSelectorView:(WDDateSelectorView *)dateSelectorView
-{
-    [self exitChangeYearMonthModeWithSelectedDateComponents:dateComponents];
-}
-
 
 @end
