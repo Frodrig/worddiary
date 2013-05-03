@@ -476,8 +476,10 @@ const NSUInteger WEEKS_MONTHS = 5;
 {
     if (nil == self.dayMonthPendingToRemove && gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
-        self.dayMonthPendingToRemove = [self findDayMonthViewForHitPoint:hitPoint];
-        if (!self.dayMonthPendingToRemove.hidden) {
+        WDDayMonthView *selectedWordDayView = [self findDayMonthViewForHitPoint:hitPoint];
+        WDWord *selectedWordDay = [self findWordForDayMonthView:selectedWordDayView];
+        if (!selectedWordDayView.hidden && selectedWordDay != nil && selectedWordDay.word.length > 0) {
+            self.dayMonthPendingToRemove = selectedWordDayView;
             self.dayMonthPendingToRemove.removeMode = YES;
             self.infoButton.enabled = NO;
             self.changeYearMonthButton.enabled = NO;
