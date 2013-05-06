@@ -553,8 +553,12 @@ const NSUInteger WEEKS_MONTHS = 5;
     self.pickerView.alpha = 0.0;
     [self.pickerView selectRow:self.todayDate.year - self.actualDate.year inComponent:0 animated:NO];
     [self.pickerView selectRow:self.actualDate.month - 1 inComponent:1 animated:NO];
+    CAGradientLayer *pickerViewLayer = [CAGradientLayer layer];
+    pickerViewLayer.frame = self.pickerView.bounds;
+    pickerViewLayer.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.0 alpha:0.75].CGColor, (id)[UIColor colorWithWhite:0 alpha:0.5].CGColor, (id)[UIColor colorWithWhite:1 alpha:0].CGColor, (id)[UIColor colorWithWhite:0 alpha:0.5].CGColor, [UIColor colorWithWhite:0.0 alpha:0.75].CGColor, nil];
+    [self.pickerView.layer addSublayer:pickerViewLayer];
     [self.daysOfTheMonthContainerView addSubview:self.pickerView];
-    
+       
     self.changeYearMonthButton.enabled = NO;
     [UIView animateWithDuration:0.55 animations:^{
         for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
@@ -638,9 +642,9 @@ const NSUInteger WEEKS_MONTHS = 5;
     NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:strTitle
                                                                      attributes:@{
                                                           NSShadowAttributeName: textShadow,
-                                                            NSFontAttributeName: [UIFont fontWithName:component == 0 ?  @"Helvetica-Bold" : @"Helvetica" size: component == 0 ? 28.0 : 32.0],
+                                                            NSFontAttributeName: [UIFont fontWithName:component == 0 ?  @"Helvetica" : @"Helvetica" size: component == 0 ? 24.0 : 28.0],
                                                  NSForegroundColorAttributeName: available ? [UIColor blackColor] : [UIColor lightGrayColor],
-                                                            NSKernAttributeName: component == 0 ? @2.0f : @2.0f}];
+                                                            }];
     
     return attrString;
 }
