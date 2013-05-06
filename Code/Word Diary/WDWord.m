@@ -117,11 +117,10 @@
 - (NSString *)createDayAndMonthAbreviateAsString:(BOOL)abreviate
 {
     NSString *dayMonthDateText = nil;
-    NSString *dayString = [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:self.dateComponents.day]];
     if ([WDUtils englishIsTheCurrentAppLanguage]) {
-        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate], dayString];
+        dayMonthDateText = [NSString stringWithFormat:@"%@%@ %d", [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate], NSLocalizedString(@"TAG_DATE_MONTHDAY_SEPARATOR", @""), self.dateComponents.day];
     } else {
-        dayMonthDateText = [NSString stringWithFormat:@"%@, %@", dayString, [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate]];
+        dayMonthDateText = [NSString stringWithFormat:@"%d %@ %@", self.dateComponents.day, NSLocalizedString(@"TAG_DATE_MONTHDAY_SEPARATOR", @""), [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate]];
     }
     
     return dayMonthDateText;

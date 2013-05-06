@@ -17,6 +17,7 @@
 
 "TAG_TODAY"        = "Hoy";
 "TAG_YESTERDAY"    = "Ayer";
+"TAG_DATE_MONTHDAY_SEPARATOR" = "de";
 
 "TAG_EMOTION_NAME_NEUTRAL" = "Neutral";
 "TAG_EMOTION_NAME_LOVE" = "Amor";

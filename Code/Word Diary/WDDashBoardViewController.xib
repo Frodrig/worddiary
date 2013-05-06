@@ -2207,6 +2207,7 @@
 					<reference ref="1003847565"/>
 				</array>
 				<string key="102.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="0.0" key="102.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<array class="NSMutableArray" key="102.IBViewMetadataConstraints">
 					<reference ref="759643153"/>
 				</array>
@@ -2398,6 +2399,7 @@
 				<string key="279.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="286.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="3" key="4.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<array key="4.IBViewMetadataConstraints">
 					<reference ref="581721250"/>
 					<reference ref="803857755"/>

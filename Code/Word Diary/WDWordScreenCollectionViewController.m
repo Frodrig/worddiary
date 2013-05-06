@@ -315,13 +315,19 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     return cell;
 }
 
-/*
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
- // MUY INTERESANTE PARA HACER EFECTO OSCURECIDO 
-    NSLog(@"hey");
+    if (scrollView.contentSize.width > 0) {
+        const CGFloat cellIndexWithOffset = scrollView.contentOffset.x / (scrollView.contentSize.width / [WDWordDiary sharedWordDiary].words.count);
+        const CGFloat indexRight = ceilf(cellIndexWithOffset);
+        const CGFloat indexLeft = floorf(cellIndexWithOffset);
+        WDWordScreenCollectionViewCell *cellAtLeft = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexLeft]];
+        cellAtLeft.alpha = 1 - (cellIndexWithOffset - indexLeft);
+        WDWordScreenCollectionViewCell *cellAtRight = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexRight]];
+        cellAtRight.alpha = 1 - (indexRight - cellIndexWithOffset);
+    }
 }
-*/
+
 /*
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
