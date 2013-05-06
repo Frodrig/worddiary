@@ -18,7 +18,7 @@
 
 @property(nonatomic, weak) WDWord   *selectedWord;
 
-- (WDWord *) prepareSelectedWordAtLaunchOrResume;
+- (WDWord *) createFirstWord;
 
 @end
 
@@ -35,7 +35,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [self prepareSelectedWordAtLaunchOrResume];
+        [self createFirstWord];
         
           }
     return self;
@@ -79,7 +79,7 @@
 
 #pragma mark - Auxiliary
 
-- (WDWord *) prepareSelectedWordAtLaunchOrResume
+- (WDWord *)createFirstWord
 {
     NSDate *todayDate = [NSDate date];
     WDWord *selectedWordCandidate = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
