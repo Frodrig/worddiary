@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="WDPalette" representedClassName="WDPalette" syncable="YES">
-        <attribute name="accessoriesColor" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="darkBackground" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="idName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lightBackground" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wordColor" optional="YES" attributeType="String" syncable="YES"/>
@@ -19,7 +17,7 @@
         <relationship name="style" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="WDStyle" inverseName="word" inverseEntity="WDStyle" syncable="YES"/>
     </entity>
     <elements>
-        <element name="WDPalette" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="WDPalette" positionX="0" positionY="0" width="128" height="105"/>
         <element name="WDStyle" positionX="0" positionY="0" width="128" height="75"/>
         <element name="WDWord" positionX="0" positionY="0" width="128" height="105"/>
     </elements>

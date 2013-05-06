@@ -13,21 +13,14 @@
 
 @implementation WDPalette
 
-@dynamic accessoriesColor;
 @dynamic lightBackground;
 @dynamic idName;
-@dynamic darkBackground;
 @dynamic wordColor;
 @dynamic word;
 
 - (UIColor *) makeLightBackgroundColorObject
 {
     return [WDUtils convertStringToColor:self.lightBackground];
-}
-
-- (UIColor *) makeDarkBackgroundColorObject
-{
-    return [WDUtils convertStringToColor:self.darkBackground];
 }
 
 - (UIColor *) makeWordColorObject

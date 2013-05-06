@@ -20,7 +20,7 @@
 - (NSArray *) fetchAllEntitiesOfType:(NSString *)entity;
 
 - (void)      prepareStyles;
-- (void)      addPalette:(NSString *)idName lightBackgroundColor:(NSString *)lBackgroundColor darkBackgroundColor:(NSString *)dBackgroundColor wordColor:(NSString *)wColor andAccesoriesColor:(NSString *)aColor;
+- (void)      addPalette:(NSString *)idName lightBackgroundColor:(NSString *)lBackgroundColor andWordColor:(NSString *)wColor;
 - (void)      preparePalettes;
 - (void)      prepareWords;
 
@@ -143,14 +143,12 @@
     styles_ = [styles_ sortedArrayUsingSelector:@selector(compare:)];
 }
 
-- (void) addPalette:(NSString *)idName lightBackgroundColor:(NSString *)lBackgroundColor darkBackgroundColor:(NSString *)dBackgroundColor wordColor:(NSString *)wColor andAccesoriesColor:(NSString *)aColor;
+- (void)addPalette:(NSString *)idName lightBackgroundColor:(NSString *)lBackgroundColor andWordColor:(NSString *)wColor;
 {
     WDPalette *palette = [NSEntityDescription insertNewObjectForEntityForName:@"WDPalette" inManagedObjectContext:self.context];
     palette.idName = idName;
     palette.lightBackground = lBackgroundColor;
-    palette.darkBackground = dBackgroundColor;
     palette.wordColor = wColor;
-    palette.accessoriesColor = aColor;
     
     palettes_ = palettes_ == nil ? [NSArray arrayWithObject:palette] : [palettes_ arrayByAddingObject:palette];
 }
@@ -183,11 +181,9 @@
         for (NSUInteger paletteIndex = 0; paletteIndex < lighPalettes.count; ++paletteIndex) {
             NSString *paletteId = [NSString stringWithFormat:@"%d", paletteIndex];
             NSString *lightBackgroundColorString = [WDUtils convertColorToString:[lighPalettes objectAtIndex:paletteIndex]];
-            NSString *darkBackgroundColorString = [lightBackgroundColorString copy];//[WDUtils convertColorToString:[darkPalettes objectAtIndex:paletteIndex]];
-            NSString *wordColorString = [WDUtils convertColorToString:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
-            NSString *accesoriesColorString = [WDUtils convertColorToString:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
+            NSString *wordColorString = [WDUtils convertColorToString:[UIColor colorWithRed:46.0 green:46.0 blue:51.0 alpha:1.0]];//[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
             
-            [self addPalette:paletteId lightBackgroundColor:lightBackgroundColorString darkBackgroundColor:darkBackgroundColorString wordColor:wordColorString andAccesoriesColor:accesoriesColorString];
+            [self addPalette:paletteId lightBackgroundColor:lightBackgroundColorString andWordColor:wordColorString];
         }
         
         // ToDo: Por ahora una unica paleta para todas las emociones
