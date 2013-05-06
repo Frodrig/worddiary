@@ -41,6 +41,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (weak, nonatomic) IBOutlet UIButton                           *acceptButton;
 @property (weak, nonatomic) IBOutlet UIButton                           *cancelButton;
 @property (nonatomic, strong) UIPickerView                              *pickerView;
+@property (weak, nonatomic) IBOutlet UIView                             *wordSlateContainerView;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -95,6 +96,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize cancelButton                     = cancelButton_;
 @synthesize pickerView                       = pickerView_;
 @synthesize infoButton                       = infoButton_;
+@synthesize wordSlateContainerView           = wordSlateContainerView_;
 
 #pragma mar - Properties
 
@@ -397,13 +399,16 @@ const NSUInteger WEEKS_MONTHS = 5;
 {
     self.dayMonthPendingToRemove.removeMode = NO;
     self.dayMonthPendingToRemove = nil;
+    UILabel *selectedWordLabel = (UILabel *)[self.wordSlateContainerView viewWithTag:100];
     
     [UIView animateWithDuration:0.55 animations:^{
         self.acceptButton.alpha = self.cancelButton.alpha = 0.0;
+        selectedWordLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
         self.acceptButton.hidden = self.cancelButton.hidden = YES;
         self.infoButton.enabled = YES;
         self.changeYearMonthButton.enabled = YES;
+        [selectedWordLabel removeFromSuperview];
     }];
 }
 
@@ -495,6 +500,21 @@ const NSUInteger WEEKS_MONTHS = 5;
                 self.dayMonthPendingToRemove.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0);
                 self.dayMonthPendingToRemove.alpha = 1.0;
             } completion:^(BOOL finished) {
+                WDWord *selectedWordDay = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
+                UILabel *wordSelectedLabel = [[UILabel alloc] initWithFrame:self.wordSlateContainerView.bounds];
+                wordSelectedLabel.backgroundColor = [UIColor clearColor];
+                wordSelectedLabel.attributedText = [[NSAttributedString alloc] initWithString:selectedWordDay.word
+                                                                                   attributes:@{
+                                                                          NSFontAttributeName:[UIFont fontWithName:selectedWordDay.style.familyFont size:[selectedWordDay.style.familyFont compare:@"Zapfino"] == NSOrderedSame ? 34 : 75 ],
+                                                               NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                                          NSKernAttributeName: @2.0f}];
+                wordSelectedLabel.textAlignment = NSTextAlignmentCenter;
+                wordSelectedLabel.adjustsFontSizeToFitWidth = YES;
+                wordSelectedLabel.adjustsLetterSpacingToFitWidth = YES;
+                wordSelectedLabel.minimumScaleFactor = 0.3;
+                wordSelectedLabel.alpha = 0.0;
+                wordSelectedLabel.tag = 100;
+                [self.wordSlateContainerView addSubview:wordSelectedLabel];
                 self.dayMonthPendingToRemove.removeMode = YES;
                 self.infoButton.enabled = NO;
                 self.changeYearMonthButton.enabled = NO;
@@ -502,6 +522,7 @@ const NSUInteger WEEKS_MONTHS = 5;
                 self.acceptButton.hidden = self.cancelButton.hidden = NO;
                 [UIView animateWithDuration:0.55 animations:^{
                     self.acceptButton.alpha = self.cancelButton.alpha = 1.0;
+                    wordSelectedLabel.alpha = 1.0;
                 }];
             }];
         }
