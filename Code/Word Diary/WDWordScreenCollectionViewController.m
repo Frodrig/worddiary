@@ -36,6 +36,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @property (nonatomic, strong) NSIndexPath                   *indexPathForWordWhenAppear;
 @property (nonatomic) BOOL                                  otherViewControllerInDismissMode;
 @property (nonatomic) BOOL                                  editWordModeActive;
+@property (nonatomic) BOOL                                  inPanModeForChangeBackgroundColor;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -83,6 +84,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 @synthesize indexPathForWordWhenAppear         = indexPathForWordWhenAppear_;
 @synthesize otherViewControllerInDismissMode   = otherWordViewControllerInDismissMode_;
 @synthesize editWordModeActive                 = editWordModeActive_;
+@synthesize inPanModeForChangeBackgroundColor  = inPanModeForChangeBackgroundColor_;
 
 #pragma mark - Properties
 
@@ -134,10 +136,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 	// Do any additional setup after loading the view.
 
-    // Gestures
+    // Gesture
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.panGestureRecognizer];
-    
+
     self.dobleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dobleTapGestureRecognizerHandle:)];
     self.dobleTapGestureRecognizer.numberOfTapsRequired = 2;
     self.dobleTapGestureRecognizer.numberOfTouchesRequired = 1;
@@ -145,8 +147,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
-    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.dobleTapGestureRecognizer];
-    
+    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.panGestureRecognizer];
+
     // Collection
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -522,23 +524,28 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture
 {
     if (!self.isFirstResponder) {
-        const BOOL fadeOutText = gesture.state == UIGestureRecognizerStateBegan;
-        const BOOL fadeInText = gesture.state == UIGestureRecognizerStateEnded;
         WDPalette *newPalette = nil;
-        
         if (gesture == self.panGestureRecognizer) {
             switch (gesture.state) {
                 case UIGestureRecognizerStateBegan:
                 case UIGestureRecognizerStateChanged: {
                     CGPoint translation = [gesture translationInView:self.view];
                     if (![WDUtils is:translation.y equalsTo:0.0]) {
-                        const CGFloat minimumDistance = 5.0;
-                        WDWord *word = [self findSelectedWord];
-                        if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
-                            newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
-                        } else if (translation.y > 0.0 && translation.y > minimumDistance) {
-                            newPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+                        if (abs(translation.y) > abs(translation.x)) {
+                            const CGFloat minimumDistance = 5.0;
+                            WDWord *word = [self findSelectedWord];
+                            if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
+                                newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
+                            } else if (translation.y > 0.0 && translation.y > minimumDistance) {
+                                newPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+                            }
+                            if (newPalette != nil && !self.inPanModeForChangeBackgroundColor) {
+                                self.inPanModeForChangeBackgroundColor = YES;
+                            }
+                        } else {
+                            [gesture setTranslation:CGPointZero inView:self.view];
                         }
+                        
                     }
                 } break;
                     
@@ -546,6 +553,9 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                     break;
             }
         }
+        
+        const BOOL fadeOutText = (gesture.state == UIGestureRecognizerStateChanged || gesture.state == UIGestureRecognizerStateEnded) && self.inPanModeForChangeBackgroundColor;
+        const BOOL fadeInText = gesture.state == UIGestureRecognizerStateEnded && self.inPanModeForChangeBackgroundColor;
         
         if (fadeInText || fadeOutText) {
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
@@ -565,6 +575,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                 if (fadeInText) {
                     [self launchFadeDateAndDayTextTimer];
                     [cell resumeBackgroundColorAnimation];
+                    self.inPanModeForChangeBackgroundColor = NO;
                 }
             }];
         }
