@@ -101,6 +101,7 @@
 
 - (void)setWord:(WDWord *)word
 {
+    NSLog(@"setword");
     [self setDateLabelOfWord:word];
     [self setWordRepresentation:word];
     [self setDayDiaryLabelOfWord:word];
@@ -151,7 +152,7 @@
     [self updateColorOfLabel:self.dayDiaryLabel withColor:[word.palette makeWordColorObject]];
 }
 
-- (void) addBackgroundColorAnimation
+- (void)addBackgroundColorAnimation
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM"]) {
         if (!self.backgroundColorAnimationPaused &&

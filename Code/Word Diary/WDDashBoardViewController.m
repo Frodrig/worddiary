@@ -126,7 +126,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];

@@ -197,7 +197,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }
     
     // Scroll a la ultima palabra
-    [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     self.indexPathForWordWhenAppear = nil;
     
     // Timers
