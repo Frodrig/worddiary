@@ -29,6 +29,10 @@
 		5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D18AF172A95110002F300 /* WDDayMonthView.m */; };
 		5B6987E7171816D100046FE0 /* UIView+RoundedCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */; };
 		5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80894716DE3CE2002CD179 /* WDUtils.m */; };
+		5B829CAB173808A100477041 /* 02-arrow-east.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B829CA7173808A100477041 /* 02-arrow-east.png */; };
+		5B829CAC173808A100477041 /* 02-arrow-east@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B829CA8173808A100477041 /* 02-arrow-east@2x.png */; };
+		5B829CAD173808A100477041 /* 09-arrow-west.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B829CA9173808A100477041 /* 09-arrow-west.png */; };
+		5B829CAE173808A100477041 /* 09-arrow-west@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B829CAA173808A100477041 /* 09-arrow-west@2x.png */; };
 		5B86DBD9171BE542003152AB /* WDPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBD8171BE542003152AB /* WDPalette.m */; };
 		5B86DBDC171BE542003152AB /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBDB171BE542003152AB /* WDWord.m */; };
 		5B86DBE0171BEA37003152AB /* WDWordScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBDF171BEA37003152AB /* WDWordScreenViewController.m */; };
@@ -112,6 +116,10 @@
 		5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RoundedCorners.m"; sourceTree = "<group>"; };
 		5B80894616DE3CE2002CD179 /* WDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDUtils.h; sourceTree = "<group>"; };
 		5B80894716DE3CE2002CD179 /* WDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDUtils.m; sourceTree = "<group>"; };
+		5B829CA7173808A100477041 /* 02-arrow-east.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "02-arrow-east.png"; sourceTree = "<group>"; };
+		5B829CA8173808A100477041 /* 02-arrow-east@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "02-arrow-east@2x.png"; sourceTree = "<group>"; };
+		5B829CA9173808A100477041 /* 09-arrow-west.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "09-arrow-west.png"; sourceTree = "<group>"; };
+		5B829CAA173808A100477041 /* 09-arrow-west@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "09-arrow-west@2x.png"; sourceTree = "<group>"; };
 		5B86DBD7171BE542003152AB /* WDPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDPalette.h; sourceTree = "<group>"; };
 		5B86DBD8171BE542003152AB /* WDPalette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDPalette.m; sourceTree = "<group>"; };
 		5B86DBDA171BE542003152AB /* WDWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWord.h; sourceTree = "<group>"; };
@@ -227,6 +235,10 @@
 				5B9829A81727D25D00A3071C /* 42-info.png */,
 				5B9829A91727D25D00A3071C /* 42-info@2x.png */,
 				5BA4D57E172A75500042CFF1 /* 83-calendar.png */,
+				5B829CA7173808A100477041 /* 02-arrow-east.png */,
+				5B829CA8173808A100477041 /* 02-arrow-east@2x.png */,
+				5B829CA9173808A100477041 /* 09-arrow-west.png */,
+				5B829CAA173808A100477041 /* 09-arrow-west@2x.png */,
 				5BA4D57F172A75500042CFF1 /* 83-calendar@2x.png */,
 				5BEB4C7D1725A5F5005BC2D9 /* 298-circlex.png */,
 				5BEB4C7E1725A5F7005BC2D9 /* 298-circlex@2x.png */,
@@ -714,6 +726,10 @@
 				5BA4D581172A75500042CFF1 /* 83-calendar@2x.png in Resources */,
 				5BA4D584172A766C0042CFF1 /* 426-calendar.png in Resources */,
 				5BA4D585172A766C0042CFF1 /* 426-calendar@2x.png in Resources */,
+				5B829CAB173808A100477041 /* 02-arrow-east.png in Resources */,
+				5B829CAC173808A100477041 /* 02-arrow-east@2x.png in Resources */,
+				5B829CAD173808A100477041 /* 09-arrow-west.png in Resources */,
+				5B829CAE173808A100477041 /* 09-arrow-west@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

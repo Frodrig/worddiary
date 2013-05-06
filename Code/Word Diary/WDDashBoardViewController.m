@@ -613,6 +613,74 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
 }
 
+- (void)updateYearMonthData:(BOOL)rightDirection
+{
+    const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
+    for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
+        const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
+        WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
+        //CGFloat duration = (float)rand()/(float)RAND_MAX;
+        CGFloat duration = (float)rand()/((float)RAND_MAX/1.35);
+        if (duration < 0.40) {
+            duration = 0.40;
+        }
+        if (dayMonthViewIt.layer.sublayers > 0) {
+            dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
+        }
+        [WDUtils destroyViewGosthEffect:dayMonthViewIt withDuration:duration andDisplacement:rightDirection ? -1 * (44 + duration) : (44 + duration)];
+        dayMonthViewIt.alpha = 0.0;
+    }
+ 
+    [self configureMonthAndYearLabel];
+    [self configureDayOfTheMonths];
+    
+    for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
+        const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
+        WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
+        [UIView animateWithDuration:0.25 animations:^{
+            dayMonthViewIt.alpha = 1.0;
+        }];
+    }
+}
+
+- (IBAction)leftButtonPressed:(id)sender
+{
+    BOOL updateDate = YES;
+    if (self.actualDate.month > 1) {
+        self.actualDate.month = self.actualDate.month - 1;
+    } else if (self.actualDate.year > 0) {
+        self.actualDate.year = self.actualDate.year - 1;
+        self.actualDate.month = 12;
+    } else {
+        updateDate = NO;
+    }
+    
+    if (updateDate) {
+        [self updateYearMonthData:NO];
+    }
+}
+
+- (IBAction)rightButtonPressed:(id)sender
+{
+    BOOL updateDate = YES;
+    if (self.actualDate.year < self.todayDate.year) {
+        if (self.actualDate.month < 12) {
+            self.actualDate.month = self.actualDate.month + 1;
+        } else {
+            self.actualDate.year = self.actualDate.year + 1;
+            self.actualDate.month = 1;
+        }
+    } else if (self.actualDate.month < self.todayDate.month) {
+        self.actualDate.month = self.actualDate.month + 1;
+    } else {
+        updateDate = NO;
+    }
+    
+    if (updateDate) {
+        [self updateYearMonthData:YES];
+    }
+}
+
 #pragma mark - UIPickerViewDelegate
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
