@@ -45,6 +45,7 @@
 
 - (WDStyle *)     defaultStyle;
 - (WDPalette *)   defaultPalette;
+- (WDPalette *)   randomPalette;
 
 - (WDPalette *)   findPaletteWithIdName:(NSString *)idName;
 

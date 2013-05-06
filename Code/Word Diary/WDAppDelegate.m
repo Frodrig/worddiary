@@ -114,7 +114,6 @@
         NSTimeInterval timeInterval = [calendar dateFromComponents:dateComponents].timeIntervalSince1970;
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
         WDWord *word = [[WDWordDiary sharedWordDiary] createWord:wordIt inTimeInterval:date.timeIntervalSince1970];
-        word.palette = [[WDWordDiary sharedWordDiary].palettes objectAtIndex:rand() % [WDWordDiary sharedWordDiary].palettes.count];
         word.style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:rand() % [WDWordDiary sharedWordDiary].styles.count];
         
         [[WDWordDiary sharedWordDiary] saveAll];

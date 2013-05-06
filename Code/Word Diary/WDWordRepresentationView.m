@@ -147,7 +147,7 @@
         leftMarginAdjustmentByFont = lineImageBounds.origin.x < 0.0 ? abs(lineImageBounds.origin.x) : -lineImageBounds.origin.x;
         endFindingFontSize = leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + lineImageBounds.size.width + rightWidthMargin + finalFontSizeModulator < leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + self.bounds.size.width;
         if (endFindingFontSize) {
-            endFindingFontSize = lineImageBounds.size.height + ((self.frame.size.height + self.frame.origin.y) - startPointDraw.y) < self.bounds.size.height;
+            endFindingFontSize = (lineImageBounds.size.height + ((self.frame.size.height + self.frame.origin.y) - startPointDraw.y)) < self.bounds.size.height;
         }
         
         if (!endFindingFontSize) {

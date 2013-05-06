@@ -826,10 +826,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController createdNewWord:(WDWord *)word;
 {
     [self.collectionView reloadData];
-    /*
-    NSIndexPath *indexPathForWord = [self indexPathForWord:word];
-    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:indexPathForWord.section]];
-     */
 }
 
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController selectRemoveWord:(WDWord *)word

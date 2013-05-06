@@ -232,7 +232,7 @@
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
     wordObject.style = [self defaultStyle];
-    wordObject.palette = [self defaultPalette];
+    wordObject.palette = [self randomPalette];
     
     [words_ addObject:wordObject];
     [self sortWords];
@@ -466,6 +466,12 @@
 - (WDPalette *)defaultPalette
 {
     return [self.palettes objectAtIndex:0];
+}
+
+- (WDPalette *)randomPalette
+{
+    NSUInteger indexPalette = rand() % self.palettes.count;
+    return [self.palettes objectAtIndex:indexPalette];
 }
 
 #pragma mark - Key Value Observing
