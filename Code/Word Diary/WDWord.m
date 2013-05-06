@@ -118,7 +118,7 @@
 {
     NSString *dayMonthDateText = nil;
     if ([WDUtils englishIsTheCurrentAppLanguage]) {
-        dayMonthDateText = [NSString stringWithFormat:@"%@%@ %d", [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate], NSLocalizedString(@"TAG_DATE_MONTHDAY_SEPARATOR", @""), self.dateComponents.day];
+        dayMonthDateText = [NSString stringWithFormat:@"%@ %d", [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate], self.dateComponents.day];
     } else {
         dayMonthDateText = [NSString stringWithFormat:@"%d %@ %@", self.dateComponents.day, NSLocalizedString(@"TAG_DATE_MONTHDAY_SEPARATOR", @""), [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate]];
     }
