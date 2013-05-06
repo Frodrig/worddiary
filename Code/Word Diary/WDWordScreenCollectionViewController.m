@@ -321,8 +321,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         const CGFloat cellIndexWithOffset = scrollView.contentOffset.x / (scrollView.contentSize.width / [WDWordDiary sharedWordDiary].words.count);
         const CGFloat indexRight = ceilf(cellIndexWithOffset);
         const CGFloat indexLeft = floorf(cellIndexWithOffset);
-        WDWordScreenCollectionViewCell *cellAtLeft = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexLeft]];
-        cellAtLeft.alpha = 1 - (cellIndexWithOffset - indexLeft);
+        if (indexLeft != indexRight) {
+            WDWordScreenCollectionViewCell *cellAtLeft = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexLeft]];
+            cellAtLeft.alpha = 1 - (cellIndexWithOffset - indexLeft);
+        }
         WDWordScreenCollectionViewCell *cellAtRight = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexRight]];
         cellAtRight.alpha = 1 - (indexRight - cellIndexWithOffset);
     }
@@ -416,7 +418,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     cell.wordRepresentationView.dataSource = self;
     cell.wordRepresentationView.clearsContextBeforeDrawing = YES;
     cell.wordRepresentationView.tag = indexPath.section;
-
+    
     WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:[self convertIndexPathToWordIndexContainer:indexPath]];
     [cell setWord:word];
         
