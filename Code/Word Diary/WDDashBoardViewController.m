@@ -456,9 +456,9 @@ const NSUInteger WEEKS_MONTHS = 5;
         WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
         if (nil == wordDayOfHitPoint) {
             WDDayMonthView *dayMonthViewFound = [self findDayMonthViewForHitPoint:hitPoint];
-            NSAssert(dayMonthViewFound, @"ops");
+            NSAssert(dayMonthViewFound, @"problemas");
             NSDateComponents *dateComponentsOfView = [self findDateComponentesForDayMonthView:dayMonthViewFound];
-            NSAssert(dateComponentsOfView, @"wtf");
+            NSAssert(dateComponentsOfView, @"problemas");
             wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[[NSCalendar currentCalendar] dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
             [self.delegate dashBoardViewController:self createdNewWord:wordDayOfHitPoint];
         }
@@ -474,19 +474,35 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)longPresureGestureRecognizerHandle:(UILongPressGestureRecognizer *)gestureRecognizer
 {
-    if (nil == self.dayMonthPendingToRemove && gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
-        WDDayMonthView *selectedWordDayView = [self findDayMonthViewForHitPoint:hitPoint];
-        WDWord *selectedWordDay = [self findWordForDayMonthView:selectedWordDayView];
-        if (!selectedWordDayView.hidden && selectedWordDay != nil && selectedWordDay.word.length > 0) {
-            self.dayMonthPendingToRemove = selectedWordDayView;
-            self.dayMonthPendingToRemove.removeMode = YES;
-            self.infoButton.enabled = NO;
-            self.changeYearMonthButton.enabled = NO;
-            self.acceptButton.alpha = self.cancelButton.alpha = 0;
-            self.acceptButton.hidden = self.cancelButton.hidden = NO;
-            [UIView animateWithDuration:0.55 animations:^{
-                self.acceptButton.alpha = self.cancelButton.alpha = 1.0;
+    const CGFloat scaleFactor = 4.5;
+    
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        if (nil == self.dayMonthPendingToRemove) {
+            CGPoint hitPoint = [gestureRecognizer locationInView:self.daysOfTheMonthContainerView];
+            WDDayMonthView *selectedWordDayView = [self findDayMonthViewForHitPoint:hitPoint];
+            WDWord *selectedWordDay = [self findWordForDayMonthView:selectedWordDayView];
+            if (!selectedWordDayView.hidden && selectedWordDay != nil && selectedWordDay.word.length > 0) {
+                self.dayMonthPendingToRemove = selectedWordDayView;
+                [UIView animateWithDuration:0.25 animations:^{
+                    self.dayMonthPendingToRemove.layer.transform = CATransform3DMakeScale(scaleFactor, scaleFactor, 1.0);
+                    self.dayMonthPendingToRemove.alpha = 0.3;
+                }];
+            }
+        }        
+    } else if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        if (self.dayMonthPendingToRemove) {
+            [UIView animateWithDuration:0.25 animations:^{
+                self.dayMonthPendingToRemove.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0);
+                self.dayMonthPendingToRemove.alpha = 1.0;
+            } completion:^(BOOL finished) {
+                self.dayMonthPendingToRemove.removeMode = YES;
+                self.infoButton.enabled = NO;
+                self.changeYearMonthButton.enabled = NO;
+                self.acceptButton.alpha = self.cancelButton.alpha = 0;
+                self.acceptButton.hidden = self.cancelButton.hidden = NO;
+                [UIView animateWithDuration:0.55 animations:^{
+                    self.acceptButton.alpha = self.cancelButton.alpha = 1.0;
+                }];
             }];
         }
     }

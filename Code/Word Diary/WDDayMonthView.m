@@ -12,8 +12,6 @@
 
 @interface WDDayMonthView()
 
-@property (nonatomic, strong) UIImageView *removeModeImage;
-
 @end
 
 @implementation WDDayMonthView
@@ -25,7 +23,6 @@
 @synthesize dayOfMonthLabel          = dayOfTheMonthLabel_;
 @synthesize initialLetterLabel       = initialLetterLabel_;
 @synthesize removeMode               = removeMode_;
-@synthesize removeModeImage          = removeModeImage_;
 
 #pragma mark - Properties
 
@@ -33,23 +30,17 @@
 {
     if (removeMode != removeMode_) {
         if (removeMode) {
-            self.removeModeImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37-circle-x-bw"]];
-            self.removeModeImage.contentMode = UIViewContentModeCenter;
-            self.removeModeImage.frame = self.bounds;
-            
-            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            animation.fromValue = [NSNumber numberWithFloat:1.0];
-            animation.toValue = [NSNumber numberWithFloat:0.5];
+            CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"transform"];
+            animation.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
+            animation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.2, 1.2, 1.0)];
             animation.removedOnCompletion = NO;
-            animation.duration = 1.0;
+            animation.duration = 0.45;
             animation.repeatCount = HUGE_VALF;
             animation.autoreverses = YES;
-            [self.removeModeImage.layer addAnimation:animation forKey:@"blink"];
+            [self.layer addAnimation:animation forKey:@"blink"];
             
-            [self addSubview:self.removeModeImage];
         } else {
-            [self.removeModeImage removeFromSuperview];
-            self.removeModeImage = nil;
+            [self.layer removeAllAnimations];
         }
         
         removeMode_ = removeMode;
