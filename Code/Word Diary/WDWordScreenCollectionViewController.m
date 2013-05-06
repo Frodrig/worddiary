@@ -147,7 +147,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
     [self.view addGestureRecognizer:self.tapGestureRecognizer];
-    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.panGestureRecognizer];
+    [self.tapGestureRecognizer requireGestureRecognizerToFail:self.dobleTapGestureRecognizer];
 
     // Collection
     self.collectionView.delegate = self;
