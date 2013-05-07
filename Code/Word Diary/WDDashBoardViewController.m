@@ -393,8 +393,7 @@ const NSUInteger WEEKS_MONTHS = 5;
         selectedWordLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
         self.acceptButton.hidden = self.cancelButton.hidden = YES;
-        self.infoButton.enabled = YES;
-        self.changeYearMonthButton.enabled = YES;
+        self.infoButton.enabled = self.leftNavigationButton.enabled = self.rightNavigationButton.enabled = self.changeYearMonthButton.enabled = YES;
         [selectedWordLabel removeFromSuperview];
     }];
 }
@@ -476,6 +475,7 @@ const NSUInteger WEEKS_MONTHS = 5;
             WDWord *selectedWordDay = [self findWordForDayMonthView:selectedWordDayView];
             if (!selectedWordDayView.hidden && selectedWordDay != nil && selectedWordDay.word.length > 0) {
                 self.dayMonthPendingToRemove = selectedWordDayView;
+                self.infoButton.enabled = self.leftNavigationButton.enabled = self.rightNavigationButton.enabled = self.changeYearMonthButton.enabled = NO;
                 [UIView animateWithDuration:0.25 animations:^{
                     self.dayMonthPendingToRemove.layer.transform = CATransform3DMakeScale(scaleFactor, scaleFactor, 1.0);
                     self.dayMonthPendingToRemove.alpha = 0.3;
