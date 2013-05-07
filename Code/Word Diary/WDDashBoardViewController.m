@@ -498,7 +498,6 @@ const NSUInteger WEEKS_MONTHS = 5;
                                                                           NSKernAttributeName: @2.0f}];
                 wordSelectedLabel.textAlignment = NSTextAlignmentCenter;
                 wordSelectedLabel.adjustsFontSizeToFitWidth = YES;
-                wordSelectedLabel.adjustsLetterSpacingToFitWidth = YES;
                 wordSelectedLabel.minimumScaleFactor = 0.3;
                 wordSelectedLabel.alpha = 0.0;
                 wordSelectedLabel.tag = 100;
