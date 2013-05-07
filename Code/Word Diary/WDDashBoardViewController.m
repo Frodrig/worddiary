@@ -448,7 +448,14 @@ const NSUInteger WEEKS_MONTHS = 5;
             WDDayMonthView *dayMonthViewFound = [self findDayMonthViewForHitPoint:hitPoint];
             NSDateComponents *dateComponentsOfView = [self findDateComponentsForDayMonthView:dayMonthViewFound];
             if (dateComponentsOfView) {
-                if (dateComponentsOfView.year <= self.todayDate.year && dateComponentsOfView.month <= self.todayDate.month && dateComponentsOfView.day <= self.todayDate.day) {
+                BOOL validDay = dateComponentsOfView.year < self.todayDate.year;
+                if (!validDay) {
+                    validDay = dateComponentsOfView.month < self.todayDate.month;
+                }
+                if (!validDay) {
+                    validDay = dateComponentsOfView.day <= self.todayDate.day;
+                }
+                if (validDay) {
                     wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[[NSCalendar currentCalendar] dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
                     [self.delegate dashBoardViewController:self createdNewWord:wordDayOfHitPoint];
                 }
