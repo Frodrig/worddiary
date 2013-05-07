@@ -22,7 +22,6 @@
 		5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1193571704752B00CAF765 /* MessageUI.framework */; };
 		5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B119359170489D200CAF765 /* CoreMotion.framework */; };
 		5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */; };
-		5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
 		5B3555F1172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */; };
 		5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B446F7616F22A48005A432D /* CoreText.framework */; };
@@ -64,7 +63,6 @@
 		5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB840E116DCB9470005AF21 /* WDWordDiary.m */; };
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
 		5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */; };
-		5BE2F6E41700216400A68287 /* WDGradientBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE2F6E31700216400A68287 /* WDGradientBackground.m */; };
 		5BE5DDBB17390E050078B855 /* UIColor+HSL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE5DDBA17390E050078B855 /* UIColor+HSL.m */; };
 		5BE67E6F172873FD00D01633 /* WDInfoScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE67E6D172873FD00D01633 /* WDInfoScreenViewController.m */; };
 		5BE67E70172873FD00D01633 /* WDInfoScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */; };
@@ -100,8 +98,6 @@
 		5B119359170489D200CAF765 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		5B1193671704B61C00CAF765 /* UILabel+TopAlign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+TopAlign.h"; sourceTree = "<group>"; };
 		5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+TopAlign.m"; sourceTree = "<group>"; };
-		5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDBackgroundView.h; sourceTree = "<group>"; };
-		5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDBackgroundView.m; sourceTree = "<group>"; };
 		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
 		5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIViewNibLoad.m"; sourceTree = "<group>"; };
 		5B3555EF172EBB5F0033705C /* WDDaysOfTheWeekContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheWeekContainerView.h; sourceTree = "<group>"; };
@@ -171,8 +167,6 @@
 		5BB840FB16DCC83E0005AF21 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5BCCE325172E9161001F4C52 /* WDDashBoardViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDashBoardViewControllerDataSource.h; sourceTree = "<group>"; };
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		5BE2F6E21700216400A68287 /* WDGradientBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDGradientBackground.h; sourceTree = "<group>"; };
-		5BE2F6E31700216400A68287 /* WDGradientBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDGradientBackground.m; sourceTree = "<group>"; };
 		5BE5DDB917390E050078B855 /* UIColor+HSL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HSL.h"; sourceTree = "<group>"; };
 		5BE5DDBA17390E050078B855 /* UIColor+HSL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HSL.m"; sourceTree = "<group>"; };
 		5BE67E6C172873FD00D01633 /* WDInfoScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDInfoScreenViewController.h; sourceTree = "<group>"; };
@@ -281,15 +275,6 @@
 				5B07E98E1720421500D12450 /* WDWordCharacterCounterViewDelegate.h */,
 			);
 			name = "Word Character Counter View";
-			sourceTree = "<group>";
-		};
-		5B1A712F16E8A24C00355F59 /* Custom Views */ = {
-			isa = PBXGroup;
-			children = (
-				5B1A713316E8A2BE00355F59 /* WDBackgroundView.h */,
-				5B1A713416E8A2BE00355F59 /* WDBackgroundView.m */,
-			);
-			name = "Custom Views";
 			sourceTree = "<group>";
 		};
 		5B1AC4B516EA0A4100950206 /* Categories */ = {
@@ -516,7 +501,6 @@
 				5B1AC4B516EA0A4100950206 /* Categories */,
 				5BB840D316DCB6210005AF21 /* Model */,
 				5BEC305317154E0300EE8D72 /* Controller with Views */,
-				5BB840DE16DCB6D60005AF21 /* Views */,
 				5BB6B30A16DBE13900394113 /* Supporting Files */,
 			);
 			path = "Word Diary";
@@ -540,15 +524,6 @@
 				5BD34C9D16E799D4007B46A2 /* Word Diary */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		5BB840DE16DCB6D60005AF21 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				5BE2F6E1170020D300A68287 /* Gradient Background */,
-				5B1A712F16E8A24C00355F59 /* Custom Views */,
-			);
-			name = Views;
 			sourceTree = "<group>";
 		};
 		5BB840DF16DCB9250005AF21 /* Core Data */ = {
@@ -581,15 +556,6 @@
 				5BB840E116DCB9470005AF21 /* WDWordDiary.m */,
 			);
 			name = "Word Diary";
-			sourceTree = "<group>";
-		};
-		5BE2F6E1170020D300A68287 /* Gradient Background */ = {
-			isa = PBXGroup;
-			children = (
-				5BE2F6E21700216400A68287 /* WDGradientBackground.h */,
-				5BE2F6E31700216400A68287 /* WDGradientBackground.m */,
-			);
-			name = "Gradient Background";
 			sourceTree = "<group>";
 		};
 		5BE67E6B172873E000D01633 /* Info Screen */ = {
@@ -710,10 +676,8 @@
 				5BB6B31D16DBE13900394113 /* Word_Diary.xcdatamodeld in Sources */,
 				5BB840E216DCB9470005AF21 /* WDWordDiary.m in Sources */,
 				5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */,
-				5B1A713516E8A2BE00355F59 /* WDBackgroundView.m in Sources */,
 				5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */,
 				5B0764A516FB0B9B00A046BC /* WDDayChecker.m in Sources */,
-				5BE2F6E41700216400A68287 /* WDGradientBackground.m in Sources */,
 				5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */,
 				5BFEEA69170C1BCB0048482B /* WDStyle.m in Sources */,
 				5BFEEA75170C1DDD0048482B /* UIColor+hexColorCreation.m in Sources */,
