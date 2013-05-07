@@ -175,24 +175,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     
-    // Counter
-    self.wordCharacterCounterView = [[WDWordCharacterCounterView alloc] initWithFrame:CGRectMake(0.0, 0.0, 150.0, 88.0) andDataSource:self];
-    self.wordCharacterCounterView.delegate = self;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    // Cfg layout
-    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.minimumInteritemSpacing = 0;
-    flowLayout.minimumLineSpacing = 0;
-    const CGFloat edgeMargin = 3.0;
-    flowLayout.itemSize = CGSizeMake(self.view.bounds.size.width - edgeMargin * 2, self.view.bounds.size.height - edgeMargin * 2);
-    flowLayout.sectionInset = UIEdgeInsetsMake(edgeMargin, edgeMargin, edgeMargin, edgeMargin);
-    
     // StyleMenu
     self.styleMenuView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, 44.0)];
     NSArray *styles = [WDWordDiary sharedWordDiary].styles;
@@ -214,6 +196,25 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         [self.styleMenuView addSubview:styleButtonIt];
     }
     
+    // Counter
+    self.wordCharacterCounterView = [[WDWordCharacterCounterView alloc] initWithFrame:CGRectMake(0.0, 0.0, 150.0, 88.0) andDataSource:self];
+    self.wordCharacterCounterView.delegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // Cfg layout
+    UICollectionViewFlowLayout *flowLayout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    flowLayout.minimumInteritemSpacing = 0;
+    flowLayout.minimumLineSpacing = 0;
+    const CGFloat edgeMargin = 3.0;
+    flowLayout.itemSize = CGSizeMake(self.view.bounds.size.width - edgeMargin * 2, self.view.bounds.size.height - edgeMargin * 2);
+    flowLayout.sectionInset = UIEdgeInsetsMake(edgeMargin, edgeMargin, edgeMargin, edgeMargin);
+    
+       
     // Scroll a la ultima palabra
     [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     self.indexPathForWordWhenAppear = nil;
@@ -492,7 +493,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)launchFadeDateAndDayTextTimer
 {
     [self.fadeDecoratorTextTimer invalidate];
-    self.fadeDecoratorTextTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(fadeDateAndDayTextTimerHandle:) userInfo:nil repeats:NO];
+    self.fadeDecoratorTextTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(fadeDateAndDayTextTimerHandle:) userInfo:nil repeats:NO];
 }
 
 - (void) endFadeDateAndDayTextTimer
@@ -788,10 +789,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                                           self.styleMenuView.bounds.size.width,
                                           self.styleMenuView.bounds.size.height);
     [self.view addSubview:self.styleMenuView];
-    NSNumber *keybAnimationDuration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
-        CGFloat animationDuration = (keybAnimationDuration.floatValue + styleIt) * 0.25;
-        [UIView animateWithDuration:animationDuration animations:^{
+        [UIView animateWithDuration:0.25 delay:0.1 + 0.04 * styleIt options:UIViewAnimationOptionCurveLinear animations:^{
             [self.styleMenuView viewWithTag:styleIt + 1].alpha = 1.0;
         } completion:^(BOOL finished) {
             if (styleIt == [WDWordDiary sharedWordDiary].styles.count - 1) {
@@ -799,8 +798,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                 NSUInteger selectedIndexOfWordStyle = [[WDWordDiary sharedWordDiary] findIndexPositionForStyle:selectedWord.style];
                 for (NSUInteger styleIt = 0; styleIt < [WDWordDiary sharedWordDiary].styles.count; styleIt++) {
                     if (styleIt != selectedIndexOfWordStyle) {
-                        [UIView animateWithDuration:0.75 animations:^{
-                            [self.styleMenuView viewWithTag:styleIt + 1].alpha = 0.5;
+                        [UIView animateWithDuration:0.55 animations:^{
+                            [self.styleMenuView viewWithTag:styleIt + 1].alpha = 0.55;
                         }];
                     }
                 }
