@@ -42,6 +42,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (weak, nonatomic) IBOutlet UIButton                           *cancelButton;
 @property (nonatomic, strong) UIPickerView                              *pickerView;
 @property (weak, nonatomic) IBOutlet UIView                             *wordSlateContainerView;
+@property (weak, nonatomic) IBOutlet UIButton                           *leftNavigationButton;
+@property (weak, nonatomic) IBOutlet UIButton                           *rightNavigationButton;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -97,6 +99,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize pickerView                       = pickerView_;
 @synthesize infoButton                       = infoButton_;
 @synthesize wordSlateContainerView           = wordSlateContainerView_;
+@synthesize leftNavigationButton             = leftNavigationButton_;
+@synthesize rightNavigationButton            = rightNavigationButton_;
 
 #pragma mar - Properties
 
@@ -445,6 +449,7 @@ const NSUInteger WEEKS_MONTHS = 5;
                     viewIt.alpha = 1.0;
                 }
             }
+            self.leftNavigationButton.alpha = self.rightNavigationButton.alpha = 1.0;
         } completion:^(BOOL finished) {
             self.changeYearMonthButton.enabled = YES;
             self.infoButton.enabled = YES;
@@ -571,6 +576,7 @@ const NSUInteger WEEKS_MONTHS = 5;
                 viewIt.alpha = 0.0;
             }
         }
+        self.leftNavigationButton.alpha = self.rightNavigationButton.alpha = 0.0;
     } completion:^(BOOL finished) {
         self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
         self.cancelButton.hidden = self.acceptButton.hidden = NO;
