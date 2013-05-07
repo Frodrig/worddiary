@@ -873,9 +873,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     NSLog(@"applicationWillEnterForeground");
     [self resumeAll];
-    if ([[WDWordDiary sharedWordDiary] cutWordsArrayAtPresentDay]) {
-        [self.collectionView reloadData];
-    }
+    [self.collectionView reloadData];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -891,7 +889,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     NSLog(@"applicationWillTerminate");    
 }
-
 
 #pragma mark - WDWordCharacterCounterViewDataSource
 

@@ -782,6 +782,16 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
+    if (self.dateSelectorModeActive) {
+        [self.pickerView reloadAllComponents];
+    } else {
+        todayDate_ = nil;
+        self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
+        [self configureMonthAndYearLabel];
+        [self configureDayOfTheMonths];
+    }
+
+    // ToDo: Comprobar si hemos cambiado de idioma
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

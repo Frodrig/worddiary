@@ -18,7 +18,13 @@
 
 @property(nonatomic, weak) WDWord   *selectedWord;
 
-- (WDWord *) createFirstWord;
+- (WDWord *)            createFirstWord;
+
+- (void)                applicationWillResignActive:(NSNotification *)notification;
+- (void)                applicationDidEnterBackground:(NSNotification *)notification;
+- (void)                applicationWillEnterForeground:(NSNotification *)notification;
+- (void)                applicationDidBecomeActive:(NSNotification *)notification;
+- (void)                applicationWillTerminate:(NSNotification *)notification;
 
 @end
 
@@ -35,10 +41,21 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
+        
         [self createFirstWord];
         
-          }
+    }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad
@@ -109,5 +126,33 @@
     //self.collectionViewController = [[WDWordScreenCollectionViewController alloc] init];
     //[self presentViewController:self.collectionViewController animated:YES completion:nil];
 }
+
+#pragma mark - Application Notifications
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification
+{
+    if ([[WDWordDiary sharedWordDiary] cutWordsArrayAtPresentDay]) {
+        if ([WDWordDiary sharedWordDiary].words.count == 0) {
+            [self createFirstWord];
+        }
+    }
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+}
+
 
 @end
