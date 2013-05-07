@@ -13,6 +13,7 @@
 #import "WDUtils.h"
 #import "WDWordDiary.h"
 #import "UIColor+hexColorCreation.h"
+#import "UIColor+HSL.h"
 #import "CALayer+PauseResume.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -25,13 +26,13 @@
 @property (nonatomic, strong) CAGradientLayer         *gradientLayerBackgroundColor;
 @property (nonatomic, strong) CAGradientLayer         *gradientLayerBorder;
 @property (nonatomic) BOOL                            backgroundColorAnimationPaused;
-
+@property (nonatomic, weak) WDWord                    *actualWord; // MAL esto no se hace asi, usar datasources
 
 - (void) setDateLabelOfWord:(WDWord *)word;
 - (void) setDayDiaryLabelOfWord:(WDWord *)word;
 - (void) setWordRepresentation:(WDWord *)word;
 
-- (void) addBackgroundColorAnimation;
+- (void) addBackgroundColorAnimationWithWord:(WDWord *)word;
 
 - (void) addBorderGradientLayer;
 
@@ -52,6 +53,7 @@
 @synthesize gradientLayerBackgroundColor    = gradientLayerBackgroundColor_;
 @synthesize gradientLayerBorder             = gradientLayerBorder_;
 @synthesize backgroundColorAnimationPaused  = backgroundColorAnimationPaused_;
+@synthesize actualWord                        = actualWord_;
 
 #pragma mark - Properties
 
@@ -112,6 +114,8 @@
     self.dayDiaryContainerView.alpha = 1.0;
     
     [self addBorderGradientLayer];
+    
+    self.actualWord = word;
 }
 
 - (void) addBorderGradientLayer
@@ -132,103 +136,56 @@
 
 - (void)refreshBackgroundColorOfWord:(WDWord *)word
 {
-    WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
-    WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
-    WDPalette *prevprevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:prevPalette];
-    WDPalette *nextnextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:nextPalette];
-    
     self.gradientLayerBackgroundColor.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
-    self.gradientLayerBackgroundColor.colors = [[NSArray alloc] initWithObjects:(id)[prevprevPalette makeLightBackgroundColorObject].CGColor, (id)[prevPalette makeLightBackgroundColorObject].CGColor, (id)[word.palette makeLightBackgroundColorObject].CGColor, (id)[nextPalette makeLightBackgroundColorObject].CGColor, (id)[nextnextPalette makeLightBackgroundColorObject].CGColor, nil];
-   // self.gradientLayerBackgroundColor.locations = [NSArray arrayWithObjects:@0.0F, @0.4F, @0.9F, nil];
+    self.gradientLayerBackgroundColor.colors = [[WDWordDiary sharedWordDiary] makeGradientCGColorPaletteOfWord:word];
     self.gradientLayerBackgroundColor.startPoint = CGPointMake(0.5, 0.0);
     self.gradientLayerBackgroundColor.endPoint = CGPointMake(0.5, 1.0);
     
-    [self addBackgroundColorAnimation];
+    [self addBackgroundColorAnimationWithWord:word];
     
     // Update color de fechas, dia de diaria
     [self updateColorOfLabel:self.dateDayOfTheWeekLabel withColor:[word.palette makeWordColorObject]];
     [self updateColorOfLabel:self.dateDayAndMonthLabel withColor:[word.palette makeWordColorObject]];
     [self updateColorOfLabel:self.dateYearLabel withColor:[word.palette makeWordColorObject]];
     [self updateColorOfLabel:self.dayDiaryLabel withColor:[word.palette makeWordColorObject]];
+    
+    self.actualWord = word;
 }
 
-- (void)addBackgroundColorAnimation
+- (void)addBackgroundColorAnimationWithWord:(WDWord *)word
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM"]) {
         if (!self.backgroundColorAnimationPaused &&
             self.gradientLayerBackgroundColor.animationKeys.count == 0) {
-            /*
-             CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"locations"];
-             anim.fromValue = self.gradientLayer.locations;
-             anim.toValue = [NSArray arrayWithObjects:@0.05F, @0.85F, @1.0F, nil];
-             anim.duration = 3.0;
-             anim.removedOnCompletion = NO;
-             anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-             anim.repeatCount = HUGE_VALF;
-             anim.autoreverses = YES;
-             [self.gradientLayer addAnimation:anim forKey:@"gradientAnimation"];
-             */
-            /*
-             CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"opacity"];
-             anim.fromValue = [NSNumber numberWithFloat:gradientLayer_.opacity];
-             anim.toValue = [NSNumber numberWithFloat:0.9];
-             anim.duration = 1.0;
-             anim.removedOnCompletion = NO;
-             anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-             anim.repeatCount = HUGE_VALF;
-             anim.autoreverses = YES;
-             [self.gradientLayer addAnimation:anim forKey:@"gradientAnimation"];
-             */
-            CAKeyframeAnimation *gradientAnimationStartPoint = [CAKeyframeAnimation animationWithKeyPath:@"startPoint"];
-            [gradientAnimationStartPoint setValues:[NSArray arrayWithObjects:
-                                                    [NSValue valueWithCGPoint:CGPointMake(0.5, 0.0)],
-                                                    [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
-                                                    [NSValue valueWithCGPoint:CGPointMake(0.5, 0.0)],
-                                                    [NSValue valueWithCGPoint:CGPointMake(1.0, 0.0)],
-                                                    [NSValue valueWithCGPoint:CGPointMake(1.0, 0.5)],
-                                                    [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
-                                                    nil]];
-            gradientAnimationStartPoint.duration = 5.0;
-            gradientAnimationStartPoint.removedOnCompletion = NO;
-            gradientAnimationStartPoint.calculationMode = kCAAnimationPaced;
-            gradientAnimationStartPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-            gradientAnimationStartPoint.repeatCount = HUGE_VALF;
-            gradientAnimationStartPoint.autoreverses = YES;
-            [self.gradientLayerBackgroundColor addAnimation:gradientAnimationStartPoint forKey:@"animateGradientChangeStartPoints"];
-            
-            
-            CAKeyframeAnimation *gradientAnimationEndPoint = [CAKeyframeAnimation animationWithKeyPath:@"endPoint"];
-            [gradientAnimationEndPoint setValues:[NSArray arrayWithObjects:
-                                                  [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)],
-                                                  [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)],
-                                                  [NSValue valueWithCGPoint:CGPointMake(0.5, 1.0)],
-                                                  [NSValue valueWithCGPoint:CGPointMake(0.0, 1.0)],
-                                                  [NSValue valueWithCGPoint:CGPointMake(0.0, 0.5)],
-                                                  [NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)],
-                                                  nil]];
-            gradientAnimationEndPoint.duration = 5.0;
-            gradientAnimationEndPoint.removedOnCompletion = NO;
-            gradientAnimationEndPoint.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-            gradientAnimationEndPoint.calculationMode = kCAAnimationPaced;
-            gradientAnimationEndPoint.repeatCount = HUGE_VALF;
-            gradientAnimationEndPoint.autoreverses = YES;
-            [self.gradientLayerBackgroundColor addAnimation:gradientAnimationEndPoint forKey:@"animateGradientChangeEndPoints"];
+                
+            CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
+            gradientAnimation.fromValue = self.gradientLayerBackgroundColor.colors;
+            NSArray *gradientColorPalette = [[WDWordDiary sharedWordDiary] makeGradientColorPaletteOfWord:word];
+            for (UIColor *colorIt in gradientColorPalette) {
+                UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:0.06 alpha:0];
+                gradientAnimation.toValue = gradientAnimation.toValue == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [gradientAnimation.toValue arrayByAddingObject:(id)colorOffset.CGColor];
+            }
+            gradientAnimation.duration = 3.0;
+            gradientAnimation.repeatCount = HUGE_VALF;
+            gradientAnimation.autoreverses = YES;
+
+            [self.gradientLayerBackgroundColor addAnimation:gradientAnimation forKey:@"animateGradientSoftBlink"];
         }
     } else {
         [self.gradientLayerBackgroundColor removeAllAnimations];
     }
   }
 
-- (void) pauseBackgroundColorAnimation
+- (void)pauseBackgroundColorAnimation
 {
     self.backgroundColorAnimationPaused = YES;
     [self.gradientLayerBackgroundColor removeAllAnimations];
 }
 
-- (void) resumeBackgroundColorAnimation
+- (void)resumeBackgroundColorAnimation
 {
     self.backgroundColorAnimationPaused = NO;
-    [self addBackgroundColorAnimation];
+    [self addBackgroundColorAnimationWithWord:self.actualWord];
 }
 
 - (void) updateColorOfLabel:(UILabel *)label withColor:(UIColor *)color

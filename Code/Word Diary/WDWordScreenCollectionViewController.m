@@ -539,7 +539,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
                     CGPoint translation = [gesture translationInView:self.view];
                     if (![WDUtils is:translation.y equalsTo:0.0]) {
                         if (abs(translation.y) > abs(translation.x)) {
-                            const CGFloat minimumDistance = 5.0;
+                            const CGFloat minimumDistance = 10.0;
                             WDWord *word = [self findSelectedWord];
                             if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
                                 newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];

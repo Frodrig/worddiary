@@ -28,6 +28,5 @@
     return [UIColor colorWithWhite:[WDUtils brightnessOfColor:[self makeLightBackgroundColorObject]] alpha:1.0];
 }
 
-
 @end
                                             

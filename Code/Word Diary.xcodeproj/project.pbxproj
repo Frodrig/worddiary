@@ -65,6 +65,7 @@
 		5BB840F716DCC80E0005AF21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5BB840F916DCC80E0005AF21 /* Localizable.strings */; };
 		5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */; };
 		5BE2F6E41700216400A68287 /* WDGradientBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE2F6E31700216400A68287 /* WDGradientBackground.m */; };
+		5BE5DDBB17390E050078B855 /* UIColor+HSL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE5DDBA17390E050078B855 /* UIColor+HSL.m */; };
 		5BE67E6F172873FD00D01633 /* WDInfoScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE67E6D172873FD00D01633 /* WDInfoScreenViewController.m */; };
 		5BE67E70172873FD00D01633 /* WDInfoScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */; };
 		5BEB4C7F1725A5FC005BC2D9 /* 298-circlex.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEB4C7D1725A5F5005BC2D9 /* 298-circlex.png */; };
@@ -172,6 +173,8 @@
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5BE2F6E21700216400A68287 /* WDGradientBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDGradientBackground.h; sourceTree = "<group>"; };
 		5BE2F6E31700216400A68287 /* WDGradientBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDGradientBackground.m; sourceTree = "<group>"; };
+		5BE5DDB917390E050078B855 /* UIColor+HSL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HSL.h"; sourceTree = "<group>"; };
+		5BE5DDBA17390E050078B855 /* UIColor+HSL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HSL.m"; sourceTree = "<group>"; };
 		5BE67E6C172873FD00D01633 /* WDInfoScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDInfoScreenViewController.h; sourceTree = "<group>"; };
 		5BE67E6D172873FD00D01633 /* WDInfoScreenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDInfoScreenViewController.m; sourceTree = "<group>"; };
 		5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDInfoScreenViewController.xib; sourceTree = "<group>"; };
@@ -299,6 +302,8 @@
 				5BFEEA73170C1DDD0048482B /* UIColor+hexColorCreation.h */,
 				5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */,
 				5B6987E5171816D100046FE0 /* UIView+RoundedCorners.h */,
+				5BE5DDB917390E050078B855 /* UIColor+HSL.h */,
+				5BE5DDBA17390E050078B855 /* UIColor+HSL.m */,
 				5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */,
 				5B930D761721E07400FF7AFD /* CALayer+PauseResume.h */,
 				5B930D771721E07400FF7AFD /* CALayer+PauseResume.m */,
@@ -729,6 +734,7 @@
 				5B8B2D9C172EE0B000EF25FA /* WDDateContainerView.m in Sources */,
 				5B8B2DA4172EE34D00EF25FA /* WDDaysOfTheMonthContainerView.m in Sources */,
 				5B8B2DA8172F002E00EF25FA /* WDChangeDateButtonContainerView.m in Sources */,
+				5BE5DDBB17390E050078B855 /* UIColor+HSL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

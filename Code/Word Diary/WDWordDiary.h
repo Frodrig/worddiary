@@ -40,6 +40,8 @@
 
 - (WDPalette *)   findNextPaletteOfPalette:(WDPalette *)palette;
 - (WDPalette *)   findPrevPaletteOfPalette:(WDPalette *)palette;
+- (NSArray *)     makeGradientCGColorPaletteOfWord:(WDWord *)word;
+- (NSArray *)     makeGradientColorPaletteOfWord:(WDWord *)word;
 
 - (NSUInteger)    findIndexPositionForStyle:(WDStyle *)style;
 

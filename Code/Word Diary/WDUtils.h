@@ -43,6 +43,7 @@ typedef enum {
 
 + (NSArray *)            pickerColorArray;
 + (NSArray *)            makeColorGradientWithParameters:(NSDictionary *)parameters;
++ (NSArray *)            makeColorGradientWithHSL;
 
 + (NSString *)           stringFromWeekday:(NSUInteger)weekDay;
 
