@@ -259,12 +259,10 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (void)addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word
 {
     CAGradientLayer *gradient = [CAGradientLayer layer];
-    CGFloat gradientWithMargin = dayMonthView.bounds.size.width * 0.1;
+    gradient.frame = CGRectMake(4.0, 4.0, 36.0, 36.0);
     if (dayMonthView.bounds.size.width > 44.0) {
-        gradientWithMargin += (dayMonthView.bounds.size.width - 44.0) / 2.0;
+        gradient.frame = CGRectMake(7.0, 4.0, 36.0, 36.0);
     }
-    gradient.frame = CGRectMake(gradientWithMargin, 5.0, dayMonthView.bounds.size.width
-                                - gradientWithMargin * 2, dayMonthView.bounds.size.height - 10.0);
     WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
     WDPalette *prevPrevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:prevPalette];
     WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
