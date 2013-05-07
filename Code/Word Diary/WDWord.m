@@ -99,12 +99,20 @@
 
 - (NSUInteger)daysSinceTodayDate
 {
+    
     NSDate *todayDate = [NSDate date];
     NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
     
     return dateComponents.day;
+    
+    /*
+    NSDateComponents *todayDateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *wordDateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate dateWithTimeIntervalSince1970:self.timeInterval]];
+    
+    [NSCalendar currentCalendar] day
+    */
 }
 
 #pragma mark - Obtencion

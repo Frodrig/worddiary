@@ -199,8 +199,10 @@
 
 #pragma mark - Actions
 
-- (void)cutWordsArrayAtPresentDay
+- (BOOL)cutWordsArrayAtPresentDay
 {
+    const NSUInteger previousWordCount = words_.count;
+    
     NSDate *todayDate = [NSDate date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *todayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:todayDate];
@@ -212,6 +214,8 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
     
     words_ = [NSMutableArray arrayWithArray:[words_ filteredArrayUsingPredicate:predicate]];
+    
+    return words_.count != previousWordCount;
 }
 
 - (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval

@@ -73,6 +73,12 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (void)                addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word;
 - (void)                removeGradientLayerOfDayMonthView:(WDDayMonthView *)dayMonthView;
 
+- (void)                applicationWillResignActive:(NSNotification *)notification;
+- (void)                applicationDidEnterBackground:(NSNotification *)notification;
+- (void)                applicationWillEnterForeground:(NSNotification *)notification;
+- (void)                applicationDidBecomeActive:(NSNotification *)notification;
+- (void)                applicationWillTerminate:(NSNotification *)notification;
+
 @end
 
 @implementation WDDashBoardViewController
@@ -136,8 +142,20 @@ const NSUInteger WEEKS_MONTHS = 5;
         
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad
@@ -743,5 +761,36 @@ const NSUInteger WEEKS_MONTHS = 5;
     
     return retComponents;
 }
+
+#pragma mark - Application Notifications
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+    if (self.dayMonthPendingToRemove) {
+        if (self.dayMonthPendingToRemove.alpha != 1.0) {
+            self.dayMonthPendingToRemove.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0);
+            self.dayMonthPendingToRemove.alpha = 1.0;
+        }
+        [self cancelButtonPressed:self.cancelButton];
+    }
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification
+{
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+}
+
 
 @end

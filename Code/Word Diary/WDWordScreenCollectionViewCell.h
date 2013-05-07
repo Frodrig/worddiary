@@ -20,6 +20,8 @@
 
 - (void) setWord:(WDWord *)word;
 
+- (void) updateDateInfo;
+
 - (void) pauseBackgroundColorAnimation;
 - (void) resumeBackgroundColorAnimation;
 

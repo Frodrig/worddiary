@@ -196,6 +196,11 @@
     label.attributedText = attrString;
 }
 
+- (void) updateDateInfo
+{
+    [self setDateLabelOfWord:self.actualWord];
+}
+
 - (void)setDateLabelOfWord:(WDWord *)word
 {
     NSDictionary *attributedTextProperties = @{

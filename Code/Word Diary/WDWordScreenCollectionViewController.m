@@ -213,7 +213,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     const CGFloat edgeMargin = 3.0;
     flowLayout.itemSize = CGSizeMake(self.view.bounds.size.width - edgeMargin * 2, self.view.bounds.size.height - edgeMargin * 2);
     flowLayout.sectionInset = UIEdgeInsetsMake(edgeMargin, edgeMargin, edgeMargin, edgeMargin);
-    
        
     // Scroll a la ultima palabra
     [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
@@ -874,12 +873,18 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 {
     NSLog(@"applicationWillEnterForeground");
     [self resumeAll];
+    if ([[WDWordDiary sharedWordDiary] cutWordsArrayAtPresentDay]) {
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     NSLog(@"applicationDidBecomeActive");
     [self resumeAll];
+    
+    WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
+    [actualCell updateDateInfo];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification
