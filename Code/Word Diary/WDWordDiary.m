@@ -221,7 +221,7 @@
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
     wordObject.style = [self defaultStyle];
-    wordObject.palette = [self defaultPalette]; //[self randomPalette];
+    wordObject.palette = [self randomPalette];
     
     [words_ addObject:wordObject];
     [self sortWords];

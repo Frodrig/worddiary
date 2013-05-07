@@ -63,7 +63,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)                             styleButtonPressed:(UIButton *)button;
 
--(void)                              fixCellWithTagsStartingAt:(NSIndexPath *)startIndexPath;
+- (void)                             fixCellWithTagsStartingAt:(NSIndexPath *)startIndexPath;
+
+- (void)                             pauseAll;
+- (void)                             resumeAll;
 
 @end
 
@@ -198,7 +201,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     // Scroll a la ultima palabra
     [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     self.indexPathForWordWhenAppear = nil;
-    
+
     // Timers
     [self launchFadeDateAndDayTextTimer];
     [self launchCursorColorTimer];
@@ -207,6 +210,10 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    // Cell
+    WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
+    [actualCell resumeBackgroundColorAnimation];
     
     self.otherViewControllerInDismissMode = NO;
 }
@@ -312,6 +319,22 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:sectionIndex]];
     
     return cell;
+}
+
+- (void)pauseAll
+{
+    [self endFadeDateAndDayTextTimer];
+    [self endCursorColorTimer];
+    WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
+    [actualCell pauseBackgroundColorAnimation];
+}
+
+- (void)resumeAll
+{
+    [self launchCursorColorTimer];
+    [self launchFadeDateAndDayTextTimer];
+    WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
+    [actualCell resumeBackgroundColorAnimation];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -457,13 +480,13 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     }
 }
 
-- (void) launchCursorColorTimer
+- (void)launchCursorColorTimer
 {
     [self.cursorColorTimer invalidate];
     self.cursorColorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(cursorColorTimerHandle:) userInfo:nil repeats:YES];
 }
 
-- (void) endCursorColorTimer
+- (void)endCursorColorTimer
 {
     [self.cursorColorTimer invalidate];
     self.cursorColorTimer = nil;
@@ -622,7 +645,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         dashBoardViewController.delegate = self;
         dashBoardViewController.dataSource = self;
         [self presentViewController:dashBoardViewController animated:YES completion:^{
-            [self endCursorColorTimer];
+            [self pauseAll];
         }];
     }
 }

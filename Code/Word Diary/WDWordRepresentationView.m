@@ -86,7 +86,7 @@
 - (void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
-    
+        
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     
     // Flip coordinate system
