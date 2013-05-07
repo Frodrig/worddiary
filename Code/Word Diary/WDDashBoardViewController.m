@@ -493,12 +493,12 @@ const NSUInteger WEEKS_MONTHS = 5;
                 wordSelectedLabel.backgroundColor = [UIColor clearColor];
                 wordSelectedLabel.attributedText = [[NSAttributedString alloc] initWithString:selectedWordDay.word
                                                                                    attributes:@{
-                                                                          NSFontAttributeName:[UIFont fontWithName:selectedWordDay.style.familyFont size:[selectedWordDay.style.familyFont compare:@"Zapfino"] == NSOrderedSame ? 34 : 75 ],
-                                                               NSForegroundColorAttributeName: [UIColor whiteColor],
-                                                                          NSKernAttributeName: @2.0f}];
+                                                                          NSFontAttributeName:[UIFont fontWithName:selectedWordDay.style.familyFont size:[selectedWordDay.style.familyFont compare:@"Zapfino"] == NSOrderedSame ? 21 : 40 ],
+                                                               NSForegroundColorAttributeName: [UIColor whiteColor]}];
                 wordSelectedLabel.textAlignment = NSTextAlignmentCenter;
                 wordSelectedLabel.adjustsFontSizeToFitWidth = YES;
-                wordSelectedLabel.minimumScaleFactor = 0.3;
+                wordSelectedLabel.adjustsLetterSpacingToFitWidth = NO;
+                wordSelectedLabel.minimumScaleFactor = 0.1;
                 wordSelectedLabel.alpha = 0.0;
                 wordSelectedLabel.tag = 100;
                 [self.wordSlateContainerView addSubview:wordSelectedLabel];
