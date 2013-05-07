@@ -26,6 +26,7 @@
 - (void) refreshBackgroundColorOfWord:(WDWord *)word;
 
 - (void) fadeInDataAndDayText;
+- (void) fadeInDataAndDayTextInmediate;
 - (void) fadeOutDataAndDayText;
 
 @end

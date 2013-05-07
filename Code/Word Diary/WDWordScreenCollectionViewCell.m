@@ -36,6 +36,8 @@
 
 - (void) addBorderGradientLayer;
 
+- (void) fadeInDataAndDayTextWithDuration:(CGFloat)duration;
+
 @end
 
 @implementation WDWordScreenCollectionViewCell
@@ -103,7 +105,6 @@
 
 - (void)setWord:(WDWord *)word
 {
-    NSLog(@"setword");
     [self setDateLabelOfWord:word];
     [self setWordRepresentation:word];
     [self setDayDiaryLabelOfWord:word];
@@ -237,14 +238,25 @@
                                                                NSKernAttributeName: [NSNumber numberWithInt:6]}];
 }
 
-- (void) fadeInDataAndDayText
+- (void)fadeInDataAndDayTextWithDuration:(CGFloat)duration
 {
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [UIView animateWithDuration:0.35 animations:^{
+    [UIView animateWithDuration:duration animations:^{
         self.dateContainerView.alpha = 1.0;
         self.dayDiaryContainerView.alpha = 1.0;
     }];
 }
+
+- (void)fadeInDataAndDayTextInmediate
+{
+    [self fadeInDataAndDayTextWithDuration:0];
+}
+
+- (void)fadeInDataAndDayText
+{
+    [self fadeInDataAndDayTextWithDuration:0.35];
+}
+
 - (void) fadeOutDataAndDayText
 {
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
