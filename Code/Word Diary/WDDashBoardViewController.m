@@ -153,24 +153,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.tapGestureRecognizer];
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.longPresureGestureRecognizer];
     
-    WDWord *actualSelectedWord = [self.dataSource selectedWordForDashBoardViewController:self];
-    WDPalette *prevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:actualSelectedWord.palette];
-    WDPalette *prevPrevPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:prevPalette];
-    WDPalette *nextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:actualSelectedWord.palette];
-    WDPalette *nextNextPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:nextPalette];
-    self.gradientLayer = [CAGradientLayer layer];
-    self.gradientLayer.frame = self.view.bounds;
-    self.gradientLayer.colors = [NSArray arrayWithObjects:(id)[prevPrevPalette makeLightBackgroundColorObject].CGColor, (id)[prevPalette makeLightBackgroundColorObject].CGColor, (id)[actualSelectedWord.palette makeLightBackgroundColorObject].CGColor, (id)[nextPalette makeLightBackgroundColorObject].CGColor, (id)[nextNextPalette makeLightBackgroundColorObject].CGColor, nil];
-    self.gradientLayer.startPoint = CGPointMake(0.5, 0.0);
-    self.gradientLayer.endPoint = CGPointMake(0.5, 1.0);
-    self.gradientLayer.cornerRadius = 10.0;
-    [self.view.layer insertSublayer:self.gradientLayer below:self.datePannelViewContainer.layer];
-    
-    
     self.datePannelViewContainer.backgroundColor = [UIColor colorWithWhite:0.16 alpha:1.0];
-    //self.datePannelViewContainer.layer.borderColor = [UIColor colorWithWhite:0.24 alpha:1.0].CGColor;
-    //self.datePannelViewContainer.layer.borderWidth = 1.5;
-    //self.datePannelViewContainer.layer.cornerRadius = 10.0;
 }
 
 - (void)viewWillAppear:(BOOL)animated
