@@ -14,7 +14,6 @@
 #import "WDUtils.h"
 #import "WDWordScreenCollectionViewCell.h"
 #import "WDWordCharacterCounterView.h"
-#import "WDAddWordDayViewController.h"
 #import "WDDashBoardViewController.h"
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
@@ -878,30 +877,6 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (WDWord *)selectedWordForDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController
 {
     return [self findSelectedWord];
-}
-
-#pragma mark - WDAddWordDayViewControllerDelegate
-
-- (void)addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController createdNewWord:(WDWord *)word
-{
-    NSIndexPath *indexPathForWord = [self indexPathForWord:word];
-    [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:indexPathForWord.section]];
-}
-
-- (void)addWordDayViewController:(WDAddWordDayViewController *)addWordDayViewController willDismissWithSelectedWord:(WDWord *)word
-{
-    self.indexPathForWordWhenAppear = [self indexPathForWord:word];
-}
-
-- (void)addWordDayViewControllerWillDismiss:(WDAddWordDayViewController *)addWordDayViewController
-{
-    self.otherViewControllerInDismissMode = YES;
-    [self fadeInDateAndDayTextOnCell:[self findSelectedCell] withInfiniteDuration:NO];
-}
-
-- (void)addWordDayViewControllerDidDismiss:(WDAddWordDayViewController *)addWordDayViewController
-{
-    self.otherViewControllerInDismissMode = NO;
 }
 
 @end
