@@ -303,11 +303,6 @@ const NSUInteger WEEKS_MONTHS = 5;
             dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
             dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
             if (wordOfCalendarDay && wordOfCalendarDay.word.length > 0) {
-                /*
-                dayMonthViewIt.initialLetterLabel.font = [UIFont fontWithName:wordOfCalendarDay.style.familyFont size:16];
-                dayMonthViewIt.initialLetterLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
-                dayMonthViewIt.initialLetterLabel.text = [wordOfCalendarDay.word substringWithRange:NSMakeRange(0, 1)];
-                 */
                 [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay];            
             } else {
                 [self configureDayMonthViewWithoutWordMode:dayMonthViewIt];
@@ -332,7 +327,6 @@ const NSUInteger WEEKS_MONTHS = 5;
     NSComparisonResult compareResult = [self.normalizedRealTodayDate compare:normalizedActuayDayMonthViewDate];
     const BOOL actualDayMonthViewAccesible = compareResult == NSOrderedDescending || compareResult == NSOrderedSame;
     dayMonthView.dayOfMonthLabel.textColor = actualDayMonthViewAccesible ? [UIColor lightGrayColor] : [UIColor darkGrayColor];
-    dayMonthView.initialLetterLabel.text = @"";
     dayMonthView.backgroundColor = [UIColor clearColor];
     dayMonthView.layer.cornerRadius = 0.0;
     [self removeGradientLayerOfDayMonthView:dayMonthView];

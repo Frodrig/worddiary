@@ -21,7 +21,6 @@
 @synthesize index                    = index_;
 @synthesize dayOfTheActualMonthIndex = dayOfTheActualMonthIndex_;
 @synthesize dayOfMonthLabel          = dayOfTheMonthLabel_;
-@synthesize initialLetterLabel       = initialLetterLabel_;
 @synthesize removeMode               = removeMode_;
 
 #pragma mark - Properties
@@ -64,15 +63,6 @@
         dayOfTheMonthLabel_.backgroundColor = [UIColor clearColor];
         dayOfTheMonthLabel_.opaque = YES;
         [self addSubview:dayOfTheMonthLabel_];
-        
-        initialLetterLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, dayOfTheMonthLabel_.frame.size.height, frame.size.width, frame.size.height - dayOfTheMonthLabel_.frame.size.height)];
-        initialLetterLabel_.textAlignment = NSTextAlignmentCenter;
-        initialLetterLabel_.textColor = [UIColor whiteColor];
-        initialLetterLabel_.backgroundColor = [UIColor clearColor];
-        initialLetterLabel_.opaque = YES;
-        initialLetterLabel_.adjustsFontSizeToFitWidth = YES;
-        initialLetterLabel_.minimumScaleFactor = 0.5;
-        [self addSubview:initialLetterLabel_];
     }
     return self;
 }

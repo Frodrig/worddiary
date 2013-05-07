@@ -13,7 +13,6 @@
 @property (nonatomic, readonly )NSUInteger index;
 @property (nonatomic) NSUInteger           dayOfTheActualMonthIndex;
 @property (nonatomic, strong) UILabel      *dayOfMonthLabel;
-@property (nonatomic, strong) UILabel      *initialLetterLabel;
 @property (nonatomic) BOOL                 removeMode;
 
 
