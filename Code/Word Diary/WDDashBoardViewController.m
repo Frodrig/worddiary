@@ -65,7 +65,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (WDDayMonthView *)    findDayMonthViewForHitPoint:(CGPoint)hitPoint;
 - (WDWord *)            findWordForHitPoint:(CGPoint)hitPoint;
 - (WDWord *)            findWordForDayMonthView:(WDDayMonthView *)dayMonthView;
-- (NSDateComponents *)  findDateComponentesForDayMonthView:(WDDayMonthView *)dayMonthView;
+- (NSDateComponents *)  findDateComponentsForDayMonthView:(WDDayMonthView *)dayMonthView;
 
 - (void)                exitRemoveDayMode;
 - (void)                exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents;
@@ -351,7 +351,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     return retDayMonthViewFound;
 }
 
-- (NSDateComponents *)findDateComponentesForDayMonthView:(WDDayMonthView *)dayMonthView
+- (NSDateComponents *)findDateComponentsForDayMonthView:(WDDayMonthView *)dayMonthView
 {
     NSDateComponents *retDateComponents = nil;
     if (!dayMonthView.hidden) {
@@ -365,7 +365,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (WDWord *)findWordForDayMonthView:(WDDayMonthView *)dayMonthView
 {
     WDWord *retWord = nil;
-    NSDateComponents *wordDateComponents = [self findDateComponentesForDayMonthView:dayMonthView];
+    NSDateComponents *wordDateComponents = [self findDateComponentsForDayMonthView:dayMonthView];
     if (wordDateComponents) {
         retWord = [[WDWordDiary sharedWordDiary] findWordWithDateComponents:wordDateComponents];
     }
@@ -446,11 +446,13 @@ const NSUInteger WEEKS_MONTHS = 5;
         WDWord *wordDayOfHitPoint = [self findWordForHitPoint:hitPoint];
         if (nil == wordDayOfHitPoint) {
             WDDayMonthView *dayMonthViewFound = [self findDayMonthViewForHitPoint:hitPoint];
-            NSAssert(dayMonthViewFound, @"problemas");
-            NSDateComponents *dateComponentsOfView = [self findDateComponentesForDayMonthView:dayMonthViewFound];
-            NSAssert(dateComponentsOfView, @"problemas");
-            wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[[NSCalendar currentCalendar] dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
-            [self.delegate dashBoardViewController:self createdNewWord:wordDayOfHitPoint];
+            NSDateComponents *dateComponentsOfView = [self findDateComponentsForDayMonthView:dayMonthViewFound];
+            if (dateComponentsOfView) {
+                if (dateComponentsOfView.year <= self.todayDate.year && dateComponentsOfView.month <= self.todayDate.month && dateComponentsOfView.day <= self.todayDate.day) {
+                    wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[[NSCalendar currentCalendar] dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
+                    [self.delegate dashBoardViewController:self createdNewWord:wordDayOfHitPoint];
+                }
+            }
         }
         
         if (wordDayOfHitPoint) {
