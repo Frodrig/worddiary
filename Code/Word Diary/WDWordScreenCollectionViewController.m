@@ -879,25 +879,21 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
-    NSLog(@"applicationWillResignActive");
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    NSLog(@"applicationDidEnterBackground");
     [self pauseAll];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    NSLog(@"applicationWillEnterForeground");
     [self resumeAll];
     [self.collectionView reloadData];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    NSLog(@"applicationDidBecomeActive");
     [self resumeAll];
     
     [self updateDateInfoOfSensibleCells];
@@ -905,7 +901,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-    NSLog(@"applicationWillTerminate");    
 }
 
 #pragma mark - SignificatTimeChangeNotification
