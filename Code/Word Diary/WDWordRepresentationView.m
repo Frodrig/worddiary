@@ -104,7 +104,7 @@
     [wordColor getRed:&wordColorRGBComponents[0] green:&wordColorRGBComponents[1] blue:&wordColorRGBComponents[2] alpha:&wordColorRGBComponents[3]];
     const BOOL isEmptyText = wordText.length == 0;
     const BOOL showCursor = (isEmptyText || self.keyboardMode);
-    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.5);
+    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * 0.6);
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat wordStartPointDrawMargin = showCursor ? 15.0 : 15.0;
     const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
