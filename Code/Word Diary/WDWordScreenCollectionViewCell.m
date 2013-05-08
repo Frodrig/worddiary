@@ -98,6 +98,8 @@
 {
     [super prepareForReuse];
     
+    [self.gradientLayerBackgroundColor removeAllAnimations];
+
     [self.wordRepresentationView setNeedsDisplay];
 }
 
@@ -137,6 +139,7 @@
 
 - (void)refreshBackgroundColorOfWord:(WDWord *)word
 {
+    NSLog(@"refreshBackgroundColorOfWord %@ color %@", word.word, [[word.palette makeLightBackgroundColorObject] description]);
     self.gradientLayerBackgroundColor.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
     self.gradientLayerBackgroundColor.colors = [[WDWordDiary sharedWordDiary] makeGradientCGColorPaletteOfWord:word];
     self.gradientLayerBackgroundColor.startPoint = CGPointMake(0.5, 0.0);
