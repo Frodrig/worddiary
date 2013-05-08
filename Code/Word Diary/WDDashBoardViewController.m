@@ -304,8 +304,8 @@ const NSUInteger WEEKS_MONTHS = 5;
     const NSUInteger maxDaysOfTheMonth = [self findMaxDaysOfTheMonth];
     const NSUInteger firstWeekdayOfTheMonth = [self findFirstWeekdayOfTheMonth];
     
-    for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
-        const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
+    for (NSUInteger dayMontViewIterator = 0; dayMontViewIterator < maxDayMonthViews; dayMontViewIterator++) {
+        const NSUInteger dayMonthViewIndex = dayMontViewIterator + 1;
         WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
         
         [self removeGradientLayerOfDayMonthView:dayMonthViewIt];
@@ -331,10 +331,9 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (NSDate *)createNormalizedDateForDayMonthView:(WDDayMonthView *)dayMonthView
 {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDateComponents *actualDayMonthViewDateComponents = [self.actualDate copy];
     actualDayMonthViewDateComponents.day = dayMonthView.dayOfTheActualMonthIndex;
-    NSDate *normalizedActuayDayMonthViewDate = [calendar dateFromComponents:actualDayMonthViewDateComponents];
+    NSDate *normalizedActuayDayMonthViewDate = [[NSCalendar currentCalendar] dateFromComponents:actualDayMonthViewDateComponents];
 
     return normalizedActuayDayMonthViewDate;
 }
@@ -772,6 +771,8 @@ const NSUInteger WEEKS_MONTHS = 5;
             self.dayMonthPendingToRemove.alpha = 1.0;
         }
         [self cancelButtonPressed:self.cancelButton];
+    } else {
+        [self cancelButtonPressed:self.cancelButton];
     }
 }
 
@@ -783,14 +784,11 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     todayDate_ = nil;
+    normalizedRealTodayDate_ = nil;
     self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
     
-    if (self.dateSelectorModeActive) {
-        [self.pickerView reloadAllComponents];
-    } else {
-        [self configureMonthAndYearLabel];
-        [self configureDayOfTheMonths];
-    }
+    [self configureMonthAndYearLabel];
+    [self configureDayOfTheMonths];
 
     // ToDo: Comprobar si hemos cambiado de idioma
 }
