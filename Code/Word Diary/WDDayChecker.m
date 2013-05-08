@@ -67,15 +67,13 @@
 - (void)update:(NSTimer *)timer
 {
     if (self.delegate) {
-        NSDate *actualDate = [NSDate date];
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        NSDateComponents *actualDateComponents = [calendar components:NSDayCalendarUnit fromDate:actualDate];
-        NSDateComponents *previousDateComponents = [calendar components:NSDayCalendarUnit fromDate:self.date];
+        NSDateComponents *actualDateComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:[NSDate date]];
+        NSDateComponents *previousDateComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:self.date];
         if (actualDateComponents.day != previousDateComponents.day) {
             if ([self.delegate respondsToSelector:@selector(dayCheckerOnNewDay:)]) {
                 [self.delegate dayCheckerOnNewDay:self];
             }
-            self.date = actualDate;
+            self.date = [NSDate date];
         }
     }
 }

@@ -34,9 +34,8 @@
 {
     if (nil == dateComponents_) {
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-        dateComponents_ = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
-        dateComponents_.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        dateComponents_ = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
+        dateComponents_.calendar = [NSCalendar currentCalendar];
     }
     
     return dateComponents_;
@@ -86,11 +85,9 @@
 
 - (BOOL)isTodayWord
 {
-    NSDate *todayDate = [NSDate date];
     NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *dateComponentsFromToday = [calendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:todayDate];
-    NSDateComponents *dateComponentsFromWordDate = [calendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:wordDate];
+    NSDateComponents *dateComponentsFromToday = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *dateComponentsFromWordDate = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:wordDate];
     
     return dateComponentsFromToday.year == dateComponentsFromWordDate.year &&
     dateComponentsFromToday.month == dateComponentsFromWordDate.month &&

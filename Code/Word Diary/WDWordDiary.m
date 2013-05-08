@@ -203,13 +203,11 @@
 {
     const NSUInteger previousWordCount = words_.count;
     
-    NSDate *todayDate = [NSDate date];
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *todayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:todayDate];
+    NSDateComponents *todayDateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     todayDateComponents.hour = 23;
     todayDateComponents.minute = 59;
     todayDateComponents.second = 59;
-    NSTimeInterval todayLimitTimeInterval = [calendar dateFromComponents:todayDateComponents].timeIntervalSince1970;
+    NSTimeInterval todayLimitTimeInterval = [[NSCalendar currentCalendar] dateFromComponents:todayDateComponents].timeIntervalSince1970;
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
     
