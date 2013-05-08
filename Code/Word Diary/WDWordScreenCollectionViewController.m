@@ -18,7 +18,8 @@
 #import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 
-static const NSUInteger MAX_WORD_LENGHT = 20;
+static const CGFloat    MIN_HIDDEN_CELL_ALPHA_VALUE = 0.5;
+static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 @interface WDWordScreenCollectionViewController ()
 
@@ -374,7 +375,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView.contentSize.width > 0) {
+    if (scrollView.contentSize.width > 0) {        
         [self endFadeDateAndDayTextTimer];
         WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
         [actualCell fadeInDataAndDayTextInmediate];
@@ -384,15 +385,18 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         const CGFloat indexLeft = floorf(cellIndexWithOffset);
         if (indexLeft != indexRight) {
             WDWordScreenCollectionViewCell *cellAtLeft = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexLeft]];
-            cellAtLeft.alpha = 1 - (cellIndexWithOffset - indexLeft);
+            cellAtLeft.alpha = MAX(MIN_HIDDEN_CELL_ALPHA_VALUE, 1 - (cellIndexWithOffset - indexLeft));
         }
         WDWordScreenCollectionViewCell *cellAtRight = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexRight]];
-        cellAtRight.alpha = 1 - (indexRight - cellIndexWithOffset);
+        cellAtRight.alpha = MAX(MIN_HIDDEN_CELL_ALPHA_VALUE, 1 - (indexRight - cellIndexWithOffset));
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+    cell.alpha = 1.0;
+    
     [self launchFadeDateAndDayTextTimer];
 }
 
@@ -484,6 +488,7 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     cell.wordRepresentationView.dataSource = self;
     cell.wordRepresentationView.clearsContextBeforeDrawing = YES;
     cell.wordRepresentationView.tag = indexPath.section;
+    cell.alpha = MIN_HIDDEN_CELL_ALPHA_VALUE;
     
     WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:[self convertIndexPathToWordIndexContainer:indexPath]];
     [cell setWord:word];
