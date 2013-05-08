@@ -19,14 +19,6 @@
 "TAG_YESTERDAY"    = "Ayer";
 "TAG_DATE_MONTHDAY_SEPARATOR" = "de";
 
-"TAG_EMOTION_NAME_NEUTRAL" = "Neutral";
-"TAG_EMOTION_NAME_LOVE" = "Amor";
-"TAG_EMOTION_NAME_FEAR" = "Miedo";
-"TAG_EMOTION_NAME_JOY" = "Felicidad";
-"TAG_EMOTION_NAME_SADNESS" = "Tristeza";
-"TAG_EMOTION_NAME_SURPRISE" = "Sorpresa";
-"TAG_EMOTION_NAME_DISGUST" = "Asco";
-
 "TAG_ABREVIATEMONTH_JANUARY" = "Ene.";
 "TAG_ABREVIATEMONTH_FEBRUARY" = "Feb.";
 "TAG_ABREVIATEMONTH_MARCH" = "Mar.";
@@ -53,25 +45,7 @@
 "TAG_MONTH_NOVEMBER"    = "Noviembre";
 "TAG_MONTH_DECEMBER"    = "Diciembre";
 
-"TAG_TODAYWORDMENU_WRITEOPTION"     = "palabra";
-"TAG_TODAYWORDMENU_FONTOPTION"      = "estilo";
-"TAG_TODAYWORDMENU_COLOROPTION"     = "emoción";
-"TAG_TODAYWORDMENU_SETTINGSOPTION"  = "ajustes";
-"TAG_TODAYWORDMENU_TIPSOPTION"      = "ayuda";
-"TAG_TODAYWORDMENU_SUPPORTOPTION"   = "soporte";
-"TAG_TODAYWORDMENU_ABOUTOPTION"     = "acerca de";
-
-"TAG_PREVIOUSWORDMENU_DELETEOPTION" = "Borrar";
-
-"TAG_CONFIRMACTIONMENU_DESCRIPTION" = "La palabra será eliminada para siempre";
-"TAG_CONFIRMACTIONMENU_CANCEL"      = "¡No!";
-"TAG_CONFIRMACTIONMENU_YES"         = "Borrar";
-
-"TAG_PLACEHOLDERTEXT_TODAYWORD"     = "Palabra...";
 "TAG_DIARYDAY_LABEL"                = "Día %@";
-
-"TAG_PLACEHOLDER_WORD"              = "|";
-"TAG_CURSOR_INPUT"                  = "|";
 
 "TAG_WEEKDAY_SUNDAY"                = "Domingo";
 "TAG_WEEKDAY_MONDAY"                = "Lunes";
@@ -80,41 +54,6 @@
 "TAG_WEEKDAY_THURSDAY"              = "Jueves";
 "TAG_WEEKDAY_FRIDAY"                = "Viernes";
 "TAG_WEEKDAY_SATURDAY"              = "Sábado";
-
-"TAG_AUXILIARYSCREEN_SUPPORTTITLE"  = "soporte";
-"TAG_AUXILIARYSCREEN_ABOUTTITLE"    = "acerca de";
-"TAG_AUXILIARYSCREEN_SETTINGSTITLE" = "ajustes";
-"TAG_AUXILIARYSCREEN_TIPSTITLE"     = "ayuda";
-
-"TAG_WORDDIARY_URL"                                = "http://www.frodrig.com";
-"TAG_FRODRIGTWITTER_URL"                           = "https://twitter.com/_Frodrig";
-
-"TAG_AUXILIARYSUPPORTPANEL_DESCRIPTION"            = "Si tienes cualquier problema con la aplicación o quieres enviarme feedback (sugerencias, críticas, ideas,...) puedes escribirme.\n\n¡Estaré encantado de atenderte!";
-"TAG_AUXILIARYSUPPORTPANEL_EMAILDESCRIPTION"       = "hola@frodrig.com";
-"TAG_AUXILIARYSUPPORTPANEL_EMAILSEND"              = "Enviar correo";
-
-"TAG_AUXILIARYHELPPANEL_1"                         = "Word Diary es un diario minimalista en el que podrás escribir una única palabra cada día.";
-"TAG_AUXILIARYHELPPANEL_2"                         = "Cada palabra podrá tener su propio estilo de fuente y color de fondo.";
-"TAG_AUXILIARYHELPPANEL_3"                         = "Podrás desplazarte por el diario deslizando el dedo en la dirección a la que desees ir.";
-"TAG_AUXILIARYHELPPANEL_4"                         = "Para moverte muy rápidamente, deja el dedo pulsado en la mitad derecha o izquierda de la pantalla.";
-"TAG_AUXILIARYHELPPANEL_5"                         = "Para situarte inmediatamente en el día actual haz doble pulsación en la pantalla.";
-"TAG_AUXILIARYHELPPANEL_6"                         = "Si estás escribiendo una palabra (con el teclado desplegado) y quieres borrarla fácilmente, agita tu iPhone.";
-"TAG_AUXILIARYHELPPANEL_7"                         = "Las palabras de días previos no se pueden cambiar. Únicamente borrar.";
-"TAG_AUXILIARYHELPPANEL_8"                         = "Recuerda:\n\nUna palabra al día.\n\nUn diario llevado a la mínima expresión.";
-
-"TAG_ADDWORDDAY_YEAR_LABEL"                         = "Año";
-"TAG_ADDWORDDAY_MONTH_LABEL"                        = "Mes";
-"TAG_ADDWORDDAY_DAY_LABEL"                          = "Día";
-"TAG_ADDWORD_INFO_WORDDAYALREADYEXIST"              = "Ya existe una palabra asociada a este día";
-"TAG_ADDWORDDAY_INFO_WORDDAYALREADYEXIST"           = "Ya hay una palabra para este día";
-"TAG_ADDWORDDAY_GO"                                 = "Ir";
-
-"SETTINGS_SCREEN_REMOVEDAYWITHOUTWORDS"             = "Borrar días sin palabras";
-"SETTINGS_SCREEN_DEACTIVATEBACKGROUNDGRADIENTANIM"  = "Animación en el color";
-"SETTINGS_SCREEN_SHOWHELPINTRO"                     = "Mostrar ayuda de introducción";
-"SETTINGS_SCREEN_YES"                               = "Sí";
-"SETTINGS_SCREEN_NO"                                = "No";
-"SETTINGS_SCREEN_NOW"                               = "Ahora";
 
 "TAG_INFO_TITLE"                                    = "Word Diary";
 "TAG_INFO_SUBTITLE"                                 = "Un día en una palabra";
@@ -128,10 +67,10 @@
 "TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "feedback@frodrig.com";
 
 "TAG_HELP_INFOTEXT_PAGE_0"                         = "Bienvenido a Word Diary\nUn día en una palabra";
-"TAG_HELP_INFOTEXT_PAGE_1"                         = "Pulsa en el área de la línea y el cursor para escribir";
-"TAG_HELP_INFOTEXT_PAGE_2"                         = "Desliza arriba o abajo para cambiar el color de fondo";
-"TAG_HELP_INFOTEXT_PAGE_3"                         = "Desliza a izquierda o derecha para cambiar de día y palabra";
-"TAG_HELP_INFOTEXT_PAGE_4"                         = "Pulsa dos veces para añadir, borrar y ver otras opciones";
+"TAG_HELP_INFOTEXT_PAGE_1"                         = "Pulsa en la línea para escribir";
+"TAG_HELP_INFOTEXT_PAGE_2"                         = "Desliza el dedo arriba o abajo para cambiar el color";
+"TAG_HELP_INFOTEXT_PAGE_3"                         = "Desliza el dedo a izquierda o derecha para navegar por tu diario";
+"TAG_HELP_INFOTEXT_PAGE_4"                         = "Pulsa dos veces para ir al calendario y ver otras opciones";
 "TAG_HELP_INFOTEXT_PAGE_5"                         = "";
 
 "TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL"        = "%@ de %d";
