@@ -101,9 +101,10 @@
 {
     
     NSDate *todayDate = [NSDate date];
-    NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
+    //Falla la linea de abajo, no da siempre cambio de dia, usaremos los componentes sin el timeinterval
+    //NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
+    NSDate *wordDate = [[NSCalendar currentCalendar] dateFromComponents:self.dateComponents];
+    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
     
     return dateComponents.day;
     
