@@ -68,6 +68,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)                             pauseAll;
 - (void)                             resumeAll;
 
+- (void)                             updateDateInfoOfSensibleCells;
+
 - (void)                             keyboardWillShowNotification:(NSNotification *)notification;
 - (void)                             keyboardWillHideNotification:(NSNotification *)notification;
 - (void)                             keyboardDidHideNotification:(NSNotification *)notification;
@@ -77,6 +79,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 - (void)                             applicationWillEnterForeground:(NSNotification *)notification;
 - (void)                             applicationDidBecomeActive:(NSNotification *)notification;
 - (void)                             applicationWillTerminate:(NSNotification *)notification;
+
+- (void)                             significatTimeChange:(NSNotification *)notification;
 
 @end
 
@@ -129,6 +133,8 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significatTimeChange:) name:UIApplicationSignificantTimeChangeNotification object:nil];
     }
     return self;
 }
@@ -241,6 +247,14 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
 }
 
 #pragma mark - Auxiliary
+
+- (void)updateDateInfoOfSensibleCells
+{
+    // Solo las celdas asociadas a hoy y ayer, cuando hay cambio de dia, se ven afectadas
+    // Las celdas de ayer y hoy, de existir, seran la ultima y antepenultima
+    [(WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:self.collectionView.numberOfSections - 2]] updateDateInfo];
+    [(WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:self.collectionView.numberOfSections - 1]] updateDateInfo];
+}
 
 -(void)fixCellWithTagsStartingAt:(NSIndexPath *)startIndexPath
 {
@@ -881,13 +895,19 @@ static const NSUInteger MAX_WORD_LENGHT = 20;
     NSLog(@"applicationDidBecomeActive");
     [self resumeAll];
     
-    WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
-    [actualCell updateDateInfo];
+    [self updateDateInfoOfSensibleCells];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
     NSLog(@"applicationWillTerminate");    
+}
+
+#pragma mark - SignificatTimeChangeNotification
+
+- (void)significatTimeChange:(NSNotification *)notification
+{
+    [self updateDateInfoOfSensibleCells];
 }
 
 #pragma mark - WDWordCharacterCounterViewDataSource

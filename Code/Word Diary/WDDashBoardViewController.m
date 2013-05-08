@@ -79,6 +79,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (void)                applicationDidBecomeActive:(NSNotification *)notification;
 - (void)                applicationWillTerminate:(NSNotification *)notification;
 
+- (void)                significatTimeChange:(NSNotification *)notification;
+
 @end
 
 @implementation WDDashBoardViewController
@@ -149,6 +151,8 @@ const NSUInteger WEEKS_MONTHS = 5;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significatTimeChange:) name:UIApplicationSignificantTimeChangeNotification object:nil];
     }
     return self;
 }
@@ -783,12 +787,6 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    todayDate_ = nil;
-    normalizedRealTodayDate_ = nil;
-    self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
-    
-    [self configureMonthAndYearLabel];
-    [self configureDayOfTheMonths];
 
     // ToDo: Comprobar si hemos cambiado de idioma
 }
@@ -800,6 +798,21 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
 }
+
+#pragma mark - TimeSignificantChangeNotification
+
+- (void)significatTimeChange:(NSNotification *)notification
+{
+    todayDate_ = nil;
+    normalizedRealTodayDate_ = nil;
+    self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
+    
+    if (!self.dateSelectorModeActive) {
+        [self configureMonthAndYearLabel];
+    }
+    [self configureDayOfTheMonths];
+}
+
 
 
 @end
