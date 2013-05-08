@@ -12,6 +12,9 @@
 
 @interface WDWordRepresentationView()
 
+- (CGFloat) scaleFontInEditMode;
+- (CGFloat) scaleFontInPresentationMode;
+
 @end
 
 @implementation WDWordRepresentationView
@@ -79,6 +82,50 @@
     }];
 }
 
+#pragma mark - Auxiliary
+/*
+@"Baskerville",
+@"Zapfino",
+@"PartyLetPlain",
+@"SnellRoundhand",
+*/
+
+- (CGFloat)scaleFontInEditMode
+{
+    CGFloat retScale = 1.0;
+    
+    const NSString *familyFont = [self.dataSource selectedWordTextFamilyFontForWordRepresentationView:self];
+    if ([familyFont compare:@"Baskerville"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 1.45 : 1.2;
+    } else if ([familyFont compare:@"Zapfino"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 0.6 : 0.3;
+    } else if ([familyFont compare:@"PartyLetPlain"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 1.5 : 1.5;
+    } else if ([familyFont compare:@"SnellRoundhand"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 1.3 : 1.1;
+    }
+    
+    return retScale;
+}
+
+- (CGFloat)scaleFontInPresentationMode
+{
+    CGFloat retScale = 1.0;
+    
+    const NSString *familyFont = [self.dataSource selectedWordTextFamilyFontForWordRepresentationView:self];
+    if ([familyFont compare:@"Baskerville"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 1.45 : 1.2;
+    } else if ([familyFont compare:@"Zapfino"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 0.65 : 0.5;
+    } else if ([familyFont compare:@"PartyLetPlain"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 1.8 : 1.5;
+    } else if ([familyFont compare:@"SnellRoundhand"] == NSOrderedSame) {
+        retScale = [WDUtils is568Screen] ? 1.4 : 1.2;
+    }
+    
+    return retScale;
+}
+
 #pragma mark - Draw
 
 // Only override drawRect: if you perform custom drawing.
@@ -97,14 +144,14 @@
     // Constantes y vbles
     NSString *wordText = [self.dataSource selectedWordTextForWordRepresentationView:self];
     const NSString *familyFont = [self.dataSource selectedWordTextFamilyFontForWordRepresentationView:self];
-    CGFloat fontSize = [self.dataSource selectedWordFontStartSizeForWordRepresentationView:self];
+    CGFloat fontSize = 100.0 * (self.keyboardMode ? [self scaleFontInEditMode] : [self scaleFontInPresentationMode]);
     const UIColor *wordColor = [self.dataSource selectedWordColorForWordRepresentationView:self];
     const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
     float wordColorRGBComponents[4];
     [wordColor getRed:&wordColorRGBComponents[0] green:&wordColorRGBComponents[1] blue:&wordColorRGBComponents[2] alpha:&wordColorRGBComponents[3]];
     const BOOL isEmptyText = wordText.length == 0;
     const BOOL showCursor = (isEmptyText || self.keyboardMode);
-    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * ([WDUtils is568Screen] ? 0.6 : 0.5));
+    const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * ([WDUtils is568Screen] ? 0.6 : 0.6));
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
     const CGFloat wordStartPointDrawMargin = showCursor ? 15.0 : 15.0;
     const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
@@ -127,7 +174,7 @@
     
     CGContextRestoreGState(contextRef);
     
-    // Tamaño palabra
+    // Tamaño palabra    
     CTLineRef line = nil;
     CGRect lineImageBounds;
     BOOL endFindingFontSize = NO;

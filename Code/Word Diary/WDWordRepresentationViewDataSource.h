@@ -15,7 +15,6 @@
 - (NSString *) selectedWordTextForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 - (NSString *) selectedWordTextFamilyFontForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 - (UIColor *)  selectedWordColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
-- (CGFloat)    selectedWordFontStartSizeForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
 - (UIColor *)  selectedWordCursorColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 

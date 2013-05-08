@@ -719,12 +719,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     return selectedWord.style.familyFont;
 }
 
-- (CGFloat) selectedWordFontStartSizeForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
-{
-    const CGFloat startFontSize = 100.0;
-    return [WDUtils isIPhone5Screen] ? startFontSize * 1.15 : startFontSize * 0.9;
-}
-
 - (BOOL)isKeyboardActiveForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
     BOOL firstResponder = [self isFirstResponder];
