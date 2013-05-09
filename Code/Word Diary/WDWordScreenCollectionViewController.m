@@ -705,6 +705,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         dashBoardViewController.dataSource = self;
         [self presentViewController:dashBoardViewController animated:YES completion:^{
             [self pauseAll];
+            [self fadeInDateAndDayTextOnCell:[self findSelectedCell] withInfiniteDuration:YES];
         }];
     }
 }
