@@ -889,6 +889,10 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 {
     [self pauseAll];
     
+    if (self.editWordModeActive) {
+        [self resignFirstResponder];
+    }
+    
     self.view.alpha = 0.0;
 }
 
