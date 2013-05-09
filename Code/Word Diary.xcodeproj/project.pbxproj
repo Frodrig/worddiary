@@ -41,6 +41,8 @@
 		5B7B0669173B96D40009E5C1 /* 39-back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7B0665173B96D40009E5C1 /* 39-back@2x.png */; };
 		5B7B066A173B96D40009E5C1 /* 40-forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7B0666173B96D40009E5C1 /* 40-forward.png */; };
 		5B7B066B173B96D40009E5C1 /* 40-forward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7B0667173B96D40009E5C1 /* 40-forward@2x.png */; };
+		5B7B066E173B98580009E5C1 /* 433-x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7B066C173B98580009E5C1 /* 433-x.png */; };
+		5B7B066F173B98580009E5C1 /* 433-x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7B066D173B98580009E5C1 /* 433-x@2x.png */; };
 		5B80894816DE3CE2002CD179 /* WDUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80894716DE3CE2002CD179 /* WDUtils.m */; };
 		5B86DBD9171BE542003152AB /* WDPalette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBD8171BE542003152AB /* WDPalette.m */; };
 		5B86DBDC171BE542003152AB /* WDWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B86DBDB171BE542003152AB /* WDWord.m */; };
@@ -131,6 +133,8 @@
 		5B7B0665173B96D40009E5C1 /* 39-back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39-back@2x.png"; sourceTree = "<group>"; };
 		5B7B0666173B96D40009E5C1 /* 40-forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "40-forward.png"; sourceTree = "<group>"; };
 		5B7B0667173B96D40009E5C1 /* 40-forward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "40-forward@2x.png"; sourceTree = "<group>"; };
+		5B7B066C173B98580009E5C1 /* 433-x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "433-x.png"; sourceTree = "<group>"; };
+		5B7B066D173B98580009E5C1 /* 433-x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "433-x@2x.png"; sourceTree = "<group>"; };
 		5B80894616DE3CE2002CD179 /* WDUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDUtils.h; sourceTree = "<group>"; };
 		5B80894716DE3CE2002CD179 /* WDUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDUtils.m; sourceTree = "<group>"; };
 		5B86DBD7171BE542003152AB /* WDPalette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDPalette.h; sourceTree = "<group>"; };
@@ -242,6 +246,8 @@
 				5B7B0664173B96D40009E5C1 /* 39-back.png */,
 				5B7B0665173B96D40009E5C1 /* 39-back@2x.png */,
 				5B7B0666173B96D40009E5C1 /* 40-forward.png */,
+				5B7B066C173B98580009E5C1 /* 433-x.png */,
+				5B7B066D173B98580009E5C1 /* 433-x@2x.png */,
 				5B7B0667173B96D40009E5C1 /* 40-forward@2x.png */,
 				5BA4D57F172A75500042CFF1 /* 83-calendar@2x.png */,
 				5BEB4C7D1725A5F5005BC2D9 /* 298-circlex.png */,
@@ -709,6 +715,8 @@
 				5B7B0669173B96D40009E5C1 /* 39-back@2x.png in Resources */,
 				5B7B066A173B96D40009E5C1 /* 40-forward.png in Resources */,
 				5B7B066B173B96D40009E5C1 /* 40-forward@2x.png in Resources */,
+				5B7B066E173B98580009E5C1 /* 433-x.png in Resources */,
+				5B7B066F173B98580009E5C1 /* 433-x@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
