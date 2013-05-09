@@ -793,13 +793,17 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-
+    self.view.alpha = 0.0;
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
 
     // ToDo: Comprobar si hemos cambiado de idioma
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:1.5 animations:^{
+        self.view.alpha = 1.0;
+    }];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

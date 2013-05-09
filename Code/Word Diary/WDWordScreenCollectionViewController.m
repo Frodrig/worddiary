@@ -878,12 +878,19 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
     [self pauseAll];
+    
+    self.view.alpha = 0.0;
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     [self resumeAll];
     [self.collectionView reloadData];
+    
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:1.5 animations:^{
+        self.view.alpha = 1.0;
+    }];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification

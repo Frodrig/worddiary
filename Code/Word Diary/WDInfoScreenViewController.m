@@ -18,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UILabel                    *versionLabel;
 @property (nonatomic, strong) MFMailComposeViewController       *mailComposerViewController;
 
+- (void)  applicationDidEnterBackground:(NSNotification *)notification;
+- (void)  applicationWillEnterForeground:(NSNotification *)notification;
+
 @end
 
 @implementation WDInfoScreenViewController
@@ -52,6 +55,9 @@
     if (self) {
         // Custom initialization
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];        
     }
     return self;
 }
@@ -103,6 +109,22 @@
 {
     [self.mailComposerViewController dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - Application Notifications
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{    
+    self.view.alpha = 0.0;
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification
+{
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:1.5 animations:^{
+        self.view.alpha = 1.0;
+    }];
+}
+
 
 
 @end
