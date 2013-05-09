@@ -78,7 +78,6 @@
     [super viewDidAppear:animated];
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"]) {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"];
         WDHelpScreenViewController *helpScreenViewController = [[WDHelpScreenViewController alloc] initWithNibName:nil bundle:nil];
         helpScreenViewController.delegate = self;
         [self presentViewController:helpScreenViewController animated:YES completion:nil];
@@ -120,6 +119,12 @@
 
 
 #pragma mark - WDHelpScreenViewControllerDelegate
+
+- (void) willReachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController
+{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 - (void)reachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController
 {

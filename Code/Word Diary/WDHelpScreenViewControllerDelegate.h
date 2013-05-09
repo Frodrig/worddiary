@@ -12,6 +12,7 @@
 
 @protocol WDHelpScreenViewControllerDelegate <NSObject>
 
+- (void) willReachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController;
 - (void) reachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "WDHelpScreenViewController.h"
+#import "WDUtils.h"
 
 @interface WDHelpScreenViewController ()
 
@@ -14,7 +15,19 @@
 @property (weak, nonatomic) IBOutlet UILabel       *infoLabel;
 @property (weak, nonatomic) IBOutlet UIPageControl *pageControl;
 
-- (void) setInfolabelTextForCurrentPage;
+- (void)    setInfolabelTextForCurrentPage;
+
+- (void)    createScreens;
+- (void)    releaseScreens;
+
+- (void)    prepareAlphasForAlphaAnimateInitTransition;
+- (void)    alphaAnimateInitTransition;
+
+- (void)    applicationWillResignActive:(NSNotification *)notification;
+- (void)    applicationDidEnterBackground:(NSNotification *)notification;
+- (void)    applicationWillEnterForeground:(NSNotification *)notification;
+- (void)    applicationDidBecomeActive:(NSNotification *)notification;
+- (void)    applicationWillTerminate:(NSNotification *)notification;
 
 @end
 
@@ -35,6 +48,12 @@
     if (self) {
         // Custom initialization
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
     }
     return self;
 }
@@ -50,11 +69,26 @@
     self.pageControl.currentPage = 0;
     
     [self setInfolabelTextForCurrentPage];
+    
+    self.view.alpha = 0.0;
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self prepareAlphasForAlphaAnimateInitTransition];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self createScreens];
+    [self alphaAnimateInitTransition];
+
+    //NSLog(@"frame %@", NSStringFromCGRect(self.scrollView.bounds));
 }
 
 - (void)didReceiveMemoryWarning
@@ -72,6 +106,42 @@
     self.infoLabel.text = NSLocalizedString(tagInfoHelp, @"");
 }
 
+- (void)createScreens
+{
+    const NSUInteger maxScreens = 5;
+    for (NSUInteger screenIt = 0; screenIt < maxScreens; screenIt++) {
+        NSString *screenName = [NSString stringWithFormat:@"help_screen%d", screenIt];
+        UIImageView *screen = [[UIImageView alloc] initWithFrame:self.scrollView.frame];
+        screen.contentMode = UIViewContentModeScaleAspectFit;
+        screen.image = [UIImage imageNamed:screenName];
+        screen.frame = CGRectMake(screen.frame.size.width * screenIt, screen.frame.origin.y, screen.frame.size.width, screen.frame.size.height);
+        [self.scrollView addSubview:screen];
+    }
+}
+
+- (void)alphaAnimateInitTransition
+{
+    [UIView animateWithDuration:1.5 animations:^{ self.scrollView.alpha = 1.0; }];
+    [UIView animateWithDuration:2.0 animations:^{ self.infoLabel.alpha = 1.0; }];
+    [UIView animateWithDuration:2.5 animations:^{ self.pageControl.alpha = 1.0; }];
+}
+
+- (void)prepareAlphasForAlphaAnimateInitTransition
+{
+    self.scrollView.alpha = 0.0;
+    self.infoLabel.alpha = 0.0;
+    self.pageControl.alpha = 0.0;
+}
+
+- (void)releaseScreens
+{
+    for (UIView *viewIt in self.scrollView.subviews) {
+        if ([viewIt isKindOfClass:[UIImageView class]]) {
+            [viewIt removeFromSuperview];
+        }
+    }
+}
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -80,10 +150,41 @@
     [self setInfolabelTextForCurrentPage];
     
     if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
+        [self.delegate willReachLastPageFromHelpScreenViewController:self];
         [self dismissViewControllerAnimated:YES completion:^{
             [self.delegate reachLastPageFromHelpScreenViewController:self];
         }];
     }
 }
+
+#pragma mark - UIApplicationNotification
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+    
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+    [self releaseScreens];
+    [self prepareAlphasForAlphaAnimateInitTransition];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification
+{
+    [self createScreens];
+    [self alphaAnimateInitTransition];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    
+}
+
+- (void)applicationWillTerminate:(NSNotification *)notification
+{
+    
+}
+
 
 @end
