@@ -343,7 +343,7 @@
 										<reference key="IBUINormalTitleShadowColor" ref="608479086"/>
 										<object class="NSCustomResource" key="IBUINormalImage">
 											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">02-arrow-east.png</string>
+											<string key="NSResourceName">40-forward.png</string>
 										</object>
 										<reference key="IBUIFontDescription" ref="761065823"/>
 										<reference key="IBUIFont" ref="220750516"/>
@@ -368,7 +368,7 @@
 										<reference key="IBUINormalTitleShadowColor" ref="608479086"/>
 										<object class="NSCustomResource" key="IBUINormalImage">
 											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">09-arrow-west.png</string>
+											<string key="NSResourceName">39-back.png</string>
 										</object>
 										<reference key="IBUIFontDescription" ref="761065823"/>
 										<reference key="IBUIFont" ref="220750516"/>
@@ -441,6 +441,7 @@
 										<string key="NSFrame">{{193, 0}, {110, 44}}</string>
 										<reference key="NSSuperview" ref="490518166"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -3040,6 +3041,45 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">WDDashBoardViewController</string>
 					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="acceptButtonPressed:">id</string>
+						<string key="cancelButtonPressed:">id</string>
+						<string key="cancelRemoveDayMode:">id</string>
+						<string key="changeMonthYearButtonPressed:">id</string>
+						<string key="infoButtonPressed:">id</string>
+						<string key="leftButtonPressed:">id</string>
+						<string key="rightButtonPressed:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="acceptButtonPressed:">
+							<string key="name">acceptButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="cancelButtonPressed:">
+							<string key="name">cancelButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="cancelRemoveDayMode:">
+							<string key="name">cancelRemoveDayMode:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="changeMonthYearButtonPressed:">
+							<string key="name">changeMonthYearButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="infoButtonPressed:">
+							<string key="name">infoButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="leftButtonPressed:">
+							<string key="name">leftButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="rightButtonPressed:">
+							<string key="name">rightButtonPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="acceptButton">UIButton</string>
 						<string key="cancelButton">UIButton</string>
@@ -3132,8 +3172,8 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="02-arrow-east.png">{19, 16}</string>
-			<string key="09-arrow-west.png">{19, 16}</string>
+			<string key="39-back.png">{16, 16}</string>
+			<string key="40-forward.png">{16, 16}</string>
 			<string key="42-info.png">{28, 28}</string>
 			<string key="83-calendar.png">{23, 25}</string>
 		</dictionary>
