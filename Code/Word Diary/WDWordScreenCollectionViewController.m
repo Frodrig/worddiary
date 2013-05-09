@@ -178,7 +178,9 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerNib:[UINib nibWithNibName:@"WDWordScreenCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"WordScreenCell"];
-    self.collectionView.pagingEnabled = YES;
+    self.collectionView.pagingEnabled = NO;
+    self.collectionView.bounces = YES;
+    self.collectionView.alwaysBounceHorizontal = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     
