@@ -69,14 +69,13 @@
     self.pageControl.currentPage = 0;
     
     [self setInfolabelTextForCurrentPage];
-    
-    self.view.alpha = 0.0;
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self.view sizeToFit];
     
     [self prepareAlphasForAlphaAnimateInitTransition];
 }
@@ -151,9 +150,16 @@
     
     if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
         [self.delegate willReachLastPageFromHelpScreenViewController:self];
-        [self dismissViewControllerAnimated:YES completion:^{
+        self.scrollView.scrollEnabled = NO;
+        [UIView animateWithDuration:1.0 animations:^{
+            self.view.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [self.delegate didReachLastPageFromHelpScreenViewController:self];
+        }];
+        /*[self dismissViewControllerAnimated:YES completion:^{
             [self.delegate reachLastPageFromHelpScreenViewController:self];
         }];
+         */
     }
 }
 
@@ -173,6 +179,9 @@
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     [self createScreens];
+    self.scrollView.contentOffset = CGPointMake(0.0, 0.0);
+    self.pageControl.currentPage = 0;
+    [self setInfolabelTextForCurrentPage];
     [self alphaAnimateInitTransition];
 }
 

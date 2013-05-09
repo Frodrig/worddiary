@@ -230,6 +230,9 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     // Timers
     [self launchFadeDateAndDayTextTimer];
     [self launchCursorColorTimer];
+    
+    // Transicion incial
+    self.view.alpha = 0.0;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -241,6 +244,11 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     [actualCell resumeBackgroundColorAnimation];
     
     self.otherViewControllerInDismissMode = NO;
+    
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:1.0 animations:^{
+        self.view.alpha = 1.0;
+    }];
 }
 
 - (void)didReceiveMemoryWarning
@@ -890,7 +898,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     [self.collectionView reloadData];
     
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView animateWithDuration:1.5 animations:^{
+    [UIView animateWithDuration:1.0 animations:^{
         self.view.alpha = 1.0;
     }];
 }

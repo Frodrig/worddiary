@@ -9,16 +9,25 @@
 #import "WDWordScreenViewController.h"
 #import "WDWordScreenCollectionViewController.h"
 #import "WDHelpScreenViewController.h"
+#import "WDDashBoardViewController.h"
 #import "WDWord.h"
+#import "WDUtils.h"
 #import "WDWordDiary.h"
 
 @interface WDWordScreenViewController ()
 
 #pragma mark - Properties
 
-@property(nonatomic, weak) WDWord   *selectedWord;
+@property(nonatomic, weak)   WDWord                               *selectedWord;
+@property(nonatomic, strong) UIImageView                          *launchTransitionImageView;
+@property(nonatomic, strong) WDHelpScreenViewController           *helpScreenViewController;
+@property(nonatomic, strong) WDWordScreenCollectionViewController *wordScreenCollectionViewController;
 
 - (WDWord *)            createFirstWord;
+
+- (void)                showApropiateViewController;
+
+- (void)                fadeOutLaunchImage;
 
 - (void)                applicationWillResignActive:(NSNotification *)notification;
 - (void)                applicationDidEnterBackground:(NSNotification *)notification;
@@ -32,7 +41,10 @@
 
 #pragma mark - Synthesize
 
-@synthesize selectedWord             = selectedWord_;
+@synthesize selectedWord                       = selectedWord_;
+@synthesize launchTransitionImageView          = launchTransitionImageView_;
+@synthesize helpScreenViewController           = helpScreenViewController_;
+@synthesize wordScreenCollectionViewController = wordScreenCollectionViewController_;
 
 #pragma mark - Init
 
@@ -66,25 +78,24 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 
     self.view.backgroundColor = [UIColor blackColor];
+    self.view.opaque = NO;
+    self.view.contentMode = UIViewContentModeScaleAspectFill;
+    self.view.autoresizesSubviews = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    self.launchTransitionImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[WDUtils is568Screen] ? @"Default-568h" : @"Default"]];
+    [self.view addSubview:self.launchTransitionImageView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"]) {
-        WDHelpScreenViewController *helpScreenViewController = [[WDHelpScreenViewController alloc] initWithNibName:nil bundle:nil];
-        helpScreenViewController.delegate = self;
-        [self presentViewController:helpScreenViewController animated:YES completion:nil];
-    } else {
-        WDWordScreenCollectionViewController *collectionViewController = [[WDWordScreenCollectionViewController alloc] init];
-        [self presentViewController:collectionViewController animated:YES completion:nil];
-    }
+    [self showApropiateViewController];
 }
 
 - (void)didReceiveMemoryWarning
@@ -94,6 +105,42 @@
 }
 
 #pragma mark - Auxiliary
+
+- (void)fadeOutLaunchImage
+{
+    const BOOL helpScreenHaveLaunchAtInit = [[NSUserDefaults standardUserDefaults] boolForKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView animateWithDuration:helpScreenHaveLaunchAtInit ? 2.0 : 2.0 animations:^{
+        self.launchTransitionImageView.alpha = 0.0;
+        if (helpScreenHaveLaunchAtInit) {
+            if (self.wordScreenCollectionViewController.presentedViewController != nil) {
+                if (self.wordScreenCollectionViewController.presentedViewController.presentedViewController == nil) {
+                    self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x, self.launchTransitionImageView.center.y * - 1);
+                }
+            } else {
+                self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
+            }
+        }
+    } completion:^(BOOL finished) {
+        [self.launchTransitionImageView removeFromSuperview];
+        self.launchTransitionImageView = nil;
+    }];
+}
+
+- (void)showApropiateViewController
+{
+    [self fadeOutLaunchImage];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"]) {
+        self.helpScreenViewController = [[WDHelpScreenViewController alloc] initWithNibName:nil bundle:nil];
+        self.helpScreenViewController.delegate = self;
+        self.helpScreenViewController.view.frame = self.view.frame;
+        [self.view insertSubview:self.helpScreenViewController.view belowSubview:self.launchTransitionImageView];
+    } else {
+        self.wordScreenCollectionViewController = [[WDWordScreenCollectionViewController alloc] init];
+        [self.view insertSubview:self.wordScreenCollectionViewController.view belowSubview:self.launchTransitionImageView];
+    }
+}
 
 - (WDWord *)createFirstWord
 {
@@ -117,19 +164,21 @@
     return selectedWordCandidate;
 }
 
-
 #pragma mark - WDHelpScreenViewControllerDelegate
 
-- (void) willReachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController
+- (void)willReachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController
 {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HELP_SCREEN_HAVE_LAUCH_AT_INIT"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)reachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController
+- (void)didReachLastPageFromHelpScreenViewController:(WDHelpScreenViewController *)helpScreenViewController
 {
-    //self.collectionViewController = [[WDWordScreenCollectionViewController alloc] init];
-    //[self presentViewController:self.collectionViewController animated:YES completion:nil];
+    [self.helpScreenViewController.view removeFromSuperview];
+    self.helpScreenViewController = nil;
+    
+    self.wordScreenCollectionViewController = [[WDWordScreenCollectionViewController alloc] init];
+    [self.view addSubview:self.wordScreenCollectionViewController.view];
 }
 
 #pragma mark - Application Notifications
@@ -148,6 +197,12 @@
         if ([WDWordDiary sharedWordDiary].words.count == 0) {
             [self createFirstWord];
         }
+    }
+    
+    if (!self.launchTransitionImageView) {
+        self.launchTransitionImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[WDUtils is568Screen] ? @"Default-568h" : @"Default"]];
+        [self.view insertSubview:self.launchTransitionImageView aboveSubview:self.helpScreenViewController ? self.helpScreenViewController.view : self.wordScreenCollectionViewController.view];
+        [self performSelector:@selector(fadeOutLaunchImage) withObject:nil afterDelay:0.5];
     }
 }
 
