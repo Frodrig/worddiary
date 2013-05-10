@@ -200,10 +200,14 @@
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    if ([[WDWordDiary sharedWordDiary] cutWordsArrayAtPresentDay]) {
-        if ([WDWordDiary sharedWordDiary].words.count == 0) {
-            [self createFirstWord];
-        }
+    [[WDWordDiary sharedWordDiary] cutWordsArrayAtPresentDay];
+    
+    BOOL createTodayWord = [WDWordDiary sharedWordDiary].words.count == 0;
+    if (!createTodayWord) {
+        createTodayWord = self.wordScreenCollectionViewController && self.wordScreenCollectionViewController.presentedViewController == nil;
+    }
+    if (createTodayWord) {
+        [self createFirstWord];
     }
     
     if (!self.launchTransitionImageView) {

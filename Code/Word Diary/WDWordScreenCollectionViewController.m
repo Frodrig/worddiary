@@ -71,6 +71,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)                             updateDateInfoOfSensibleCells;
 
+- (void)                             performScrollToIndexPathForWordWhenAppear;
+
 - (void)                             keyboardWillShowNotification:(NSNotification *)notification;
 - (void)                             keyboardWillHideNotification:(NSNotification *)notification;
 - (void)                             keyboardDidHideNotification:(NSNotification *)notification;
@@ -224,8 +226,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     flowLayout.sectionInset = UIEdgeInsetsMake(edgeMargin, edgeMargin, edgeMargin, edgeMargin);
        
     // Scroll a la ultima palabra
-    [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-    self.indexPathForWordWhenAppear = nil;
+    [self performScrollToIndexPathForWordWhenAppear];
 
     // Timers
     [self launchFadeDateAndDayTextTimer];
@@ -258,6 +259,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 }
 
 #pragma mark - Auxiliary
+
+- (void)performScrollToIndexPathForWordWhenAppear
+{
+    [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    self.indexPathForWordWhenAppear = nil;
+}
 
 - (void)updateDateInfoOfSensibleCells
 {
@@ -895,6 +902,18 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         [self resignFirstResponder];
     }
     
+    if (nil == self.presentedViewController) {
+        WDWord *actualSelectedWord = [self findSelectedWord];
+        if (actualSelectedWord.word.length > 0) {
+            self.indexPathForWordWhenAppear = [self indexPathForWord:actualSelectedWord];
+        }
+    }
+    
+    NSDateComponents *lastDayDateComponents = [[WDWordDiary sharedWordDiary] findLastCreatedWord].dateComponents;
+    [[NSUserDefaults standardUserDefaults] setInteger:lastDayDateComponents.year forKey:@"LAST_WORD_YEAR_BEFORE_ENTER_BACKGROUND"];
+    [[NSUserDefaults standardUserDefaults] setInteger:lastDayDateComponents.month forKey:@"LAST_WORD_MONTH_BEFORE_ENTER_BACKGROUND"];
+    [[NSUserDefaults standardUserDefaults] setInteger:lastDayDateComponents.day forKey:@"LAST_WORD_DAY_BEFORE_ENTER_BACKGROUND"];
+    
     self.view.alpha = 0.0;
 }
 
@@ -902,6 +921,24 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 {
     [self resumeAll];
     [self.collectionView reloadData];
+    
+    NSInteger lastWordYearBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_YEAR_BEFORE_ENTER_BACKGROUND"];
+    NSInteger lastWordMontBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_MONTH_BEFORE_ENTER_BACKGROUND"];
+    NSInteger lastWordDayBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_DAY_BEFORE_ENTER_BACKGROUND"];
+    WDWord *newPosibleLastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
+    BOOL goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordYearBeforeEnterBackground != newPosibleLastWord.dateComponents.year;
+    if (!goToLastPositionBecouseOneOrMoreDaysHavePassed) {
+        goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordMontBeforeEnterBackground != newPosibleLastWord.dateComponents.month;
+    }
+    if (!goToLastPositionBecouseOneOrMoreDaysHavePassed) {
+        goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordDayBeforeEnterBackground != newPosibleLastWord.dateComponents.day;
+    }
+    
+    if (goToLastPositionBecouseOneOrMoreDaysHavePassed) {
+        self.indexPathForWordWhenAppear = nil;
+    }
+    
+    [self performScrollToIndexPathForWordWhenAppear];
     
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     [UIView animateWithDuration:1.0 animations:^{

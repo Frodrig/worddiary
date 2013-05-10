@@ -69,6 +69,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 - (NSDateComponents *)  findDateComponentsForDayMonthView:(WDDayMonthView *)dayMonthView;
 
 - (void)                exitRemoveDayMode;
+
+- (BOOL)                logicChangeYearMonthWithSelectedDateComponents:(NSDateComponents *)dateComponents;
 - (void)                exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents;
 
 - (void)                addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word;
@@ -415,15 +417,27 @@ const NSUInteger WEEKS_MONTHS = 5;
     }];
 }
 
-- (void)exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents
+- (BOOL)logicChangeYearMonthWithSelectedDateComponents:(NSDateComponents *)dateComponents
 {
-    NSAssert(self.dateSelectorModeActive, @"Deberia de estar activo el modo de cambio de fecha");
-   
-    self.dateSelectorModeActive = NO;
-    
-    if (dateComponents != nil && (self.actualDate.year != dateComponents.year || self.actualDate.month != dateComponents.month)) {
+    const BOOL logicChange = dateComponents != nil && (self.actualDate.year != dateComponents.year || self.actualDate.month != dateComponents.month);
+    if (logicChange) {
         self.actualDate.year = dateComponents.year;
         self.actualDate.month = dateComponents.month;
+        self.actualDate.day = dateComponents.day;
+        self.actualDate.week = dateComponents.week;
+    }
+    
+    return logicChange;
+}
+
+- (void)exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents
+{
+    NSAssert(self.dateSelectorModeActive, @"Deberia de estar activo el modo de seleccion de fecha manual");
+    
+    self.dateSelectorModeActive = NO;
+    
+    const BOOL logicChange = [self logicChangeYearMonthWithSelectedDateComponents:dateComponents];
+    if (logicChange) {
         [self configureDayOfTheMonths];
     }
     
@@ -806,8 +820,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-
-    // ToDo: Comprobar si hemos cambiado de idioma
+    // ¿ToDo: Comprobar si hemos cambiado de idioma?
+    
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     [UIView animateWithDuration:1.5 animations:^{
         self.view.alpha = 1.0;
@@ -828,12 +842,12 @@ const NSUInteger WEEKS_MONTHS = 5;
 {
     todayDate_ = nil;
     normalizedRealTodayDate_ = nil;
-    self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
     
-    if (!self.dateSelectorModeActive) {
+    NSDateComponents *newActualDate = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
+    if ([self logicChangeYearMonthWithSelectedDateComponents:newActualDate]) {
+        [self configureDayOfTheMonths];
         [self configureMonthAndYearLabel];
     }
-    [self configureDayOfTheMonths];
 }
 
 

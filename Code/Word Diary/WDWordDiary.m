@@ -306,15 +306,16 @@
 {
     NSUInteger retNumberOfWords = 0;
     for (WDWord *word in self.words) {
+        BOOL updateCounter = NO;
         if (month > 0) {
-            if (word.dateComponents.month == month && word.dateComponents.year == year) {
-                retNumberOfWords++;
-            }
+            updateCounter = word.dateComponents.month == month && word.dateComponents.year == year;
         } else {
-            if (word.dateComponents.year == year) {
-                retNumberOfWords++;
-            }
+            updateCounter = word.dateComponents.year == year;
         }
+        if (updateCounter) {
+            updateCounter = word.word.length > 0;
+        }
+        retNumberOfWords += updateCounter ? 1 : 0;
     }
     
     return retNumberOfWords;
