@@ -161,6 +161,13 @@
         selectedWordCandidate = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[todayDate timeIntervalSince1970]];
     }
     
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"FIRST_BACKGROUND_SETTING"]) {
+        WDPalette *startingWordPalette = [[WDWordDiary sharedWordDiary].palettes objectAtIndex:0];
+        selectedWordCandidate.palette = startingWordPalette;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"FIRST_BACKGROUND_SETTING"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     return selectedWordCandidate;
 }
 

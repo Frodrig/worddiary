@@ -670,6 +670,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         }
         
         if (newPalette) {
+            NSLog(@"new palette index %d", [[WDWordDiary sharedWordDiary].palettes indexOfObject:newPalette]);
             WDWord *word = [self findSelectedWord];
             word.palette = newPalette;
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];

@@ -168,7 +168,8 @@
                 UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:0.06 alpha:0];
                 gradientAnimation.toValue = gradientAnimation.toValue == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [gradientAnimation.toValue arrayByAddingObject:(id)colorOffset.CGColor];
             }
-            gradientAnimation.duration = 3.0;
+            gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+            gradientAnimation.duration = 4.0;
             gradientAnimation.repeatCount = HUGE_VALF;
             gradientAnimation.autoreverses = YES;
 
