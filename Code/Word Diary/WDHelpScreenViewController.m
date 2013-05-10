@@ -143,11 +143,15 @@
 
 #pragma mark - UIScrollViewDelegate
 
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    self.pageControl.currentPage = floor((self.scrollView.contentOffset.x / self.scrollView.bounds.size.width) + 0.5);
+    [self setInfolabelTextForCurrentPage];
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    self.pageControl.currentPage = self.scrollView.contentOffset.x / self.scrollView.bounds.size.width;
-    [self setInfolabelTextForCurrentPage];
-    
     if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
         [self.delegate willReachLastPageFromHelpScreenViewController:self];
         self.scrollView.scrollEnabled = NO;
@@ -156,10 +160,6 @@
         } completion:^(BOOL finished) {
             [self.delegate didReachLastPageFromHelpScreenViewController:self];
         }];
-        /*[self dismissViewControllerAnimated:YES completion:^{
-            [self.delegate reachLastPageFromHelpScreenViewController:self];
-        }];
-         */
     }
 }
 
