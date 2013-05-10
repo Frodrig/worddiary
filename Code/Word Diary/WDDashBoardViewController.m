@@ -538,6 +538,8 @@ const NSUInteger WEEKS_MONTHS = 5;
                     self.dayMonthPendingToRemove.removeMode = YES;
                     self.infoButton.enabled = NO;
                     self.acceptButton.alpha = self.cancelButton.alpha = 0;
+                    [self.acceptButton setTitle:NSLocalizedString(@"TAG_DASHBOARDSCREEN_ACCEPT_ERASE", @"") forState:UIControlStateNormal];
+                    [self.cancelButton setTitle:NSLocalizedString(@"TAG_DASHBOARDSCREEN_CANCEL", @"") forState:UIControlStateNormal];
                     self.acceptButton.hidden = self.cancelButton.hidden = NO;
                     [UIView animateWithDuration:0.55 animations:^{
                         self.acceptButton.alpha = self.cancelButton.alpha = 1.0;
@@ -595,6 +597,8 @@ const NSUInteger WEEKS_MONTHS = 5;
     } completion:^(BOOL finished) {
         self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
         self.cancelButton.hidden = self.acceptButton.hidden = NO;
+        [self.acceptButton setTitle:NSLocalizedString(@"TAG_DASHBOARDSCREEN_ACCEPT_GO", @"") forState:UIControlStateNormal];
+        [self.cancelButton setTitle:NSLocalizedString(@"TAG_DASHBOARDSCREEN_CANCEL", @"") forState:UIControlStateNormal];
         self.cancelButton.alpha = self.acceptButton.alpha = 0.0;
         [UIView animateWithDuration:0.5 animations:^{
             self.yearMonthLabel.alpha = 1.0;

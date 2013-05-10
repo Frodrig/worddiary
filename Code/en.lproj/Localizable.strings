@@ -74,5 +74,8 @@
 "TAG_HELP_INFOTEXT_PAGE_5"                         = "";
 
 "TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL"        = "%@ %d";
+"TAG_DASHBOARDSCREEN_ACCEPT_ERASE"                 = "Remove";
+"TAG_DASHBOARDSCREEN_ACCEPT_GO"                    = "Go";
+"TAG_DASHBOARDSCREEN_CANCEL"                       = "Cancel";
 
 "TAG_DATESELECTOR_TITLE"                           = "Select date";
