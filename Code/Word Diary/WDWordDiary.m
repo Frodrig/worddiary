@@ -297,6 +297,29 @@
 
 #pragma mark - Find
 
+- (NSUInteger)findNumberOfWordsInYear:(NSUInteger)year
+{
+    return [self findNumberOfWordsInMonth:0 ofYear:year];
+}
+
+- (NSUInteger)findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year
+{
+    NSUInteger retNumberOfWords = 0;
+    for (WDWord *word in self.words) {
+        if (month > 0) {
+            if (word.dateComponents.month == month && word.dateComponents.year == year) {
+                retNumberOfWords++;
+            }
+        } else {
+            if (word.dateComponents.year == year) {
+                retNumberOfWords++;
+            }
+        }
+    }
+    
+    return retNumberOfWords;
+}
+
 - (WDWord *)findTodayWord
 {
     WDWord *result = [self findLastCreatedWord];

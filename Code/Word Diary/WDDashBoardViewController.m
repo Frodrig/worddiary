@@ -715,16 +715,20 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
+    NSUInteger numberOfWordsForDate = 0;
     BOOL available = YES;
     NSString *strTitle = nil;
     if (0 == component) {
         const NSUInteger year = self.todayDate.year - row;
-        strTitle = [NSString stringWithFormat:@"%d", year];
+        numberOfWordsForDate = [[WDWordDiary sharedWordDiary] findNumberOfWordsInYear:year];
+        strTitle = numberOfWordsForDate > 0 ? [NSString stringWithFormat:@"%d (%d)", year,  numberOfWordsForDate] : [NSString stringWithFormat:@"%d", year];
+
     } else {
-        strTitle = [WDUtils monthString:row + 1 abreviateMode:NO];
         if (self.todayDate.year == self.todayDate.year - [pickerView selectedRowInComponent:0]) {
             available = self.todayDate.month > row;
         }
+        numberOfWordsForDate = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:row + 1 ofYear:self.todayDate.year];
+        strTitle = numberOfWordsForDate > 0 ? [NSString stringWithFormat:@"%@ (%d)", [WDUtils monthString:row + 1 abreviateMode:NO], numberOfWordsForDate]: [WDUtils monthString:row + 1 abreviateMode:NO];
     }
     
     NSShadow *textShadow = [[NSShadow alloc] init];
@@ -735,7 +739,7 @@ const NSUInteger WEEKS_MONTHS = 5;
     NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:strTitle
                                                                      attributes:@{
                                                           NSShadowAttributeName: textShadow,
-                                                            NSFontAttributeName: [UIFont fontWithName:component == 0 ?  @"Helvetica" : @"Helvetica" size: component == 0 ? 24.0 : 28.0],
+                                                            NSFontAttributeName: [UIFont fontWithName:component == 0 ?  @"Helvetica" : @"Helvetica" size: component == 0 ? 18.0 : 18.0],
                                                  NSForegroundColorAttributeName: available ? [UIColor blackColor] : [UIColor lightGrayColor],
                                                             }];
     
@@ -746,9 +750,9 @@ const NSUInteger WEEKS_MONTHS = 5;
 {
     CGFloat retWidth = 0.0f;
     if (component == 0) {
-        retWidth = pickerView.frame.size.width * 0.3;
+        retWidth = pickerView.frame.size.width * 0.35;
     } else if (component == 1) {
-        retWidth = pickerView.frame.size.width * 0.7;
+        retWidth = pickerView.frame.size.width * 0.65;
     }
     
     return retWidth;

@@ -38,6 +38,9 @@
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
 - (NSArray *)     findAllDaysIndexWithoutWord;
 
+- (NSUInteger)    findNumberOfWordsInYear:(NSUInteger)year;
+- (NSUInteger)    findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year;
+
 - (WDPalette *)   findNextPaletteOfPalette:(WDPalette *)palette;
 - (WDPalette *)   findPrevPaletteOfPalette:(WDPalette *)palette;
 - (NSArray *)     makeGradientCGColorPaletteOfWord:(WDWord *)word;
