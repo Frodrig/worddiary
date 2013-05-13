@@ -268,7 +268,7 @@
 {
     [word removeObserver:self forKeyPath:@"word"];
     [word removeObserver:self forKeyPath:@"timeInterval"];
-    [word removeObserver:self forKeyPath:@"style"];
+    //[word removeObserver:self forKeyPath:@"style"];
     //[word removeObserver:self forKeyPath:@"palette"];
     
     [self.context refreshObject:word.style mergeChanges:NO];
@@ -487,7 +487,8 @@
 {
     [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
-    [word addObserver:self forKeyPath:@"style" options:0 context:NULL];
+    // Por optimizacion, se deja la grabacion a salir del modo edicion para evitar que cada vez que se cambia el estilo se guarde
+    //[word addObserver:self forKeyPath:@"style" options:0 context:NULL];
     // Por optimizacion, se deja la grabacion en la zona de cambio del valor cuando ha terminado de realizarse el drag
     //[word addObserver:self forKeyPath:@"palette" options:0 context:NULL];
 }
@@ -525,11 +526,8 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    // para una palabra, timeInterval y cadena asociada
     [self saveAll];
-    
-    if ([keyPath compare:@"timeInterval"] == NSOrderedSame) {
-      //  [self sortWords];
-    }
 }
 
 @end

@@ -61,6 +61,7 @@
 
 - (void)dealloc
 {
+    [self removeObserver:self forKeyPath:@"word"];
     [self removeObserver:self forKeyPath:@"timeInterval"];
 }
 

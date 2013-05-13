@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDWordRepresentationViewDelegate.h"
 #import "WDWordRepresentationViewDataSource.h"
 #import "WDWordCharacterCounterViewDataSource.h"
 #import "WDWordCharacterCounterViewDelegate.h"
@@ -14,6 +15,7 @@
 #import "WDDashBoardViewControllerDataSource.h"
 
 @interface WDWordScreenCollectionViewController : UICollectionViewController<WDWordRepresentationViewDataSource,
+                                                                             WDWordRepresentationViewDelegate,
                                                                              WDWordCharacterCounterViewDataSource,
                                                                              WDWordCharacterCounterViewDelegate,
                                                                              WDDashBoardViewControllerDelegate,

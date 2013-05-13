@@ -12,6 +12,9 @@
 
 @interface WDWordRepresentationView()
 
+@property(nonatomic) CGRect  lastCursorBounds;
+@property(nonatomic) CGFloat lastFontSize;
+
 - (CGFloat) scaleFontInEditMode;
 - (CGFloat) scaleFontInPresentationMode;
 
@@ -21,10 +24,13 @@
 
 #pragma mark - Synthesize
 
-@synthesize dataSource   = dataSource_;
-@synthesize keyboardMode = keyboardMode_;
-@synthesize isGosthView  = isGosthView_;
+@synthesize dataSource        = dataSource_;
+@synthesize keyboardMode      = keyboardMode_;
+@synthesize isGosthView       = isGosthView_;
 @synthesize forceCursorHide   = cursorHide_;
+@synthesize delegate          = delegate_;
+@synthesize lastCursorBounds  = lastCursorBounds_;
+@synthesize lastFontSize      = lastFontSize_;
 
 #pragma mark - Init
 
@@ -44,6 +50,7 @@
         keyboardMode_ = [aDecoder decodeBoolForKey:@"keyboardMode"];
         isGosthView_ = [aDecoder decodeBoolForKey:@"gosthView"];
         cursorHide_  = [aDecoder decodeBoolForKey:@"forceCursorHide"];
+        self.lastCursorBounds = CGRectNull;
     }
     
     return self;
@@ -132,8 +139,6 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    
-    NSLog(@"A");
     [super drawRect:rect];
         
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
@@ -143,28 +148,19 @@
     CGContextTranslateCTM(contextRef, 0, self.bounds.size.height);
     CGContextScaleCTM(contextRef, 1.0, -1.0);
     
-    // Constantes y vbles
-    NSString *wordText = [self.dataSource selectedWordTextForWordRepresentationView:self];
-    const NSString *familyFont = [self.dataSource selectedWordTextFamilyFontForWordRepresentationView:self];
-    CGFloat fontSize = 100.0 * (self.keyboardMode ? [self scaleFontInEditMode] : [self scaleFontInPresentationMode]);
+    // Vbles y constantes generales
+    const CGFloat dashPattern[] = {1.0, 9.0};
     const UIColor *wordColor = [self.dataSource selectedWordColorForWordRepresentationView:self];
-    const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
     float wordColorRGBComponents[4];
     [wordColor getRed:&wordColorRGBComponents[0] green:&wordColorRGBComponents[1] blue:&wordColorRGBComponents[2] alpha:&wordColorRGBComponents[3]];
-    const BOOL isEmptyText = wordText.length == 0;
-    const BOOL showCursor = (isEmptyText || self.keyboardMode);
+    NSString *wordText = [self.dataSource selectedWordTextForWordRepresentationView:self];
     const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * ([WDUtils is568Screen] ? 0.6 : 0.6));
     const CGPoint endPointDraw = CGPointMake(self.bounds.size.width, startPointDraw.y);
-    const CGFloat wordStartPointDrawMargin = showCursor ? 15.0 : 15.0;
-    const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
-    const CGFloat finalFontSizeModulator = 25.0;
-    CGFloat leftMarginAdjustmentByFont = 0.0;
-        
-    const CGFloat dashPattern[] = {1.0, 9.0};
-    
+    const BOOL isEmptyText = wordText.length == 0;
+    const BOOL showCursor = (isEmptyText || self.keyboardMode);
+
     // Línea
     CGContextSaveGState(contextRef);
-    
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineDash(contextRef, 0, dashPattern, 2);
     CGContextSetLineWidth(contextRef, 1.5);
@@ -173,15 +169,23 @@
     CGContextMoveToPoint(contextRef, startPointDraw.x, startPointDraw.y);
     CGContextAddLineToPoint(contextRef, endPointDraw.x, endPointDraw.y);
     CGContextStrokePath(contextRef);
-    
     CGContextRestoreGState(contextRef);
+
+    // Dibujado de la palabra si procede (no ha habido cambio de estado)
+    const NSString *familyFont = [self.dataSource selectedWordTextFamilyFontForWordRepresentationView:self];
+    self.lastFontSize = 100.0 * (self.keyboardMode ? [self scaleFontInEditMode] : [self scaleFontInPresentationMode]);
+   
+    const CGFloat wordStartPointDrawMargin = showCursor ? 15.0 : 15.0;
+    const CGFloat rightWidthMargin = showCursor ? 60.0 : 15.0;
+    const CGFloat finalFontSizeModulator = 25.0;
+    CGFloat leftMarginAdjustmentByFont = 0.0;
     
-    // Tamaño palabra    
+    // Tamaño palabra
     CTLineRef line = nil;
     CGRect lineImageBounds;
     BOOL endFindingFontSize = NO;
     do {
-        CTFontRef fontRef = CTFontCreateWithName((__bridge CFStringRef)familyFont, fontSize, NULL);
+        CTFontRef fontRef = CTFontCreateWithName((__bridge CFStringRef)familyFont, self.lastFontSize, NULL);
         NSDictionary *attrDictionary = @{(NSString *)kCTFontAttributeName: (__bridge id)fontRef,
                                          (NSString *)NSForegroundColorAttributeName: wordColor};
         CFRelease(fontRef);
@@ -191,7 +195,7 @@
             [attString addAttribute:NSKernAttributeName value:[NSNumber numberWithFloat:0] range:NSMakeRange(0.0, wordText.length)];
         }
         line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef)(attString));
-    
+        
         lineImageBounds = CTLineGetImageBounds(line, contextRef);
         leftMarginAdjustmentByFont = lineImageBounds.origin.x < 0.0 ? abs(lineImageBounds.origin.x) : -lineImageBounds.origin.x;
         endFindingFontSize = leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + lineImageBounds.size.width + rightWidthMargin + finalFontSizeModulator < leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x + self.bounds.size.width;
@@ -200,47 +204,44 @@
         }
         
         if (!endFindingFontSize) {
-            fontSize--;
+            self.lastFontSize--;
             CFRelease(line);
         }
     } while (!endFindingFontSize);
     
     CGPoint fontDrawPoint = showCursor ? CGPointMake(leftMarginAdjustmentByFont + startPointDraw.x + wordStartPointDrawMargin + self.frame.origin.x, startPointDraw.y) :
-                                         CGPointMake(leftMarginAdjustmentByFont + (self.bounds.size.width - lineImageBounds.size.width) / 2, startPointDraw.y);
+    CGPointMake(leftMarginAdjustmentByFont + (self.bounds.size.width - lineImageBounds.size.width) / 2, startPointDraw.y);
+    self.lastCursorBounds = CGRectMake(fontDrawPoint.x, fontDrawPoint.y, 0.0, lineImageBounds.size.height);
     
     CGContextSaveGState(contextRef);
     CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);
     
-    CGRect cursorBounds = CGRectNull;
-    if (showCursor && !self.forceCursorHide) {
-        cursorBounds = CGRectMake(fontDrawPoint.x, fontDrawPoint.y, 0.0, lineImageBounds.size.height);
-        if (wordText.length > 0) {
-            CFArrayRef lineGlyphRuns = CTLineGetGlyphRuns(line);
-            CFIndex glyphRunsCount = CFArrayGetCount(lineGlyphRuns);
-            CTRunRef glyphRunRef = CFArrayGetValueAtIndex(lineGlyphRuns, glyphRunsCount - 1);
-            CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(glyphRunRef).location + CTRunGetStringRange(glyphRunRef).length, NULL);
-            CGFloat width = CTRunGetTypographicBounds(glyphRunRef, CFRangeMake(0, 0), NULL, NULL, NULL);
-            cursorBounds = CGRectMake(fontDrawPoint.x + xOffset, cursorBounds.origin.y, width, cursorBounds.size.height);
-        }
-    }
-
+    CFArrayRef lineGlyphRuns = CTLineGetGlyphRuns(line);
+    CFIndex glyphRunsCount = CFArrayGetCount(lineGlyphRuns);
+    CTRunRef glyphRunRef = CFArrayGetValueAtIndex(lineGlyphRuns, glyphRunsCount - 1);
+    CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(glyphRunRef).location + CTRunGetStringRange(glyphRunRef).length, NULL);
+    CGFloat width = CTRunGetTypographicBounds(glyphRunRef, CFRangeMake(0, 0), NULL, NULL, NULL);
+    self.lastCursorBounds = CGRectMake(fontDrawPoint.x + xOffset, self.lastCursorBounds.origin.y, width, self.lastCursorBounds.size.height);
+    
+    // Palabra
+    CTLineDraw(line, contextRef);
+    CFRelease(line);
+    [self.delegate wordContentUpdatedFlagCheckedByWordRepresentationView:self];
+    CGContextRestoreGState(contextRef);
+    
     // Cursor
     if (showCursor && !self.forceCursorHide) {
+        const UIColor *cursorColor = [self.dataSource selectedWordCursorColorForWordRepresentationView:self];
         CGContextSaveGState(contextRef);
         
         CGContextSetLineWidth(contextRef, 4.0);
         CGContextSetStrokeColorWithColor(contextRef, cursorColor.CGColor);
-        CGContextMoveToPoint(contextRef, cursorBounds.origin.x + 1, cursorBounds.origin.y + fontSize * 0.75);
-        CGContextAddLineToPoint(contextRef, cursorBounds.origin.x + 1, cursorBounds.origin.y - fontSize * 0.25);
+        CGContextMoveToPoint(contextRef, self.lastCursorBounds.origin.x + 1, self.lastCursorBounds.origin.y + self.lastFontSize * 0.75);
+        CGContextAddLineToPoint(contextRef, self.lastCursorBounds.origin.x + 1, self.lastCursorBounds.origin.y - self.lastFontSize * 0.25);
         CGContextStrokePath(contextRef);
         
         CGContextRestoreGState(contextRef);
     }
-    
-    // Palabra    
-    CTLineDraw(line, contextRef);
-    CFRelease(line);
-    CGContextRestoreGState(contextRef);
 }
 
 @end

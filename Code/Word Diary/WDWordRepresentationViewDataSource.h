@@ -19,5 +19,6 @@
 - (UIColor *)  selectedWordCursorColorForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
 - (BOOL)       isKeyboardActiveForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
+- (BOOL)       isWordContentUpdatedForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation;
 
 @end

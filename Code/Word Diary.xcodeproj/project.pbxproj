@@ -203,6 +203,7 @@
 		5BA4D582172A766C0042CFF1 /* 426-calendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "426-calendar.png"; sourceTree = "<group>"; };
 		5BA4D583172A766C0042CFF1 /* 426-calendar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "426-calendar@2x.png"; sourceTree = "<group>"; };
 		5BA93F2D1740F7A900E42EF1 /* help_screen4_en.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help_screen4_en.png; sourceTree = "<group>"; };
+		5BA93F2F174132B900E42EF1 /* WDWordRepresentationViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDWordRepresentationViewDelegate.h; sourceTree = "<group>"; };
 		5BB42261170EC19B0081B5CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5BB42263170EC1B40081B5CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		5BB42265170EC1B80081B5CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -492,6 +493,7 @@
 				5B86DBF5171C41AA003152AB /* WDWordRepresentationView.h */,
 				5B86DBF6171C41AA003152AB /* WDWordRepresentationView.m */,
 				5B86DBF8171C41BA003152AB /* WDWordRepresentationViewDataSource.h */,
+				5BA93F2F174132B900E42EF1 /* WDWordRepresentationViewDelegate.h */,
 			);
 			name = "Word Representation View";
 			sourceTree = "<group>";

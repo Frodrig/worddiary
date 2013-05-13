@@ -37,6 +37,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @property (nonatomic) BOOL                                  otherViewControllerInDismissMode;
 @property (nonatomic) BOOL                                  editWordModeActive;
 @property (nonatomic) BOOL                                  inPanModeForChangeBackgroundColor;
+@property (nonatomic) BOOL                                  wordContentUpdatedInEditMode;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -104,6 +105,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @synthesize otherViewControllerInDismissMode   = otherWordViewControllerInDismissMode_;
 @synthesize editWordModeActive                 = editWordModeActive_;
 @synthesize inPanModeForChangeBackgroundColor  = inPanModeForChangeBackgroundColor_;
+@synthesize wordContentUpdatedInEditMode       = wordContentUpdatedInEditMode_;
 
 #pragma mark - Properties
 
@@ -126,6 +128,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         
         // Siempe aparece por un presentViewController
         otherWordViewControllerInDismissMode_ = YES;
+        wordContentUpdatedInEditMode_ = YES;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
@@ -199,11 +202,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         UIButton *styleButtonIt = [UIButton buttonWithType:UIButtonTypeCustom];
         styleButtonIt.frame = CGRectMake(areaPerButton * styleIt, 0.0, areaPerButton, self.styleMenuView.bounds.size.height);
         [styleButtonIt setImage:[UIImage imageNamed:backgroundImageForIcon] forState:UIControlStateNormal];
+        styleButtonIt.adjustsImageWhenHighlighted = NO;
         styleButtonIt.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
         // Nota: Incremento en 1 en el tag debido a que no se permite guardar tags con valor 0
         styleButtonIt.tag = styleIt + 1;
         styleButtonIt.alpha = 0.0;
-        [styleButtonIt addTarget:self action:@selector(styleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [styleButtonIt addTarget:self action:@selector(styleButtonPressed:) forControlEvents:UIControlEventTouchDown];
         [self.styleMenuView addSubview:styleButtonIt];
     }
     
@@ -503,6 +507,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     // Nota IMPORTANTE: En el tag del wordRepresentation guardamos la seccion del indexPath
     WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"WordScreenCell" forIndexPath:indexPath];
     cell.wordRepresentationView.dataSource = self;
+    cell.wordRepresentationView.delegate = self;
     cell.wordRepresentationView.clearsContextBeforeDrawing = YES;
     cell.wordRepresentationView.tag = indexPath.section;
     cell.alpha = MIN_HIDDEN_CELL_ALPHA_VALUE;
@@ -736,7 +741,19 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     }
 }
 
+#pragma mark - WDWordRepresentationViewDelegate
+
+- (void)wordContentUpdatedFlagCheckedByWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
+{
+    self.wordContentUpdatedInEditMode = NO;
+}
+
 #pragma mark - WDWordRepresentatonViewDataSource
+
+- (BOOL)isWordContentUpdatedForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
+{
+    return self.wordContentUpdatedInEditMode;
+}
 
 - (NSString *)selectedWordTextForWordRepresentationView:(WDWordRepresentationView *)wordRepresentation
 {
@@ -782,10 +799,13 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 #pragma mark - UIKeyInput
 
-- (void) deleteBackward
+- (void)deleteBackward
 {
     WDWord *selectedWord = [self findSelectedWord];
     if (selectedWord.word.length > 0) {
+        NSLog(@"hey db!");
+        self.wordContentUpdatedInEditMode = YES;
+        
         selectedWord.word = [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
         
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
@@ -794,21 +814,22 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     }
 }
 
-- (BOOL) hasText
+- (BOOL)hasText
 {
     WDWord *selectedWord = [self findSelectedWord];
     return selectedWord.word.length > 0;
 }
 
-- (void) insertText:(NSString *)text
+- (void)insertText:(NSString *)text
 {
     WDWord *selectedWord = [self findSelectedWord];
     if ([text stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]].length == 0) {
         [self resignFirstResponder];
     } else if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length > 0) {
         if (selectedWord.word.length < MAX_WORD_LENGHT) {
+            NSLog(@"hey it!");
+            self.wordContentUpdatedInEditMode = YES;
             selectedWord.word = [selectedWord.word stringByAppendingString:text];
-            
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             [cell.wordRepresentationView setNeedsDisplay];
             [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordInEditModeAddedNewCharacter" object:nil]];
@@ -859,6 +880,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
 {
+    [[WDWordDiary sharedWordDiary] saveAll];
+    
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
     
     // Wordrepresentation
