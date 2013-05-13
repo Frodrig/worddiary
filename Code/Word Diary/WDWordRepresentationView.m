@@ -132,6 +132,8 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
+    
+    NSLog(@"A");
     [super drawRect:rect];
         
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
