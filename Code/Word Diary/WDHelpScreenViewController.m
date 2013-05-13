@@ -106,14 +106,27 @@
 }
 
 - (void)createScreens
-{
+{    
     const NSUInteger maxScreens = 5;
     for (NSUInteger screenIt = 0; screenIt < maxScreens; screenIt++) {
-        NSString *screenName = [NSString stringWithFormat:@"help_screen%d", screenIt];
+        NSString *screenName = [NSString stringWithFormat:@"help_screen%d_%@", screenIt+1, NSLocalizedString(@"TAG_LANG", @"")];
         UIImageView *screen = [[UIImageView alloc] initWithFrame:self.scrollView.frame];
         screen.contentMode = UIViewContentModeScaleAspectFit;
         screen.image = [UIImage imageNamed:screenName];
         screen.frame = CGRectMake(screen.frame.size.width * screenIt, screen.frame.origin.y, screen.frame.size.width, screen.frame.size.height);
+        if (screenIt == 1) {
+            UIImageView *coachView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pointocoach"]];
+            [screen addSubview:coachView];
+            coachView.center = CGPointMake(100.0, screen.center.y * ([WDUtils is568Screen] ? 1.35 : 1.45));
+        } else if (screenIt == 2) {
+            UIImageView *coachView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"updowncoach"]];
+            [screen addSubview:coachView];
+            coachView.center = CGPointMake(screen.frame.size.width / 2.0, screen.frame.size.height / 2.0);
+        } else if (screenIt == 3) {
+            UIImageView *coachView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"leftrightcoach"]];
+            [screen addSubview:coachView];
+            coachView.center = CGPointMake(screen.frame.size.width * 0.45, screen.frame.size.height / 1.55);
+        }
         [self.scrollView addSubview:screen];
     }
 }
