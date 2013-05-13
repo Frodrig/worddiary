@@ -111,6 +111,9 @@
     [self setWordRepresentation:word];
     [self setDayDiaryLabelOfWord:word];
     
+    self.gradientLayerBackgroundColor.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
+    self.gradientLayerBackgroundColor.startPoint = CGPointMake(0.5, 0.0);
+    self.gradientLayerBackgroundColor.endPoint = CGPointMake(0.5, 1.0);
     [self refreshBackgroundColorOfWord:word];
     
     self.dateContainerView.alpha = 1.0;
@@ -139,46 +142,31 @@
 
 - (void)refreshBackgroundColorOfWord:(WDWord *)word
 {
-    self.gradientLayerBackgroundColor.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
-    self.gradientLayerBackgroundColor.colors = [[WDWordDiary sharedWordDiary] makeGradientCGColorPaletteOfWord:word];
-    self.gradientLayerBackgroundColor.startPoint = CGPointMake(0.5, 0.0);
-    self.gradientLayerBackgroundColor.endPoint = CGPointMake(0.5, 1.0);
-    
+    self.gradientLayerBackgroundColor.colors = [[WDWordDiary sharedWordDiary] makeGradientCGColorPaletteOfWord:word];    
     [self addBackgroundColorAnimationWithWord:word];
-    
-    // Update color de fechas, dia de diaria
-    [self updateColorOfLabel:self.dateDayOfTheWeekLabel withColor:[word.palette makeWordColorObject]];
-    [self updateColorOfLabel:self.dateDayAndMonthLabel withColor:[word.palette makeWordColorObject]];
-    [self updateColorOfLabel:self.dateYearLabel withColor:[word.palette makeWordColorObject]];
-    [self updateColorOfLabel:self.dayDiaryLabel withColor:[word.palette makeWordColorObject]];
     
     self.actualWord = word;
 }
 
 - (void)addBackgroundColorAnimationWithWord:(WDWord *)word
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM"]) {
-        if (!self.backgroundColorAnimationPaused &&
-            self.gradientLayerBackgroundColor.animationKeys.count == 0) {
-                
-            CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
-            gradientAnimation.fromValue = self.gradientLayerBackgroundColor.colors;
-            NSArray *gradientColorPalette = [[WDWordDiary sharedWordDiary] makeGradientColorPaletteOfWord:word];
-            for (UIColor *colorIt in gradientColorPalette) {
-                UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:0.06 alpha:0];
-                gradientAnimation.toValue = gradientAnimation.toValue == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [gradientAnimation.toValue arrayByAddingObject:(id)colorOffset.CGColor];
-            }
-            gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-            gradientAnimation.duration = 4.0;
-            gradientAnimation.repeatCount = HUGE_VALF;
-            gradientAnimation.autoreverses = YES;
-
-            [self.gradientLayerBackgroundColor addAnimation:gradientAnimation forKey:@"animateGradientSoftBlink"];
+    if (!self.backgroundColorAnimationPaused &&
+        self.gradientLayerBackgroundColor.animationKeys.count == 0) {
+        CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
+        gradientAnimation.fromValue = self.gradientLayerBackgroundColor.colors;
+        NSArray *gradientColorPalette = [[WDWordDiary sharedWordDiary] makeGradientColorPaletteOfWord:word];
+        for (UIColor *colorIt in gradientColorPalette) {
+            UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:0.06 alpha:0];
+            gradientAnimation.toValue = gradientAnimation.toValue == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [gradientAnimation.toValue arrayByAddingObject:(id)colorOffset.CGColor];
         }
-    } else {
-        [self.gradientLayerBackgroundColor removeAllAnimations];
+        gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        gradientAnimation.duration = 4.0;
+        gradientAnimation.repeatCount = HUGE_VALF;
+        gradientAnimation.autoreverses = YES;
+            
+        [self.gradientLayerBackgroundColor addAnimation:gradientAnimation forKey:@"animateGradientSoftBlink"];
     }
-  }
+}
 
 - (void)pauseBackgroundColorAnimation
 {

@@ -269,7 +269,7 @@
     [word removeObserver:self forKeyPath:@"word"];
     [word removeObserver:self forKeyPath:@"timeInterval"];
     [word removeObserver:self forKeyPath:@"style"];
-    [word removeObserver:self forKeyPath:@"palette"];
+    //[word removeObserver:self forKeyPath:@"palette"];
     
     [self.context refreshObject:word.style mergeChanges:NO];
     [self.context refreshObject:word.palette mergeChanges:NO];
@@ -388,7 +388,7 @@
     return retPalette;
 }
 
-- (WDPalette *) findPrevPaletteOfPalette:(WDPalette *)palette
+- (WDPalette *)findPrevPaletteOfPalette:(WDPalette *)palette
 {
     WDPalette *retPalette = nil;
     if (nil == palette) {
@@ -405,7 +405,7 @@
     return retPalette;
 }
 
-- (WDPalette *) findNextPaletteOfPalette:(WDPalette *)palette
+- (WDPalette *)findNextPaletteOfPalette:(WDPalette *)palette
 {
     WDPalette *retPalette = nil;
     if (nil == palette) {
@@ -450,7 +450,7 @@
         [retGradientCGColorPalette addObject:(id)color.CGColor];
     }
 
-    return [NSArray arrayWithArray:retGradientCGColorPalette];
+    return retGradientCGColorPalette;//[NSArray arrayWithArray:retGradientCGColorPalette];
 }
 
 - (NSUInteger)findIndexPositionForStyle:(WDStyle *)style
@@ -488,7 +488,8 @@
     [word addObserver:self forKeyPath:@"word" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"timeInterval" options:0 context:NULL];
     [word addObserver:self forKeyPath:@"style" options:0 context:NULL];
-    [word addObserver:self forKeyPath:@"palette" options:0 context:NULL];
+    // Por optimizacion, se deja la grabacion en la zona de cambio del valor cuando ha terminado de realizarse el drag
+    //[word addObserver:self forKeyPath:@"palette" options:0 context:NULL];
 }
 
 - (void)sortWords

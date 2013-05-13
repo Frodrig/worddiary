@@ -10,6 +10,12 @@
 #import "WDWord.h"
 #import "WDUtils.h"
 
+@interface WDPalette()
+
+@property(nonatomic, strong) UIColor *lightBackgroundUIColor;
+@property(nonatomic, strong) UIColor *wordUIColor;
+
+@end
 
 @implementation WDPalette
 
@@ -18,14 +24,40 @@
 @dynamic wordColor;
 @dynamic word;
 
-- (UIColor *) makeLightBackgroundColorObject
+@synthesize lightBackgroundUIColor = lightBackgroundUIColor_;
+@synthesize wordUIColor            = wordUIColor_;
+
+
+#pragma mark - Properties
+
+- (UIColor *)lightBackgroundUIColor
 {
-    return [WDUtils convertStringToColor:self.lightBackground];
+    if (nil == lightBackgroundUIColor_) {
+        lightBackgroundUIColor_ = [WDUtils convertStringToColor:self.lightBackground];
+    }
+    
+    return lightBackgroundUIColor_;
 }
 
-- (UIColor *) makeWordColorObject
+- (UIColor *)wordUIColor
 {
-    return [UIColor colorWithWhite:[WDUtils brightnessOfColor:[self makeLightBackgroundColorObject]] alpha:1.0];
+    if (nil == wordUIColor_) {
+        wordUIColor_ = [UIColor colorWithWhite:[WDUtils brightnessOfColor:[self makeLightBackgroundColorObject]] alpha:1.0];
+    }
+    
+    return wordUIColor_;
+}
+
+#pragma mark - makes
+
+- (UIColor *)makeLightBackgroundColorObject
+{
+    return self.lightBackgroundUIColor;
+}
+
+- (UIColor *)makeWordColorObject
+{
+    return self.wordUIColor;
 }
 
 @end

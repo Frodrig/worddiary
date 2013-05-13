@@ -71,7 +71,6 @@
 {
     // Defaults del registration domain
     NSDictionary *defaults = @{@"HELP_SCREEN_HAVE_LAUCH_AT_INIT": [NSNumber numberWithBool:NO],
-                               @"SETTINGS_SCREEN_ACTIVATEBACKGROUNDGRADIENTANIM": [NSNumber numberWithBool:YES],
                                @"FIRST_BACKGROUND_SETTING": [NSNumber numberWithBool:YES]};
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
   

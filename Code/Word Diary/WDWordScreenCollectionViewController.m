@@ -620,29 +620,19 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (void)panGestureRecognizerHandle:(UIPanGestureRecognizer *)gesture
 {
     if (!self.isFirstResponder) {
-        WDPalette *newPalette = nil;
+        BOOL checkForUpdateGesture = NO;
         if (gesture == self.panGestureRecognizer) {
             switch (gesture.state) {
-                case UIGestureRecognizerStateBegan:
+                case UIGestureRecognizerStateBegan: {
+                    checkForUpdateGesture = YES;
+                } break;
                 case UIGestureRecognizerStateChanged: {
-                    CGPoint translation = [gesture translationInView:self.view];
-                    if (![WDUtils is:translation.y equalsTo:0.0]) {
-                        if (abs(translation.y) > abs(translation.x)) {
-                            const CGFloat minimumDistance = 10.0;
-                            WDWord *word = [self findSelectedWord];
-                            if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
-                                newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
-                            } else if (translation.y > 0.0 && translation.y > minimumDistance) {
-                                newPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
-                            }
-                            if (newPalette != nil && !self.inPanModeForChangeBackgroundColor) {
-                                self.inPanModeForChangeBackgroundColor = YES;
-                            }
-                        } else {
-                            [gesture setTranslation:CGPointZero inView:self.view];
-                        }
-                        
-                    }
+                    checkForUpdateGesture = YES;
+                } break;
+                                       
+                case UIGestureRecognizerStateEnded: {
+                    checkForUpdateGesture = NO;
+                    [[WDWordDiary sharedWordDiary] saveAll];
                 } break;
                     
                 default:
@@ -650,20 +640,46 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
             }
         }
         
-        const BOOL fadeOutText = (gesture.state == UIGestureRecognizerStateChanged || gesture.state == UIGestureRecognizerStateEnded) && self.inPanModeForChangeBackgroundColor;
+        WDPalette *newPalette = nil;
+        if (checkForUpdateGesture) {
+            CGPoint translation = [gesture translationInView:self.view];
+            if (![WDUtils is:translation.y equalsTo:0.0]) {
+                if (abs(translation.y) > abs(translation.x)) {
+                    const CGFloat minimumDistance = 1.0;
+                    WDWord *word = [self findSelectedWord];
+                    if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
+                        newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
+                    } else if (translation.y > 0.0 && translation.y > minimumDistance) {
+                        newPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
+                    }
+                    if (newPalette != nil && !self.inPanModeForChangeBackgroundColor) {
+                    }
+                } else {
+                    [gesture setTranslation:CGPointZero inView:self.view];
+                }
+                
+            }
+        }
+        
+        const BOOL fadeOutText = gesture.state == UIGestureRecognizerStateBegan;
         const BOOL fadeInText = gesture.state == UIGestureRecognizerStateEnded && self.inPanModeForChangeBackgroundColor;
         
         if (fadeInText || fadeOutText) {
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-
+            
             if (fadeOutText) {
                 [self endFadeDateAndDayTextTimer];
                 [cell pauseBackgroundColorAnimation];
+                self.inPanModeForChangeBackgroundColor = YES;
+                self.collectionView.scrollEnabled = NO;
+            } else if (fadeInText) {
+                self.inPanModeForChangeBackgroundColor = NO;
             }
             
             const CGFloat alphaValue = fadeInText ? 1.0 : 0.0;
+            const CGFloat animationTime = fadeInText ? 0.35 : 0.25;
             [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-            [UIView animateWithDuration:0.25 animations:^{
+            [UIView animateWithDuration:animationTime animations:^{
                 cell.dateContainerView.alpha = alphaValue;
                 cell.wordRepresentationContainerView.alpha = alphaValue;
                 cell.dayDiaryContainerView.alpha = alphaValue;
@@ -671,13 +687,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
                 if (fadeInText) {
                     [self launchFadeDateAndDayTextTimer];
                     [cell resumeBackgroundColorAnimation];
-                    self.inPanModeForChangeBackgroundColor = NO;
+                    self.collectionView.scrollEnabled = YES;
                 }
             }];
         }
         
         if (newPalette) {
-            NSLog(@"new palette index %d", [[WDWordDiary sharedWordDiary].palettes indexOfObject:newPalette]);
             WDWord *word = [self findSelectedWord];
             word.palette = newPalette;
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
@@ -685,6 +700,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
             [gesture setTranslation:CGPointZero inView:self.view];
         }
     }
+
 }
 
 /*
