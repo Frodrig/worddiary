@@ -18,8 +18,10 @@
 #import "WDDaysOfTheWeekContainerView.h"
 #import <QuartzCore/QuartzCore.h>
 
-const NSUInteger DAYS_OF_WEEK = 7;
-const NSUInteger WEEKS_MONTHS = 5;
+const NSUInteger DAYS_OF_WEEK                             = 7;
+const NSUInteger WEEKS_MONTHS                             = 5;
+const NSUInteger DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT = 0.75;
+const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 @interface WDDashBoardViewController ()
 
@@ -45,6 +47,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 @property (weak, nonatomic) IBOutlet UIButton                           *leftNavigationButton;
 @property (weak, nonatomic) IBOutlet UIButton                           *rightNavigationButton;
 @property (weak, nonatomic) IBOutlet UIImageView                        *removeStateImage;
+@property (nonatomic) NSUInteger                                        pendingMonthNavigationRequest;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -84,6 +87,8 @@ const NSUInteger WEEKS_MONTHS = 5;
 
 - (void)                significatTimeChange:(NSNotification *)notification;
 
+- (void)                updateYearMonthData:(NSNumber *)rightDirection;
+
 @end
 
 @implementation WDDashBoardViewController
@@ -113,6 +118,7 @@ const NSUInteger WEEKS_MONTHS = 5;
 @synthesize leftNavigationButton             = leftNavigationButton_;
 @synthesize rightNavigationButton            = rightNavigationButton_;
 @synthesize removeStateImage                 = removeStateImage_;
+@synthesize pendingMonthNavigationRequest    = pendingMonthNavigationRequest_;
 
 #pragma mar - Properties
 
@@ -157,6 +163,8 @@ const NSUInteger WEEKS_MONTHS = 5;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significatTimeChange:) name:UIApplicationSignificantTimeChangeNotification object:nil];
+        
+        pendingMonthNavigationRequest_ = 0;
     }
     return self;
 }
@@ -652,34 +660,39 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
 }
 
-- (void)updateYearMonthData:(BOOL)rightDirection
+- (void)updateYearMonthData:(NSNumber *)rightDirection
 {
-    const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
-    for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
-        const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
-        WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
-        //CGFloat duration = (float)rand()/(float)RAND_MAX;
-        CGFloat duration = (float)rand()/((float)RAND_MAX/1.35);
-        if (duration < 0.40) {
-            duration = 0.40;
-        }
-        if (dayMonthViewIt.layer.sublayers > 0) {
-            dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
-        }
-        [WDUtils destroyViewGosthEffect:dayMonthViewIt withDuration:duration andDisplacement:rightDirection ? -1 * (44 + duration) : (44 + duration)];
-        dayMonthViewIt.alpha = 0.0;
-    }
- 
     [self configureMonthAndYearLabel];
-    [self configureDayOfTheMonths];
-    
-    for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
-        const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
-        WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
-        [UIView animateWithDuration:0.25 animations:^{
-            dayMonthViewIt.alpha = 1.0;
-        }];
+
+    if (self.pendingMonthNavigationRequest < MAX_PENDING_REQUEST_TO_ATTEND) {
+        const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
+        for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
+            const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
+            WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
+            //CGFloat duration = (float)rand()/(float)RAND_MAX;
+            CGFloat duration = (float)rand()/((float)RAND_MAX/1.35);
+            if (duration < 0.40) {
+                duration = 0.40;
+            }
+            if (dayMonthViewIt.layer.sublayers > 0) {
+                dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
+            }
+            [WDUtils destroyViewGosthEffect:dayMonthViewIt withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
+            dayMonthViewIt.alpha = 0.0;
+        }
+        
+        [self configureDayOfTheMonths];
+        
+        for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
+            const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
+            WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
+            [UIView animateWithDuration:0.25 animations:^{
+                dayMonthViewIt.alpha = 1.0;
+            }];
+        }
     }
+    
+    self.pendingMonthNavigationRequest--;
 }
 
 - (IBAction)leftButtonPressed:(id)sender
@@ -695,7 +708,9 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
     
     if (updateDate) {
-        [self updateYearMonthData:NO];
+        ++self.pendingMonthNavigationRequest;
+        [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+        //[self updateYearMonthData:NO];
     }
 }
 
@@ -716,7 +731,9 @@ const NSUInteger WEEKS_MONTHS = 5;
     }
     
     if (updateDate) {
-        [self updateYearMonthData:YES];
+        ++self.pendingMonthNavigationRequest;
+        [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:YES] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+        //[self updateYearMonthData:YES];
     }
 }
 
