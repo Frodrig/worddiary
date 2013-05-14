@@ -737,6 +737,13 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 #pragma mark - UIPickerViewDelegate
 
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    if (component == 0) {
+        [pickerView reloadComponent:1];
+    }
+}
+
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     return nil;
@@ -756,7 +763,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         if (self.todayDate.year == self.todayDate.year - [pickerView selectedRowInComponent:0]) {
             available = self.todayDate.month > row;
         }
-        numberOfWordsForDate = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:row + 1 ofYear:self.todayDate.year];
+        numberOfWordsForDate = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:row + 1 ofYear:self.todayDate.year - [pickerView selectedRowInComponent:0]];
         strTitle = numberOfWordsForDate > 0 ? [NSString stringWithFormat:@"%@ (%d)", [WDUtils monthString:row + 1 abreviateMode:NO], numberOfWordsForDate]: [WDUtils monthString:row + 1 abreviateMode:NO];
     }
     
@@ -785,13 +792,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     }
     
     return retWidth;
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    if (component == 0) {
-        [pickerView reloadComponent:1];
-    }
 }
 
 #pragma mark - UIPickerViewDataSource
