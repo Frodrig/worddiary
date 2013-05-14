@@ -38,6 +38,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @property (nonatomic) BOOL                                  editWordModeActive;
 @property (nonatomic) BOOL                                  inPanModeForChangeBackgroundColor;
 @property (nonatomic) BOOL                                  wordContentUpdatedInEditMode;
+@property (nonatomic, strong) UILabel                       *spaceTipInEditModeLabel;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -86,6 +87,10 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)                             significatTimeChange:(NSNotification *)notification;
 
+- (void)                             showSpaceTip;
+- (void)                             hideSpaceTip;
+- (void)                             inmediateHideSpaceTipAfterInsertText;
+
 @end
 
 @implementation WDWordScreenCollectionViewController
@@ -106,8 +111,29 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @synthesize editWordModeActive                 = editWordModeActive_;
 @synthesize inPanModeForChangeBackgroundColor  = inPanModeForChangeBackgroundColor_;
 @synthesize wordContentUpdatedInEditMode       = wordContentUpdatedInEditMode_;
+@synthesize spaceTipInEditModeLabel            = spaceTipInEditModeLabel_;
 
 #pragma mark - Properties
+
+- (UILabel *)spaceTipInEditModeLabel
+{
+    if (nil == spaceTipInEditModeLabel_) {
+        spaceTipInEditModeLabel_= [[UILabel alloc] initWithFrame:CGRectMake(5.0, 5.0, self.view.frame.size.width - 10.0, 44.0)];
+        spaceTipInEditModeLabel_.attributedText = [[NSAttributedString alloc]
+                                                   initWithString:NSLocalizedString(@"TAG_NOSPACE_TIP", @"")
+                                                   attributes:@{
+                                                   NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:17.0],
+                                                   NSForegroundColorAttributeName: [[self findSelectedWord].palette makeWordColorObject],
+                                                   NSKernAttributeName: @2.0F
+                                                   }];
+        spaceTipInEditModeLabel_.backgroundColor = [UIColor clearColor];
+        spaceTipInEditModeLabel_.numberOfLines = 2.0;
+        spaceTipInEditModeLabel_.textAlignment = NSTextAlignmentCenter;
+        spaceTipInEditModeLabel_.alpha = 0.0;
+    }
+    
+    return spaceTipInEditModeLabel_;
+}
 
 - (UIView *)pannelBackgroundView {
     if (nil == pannelBackgroundView_) {
@@ -263,6 +289,47 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 }
 
 #pragma mark - Auxiliary
+
+- (void)showSpaceTip
+{
+    if (self.spaceTipInEditModeLabel.superview == nil) {
+        [self.view addSubview:self.spaceTipInEditModeLabel];
+        [UIView animateWithDuration: 0.45 animations:^{
+            self.wordCharacterCounterView.alpha = 0.0;
+            self.spaceTipInEditModeLabel.alpha = 1.0;
+        } completion:^(BOOL finished){
+            NSNumber *spaceTipShowed = [[NSUserDefaults standardUserDefaults] valueForKey:@"SPACE_TIP_SHOWED"];
+            NSLog(@"%@", spaceTipShowed);
+            [self performSelector:@selector(hideSpaceTip) withObject:nil afterDelay:[spaceTipShowed boolValue] ? 1.0 : 4.0];
+            if (![spaceTipShowed boolValue]) {
+                [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithBool:YES] forKey:@"SPACE_TIP_SHOWED"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+            }
+        }];
+    }
+}
+
+- (void)hideSpaceTip
+{
+    if (self.spaceTipInEditModeLabel.superview) {
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+        [UIView animateWithDuration:1.5 animations:^{
+            self.wordCharacterCounterView.alpha = 1.0;
+            self.spaceTipInEditModeLabel.alpha = 0.0;
+        } completion:^(BOOL finished){
+            [self.spaceTipInEditModeLabel removeFromSuperview];
+            self.spaceTipInEditModeLabel = nil;
+        }];
+    }
+}
+
+- (void)inmediateHideSpaceTipAfterInsertText
+{
+    if ([self.spaceTipInEditModeLabel.layer animationKeys].count == 0) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideSpaceTip) object:nil];
+        [self hideSpaceTip];
+    }
+}
 
 - (void)performScrollToIndexPathForWordWhenAppear
 {
@@ -803,14 +870,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 {
     WDWord *selectedWord = [self findSelectedWord];
     if (selectedWord.word.length > 0) {
-        NSLog(@"hey db!");
         self.wordContentUpdatedInEditMode = YES;
-        
         selectedWord.word = [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
-        
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
         [cell.wordRepresentationView setNeedsDisplay];
         [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordInEditModeRemoveLastCharacter" object:nil]];
+        [self inmediateHideSpaceTipAfterInsertText];
     }
 }
 
@@ -827,13 +892,15 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         [self resignFirstResponder];
     } else if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length > 0) {
         if (selectedWord.word.length < MAX_WORD_LENGHT) {
-            NSLog(@"hey it!");
             self.wordContentUpdatedInEditMode = YES;
             selectedWord.word = [selectedWord.word stringByAppendingString:text];
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             [cell.wordRepresentationView setNeedsDisplay];
             [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordInEditModeAddedNewCharacter" object:nil]];
+            [self inmediateHideSpaceTipAfterInsertText];
         }
+    } else {
+        [self showSpaceTip];
     }
 }
 
@@ -905,12 +972,17 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
                 if (!self.isFirstResponder) {
                     [self.styleMenuView removeFromSuperview];
                 }
-                // Wordrepresentation & Wordcharacter
+                // Wordrepresentation & Wordcharacter & Space Tip
+                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideSpaceTip) object:nil];
                 [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
                 [UIView animateWithDuration:0.5 animations:^{
+                    self.spaceTipInEditModeLabel.alpha = 0.0;
                     cell.wordRepresentationContainerView.center = CGPointMake(cell.wordRepresentationContainerView.center.x, cell.wordRepresentationContainerView.center.y + 0.30 * cell.wordRepresentationContainerView.bounds.size.height);
                     self.wordCharacterCounterView.frame = CGRectMake(self.wordCharacterCounterView.frame.origin.x, -self.wordCharacterCounterView.bounds.size.height, self.wordCharacterCounterView.bounds.size.width, self.wordCharacterCounterView.bounds.size.height);
                 } completion:^(BOOL finished) {
+                    [self.spaceTipInEditModeLabel removeFromSuperview];
+                    self.spaceTipInEditModeLabel = nil;
+                    self.wordCharacterCounterView.alpha = 1.0;
                     [self fadeInDateAndDayTextOnCell:cell withInfiniteDuration:NO];
                     [self.wordCharacterCounterView removeFromSuperview];
                 }];

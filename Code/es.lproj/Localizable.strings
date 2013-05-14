@@ -80,4 +80,5 @@
 
 "TAG_DATESELECTOR_TITLE"                           = "Seleccionar fecha";
 
+"TAG_NOSPACE_TIP"                                  = "Recuerda:\nUna palabra. Sin espacios.";
 

@@ -79,3 +79,6 @@
 "TAG_DASHBOARDSCREEN_CANCEL"                       = "Cancel";
 
 "TAG_DATESELECTOR_TITLE"                           = "Select date";
+
+"TAG_NOSPACE_TIP"                                  = "Remember:\nOne word. No spaces.";
+
