@@ -99,7 +99,6 @@
     [super prepareForReuse];
     
     [self.gradientLayerBackgroundColor removeAllAnimations];
-
     [self.wordRepresentationView setNeedsDisplay];
 }
 
@@ -110,17 +109,17 @@
     [self setDateLabelOfWord:word];
     [self setWordRepresentation:word];
     [self setDayDiaryLabelOfWord:word];
-    
+
     self.gradientLayerBackgroundColor.frame = CGRectMake(0.0, 0.0, self.bounds.size.width, self.bounds.size.height);
     self.gradientLayerBackgroundColor.startPoint = CGPointMake(0.5, 0.0);
     self.gradientLayerBackgroundColor.endPoint = CGPointMake(0.5, 1.0);
     [self refreshBackgroundColorOfWord:word];
-    
+
     self.dateContainerView.alpha = 1.0;
     self.dayDiaryContainerView.alpha = 1.0;
     
     [self addBorderGradientLayer];
-    
+
     self.actualWord = word;
 }
 
@@ -142,25 +141,26 @@
 
 - (void)refreshBackgroundColorOfWord:(WDWord *)word
 {
-    self.gradientLayerBackgroundColor.colors = [[WDWordDiary sharedWordDiary] makeGradientCGColorPaletteOfWord:word];    
+    self.gradientLayerBackgroundColor.colors = [[WDWordDiary sharedWordDiary] makeGradientCGColorPaletteOfWord:word];
     [self addBackgroundColorAnimationWithWord:word];
-    
     self.actualWord = word;
 }
 
 - (void)addBackgroundColorAnimationWithWord:(WDWord *)word
 {
-    if (!self.backgroundColorAnimationPaused &&
-        self.gradientLayerBackgroundColor.animationKeys.count == 0) {
+    if (!self.backgroundColorAnimationPaused/* &&
+        self.gradientLayerBackgroundColor.animationKeys.count == 0*/) {
         CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
         gradientAnimation.fromValue = self.gradientLayerBackgroundColor.colors;
+        NSArray *toValueArray = nil;
         NSArray *gradientColorPalette = [[WDWordDiary sharedWordDiary] makeGradientColorPaletteOfWord:word];
         for (UIColor *colorIt in gradientColorPalette) {
-            UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:0.06 alpha:0];
-            gradientAnimation.toValue = gradientAnimation.toValue == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [gradientAnimation.toValue arrayByAddingObject:(id)colorOffset.CGColor];
+            UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:-0.05 alpha:0];
+            toValueArray = toValueArray == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [toValueArray arrayByAddingObject:(id)colorOffset.CGColor];
         }
+        gradientAnimation.toValue = toValueArray;
         gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-        gradientAnimation.duration = 4.0;
+        gradientAnimation.duration = 2;
         gradientAnimation.repeatCount = HUGE_VALF;
         gradientAnimation.autoreverses = YES;
             
