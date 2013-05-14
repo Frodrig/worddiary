@@ -710,7 +710,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     if (updateDate) {
         ++self.pendingMonthNavigationRequest;
         [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
-        //[self updateYearMonthData:NO];
     }
 }
 
@@ -733,7 +732,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     if (updateDate) {
         ++self.pendingMonthNavigationRequest;
         [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:YES] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
-        //[self updateYearMonthData:YES];
     }
 }
 

@@ -342,6 +342,7 @@
         viewToApplyGosthEffect = (UIView *)[NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];
         [srcView.superview addSubview:viewToApplyGosthEffect];
         gosthCounter++;
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
         [UIView animateWithDuration:duration animations:^{
             viewToApplyGosthEffect.frame = CGRectMake(viewToApplyGosthEffect.frame.origin.x + displacement, viewToApplyGosthEffect.frame.origin.y, viewToApplyGosthEffect.frame.size.width, viewToApplyGosthEffect.frame.size.height);
             viewToApplyGosthEffect.alpha = 0.0;
