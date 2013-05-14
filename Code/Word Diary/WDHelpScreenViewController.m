@@ -168,7 +168,7 @@
     if (self.pageControl.currentPage == self.pageControl.numberOfPages - 1) {
         [self.delegate willReachLastPageFromHelpScreenViewController:self];
         self.scrollView.scrollEnabled = NO;
-        [UIView animateWithDuration:1.0 animations:^{
+        [UIView animateWithDuration:0.35 animations:^{
             self.view.alpha = 0.0;
         } completion:^(BOOL finished) {
             [self.delegate didReachLastPageFromHelpScreenViewController:self];
