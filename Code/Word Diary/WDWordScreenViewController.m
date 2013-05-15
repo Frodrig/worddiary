@@ -118,13 +118,13 @@
         if (helpScreenHaveLaunchAtInit) {
             if (self.wordScreenCollectionViewController.presentedViewController != nil) {
                 if (self.wordScreenCollectionViewController.presentedViewController.presentedViewController == nil) {
-                    self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x, self.launchTransitionImageView.center.y * - 1);
+                    //self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x, self.launchTransitionImageView.center.y * - 1);
                 }
             } else {
                 //self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
             }
         } else {
-            self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
+            //self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
         }
     } completion:^(BOOL finished) {
         [self.launchTransitionImageView removeFromSuperview];
