@@ -125,7 +125,7 @@
         } else if (screenIt == 3) {
             UIImageView *coachView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"leftrightcoach"]];
             [screen addSubview:coachView];
-            coachView.center = CGPointMake(screen.frame.size.width * 0.45, screen.frame.size.height / 1.55);
+            coachView.center = CGPointMake([WDUtils is568Screen] ? screen.frame.size.width * 0.45 : screen.frame.size.width * 0.5, screen.frame.size.height / 1.55);
         }
         [self.scrollView addSubview:screen];
     }
