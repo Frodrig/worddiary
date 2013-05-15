@@ -20,10 +20,8 @@
 
 @property(nonatomic, weak)   WDWord                               *selectedWord;
 @property(nonatomic, strong) UIImageView                          *launchTransitionImageView;
-@property(nonatomic, strong) UIView                               *launchTransitionCursorView;
 @property(nonatomic, strong) WDHelpScreenViewController           *helpScreenViewController;
 @property(nonatomic, strong) WDWordScreenCollectionViewController *wordScreenCollectionViewController;
-@property(nonatomic, strong) NSTimer                              *blinkCursorTimer;
 
 - (WDWord *)            createFirstWord;
 
@@ -37,8 +35,6 @@
 - (void)                applicationDidBecomeActive:(NSNotification *)notification;
 - (void)                applicationWillTerminate:(NSNotification *)notification;
 
-- (void)                doBlinkCursorLaunchScreenHandle:(NSTimer *)timer;
-
 @end
 
 @implementation WDWordScreenViewController
@@ -49,8 +45,6 @@
 @synthesize launchTransitionImageView          = launchTransitionImageView_;
 @synthesize helpScreenViewController           = helpScreenViewController_;
 @synthesize wordScreenCollectionViewController = wordScreenCollectionViewController_;
-@synthesize launchTransitionCursorView         = launchTransitionCursorView_;
-@synthesize blinkCursorTimer                   = blinkCursorTimer_;
 
 #pragma mark - Init
 
@@ -94,13 +88,9 @@
     [super viewWillAppear:animated];
     
     self.launchTransitionImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[WDUtils is568Screen] ? @"Default-568h" : @"Default"]];
-    //self.launchTransitionCursorView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 10, 212.5)];
-    //self.launchTransitionCursorView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
-    //[self.launchTransitionImageView addSubview:self.launchTransitionCursorView];
-    //self.launchTransitionCursorView.center = [WDUtils isIPhone5Screen] ? CGPointMake(297, 163) : CGPointMake(297, 152);
-    [self.view addSubview:self.launchTransitionImageView];
+    self.launchTransitionImageView.backgroundColor = [UIColor clearColor];
     
-    //self.blinkCursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(doBlinkCursorLaunchScreenHandle:) userInfo:nil repeats:YES];
+    [self.view addSubview:self.launchTransitionImageView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -108,7 +98,7 @@
     [super viewDidAppear:animated];
     
    // [self showApropiateViewController];
-    [self performSelector:@selector(showApropiateViewController) withObject:nil afterDelay:1.5];
+    [self performSelector:@selector(showApropiateViewController) withObject:nil afterDelay:0];
 }
 
 - (void)didReceiveMemoryWarning
@@ -118,13 +108,6 @@
 }
 
 #pragma mark - Auxiliary
-
-- (void)doBlinkCursorLaunchScreenHandle:(NSTimer *)timer
-{
-    static bool alphaBlink = YES;
-    self.launchTransitionCursorView.backgroundColor = alphaBlink ? [UIColor colorWithWhite:0.0 alpha:0.7] : [UIColor colorWithWhite:0.0 alpha:1.0];
-    alphaBlink = !alphaBlink;
-}
 
 - (void)fadeOutLaunchImage
 {
@@ -138,8 +121,10 @@
                     self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x, self.launchTransitionImageView.center.y * - 1);
                 }
             } else {
-                self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
+                //self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
             }
+        } else {
+            self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
         }
     } completion:^(BOOL finished) {
         [self.launchTransitionImageView removeFromSuperview];

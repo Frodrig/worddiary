@@ -69,7 +69,7 @@
 "TAG_HELP_INFOTEXT_PAGE_0"                         = "Bienvenido a Word Diary\nUn día en una palabra";
 "TAG_HELP_INFOTEXT_PAGE_1"                         = "Pulsa en la línea para escribir";
 "TAG_HELP_INFOTEXT_PAGE_2"                         = "Desliza el dedo arriba o abajo para cambiar el color";
-"TAG_HELP_INFOTEXT_PAGE_3"                         = "Desliza el dedo a izquierda o derecha para navegar por tu diario";
+"TAG_HELP_INFOTEXT_PAGE_3"                         = "Desliza el dedo a izquierda o derecha para moverte por el diario";
 "TAG_HELP_INFOTEXT_PAGE_4"                         = "Pulsa dos veces para ir al calendario y ver otras opciones";
 "TAG_HELP_INFOTEXT_PAGE_5"                         = "";
 
