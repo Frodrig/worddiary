@@ -8,6 +8,7 @@
 
 #import "WDUtils.h"
 #import "UIColor+HSL.h"
+#import "UIColor+hexColorCreation.h"
 #import <QuartzCore/QuartzCore.h>
 #import <CoreMotion/CoreMotion.h>
 
@@ -321,11 +322,92 @@
     return colors;
 }
 
++ (NSArray *)makeHardcoreColorGradients
+{
+    NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:15 * 4];
+    
+    // NEUTRAL
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#B7A6AD" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#C8CAC0" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D3C9CE" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#BEB2A7" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D1C6BF" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#DBD7CC" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#CAB388" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D5C4A1" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#E0D4BB" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#B5B292" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#C8C5AC" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D5D3BF" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#A8ADB4" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#C3C8CD" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D2D6D9" withAlphaComponent:NO skipInitialCharacter:YES]];
+    
+    // DELICATE
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#B6D3E3" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#B9DEE1" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D0E9E7" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D7D7D1" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#E0DDD6" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#E6E4DC" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#E5D0C9" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#F0D8D2" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#F3E7E4" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#DED8B7" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#E7E3BD" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#F3F0C5" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D0C4D1" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#DDD2E3" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#E5DDEA" withAlphaComponent:NO skipInitialCharacter:YES]];
+    
+    // CHARMING
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#BC9DCA" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#C7B2D6" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#DFD5EA" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#ADC5E7" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#BAD1ED" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#C7DFF4" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#83D2E2" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#ADE0ED" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#C8E9EF" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#96D5D1" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#BCE4E5" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D7EDE6" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#B1B4B6" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#C6C8CA" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D6E2DF" withAlphaComponent:NO skipInitialCharacter:YES]];
+    
+    // ROMANTIC
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#FF5BA5" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#FF84BC" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#FFBBDA" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#DB49AC" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#E472BF" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#F0ADDB" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#9957CD" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#B07CDA" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#D1B2EA" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#438EC8" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#6BA7D6" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#A8CCE8" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#3BC6B6" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#64D4C7" withAlphaComponent:NO skipInitialCharacter:YES]];
+    [array addObject:[UIColor colorWithHexadecimalValue:@"#A4E7DF" withAlphaComponent:NO skipInitialCharacter:YES]];
+
+    return array;
+}
+
 + (NSArray *)makeColorGradientWithHSL
 {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < 255; i += 6) {
-        [array addObject:[UIColor colorWithHue:i/255.0 saturation:1.0 lightness:0.81 alpha:1.0]];
+        UIColor *color = [UIColor colorWithHue:i/255.0 saturation:1.0 lightness:0.81 alpha:1.0];
+        [array addObject:color];
+        /*
+        float components[4];
+        [color getRed:&components[0] green:&components[1] blue:&components[2] alpha:&components[3]];
+        NSLog(@"%f %f %f", components[0], components[1], components[2]);
+         */
     }
   
     return array;

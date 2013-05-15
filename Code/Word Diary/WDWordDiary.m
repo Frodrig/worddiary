@@ -174,7 +174,7 @@
         for (NSUInteger paletteIndex = 0; paletteIndex < palette.count; ++paletteIndex) {
             NSString *paletteId = [NSString stringWithFormat:@"%d", paletteIndex];
             NSString *lightBackgroundColorString = [WDUtils convertColorToString:[palette objectAtIndex:paletteIndex]];
-            NSString *wordColorString = [WDUtils convertColorToString:[UIColor colorWithRed:46.0 green:46.0 blue:51.0 alpha:1.0]];//[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
+            NSString *wordColorString = [WDUtils convertColorToString:[UIColor colorWithRed:46.0/256 green:46.0/256 blue:51.0/256.0 alpha:1.0]];//[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
             
             [self addPalette:paletteId lightBackgroundColor:lightBackgroundColorString andWordColor:wordColorString];
         }
@@ -433,6 +433,15 @@
     //WDPalette *prevprevprevprevPalette = [self findPrevPaletteOfPalette:prevprevprevPalette];
     //WDPalette *nextnextnextnextPalette = [self findNextPaletteOfPalette:nextnextnextPalette];
     
+    /*
+    NSLog(@"%@", prevprevprevPalette);
+    NSLog(@"%@", prevprevPalette);
+    NSLog(@"%@", prevPalette);
+    NSLog(@"%@", word.palette);
+    NSLog(@"%@", nextPalette);
+    NSLog(@"%@", nextnextPalette);
+    NSLog(@"%@", nextnextnextPalette);
+    */
     NSArray *gradientColorArray = [[NSArray alloc]
                                    initWithObjects:
                                    //[prevprevprevprevPalette makeLightBackgroundColorObject],

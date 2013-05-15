@@ -632,21 +632,27 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)cursorColorTimerHandle:(NSTimer *)timer
 {
+    BOOL setOriginalCursorColor = YES;
     if ([self findSelectedWord].word.length == 0 || [self isFirstResponder]) {
-        CGFloat colorComponents[] = {0.0, 0.0, 0.0, 0.0};
         WDWord *selectedWord = [self findSelectedWord];
         if  (nil == self.cursorColor) {
+            CGFloat colorComponents[] = {0.0, 0.0, 0.0, 0.0};
             self.cursorColor = [selectedWord.palette makeWordColorObject];
             [self.cursorColor getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
             self.cursorColor = [UIColor colorWithRed:colorComponents[0] green:colorComponents[1] blue:colorComponents[2] alpha:0.3];
-        } else {
-            [self.cursorColor getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
-            colorComponents[3] = colorComponents[3] < 1.0 ? 1.0 : 0.3;
-            self.cursorColor = [UIColor colorWithRed:colorComponents[0] green:colorComponents[1] blue:colorComponents[2] alpha:colorComponents[3]];
+            setOriginalCursorColor = NO;
         }
         
         WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
         [actualCell.wordRepresentationView setNeedsDisplay];
+    }
+    
+    // Si no hay que mostrar cursor SIEMPRE lo setearemos al valor solido original
+    if (setOriginalCursorColor) {
+        CGFloat colorComponents[] = {0.0, 0.0, 0.0, 0.0};
+        [self.cursorColor getRed:&colorComponents[0] green:&colorComponents[1] blue:&colorComponents[2] alpha:&colorComponents[3]];
+        colorComponents[3] = colorComponents[3] < 1.0 ? 1.0 : 0.3;
+        self.cursorColor = [UIColor colorWithRed:colorComponents[0] green:colorComponents[1] blue:colorComponents[2] alpha:colorComponents[3]];
     }
 }
 

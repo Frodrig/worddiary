@@ -67,7 +67,7 @@
 
 #pragma mark - Actions
 
-- (void) generateGosthWordRepresentation
+- (void)generateGosthWordRepresentation
 {
     isGosthView_ = YES;
     
@@ -75,7 +75,7 @@
     NSData *tempArchive = [NSKeyedArchiver archivedDataWithRootObject:self];
     __block WDWordRepresentationView *gosthView = (WDWordRepresentationView *)[NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];
     gosthView.dataSource = self.dataSource;
-    gosthView.forceCursorHide = YES;
+    //gosthView.forceCursorHide = YES;
     
     isGosthView_ = NO;
     self.frame = prevFrame;
@@ -90,12 +90,6 @@
 }
 
 #pragma mark - Auxiliary
-/*
-@"Baskerville",
-@"Zapfino",
-@"PartyLetPlain",
-@"SnellRoundhand",
-*/
 
 - (CGFloat)scaleFontInEditMode
 {
