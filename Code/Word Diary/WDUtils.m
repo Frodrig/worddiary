@@ -324,8 +324,8 @@
 + (NSArray *)makeColorGradientWithHSL
 {
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    for (NSUInteger i = 0; i < 255; i += 8) {
-        [array addObject:[UIColor colorWithHue:i/255.0 saturation:1.0 lightness:0.85 alpha:1.0]];
+    for (NSUInteger i = 0; i < 255; i += 6) {
+        [array addObject:[UIColor colorWithHue:i/255.0 saturation:1.0 lightness:0.81 alpha:1.0]];
     }
   
     return array;

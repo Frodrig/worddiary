@@ -428,14 +428,23 @@
     WDPalette *nextPalette = [self findNextPaletteOfPalette:word.palette];
     WDPalette *prevprevPalette = [self findPrevPaletteOfPalette:prevPalette];
     WDPalette *nextnextPalette = [self findNextPaletteOfPalette:nextPalette];
+    WDPalette *prevprevprevPalette = [self findPrevPaletteOfPalette:prevprevPalette];
+    WDPalette *nextnextnextPalette = [self findNextPaletteOfPalette:nextnextPalette];
+    //WDPalette *prevprevprevprevPalette = [self findPrevPaletteOfPalette:prevprevprevPalette];
+    //WDPalette *nextnextnextnextPalette = [self findNextPaletteOfPalette:nextnextnextPalette];
     
     NSArray *gradientColorArray = [[NSArray alloc]
                                    initWithObjects:
+                                   //[prevprevprevprevPalette makeLightBackgroundColorObject],
+                                   [prevprevprevPalette makeLightBackgroundColorObject],
                                    [prevprevPalette makeLightBackgroundColorObject],
                                    [prevPalette makeLightBackgroundColorObject],
                                    [word.palette makeLightBackgroundColorObject],
                                    [nextPalette makeLightBackgroundColorObject],
-                                   [nextnextPalette makeLightBackgroundColorObject], nil];
+                                   [nextnextPalette makeLightBackgroundColorObject],
+                                   [nextnextnextPalette makeLightBackgroundColorObject],
+                                  // [nextnextnextnextPalette makeLightBackgroundColorObject],
+                                   nil];
     
     return gradientColorArray;
 

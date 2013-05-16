@@ -155,7 +155,7 @@
         NSArray *toValueArray = nil;
         NSArray *gradientColorPalette = [[WDWordDiary sharedWordDiary] makeGradientColorPaletteOfWord:word];
         for (UIColor *colorIt in gradientColorPalette) {
-            UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:0.05 alpha:0];
+            UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:-0.05 alpha:0];
             toValueArray = toValueArray == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [toValueArray arrayByAddingObject:(id)colorOffset.CGColor];
         }
         gradientAnimation.toValue = toValueArray;
