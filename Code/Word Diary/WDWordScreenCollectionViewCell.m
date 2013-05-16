@@ -148,24 +148,25 @@
 
 - (void)addBackgroundColorAnimationWithWord:(WDWord *)word
 {
-    if (!self.backgroundColorAnimationPaused/* &&
-        self.gradientLayerBackgroundColor.animationKeys.count == 0*/) {
+    /*
+    if (!self.backgroundColorAnimationPaused) {
         CABasicAnimation *gradientAnimation = [CABasicAnimation animationWithKeyPath:@"colors"];
-        gradientAnimation.fromValue = self.gradientLayerBackgroundColor.colors;
+        gradientAnimation.fromValue = [self.gradientLayerBackgroundColor.colors copy];
         NSArray *toValueArray = nil;
         NSArray *gradientColorPalette = [[WDWordDiary sharedWordDiary] makeGradientColorPaletteOfWord:word];
         for (UIColor *colorIt in gradientColorPalette) {
-            UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:-0.05 alpha:0];
+            UIColor *colorOffset = [colorIt offsetWithHue:0.0 saturation:0.0 lightness:0.0 alpha:0];
             toValueArray = toValueArray == nil ? [NSArray arrayWithObject:(id)colorOffset.CGColor] : [toValueArray arrayByAddingObject:(id)colorOffset.CGColor];
         }
         gradientAnimation.toValue = toValueArray;
         gradientAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-        gradientAnimation.duration = 4;
+        gradientAnimation.duration = 1.75;
         gradientAnimation.repeatCount = HUGE_VALF;
         gradientAnimation.autoreverses = YES;
             
         [self.gradientLayerBackgroundColor addAnimation:gradientAnimation forKey:@"animateGradientSoftBlink"];
     }
+     */
 }
 
 - (void)pauseBackgroundColorAnimation

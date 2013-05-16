@@ -778,6 +778,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
             [cell refreshBackgroundColorOfWord:word];
             [gesture setTranslation:CGPointZero inView:self.view];
+            //NSLog(@"index palette %d", [[WDWordDiary sharedWordDiary].palettes indexOfObject:newPalette]);
         }
     }
 

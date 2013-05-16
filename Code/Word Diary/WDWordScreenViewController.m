@@ -169,7 +169,7 @@
     }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"FIRST_BACKGROUND_SETTING"]) {
-        WDPalette *startingWordPalette = [[WDWordDiary sharedWordDiary].palettes objectAtIndex:1];
+        WDPalette *startingWordPalette = [[WDWordDiary sharedWordDiary].palettes objectAtIndex:34];
         selectedWordCandidate.palette = startingWordPalette;
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"FIRST_BACKGROUND_SETTING"];
         [[NSUserDefaults standardUserDefaults] synchronize];
