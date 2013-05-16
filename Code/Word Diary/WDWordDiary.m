@@ -122,7 +122,6 @@
 - (NSURL *)storeFileURLWithPath
 {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
     NSString *documentDirectory = [documentDirectories objectAtIndex:0];
     
     NSURL* retURL = [NSURL fileURLWithPath:[documentDirectory stringByAppendingPathComponent:@"worddiary.data"]];
@@ -322,8 +321,12 @@
 {
     NSArray *indexWordToRemove = [self findAllDaysIndexWithoutWord];
     for (NSNumber *indexWordIt in indexWordToRemove) {
-        WDWord *wordToRemove = [self.words objectAtIndex:indexWordIt.unsignedIntegerValue];
-        [self removeWord:wordToRemove];
+        NSAssert(indexWordIt.unsignedIntegerValue < self.words.count, @"");
+        // TODO: Bug conocido cuando empezamos a saltar entre fechas, protegemos con assert e if
+        if (indexWordIt.unsignedCharValue < self.words.count) {
+            WDWord *wordToRemove = [self.words objectAtIndex:indexWordIt.unsignedIntegerValue];
+            [self removeWord:wordToRemove];
+        }
     }
     
     [self saveAll];
@@ -351,6 +354,7 @@
 
 - (void)removeWordAtIndexPosition:(NSUInteger)wordIndexPosition
 {
+    NSAssert(wordIndexPosition < self.words.count, @"");
     WDWord *word = [self.words objectAtIndex:wordIndexPosition];
     [self removeWord:word];
 }
@@ -420,6 +424,7 @@
     NSUInteger retIndex = NSNotFound;
     
     retIndex = self.words.count - [self.words indexOfObject:word] - 1;
+    NSAssert(retIndex != NSNotFound, @"");
     
     return retIndex;
 }
@@ -466,12 +471,15 @@
 {
     WDPalette *retPalette = nil;
     if (nil == palette) {
+        NSAssert(self.palettes.count > 0, @"");
         retPalette = [self.palettes objectAtIndex:self.palettes.count - 1];
     } else {
         NSUInteger indexOfPalette = [self.palettes indexOfObject:palette];
+        NSAssert(indexOfPalette != NSNotFound, @"");
         if (indexOfPalette == 0) {
             retPalette = [self findPrevPaletteOfPalette:nil];
         } else {
+            NSAssert(indexOfPalette - 1 < self.palettes.count, @"");
             retPalette = [self.palettes objectAtIndex:indexOfPalette - 1];
         }
     }
@@ -483,9 +491,11 @@
 {
     WDPalette *retPalette = nil;
     if (nil == palette) {
+        NSAssert(self.palettes.count > 0, @"");
         retPalette = [self.palettes objectAtIndex:0];
     } else {
         NSUInteger indexOfPalette = [self.palettes indexOfObject:palette];
+        NSAssert(indexOfPalette != NSNotFound, @"");
         if (indexOfPalette == self.palettes.count - 1) {
             retPalette = [self findNextPaletteOfPalette:nil];
         } else {

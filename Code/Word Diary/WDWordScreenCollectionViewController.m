@@ -1041,11 +1041,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 {
     [self resumeAll];
     [self.collectionView reloadData];
-    
+    /*
     NSInteger lastWordYearBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_YEAR_BEFORE_ENTER_BACKGROUND"];
     NSInteger lastWordMontBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_MONTH_BEFORE_ENTER_BACKGROUND"];
     NSInteger lastWordDayBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_DAY_BEFORE_ENTER_BACKGROUND"];
     WDWord *newPosibleLastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
+    
     BOOL goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordYearBeforeEnterBackground != newPosibleLastWord.dateComponents.year;
     if (!goToLastPositionBecouseOneOrMoreDaysHavePassed) {
         goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordMontBeforeEnterBackground != newPosibleLastWord.dateComponents.month;
@@ -1057,7 +1058,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     if (goToLastPositionBecouseOneOrMoreDaysHavePassed) {
         self.indexPathForWordWhenAppear = nil;
     }
-    
+    */
+    self.indexPathForWordWhenAppear = nil;
     [self performScrollToIndexPathForWordWhenAppear];
     
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
