@@ -198,7 +198,6 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.minimumTimeNavigationPressTimer invalidate];
     self.minimumTimeNavigationPressTimer = nil;
-    NSLog(@"dealloc");
 }
 
 - (void)viewDidLoad

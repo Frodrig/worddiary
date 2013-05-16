@@ -186,7 +186,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self endCursorColorTimer];
     [self endFadeDateAndDayTextTimer];
-    NSLog(@"dealloc");
 }
 
 - (void)viewDidLoad
