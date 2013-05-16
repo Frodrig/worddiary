@@ -222,6 +222,8 @@
         createTodayWord = self.wordScreenCollectionViewController && self.wordScreenCollectionViewController.presentedViewController == nil;
     }
     if (createTodayWord) {
+        // AQUI
+        [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
         [self createFirstWord];
     }
     
