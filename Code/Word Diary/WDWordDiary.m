@@ -365,28 +365,34 @@
 
 #pragma mark - Find
 
+- (NSArray *)findWordsInYear:(NSUInteger)year
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.dateComponents.year == %d && self.word.length > 0", year];
+    NSArray *words = [NSMutableArray arrayWithArray:[self.words filteredArrayUsingPredicate:predicate]];
+    
+    return words;
+}
+
 - (NSUInteger)findNumberOfWordsInYear:(NSUInteger)year
 {
-    return [self findNumberOfWordsInMonth:0 ofYear:year];
+    NSArray *words = [self findWordsInYear:year];
+    
+    return words.count;
+}
+
+- (NSArray *)findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.dateComponents.month == %d && self.dateComponents.year == %d && self.word.length > 0", month, year];
+    NSArray *words = [NSMutableArray arrayWithArray:[self.words filteredArrayUsingPredicate:predicate]];
+    
+    return words;
 }
 
 - (NSUInteger)findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year
 {
-    NSUInteger retNumberOfWords = 0;
-    for (WDWord *word in self.words) {
-        BOOL updateCounter = NO;
-        if (month > 0) {
-            updateCounter = word.dateComponents.month == month && word.dateComponents.year == year;
-        } else {
-            updateCounter = word.dateComponents.year == year;
-        }
-        if (updateCounter) {
-            updateCounter = word.word.length > 0;
-        }
-        retNumberOfWords += updateCounter ? 1 : 0;
-    }
-    
-    return retNumberOfWords;
+    NSArray *words = [self findWordsInfMonth:month ofYear:year];
+   
+    return words.count;
 }
 
 - (WDWord *)findTodayWord

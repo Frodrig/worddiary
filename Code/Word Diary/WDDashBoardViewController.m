@@ -264,6 +264,12 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (NSUInteger)findNumberOfWordsOfActualMonth
 {
+    const NSUInteger numberOfWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:self.actualDate.month ofYear:self.actualDate.year];
+    return  numberOfWords;
+    
+    /*
+     NSArray *wordsOfMonth = [[WDWordDiary sharedWordDiary] findWordsInfMonth:self.actualDate.month ofYear:self.actualDate.year];
+
     const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
     const NSUInteger firstWeekdayOfTheMonth = [self findFirstWeekdayOfTheMonth];
     NSUInteger numberOfWords = 0;
@@ -284,6 +290,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     }
     
     return numberOfWords;
+     */
 }
 
 - (void)setNumberOfWordsOfTheMonth:(BOOL)inmediate
@@ -570,6 +577,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     self.dayMonthPendingToRemove = nil;
     UILabel *selectedWordLabel = (UILabel *)[self.wordSlateContainerView viewWithTag:100];
     
+    
     [UIView animateWithDuration:0.55 animations:^{
         self.acceptButton.alpha = self.cancelButton.alpha = 0.0;
         selectedWordLabel.alpha = 0.0;
@@ -577,8 +585,9 @@ const NSUInteger WEEKS_MONTHS                             = 5;
         self.acceptButton.hidden = self.cancelButton.hidden = YES;
         self.removeStateImage.hidden = YES;
         self.changeYearMonthButton.hidden = NO;
-        [self setNumberOfWordsOfTheMonth:YES];
         self.wordsOfMonthLabel.hidden = NO;
+        self.wordsOfMonthLabel.alpha = 0;
+        [self setNumberOfWordsOfTheMonth:NO];
         self.infoButton.enabled = self.leftNavigationButton.enabled = self.rightNavigationButton.enabled = self.changeYearMonthButton.enabled = YES;
         [selectedWordLabel removeFromSuperview];
     }];
@@ -829,7 +838,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (IBAction)acceptButtonPressed:(id)sender
 {
-    if (self.dayMonthPendingToRemove != nil) {
+    if (self.dayMonthPendingToRemove) {
         WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
         [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
         [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
@@ -841,7 +850,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 {
     if (self.dateSelectorModeActive) {
         [self exitChangeYearMonthModeWithSelectedDateComponents:nil];
-    } else if (self.dayMonthPendingToRemove != nil) {
+    } else if (self.dayMonthPendingToRemove) {
         [self exitRemoveDayMode];
     }
 }

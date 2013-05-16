@@ -43,6 +43,8 @@
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
 - (NSArray *)     findAllDaysIndexWithoutWord;
 
+- (NSArray *)     findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year;
+- (NSArray *)     findWordsInYear:(NSUInteger)year;
 - (NSUInteger)    findNumberOfWordsInYear:(NSUInteger)year;
 - (NSUInteger)    findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year;
 
