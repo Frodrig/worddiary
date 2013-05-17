@@ -473,17 +473,16 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         if (indexLeft != indexRight) {
             WDWordScreenCollectionViewCell *cellAtLeft = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexLeft]];
             cellAtLeft.alpha = MAX(MIN_HIDDEN_CELL_ALPHA_VALUE, 1 - (cellIndexWithOffset - indexLeft));
+            WDWordScreenCollectionViewCell *cellAtRight = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexRight]];
+            cellAtRight.alpha = MAX(MIN_HIDDEN_CELL_ALPHA_VALUE, 1 - (indexRight - cellIndexWithOffset));
         }
-        WDWordScreenCollectionViewCell *cellAtRight = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:0.0 inSection:indexRight]];
-        cellAtRight.alpha = MAX(MIN_HIDDEN_CELL_ALPHA_VALUE, 1 - (indexRight - cellIndexWithOffset));
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-    cell.alpha = 1.0;
-    
+    //WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
+    //cell.alpha = 1.0;
     [self launchFadeDateAndDayTextTimer];
 }
 
