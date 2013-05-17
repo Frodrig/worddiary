@@ -56,7 +56,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (void)                configureDaysOfTheWeekTitles;
 - (void)                configureMonthAndYearLabel;
-- (void)                configureDayOfTheMonths;
+- (void)                configureDayOfTheMonths:(BOOL)inmediate;
 - (void)                vinculeGradientsToDaysWithWords;
 - (void)                configureDayMonthViewWithoutWordMode:(WDDayMonthView *)dayMonthView;
 
@@ -202,7 +202,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     
     [self configureMonthAndYearLabel];
     [self configureDaysOfTheWeekTitles];
-    [self configureDayOfTheMonths];
+    [self configureDayOfTheMonths:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -377,7 +377,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     
 }
 
-- (void)configureDayOfTheMonths
+- (void)configureDayOfTheMonths:(BOOL)inmediate
 {
     const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
     const NSUInteger maxDaysOfTheMonth = [self findMaxDaysOfTheMonth];
@@ -409,7 +409,11 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         }
     }
 
-    [self launchAddGradientToWordDaysTimer];
+    if (inmediate) {
+        [self vinculeGradientsToDaysWithWords];
+    } else {
+        [self launchAddGradientToWordDaysTimer];
+    }
 }
 
 - (NSDate *)createNormalizedDateForDayMonthView:(WDDayMonthView *)dayMonthView
@@ -513,7 +517,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     
     const BOOL logicChange = [self logicChangeYearMonthWithSelectedDateComponents:dateComponents];
     if (logicChange) {
-        [self configureDayOfTheMonths];
+        [self configureDayOfTheMonths:YES];
     }
     
     [UIView animateWithDuration:0.55 animations:^{
@@ -748,7 +752,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             dayMonthViewIt.alpha = 0.0;
         }
         
-        [self configureDayOfTheMonths];
+        [self configureDayOfTheMonths:NO];
         
         for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
             const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
@@ -927,7 +931,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     
     NSDateComponents *newActualDate = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
     if ([self logicChangeYearMonthWithSelectedDateComponents:newActualDate]) {
-        [self configureDayOfTheMonths];
+        [self configureDayOfTheMonths:YES];
         [self configureMonthAndYearLabel];
     }
 }
