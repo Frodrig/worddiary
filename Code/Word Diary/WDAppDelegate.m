@@ -21,6 +21,7 @@
 - (void) prepareRootViewController;
 - (void) createDebugWords;
 - (void) createDebugWords2;
+- (void) createDebugWords3;
 
 @end
 
@@ -39,6 +40,8 @@
     // Override point for customization after application launch
     //[self createDebugWords];
    // [self createDebugWords2];
+   //  [self createDebugWords3];
+
     [self prepareRootViewController];
     
     self.window.backgroundColor = [UIColor blackColor];
@@ -120,6 +123,26 @@
         [[WDWordDiary sharedWordDiary] saveAll];
     }
 }
+
+- (void)createDebugWords3
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];    
+    for (dateComponents.year = 2010; dateComponents.year < 2014; dateComponents.year = dateComponents.year + 1) {
+        for (dateComponents.month = 1; dateComponents.month < 13; dateComponents.month = dateComponents.month + 1) {
+            for (dateComponents.day = 1; dateComponents.day < 29; dateComponents.day = dateComponents.day + 1) {
+                NSTimeInterval timeInterval = [calendar dateFromComponents:dateComponents].timeIntervalSince1970;
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+                WDWord *word = [[WDWordDiary sharedWordDiary] createWord:@"PalabraLargaPuesVaya" inTimeInterval:date.timeIntervalSince1970];
+                word.style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:rand() % [WDWordDiary sharedWordDiary].styles.count];
+            }
+        }
+        NSLog(@"year %d completed", dateComponents.year);
+    }
+    
+    [[WDWordDiary sharedWordDiary] saveAll];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

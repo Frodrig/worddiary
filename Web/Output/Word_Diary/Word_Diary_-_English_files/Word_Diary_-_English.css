@@ -67,10 +67,6 @@
     text-indent: 0px;
     text-transform: none;
 }
-.style_SkipStroke_1 {
-    background: transparent;
-    opacity: 1.00;
-}
 .paragraph_style_3 {
     color: rgb(60, 61, 66);
     font-family: 'Helvetica', 'Arial', sans-serif;
@@ -92,6 +88,10 @@
     text-decoration: none;
     text-indent: 0px;
     text-transform: none;
+}
+.style_SkipStroke_1 {
+    background: transparent;
+    opacity: 1.00;
 }
 .paragraph_style_4 {
     color: rgb(60, 61, 66);

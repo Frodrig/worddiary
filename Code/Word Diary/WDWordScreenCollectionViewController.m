@@ -299,7 +299,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
             self.spaceTipInEditModeLabel.alpha = 1.0;
         } completion:^(BOOL finished){
             NSNumber *spaceTipShowed = [[NSUserDefaults standardUserDefaults] valueForKey:@"SPACE_TIP_SHOWED"];
-            NSLog(@"%@", spaceTipShowed);
             [self performSelector:@selector(hideSpaceTip) withObject:nil afterDelay:[spaceTipShowed boolValue] ? 1.0 : 4.0];
             if (![spaceTipShowed boolValue]) {
                 [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithBool:YES] forKey:@"SPACE_TIP_SHOWED"];
