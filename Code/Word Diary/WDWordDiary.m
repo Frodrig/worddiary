@@ -14,6 +14,8 @@
 
 @interface WDWordDiary()
 
+@property(nonatomic, strong) NSMutableDictionary *fastWordSearchByDateComponentsDictionary;
+
 - (void)      configureModelAndContextOfDB;
 - (NSURL *)   storeFileURLWithPath;
 
@@ -28,18 +30,33 @@
 
 - (void)      sortWords;
 
+- (void)      createFastWordSearchDictionary;
+- (void)      addWordToFastWordSearchDictionary:(WDWord *)word;
+
 @end
 
 @implementation WDWordDiary
 
 #pragma mark - Synthesize
 
-@synthesize model    = model_;
-@synthesize context  = context_;
-@synthesize words    = words_;
-@synthesize colors   = colors_;
-@synthesize styles   = styles_;
-@synthesize palettes = palettes_;
+@synthesize model                           = model_;
+@synthesize context                         = context_;
+@synthesize words                           = words_;
+@synthesize colors                          = colors_;
+@synthesize styles                          = styles_;
+@synthesize palettes                        = palettes_;
+@synthesize fastWordSearchByDateComponentsDictionary  = fastWordSearchByDateComponentsDictionary_;
+
+#pragma mark - Properties
+
+- (NSDictionary *)fastWordSearchByDateComponentsDictionary
+{
+    if (nil == fastWordSearchByDateComponentsDictionary_) {
+        fastWordSearchByDateComponentsDictionary_ = [NSMutableDictionary dictionaryWithCapacity:360];
+    }
+    
+    return fastWordSearchByDateComponentsDictionary_;
+}
 
 #pragma mark - Singleton
 
@@ -184,6 +201,20 @@
     }
 }
 
+- (void)addWordToFastWordSearchDictionary:(WDWord *)word
+{
+    NSDictionary *dayToWordDictionary = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObject:word] forKeys:[NSArray arrayWithObject:[NSNumber numberWithInteger:word.dateComponents.day]]];
+    NSDictionary *monthToDayToWordDictionary = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObject:dayToWordDictionary] forKeys:[NSArray arrayWithObject:[NSNumber numberWithInteger:word.dateComponents.month]]];
+    [self.fastWordSearchByDateComponentsDictionary setObject:monthToDayToWordDictionary forKey:[NSNumber numberWithInteger:word.dateComponents.year]];
+}
+
+- (void)createFastWordSearchDictionary
+{
+    for (WDWord *word in self.words) {
+        [self addWordToFastWordSearchDictionary:word];
+    }
+}
+
 - (void)prepareWords
 {
     NSArray *result = [self fetchAllEntitiesOfType:@"WDWord"];
@@ -191,6 +222,7 @@
     words_ = result.count > 0 ? [NSMutableArray arrayWithArray:result] : [NSMutableArray array];
     [self cutWordsArrayAtPresentDay];
     [self sortWords];
+    [self createFastWordSearchDictionary];
     
     for (WDWord *word in words_) {
         [self addObserverToWord:word];
@@ -219,17 +251,14 @@
 - (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval
 {
     WDWord *wordObject = [NSEntityDescription insertNewObjectForEntityForName:@"WDWord" inManagedObjectContext:self.context];
-    
     wordObject.word = word;
     wordObject.timeInterval = timeInterval;
     wordObject.style = [self defaultStyle];
     wordObject.palette = [self randomPalette];
-    
     [words_ addObject:wordObject];
+    [self addWordToFastWordSearchDictionary:wordObject];
     [self sortWords];
-    
     [self addObserverToWord:wordObject];
-    
     [self saveAll];
     
     return wordObject;
@@ -487,6 +516,14 @@
 
 - (WDWord *)findWordWithDateComponents:(NSDateComponents *)dateComponents
 {
+    NSDictionary *entriesForYear = [self.fastWordSearchByDateComponentsDictionary objectForKey:[NSNumber numberWithInteger:dateComponents.year]];
+    NSDictionary *entriesForMonth = [entriesForYear objectForKey:[NSNumber numberWithInteger:dateComponents.month]];
+    WDWord *wordForDay = [entriesForMonth objectForKey:[NSNumber numberWithInteger:dateComponents.day]];
+    
+    return wordForDay;
+    
+    
+    /*
     NSUInteger indexOfWordObject = [self.words indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         WDWord *wordIt = obj;
         BOOL found = wordIt.dateComponents.year == dateComponents.year &&
@@ -497,6 +534,7 @@
     }];
 
     return indexOfWordObject != NSNotFound ? [self.words objectAtIndex:indexOfWordObject] : nil;
+     */
 }
 
 #pragma mark - Auxiliary
