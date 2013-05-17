@@ -56,7 +56,7 @@
 "TAG_WEEKDAY_SATURDAY"              = "Saturday";
 
 "TAG_INFO_TITLE"                                    = "Word Diary";
-"TAG_INFO_SUBTITLE"                                 = "One day in one word";
+"TAG_INFO_SUBTITLE"                                 = "A day in a word";
 "TAG_INFO_FEEDBACKINFO"                             = "Your feedback is welcome";
 "TAG_INFO_FEEDBACKEMAIL"                            = "feedback@frodrig.com";
 "TAG_INFO_DEVELOPEDBY"                              = "Developed by\nFernando Rodríguez Martínez";
@@ -66,11 +66,11 @@
 "TAG_SUPPORTEMAIL_TEMPLATE_TITLE"                  = "About Word Diary";
 "TAG_SUPPORTEMAIL_TEMPLATE_RECIPENT"               = "feedback@frodrig.com";
 
-"TAG_HELP_INFOTEXT_PAGE_0"                         = "Bienvenido a Word Diary\nUn día en una palabra";
-"TAG_HELP_INFOTEXT_PAGE_1"                         = "Pulsa en la línea para escribir";
-"TAG_HELP_INFOTEXT_PAGE_2"                         = "Desliza el dedo arriba o abajo para cambiar el color";
-"TAG_HELP_INFOTEXT_PAGE_3"                         = "Desliza el dedo a izquierda o derecha para navegar por tu diario";
-"TAG_HELP_INFOTEXT_PAGE_4"                         = "Pulsa dos veces para ir al calendario y ver otras opciones";
+"TAG_HELP_INFOTEXT_PAGE_0"                         = "Welcome to Word Diary\nA day in a word";
+"TAG_HELP_INFOTEXT_PAGE_1"                         = "Click on the line to write something";
+"TAG_HELP_INFOTEXT_PAGE_2"                         = "Slide your finger up and down to change the color";
+"TAG_HELP_INFOTEXT_PAGE_3"                         = "Slide your finger to the left/right to read your diary";
+"TAG_HELP_INFOTEXT_PAGE_4"                         = "Click twice to go to calendar and see other options";
 "TAG_HELP_INFOTEXT_PAGE_5"                         = "";
 
 "TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL"        = "%@ %d";
@@ -78,7 +78,7 @@
 "TAG_DASHBOARDSCREEN_ACCEPT_GO"                    = "Go";
 "TAG_DASHBOARDSCREEN_CANCEL"                       = "Cancel";
 
-"TAG_DATESELECTOR_TITLE"                           = "Select date";
+"TAG_DATESELECTOR_TITLE"                           = "Choose date";
 
-"TAG_NOSPACE_TIP"                                  = "Remember:\nOne word. No spaces.";
+"TAG_NOSPACE_TIP"                                  = "Remember:\nA word. No spaces.";
 
