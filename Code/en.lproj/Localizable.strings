@@ -77,6 +77,8 @@
 "TAG_DASHBOARDSCREEN_ACCEPT_ERASE"                 = "Remove";
 "TAG_DASHBOARDSCREEN_ACCEPT_GO"                    = "Go";
 "TAG_DASHBOARDSCREEN_CANCEL"                       = "Cancel";
+"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL"         = "words";
+"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_SINGULAR"       = "words";
 
 "TAG_DATESELECTOR_TITLE"                           = "Choose date";
 

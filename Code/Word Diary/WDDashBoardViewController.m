@@ -16,6 +16,7 @@
 #import "WDInfoScreenViewController.h"
 #import "WDDaysOfTheMonthContainerView.h"
 #import "WDDaysOfTheWeekContainerView.h"
+#import "WDChangeDateButtonContainerView.h"
 #import <QuartzCore/QuartzCore.h>
 
 const NSUInteger DAYS_OF_WEEK                             = 7;
@@ -29,6 +30,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (nonatomic, strong) NSDateComponents                          *actualDate;
 @property (nonatomic, strong) NSDateComponents                          *todayDate;
 @property (weak, nonatomic) IBOutlet UILabel                            *yearMonthLabel;
+@property (nonatomic, strong) UILabel                                   *wordsOfMonthLabel;
 @property (weak, nonatomic) IBOutlet UIView                             *daysOfTheWeekTitlesContainerView;
 @property (weak, nonatomic) IBOutlet UIView                             *daysOfTheMonthContainerView;
 @property (nonatomic, strong) UITapGestureRecognizer                    *tapGestureRecognizer;
@@ -49,6 +51,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (weak, nonatomic) IBOutlet UIImageView                        *removeStateImage;
 @property (nonatomic) NSUInteger                                        pendingMonthNavigationRequest;
 @property (nonatomic, strong) NSTimer                                   *minimumTimeNavigationPressTimer;
+@property (weak, nonatomic) IBOutlet WDChangeDateButtonContainerView    *bottomContainerView;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -94,6 +97,9 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)                launchAddGradientToWordDaysTimer;
 - (void)                minimumTimeNavigationPressTimerHandle:(NSTimer *)timer;
 
+- (void)                setNumberOfWordsOfTheMonth:(BOOL)inmediate;
+- (NSUInteger)          findNumberOfWordsOfActualMonth;
+
 @end
 
 @implementation WDDashBoardViewController
@@ -103,6 +109,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @synthesize datePannelViewContainer          = datePannelViewContainer_;
 @synthesize actualDate                       = actualDate_;
 @synthesize yearMonthLabel                   = yearMonthLabel_;
+@synthesize wordsOfMonthLabel                = wordsOfMonthLabel_;
 @synthesize daysOfTheWeekTitlesContainerView = daysOfTheWeekContainerView_;
 @synthesize daysOfTheMonthContainerView      = daysOfTheMonthContainerView_;
 @synthesize tapGestureRecognizer             = tapGestureRecognizer_;
@@ -125,6 +132,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @synthesize removeStateImage                 = removeStateImage_;
 @synthesize pendingMonthNavigationRequest    = pendingMonthNavigationRequest_;
 @synthesize minimumTimeNavigationPressTimer  = minimumTimeNavigationPressTimer_;
+@synthesize bottomContainerView              = bottomContainerView_;
 
 #pragma mar - Properties
 
@@ -198,7 +206,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     [self configureMonthAndYearLabel];
     [self configureDaysOfTheWeekTitles];
     [self configureDayOfTheMonths:YES];
@@ -207,7 +215,23 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
+    if (self.wordsOfMonthLabel == nil) {
+        CGRect wordSlateBounds = CGRectMake(0.0, 0.0, self.wordSlateContainerView.bounds.size.width, self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height));
+        self.wordSlateContainerView.bounds = wordSlateBounds;
+        self.wordsOfMonthLabel = [[UILabel alloc] initWithFrame:wordSlateBounds];
+        self.wordsOfMonthLabel.minimumScaleFactor = 0.5;
+        self.wordsOfMonthLabel.numberOfLines = 2;
+        self.wordsOfMonthLabel.adjustsFontSizeToFitWidth = YES;
+        self.wordsOfMonthLabel.adjustsLetterSpacingToFitWidth = NO;
+        self.wordsOfMonthLabel.textAlignment = NSTextAlignmentCenter;
+        self.wordsOfMonthLabel.backgroundColor = [UIColor clearColor];
+        [self.wordSlateContainerView addSubview:self.wordsOfMonthLabel];
+        self.wordsOfMonthLabel.alpha = 0.0;
+    }
+
+    [self setNumberOfWordsOfTheMonth:NO];
+
     [self removeEmptyWordsDays];
 }
 
@@ -218,6 +242,46 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 }
 
 #pragma mark - Auxiliary
+
+- (NSUInteger)findNumberOfWordsOfActualMonth
+{
+    const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
+    const NSUInteger firstWeekdayOfTheMonth = [self findFirstWeekdayOfTheMonth];
+    NSUInteger numberOfWords = 0;
+    for (NSUInteger dayMontViewIterator = 0; dayMontViewIterator < maxDayMonthViews; dayMontViewIterator++) {
+        const NSUInteger dayMonthViewIndex = dayMontViewIterator + 1;
+        WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
+        if (!dayMonthViewIt.hidden) {
+            dayMonthViewIt.dayOfTheActualMonthIndex = dayMonthViewIndex - firstWeekdayOfTheMonth + 1;
+            NSDateComponents *dateComponentOfDay = [[NSDateComponents alloc] init];
+            dateComponentOfDay.year = self.actualDate.year;
+            dateComponentOfDay.month = self.actualDate.month;
+            dateComponentOfDay.day = dayMonthViewIt.dayOfTheActualMonthIndex;
+            WDWord *word = [[WDWordDiary sharedWordDiary] findWordWithDateComponents:dateComponentOfDay];
+            if (word.word.length > 0) {
+                ++numberOfWords;
+            }
+        }
+    }
+    
+    return numberOfWords;
+}
+
+- (void)setNumberOfWordsOfTheMonth:(BOOL)inmediate
+{
+    const NSUInteger numberOfWords = [self findNumberOfWordsOfActualMonth];
+    self.wordsOfMonthLabel.attributedText = [[NSAttributedString alloc]
+                                             initWithString:[NSString stringWithFormat:@"%@\n%@",NSLocalizedString(numberOfWords == 1 ? @"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_SINGULAR" : @"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL", @""), [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:numberOfWords]]]
+                                             attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:[WDUtils is568Screen] ? 34 : 24],
+                                             NSForegroundColorAttributeName:[UIColor lightGrayColor],
+                                             NSKernAttributeName: [NSNumber numberWithInteger:5.0]}];
+    
+    
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:inmediate ? 0.0 : 2.0 animations:^{
+        self.wordsOfMonthLabel.alpha = numberOfWords == 0 ? 0.2 : 1.0;
+    }];
+}
 
 - (void)launchAddGradientToWordDaysTimer
 {
@@ -302,6 +366,8 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             }];
         }
     }
+    
+    [self setNumberOfWordsOfTheMonth:inmediate];
 }
 
 - (NSUInteger)findFirstWeekdayOfTheMonth
@@ -380,6 +446,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
         
         [self removeGradientLayerOfDayMonthView:dayMonthViewIt];
+        self.wordsOfMonthLabel.alpha = 0.5;
         
         dayMonthViewIt.hidden = dayMonthViewIndex < firstWeekdayOfTheMonth || dayMonthViewIndex - (firstWeekdayOfTheMonth - 1) > maxDaysOfTheMonth;
         if (!dayMonthViewIt.hidden) {
@@ -480,6 +547,8 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         self.acceptButton.hidden = self.cancelButton.hidden = YES;
         self.removeStateImage.hidden = YES;
         self.changeYearMonthButton.hidden = NO;
+        [self setNumberOfWordsOfTheMonth:YES];
+        self.wordsOfMonthLabel.hidden = NO;
         self.infoButton.enabled = self.leftNavigationButton.enabled = self.rightNavigationButton.enabled = self.changeYearMonthButton.enabled = YES;
         [selectedWordLabel removeFromSuperview];
     }];
@@ -531,6 +600,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                 }
             }
             self.leftNavigationButton.alpha = self.rightNavigationButton.alpha = 1.0;
+            [self setNumberOfWordsOfTheMonth:NO];
         } completion:^(BOOL finished) {
             self.changeYearMonthButton.enabled = YES;
             self.infoButton.enabled = YES;
@@ -584,6 +654,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             if (!selectedWordDayView.hidden && selectedWordDay != nil && selectedWordDay.word.length > 0) {
                 self.dayMonthPendingToRemove = selectedWordDayView;
                 self.infoButton.enabled = self.leftNavigationButton.enabled = self.rightNavigationButton.enabled = NO;
+                self.wordsOfMonthLabel.hidden = YES;
                 self.changeYearMonthButton.hidden = YES;
                 self.removeStateImage.hidden = NO;
                 [UIView animateWithDuration:0.25 animations:^{
@@ -676,6 +747,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             }
         }
         self.leftNavigationButton.alpha = self.rightNavigationButton.alpha = 0.0;
+        self.wordsOfMonthLabel.alpha = 0.0;
     } completion:^(BOOL finished) {
         self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
         self.cancelButton.hidden = self.acceptButton.hidden = NO;
@@ -723,6 +795,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)updateYearMonthData:(NSNumber *)rightDirection
 {
     [self configureMonthAndYearLabel];
+    [self setNumberOfWordsOfTheMonth:YES];
 
     if (self.pendingMonthNavigationRequest < MAX_PENDING_REQUEST_TO_ATTEND) {
         const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
