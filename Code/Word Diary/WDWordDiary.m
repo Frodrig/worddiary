@@ -217,14 +217,12 @@
         NSMutableDictionary *monthsToDaysToWordDictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObject:daysToWordDictionary] forKeys:[NSArray arrayWithObject:[NSNumber numberWithInteger:word.dateComponents.month]]];
         [self.fastWordSearchByDateComponentsDictionary setObject:monthsToDaysToWordDictionary forKey:[NSNumber numberWithInteger:word.dateComponents.year]];
     } else {
-        NSMutableDictionary *dayToWordDictionary = [monthsOfYearDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.month]];
-        if (dayToWordDictionary == nil) {
-            dayToWordDictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObject:word] forKeys:[NSArray arrayWithObject:[NSNumber numberWithInteger:word.dateComponents.day]]];
-            [monthsOfYearDictionary setObject:dayToWordDictionary forKey:[NSNumber numberWithInteger:word.dateComponents.month]];
-        } else {
-            NSAssert([dayToWordDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.day]] == nil, @"NO deberia existir una entrada para ese dia");
-            [dayToWordDictionary setObject:word forKey:[NSNumber numberWithInteger:word.dateComponents.day]];
+        NSMutableDictionary *daysOfMonthDictionary = [monthsOfYearDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.month]];
+        if (daysOfMonthDictionary == nil) {
+            daysOfMonthDictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObject:word] forKeys:[NSArray arrayWithObject:[NSNumber numberWithInteger:word.dateComponents.day]]];
+            [monthsOfYearDictionary setObject:daysOfMonthDictionary forKey:[NSNumber numberWithInteger:word.dateComponents.month]];
         }
+        [daysOfMonthDictionary setObject:word forKey:[NSNumber numberWithInteger:word.dateComponents.day]];        
     }
 }
 
@@ -537,9 +535,9 @@
 
 - (WDWord *)findWordWithDateComponents:(NSDateComponents *)dateComponents
 {
-    NSDictionary *entriesForYear = [self.fastWordSearchByDateComponentsDictionary objectForKey:[NSNumber numberWithInteger:dateComponents.year]];
-    NSDictionary *entriesForMonth = [entriesForYear objectForKey:[NSNumber numberWithInteger:dateComponents.month]];
-    WDWord *wordForDay = [entriesForMonth objectForKey:[NSNumber numberWithInteger:dateComponents.day]];
+    NSDictionary *months = [self.fastWordSearchByDateComponentsDictionary objectForKey:[NSNumber numberWithInteger:dateComponents.year]];
+    NSDictionary *days = [months objectForKey:[NSNumber numberWithInteger:dateComponents.month]];
+    WDWord *wordForDay = [days objectForKey:[NSNumber numberWithInteger:dateComponents.day]];
     
     return wordForDay;
     

@@ -49,6 +49,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (weak, nonatomic) IBOutlet UIImageView                        *removeStateImage;
 @property (nonatomic) NSUInteger                                        pendingMonthNavigationRequest;
 @property (nonatomic, strong) NSTimer                                   *minimumTimeNavigationPressTimer;
+@property (nonatomic, strong) NSCalendar                                *currentCalendar;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -125,13 +126,14 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @synthesize removeStateImage                 = removeStateImage_;
 @synthesize pendingMonthNavigationRequest    = pendingMonthNavigationRequest_;
 @synthesize minimumTimeNavigationPressTimer  = minimumTimeNavigationPressTimer_;
+@synthesize currentCalendar                  = currentCalendar_;
 
 #pragma mar - Properties
 
 - (NSDateComponents *)todayDate
 {
     if (todayDate_ == nil) {
-        todayDate_ = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+        todayDate_ = [currentCalendar_ components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     }
     
     return todayDate_;
@@ -140,10 +142,9 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 -(NSDate *)normalizedRealTodayDate
 {
     if (nil == normalizedRealTodayDate_) {
-        NSCalendar *calendar = [NSCalendar currentCalendar];
         NSDate *realTodayDate = [NSDate date];
-        NSDateComponents *realTodayDateComponents = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:realTodayDate];
-        normalizedRealTodayDate_ = [calendar dateFromComponents:realTodayDateComponents];
+        NSDateComponents *realTodayDateComponents = [currentCalendar_ components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:realTodayDate];
+        normalizedRealTodayDate_ = [currentCalendar_ dateFromComponents:realTodayDateComponents];
     }
     
     return normalizedRealTodayDate_;
@@ -158,6 +159,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         // Custom initialization
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         
+        currentCalendar_ = [NSCalendar currentCalendar];
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];
         
@@ -262,7 +264,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (void)configureDaysOfTheWeekTitles
 {
-    NSUInteger firstWeekday = [[NSCalendar currentCalendar] firstWeekday];
+    NSUInteger firstWeekday = [currentCalendar_ firstWeekday];
     for (NSUInteger dayOfTheWeekTagIt = 1; dayOfTheWeekTagIt < 8; dayOfTheWeekTagIt++) {
         NSUInteger labelIndex = dayOfTheWeekTagIt + (firstWeekday - 1);
         if (labelIndex > 7) {
@@ -304,22 +306,20 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (NSUInteger)findFirstWeekdayOfTheMonth
 {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDateComponents *firstDayDateComponents = [self.actualDate copy];
     firstDayDateComponents.year = 2013;
     firstDayDateComponents.day = 1;
     firstDayDateComponents.week = 1;
-    NSDate *date = [calendar dateFromComponents:firstDayDateComponents];
-    NSUInteger firstWeekDay = [calendar ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:date];
+    NSDate *date = [currentCalendar_ dateFromComponents:firstDayDateComponents];
+    NSUInteger firstWeekDay = [currentCalendar_ ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:date];
     
     return firstWeekDay;
 }
 
 - (NSUInteger)findMaxDaysOfTheMonth
 {
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDate *date = [calendar dateFromComponents:self.actualDate];
-    NSRange rangeDaysOfMonth = [calendar rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:date];
+    NSDate *date = [currentCalendar_ dateFromComponents:self.actualDate];
+    NSRange rangeDaysOfMonth = [currentCalendar_ rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:date];
     return rangeDaysOfMonth.length;
 }
 
@@ -392,7 +392,9 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         dayMonthViewIt.hidden = dayMonthViewIndex < firstWeekdayOfTheMonth || dayMonthViewIndex - (firstWeekdayOfTheMonth - 1) > maxDaysOfTheMonth;
         if (!dayMonthViewIt.hidden) {
             dayMonthViewIt.dayOfTheActualMonthIndex = dayMonthViewIndex - firstWeekdayOfTheMonth + 1;
-            NSDateComponents *dateComponentOfDay = [self.actualDate copy];
+            NSDateComponents *dateComponentOfDay = [[NSDateComponents alloc] init];
+            dateComponentOfDay.year = self.actualDate.year;
+            dateComponentOfDay.month = self.actualDate.month;
             dateComponentOfDay.day = dayMonthViewIt.dayOfTheActualMonthIndex;
             WDWordDiary *wordDiary = [WDWordDiary sharedWordDiary];
             WDWord *wordOfCalendarDay = [wordDiary findWordWithDateComponents:dateComponentOfDay];
@@ -400,12 +402,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
             dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
             [self configureDayMonthViewWithoutWordMode:dayMonthViewIt];
-
-            /*if (wordOfCalendarDay && wordOfCalendarDay.word.length > 0) {
-                [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay];
-            } else {
-                [self configureDayMonthViewWithoutWordMode:dayMonthViewIt];
-            }*/
+            [NSObject cancelPreviousPerformRequestsWithTarget:dayMonthViewIt.dayOfMonthLabel];
         }
     }
 
@@ -420,7 +417,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 {
     NSDateComponents *actualDayMonthViewDateComponents = [self.actualDate copy];
     actualDayMonthViewDateComponents.day = dayMonthView.dayOfTheActualMonthIndex;
-    NSDate *normalizedActuayDayMonthViewDate = [[NSCalendar currentCalendar] dateFromComponents:actualDayMonthViewDateComponents];
+    NSDate *normalizedActuayDayMonthViewDate = [currentCalendar_ dateFromComponents:actualDayMonthViewDateComponents];
 
     return normalizedActuayDayMonthViewDate;
 }
@@ -568,7 +565,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                     validDay = dateComponentsOfView.day <= self.todayDate.day;
                 }
                 if (validDay) {
-                    wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[[NSCalendar currentCalendar] dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
+                    wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[currentCalendar_ dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
                     [self.delegate dashBoardViewController:self createdNewWord:wordDayOfHitPoint];
                 }
             }
@@ -928,8 +925,9 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 {
     todayDate_ = nil;
     normalizedRealTodayDate_ = nil;
+    currentCalendar_ = [NSCalendar currentCalendar];
     
-    NSDateComponents *newActualDate = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
+    NSDateComponents *newActualDate = [currentCalendar_ components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
     if ([self logicChangeYearMonthWithSelectedDateComponents:newActualDate]) {
         [self configureDayOfTheMonths:YES];
         [self configureMonthAndYearLabel];
