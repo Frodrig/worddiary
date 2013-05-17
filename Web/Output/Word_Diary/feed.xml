@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
  <id>urn:iweb:45FC9C5C-B773-423F-9258-085C2AC5F748</id>
  <title>Page list Atom feed</title>
- <updated>2013-05-16T15:29:39+02:00</updated>
+ <updated>2013-05-18T00:25:26+02:00</updated>
  <link rel="self" href="feed.xml"/>
  <generator>iWeb</generator>
  <author>
@@ -14,7 +14,7 @@
   <title xmlns="urn:iweb:">Word Diary - English</title>
   <in-navbar xmlns="urn:iweb:">B927F255-004B-4D7C-AEA7-5D5BE9DEDEB5</in-navbar>
   <link rel="alternate" href="Word_Diary_-_English.html"/>
-  <updated>2013-05-16T15:29:39.001+02:00</updated>
+  <updated>2013-05-18T00:25:26.001+02:00</updated>
   <content>Word Diary - English</content>
  </entry>
 </feed>

@@ -317,6 +317,15 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                                                44.0);
             WDDayMonthView *monthViewIt = [[WDDayMonthView alloc] initWithIndex:indexMonthView andFrame:monthViewFrame];
             monthViewIt.tag = indexMonthView;
+            monthViewIt.layer.cornerRadius = 0.0;
+            /*
+            CALayer *rectLayer = [CALayer layer];
+            rectLayer.bounds = CGRectMake(0.0, 0.0, monthViewIt.frame.size.width - 2.0, monthViewIt.frame.size.height - 2.0);
+            rectLayer.frame = CGRectMake(1.0, 1.0, rectLayer.frame.size.width, rectLayer.frame.size.height);
+            rectLayer.borderColor = [UIColor blackColor].CGColor;
+            rectLayer.borderWidth = 0.5;
+            [monthViewIt.layer addSublayer:rectLayer];
+            */
             [self.daysOfTheMonthContainerView insertSubview:monthViewIt belowSubview:self.daysOfTheMonthGridView];
 
         }
@@ -488,7 +497,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     const BOOL actualDayMonthViewAccesible = compareResult == NSOrderedDescending || compareResult == NSOrderedSame;
     dayMonthView.dayOfMonthLabel.textColor = actualDayMonthViewAccesible ? [UIColor lightGrayColor] : [UIColor darkGrayColor];
     dayMonthView.backgroundColor = [UIColor clearColor];
-    dayMonthView.layer.cornerRadius = 0.0;
     [self removeGradientLayerOfDayMonthView:dayMonthView];
 }
 
