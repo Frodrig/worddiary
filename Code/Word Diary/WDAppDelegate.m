@@ -40,7 +40,7 @@
     // Override point for customization after application launch
     //[self createDebugWords];
    // [self createDebugWords2];
-   //  [self createDebugWords3];
+    // [self createDebugWords3];
 
     [self prepareRootViewController];
     
@@ -128,7 +128,7 @@
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];    
-    for (dateComponents.year = 2010; dateComponents.year < 2014; dateComponents.year = dateComponents.year + 1) {
+    for (dateComponents.year = 2009; dateComponents.year < 2013; dateComponents.year = dateComponents.year + 1) {
         for (dateComponents.month = 1; dateComponents.month < 13; dateComponents.month = dateComponents.month + 1) {
             for (dateComponents.day = 1; dateComponents.day < 29; dateComponents.day = dateComponents.day + 1) {
                 NSTimeInterval timeInterval = [calendar dateFromComponents:dateComponents].timeIntervalSince1970;
