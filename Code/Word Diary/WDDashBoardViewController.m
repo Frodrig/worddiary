@@ -57,7 +57,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)                configureDaysOfTheWeekTitles;
 - (void)                configureMonthAndYearLabel;
 - (void)                configureDayOfTheMonths:(BOOL)inmediate;
-- (void)                vinculeGradientsToDaysWithWords;
+- (void)                vinculeGradientsToDaysWithWords:(BOOL)inmediate;
 - (void)                configureDayMonthViewWithoutWordMode:(WDDayMonthView *)dayMonthView;
 
 - (NSDate *)            createNormalizedDateForDayMonthView:(WDDayMonthView *)dayMonthView;
@@ -78,7 +78,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (BOOL)                logicChangeYearMonthWithSelectedDateComponents:(NSDateComponents *)dateComponents;
 - (void)                exitChangeYearMonthModeWithSelectedDateComponents:(NSDateComponents *)dateComponents;
 
-- (void)                addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word;
+- (void)                addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word inmediate:(BOOL)inmediate;
 - (void)                removeGradientLayerOfDayMonthView:(WDDayMonthView *)dayMonthView;
 
 - (void)                applicationWillResignActive:(NSNotification *)notification;
@@ -231,7 +231,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)minimumTimeNavigationPressTimerHandle:(NSTimer *)timer
 {
     self.minimumTimeNavigationPressTimer = nil;
-    [self vinculeGradientsToDaysWithWords];
+    [self vinculeGradientsToDaysWithWords:NO];
 }
 
 - (void)removeEmptyWordsDays
@@ -279,7 +279,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     self.yearMonthLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL", @""), [WDUtils monthString:self.actualDate.month abreviateMode:NO], self.actualDate.year];
 }
 
-- (void)vinculeGradientsToDaysWithWords
+- (void)vinculeGradientsToDaysWithWords:(BOOL)inmediate
 {
     const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
     const NSUInteger firstWeekdayOfTheMonth = [self findFirstWeekdayOfTheMonth];
@@ -294,10 +294,10 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             WDWordDiary *wordDiary = [WDWordDiary sharedWordDiary];
             WDWord *wordOfCalendarDay = [wordDiary findWordWithDateComponents:dateComponentOfDay];
             if (wordOfCalendarDay && wordOfCalendarDay.word.length > 0) {
-                [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay];
-                [dayMonthViewIt.dayOfMonthLabel performSelector:@selector(setTextColor:) withObject:[wordOfCalendarDay.palette makeWordColorObject] afterDelay:0.0 * (dayMontViewIterator + 1) / DAYS_OF_WEEK];
+                [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay inmediate:inmediate];
+                [dayMonthViewIt.dayOfMonthLabel setTextColor:[wordOfCalendarDay.palette makeWordColorObject]];
             }
-            [UIView animateWithDuration:0.75 animations:^{
+            [UIView animateWithDuration:inmediate ? 0.0 : 0.75 animations:^{
                 dayMonthViewIt.dayOfMonthLabel.alpha = 1;
             }];
         }
@@ -333,7 +333,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     }
 }
 
-- (void)addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word
+- (void)addGradientLayerToDayMonthView:(WDDayMonthView *)dayMonthView withWord:(WDWord *)word inmediate:(BOOL)inmediate
 {
     CAGradientLayer *gradient = [CAGradientLayer layer];
     gradient.frame = CGRectMake(4.0, 4.0, 36.0, 36.0);
@@ -354,27 +354,19 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     gradient.cornerRadius = 5.0;
     gradient.borderColor = [UIColor colorWithWhite:0.0 alpha:1].CGColor;
     gradient.borderWidth = 1.5;
-    gradient.opacity = 0.0;
+    gradient.opacity = inmediate ? 1.0 : 0.0;
     [dayMonthView.layer addSublayer:gradient];
     [dayMonthView bringSubviewToFront:dayMonthView.dayOfMonthLabel];
-  //  [dayMonthView.layer insertSublayer:gradient below:dayMonthView.dayOfMonthLabel.layer];
-    CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityAnimation.duration = (float)rand()/((float)RAND_MAX/1.35);
-    opacityAnimation.removedOnCompletion = YES;
-    opacityAnimation.fromValue = [NSNumber numberWithFloat:0.0];
-    opacityAnimation.toValue = [NSNumber numberWithFloat:1.0];
-    opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-    [gradient addAnimation:opacityAnimation forKey:@"opacity"];
-    gradient.opacity = 1.0;
-    
-    /*
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView animateWithDuration:(float)rand()/((float)RAND_MAX/0.75) animations:^{
-        dayMonthView.dayOfMonthLabel.textColor = [word.palette makeWordColorObject];
-    } completion:^(BOOL finished) {
-        
-    }];*/
-    
+    if (!inmediate) {
+        CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        opacityAnimation.duration = (float)rand()/((float)RAND_MAX/2.35);
+        opacityAnimation.removedOnCompletion = YES;
+        opacityAnimation.fromValue = [NSNumber numberWithFloat:0.0];
+        opacityAnimation.toValue = [NSNumber numberWithFloat:1.0];
+        opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+        [gradient addAnimation:opacityAnimation forKey:@"opacity"];
+        gradient.opacity = 1.0;
+    }
 }
 
 - (void)configureDayOfTheMonths:(BOOL)inmediate
@@ -407,7 +399,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     }
 
     if (inmediate) {
-        [self vinculeGradientsToDaysWithWords];
+        [self vinculeGradientsToDaysWithWords:inmediate];
     } else {
         [self launchAddGradientToWordDaysTimer];
     }
