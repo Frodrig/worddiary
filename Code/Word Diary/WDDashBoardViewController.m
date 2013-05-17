@@ -298,8 +298,11 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             WDWord *wordOfCalendarDay = [wordDiary findWordWithDateComponents:dateComponentOfDay];
             if (wordOfCalendarDay && wordOfCalendarDay.word.length > 0) {
                 [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay];
-                [dayMonthViewIt.dayOfMonthLabel performSelector:@selector(setTextColor:) withObject:[wordOfCalendarDay.palette makeWordColorObject] afterDelay:0.1 * (dayMontViewIterator + 1) / DAYS_OF_WEEK];
+                [dayMonthViewIt.dayOfMonthLabel performSelector:@selector(setTextColor:) withObject:[wordOfCalendarDay.palette makeWordColorObject] afterDelay:0.0 * (dayMontViewIterator + 1) / DAYS_OF_WEEK];
             }
+            [UIView animateWithDuration:0.75 animations:^{
+                dayMonthViewIt.dayOfMonthLabel.alpha = 1;
+            }];
         }
     }
 }
@@ -359,11 +362,11 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     [dayMonthView bringSubviewToFront:dayMonthView.dayOfMonthLabel];
   //  [dayMonthView.layer insertSublayer:gradient below:dayMonthView.dayOfMonthLabel.layer];
     CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityAnimation.duration = 3 + (float)rand()/((float)RAND_MAX/2.35);
+    opacityAnimation.duration = (float)rand()/((float)RAND_MAX/1.35);
     opacityAnimation.removedOnCompletion = YES;
     opacityAnimation.fromValue = [NSNumber numberWithFloat:0.0];
     opacityAnimation.toValue = [NSNumber numberWithFloat:1.0];
-    opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     [gradient addAnimation:opacityAnimation forKey:@"opacity"];
     gradient.opacity = 1.0;
     
@@ -739,25 +742,18 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
             //CGFloat duration = (float)rand()/(float)RAND_MAX;
             CGFloat duration = (float)rand()/((float)RAND_MAX/1.35);
-            if (duration < 0.40) {
-                duration = 0.40;
+            if (duration < 0.4) {
+                duration = 0.4;
             }
             if (dayMonthViewIt.layer.sublayers > 0) {
                 dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
             }
-            [WDUtils destroyViewGosthEffect:dayMonthViewIt withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
-            dayMonthViewIt.alpha = 0.0;
+            dayMonthViewIt.dayOfMonthLabel.alpha = 1;
+            [WDUtils destroyViewGosthEffect:dayMonthViewIt.dayOfMonthLabel withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
+            dayMonthViewIt.dayOfMonthLabel.alpha = 0;
         }
         
         [self configureDayOfTheMonths:NO];
-        
-        for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
-            const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
-            WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
-            [UIView animateWithDuration:0.25 animations:^{
-                dayMonthViewIt.alpha = 1.0;
-            }];
-        }
     }
     
     self.pendingMonthNavigationRequest--;
