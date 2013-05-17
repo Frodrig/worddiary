@@ -39,15 +39,25 @@
 
 #pragma mark - Synthesize
 
-@synthesize model                           = model_;
-@synthesize context                         = context_;
-@synthesize words                           = words_;
-@synthesize colors                          = colors_;
-@synthesize styles                          = styles_;
-@synthesize palettes                        = palettes_;
+@synthesize model                                     = model_;
+@synthesize context                                   = context_;
+@synthesize words                                     = words_;
+@synthesize colors                                    = colors_;
+@synthesize styles                                    = styles_;
+@synthesize palettes                                  = palettes_;
 @synthesize fastWordSearchByDateComponentsDictionary  = fastWordSearchByDateComponentsDictionary_;
+@synthesize currentCalendar                           = currentCalendar_;
 
 #pragma mark - Properties
+
+- (NSCalendar *)currentCalendar
+{
+    if (nil == currentCalendar_) {
+        currentCalendar_ = [NSCalendar currentCalendar];
+    }
+    
+    return currentCalendar_;
+}
 
 - (NSDictionary *)fastWordSearchByDateComponentsDictionary
 {
@@ -81,13 +91,17 @@
 {
     self = [super init];
     if (self) {
-        [self configureModelAndContextOfDB];
-        [self preparePalettes];
-        [self prepareStyles];
-        [self prepareWords];
     }
     
     return self;
+}
+
+- (void)loadAll
+{
+    [self configureModelAndContextOfDB];
+    [self preparePalettes];
+    [self prepareStyles];
+    [self prepareWords];
 }
 
 - (void)configureModelAndContextOfDB
@@ -253,11 +267,11 @@
 {
     const NSUInteger previousWordCount = words_.count;
     
-    NSDateComponents *todayDateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     todayDateComponents.hour = 23;
     todayDateComponents.minute = 59;
     todayDateComponents.second = 59;
-    NSTimeInterval todayLimitTimeInterval = [[NSCalendar currentCalendar] dateFromComponents:todayDateComponents].timeIntervalSince1970;
+    NSTimeInterval todayLimitTimeInterval = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:todayDateComponents].timeIntervalSince1970;
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
     

@@ -49,7 +49,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (weak, nonatomic) IBOutlet UIImageView                        *removeStateImage;
 @property (nonatomic) NSUInteger                                        pendingMonthNavigationRequest;
 @property (nonatomic, strong) NSTimer                                   *minimumTimeNavigationPressTimer;
-@property (nonatomic, strong) NSCalendar                                *currentCalendar;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -126,14 +125,13 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @synthesize removeStateImage                 = removeStateImage_;
 @synthesize pendingMonthNavigationRequest    = pendingMonthNavigationRequest_;
 @synthesize minimumTimeNavigationPressTimer  = minimumTimeNavigationPressTimer_;
-@synthesize currentCalendar                  = currentCalendar_;
 
 #pragma mar - Properties
 
 - (NSDateComponents *)todayDate
 {
     if (todayDate_ == nil) {
-        todayDate_ = [currentCalendar_ components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+        todayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     }
     
     return todayDate_;
@@ -143,8 +141,8 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 {
     if (nil == normalizedRealTodayDate_) {
         NSDate *realTodayDate = [NSDate date];
-        NSDateComponents *realTodayDateComponents = [currentCalendar_ components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:realTodayDate];
-        normalizedRealTodayDate_ = [currentCalendar_ dateFromComponents:realTodayDateComponents];
+        NSDateComponents *realTodayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:realTodayDate];
+        normalizedRealTodayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:realTodayDateComponents];
     }
     
     return normalizedRealTodayDate_;
@@ -159,7 +157,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         // Custom initialization
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         
-        currentCalendar_ = [NSCalendar currentCalendar];
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];
         
@@ -264,7 +261,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (void)configureDaysOfTheWeekTitles
 {
-    NSUInteger firstWeekday = [currentCalendar_ firstWeekday];
+    NSUInteger firstWeekday = [[WDWordDiary sharedWordDiary].currentCalendar firstWeekday];
     for (NSUInteger dayOfTheWeekTagIt = 1; dayOfTheWeekTagIt < 8; dayOfTheWeekTagIt++) {
         NSUInteger labelIndex = dayOfTheWeekTagIt + (firstWeekday - 1);
         if (labelIndex > 7) {
@@ -313,16 +310,16 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     firstDayDateComponents.year = 2013;
     firstDayDateComponents.day = 1;
     firstDayDateComponents.week = 1;
-    NSDate *date = [currentCalendar_ dateFromComponents:firstDayDateComponents];
-    NSUInteger firstWeekDay = [currentCalendar_ ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:date];
+    NSDate *date = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:firstDayDateComponents];
+    NSUInteger firstWeekDay = [[WDWordDiary sharedWordDiary].currentCalendar ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:date];
     
     return firstWeekDay;
 }
 
 - (NSUInteger)findMaxDaysOfTheMonth
 {
-    NSDate *date = [currentCalendar_ dateFromComponents:self.actualDate];
-    NSRange rangeDaysOfMonth = [currentCalendar_ rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:date];
+    NSDate *date = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:self.actualDate];
+    NSRange rangeDaysOfMonth = [[WDWordDiary sharedWordDiary].currentCalendar rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:date];
     return rangeDaysOfMonth.length;
 }
 
@@ -420,7 +417,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 {
     NSDateComponents *actualDayMonthViewDateComponents = [self.actualDate copy];
     actualDayMonthViewDateComponents.day = dayMonthView.dayOfTheActualMonthIndex;
-    NSDate *normalizedActuayDayMonthViewDate = [currentCalendar_ dateFromComponents:actualDayMonthViewDateComponents];
+    NSDate *normalizedActuayDayMonthViewDate = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:actualDayMonthViewDateComponents];
 
     return normalizedActuayDayMonthViewDate;
 }
@@ -568,7 +565,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                     validDay = dateComponentsOfView.day <= self.todayDate.day;
                 }
                 if (validDay) {
-                    wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[currentCalendar_ dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
+                    wordDayOfHitPoint = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:dateComponentsOfView].timeIntervalSince1970];
                     [self.delegate dashBoardViewController:self createdNewWord:wordDayOfHitPoint];
                 }
             }
@@ -921,9 +918,8 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 {
     todayDate_ = nil;
     normalizedRealTodayDate_ = nil;
-    currentCalendar_ = [NSCalendar currentCalendar];
     
-    NSDateComponents *newActualDate = [currentCalendar_ components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
+    NSDateComponents *newActualDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
     if ([self logicChangeYearMonthWithSelectedDateComponents:newActualDate]) {
         [self configureDayOfTheMonths:YES];
         [self configureMonthAndYearLabel];

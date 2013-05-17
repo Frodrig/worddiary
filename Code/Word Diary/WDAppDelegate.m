@@ -37,11 +37,14 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   
+    [[WDWordDiary sharedWordDiary] loadAll];
+    
     // Override point for customization after application launch
     //[self createDebugWords];
    // [self createDebugWords2];
     // [self createDebugWords3];
 
+    
     [self prepareRootViewController];
     
     self.window.backgroundColor = [UIColor blackColor];

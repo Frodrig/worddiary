@@ -20,8 +20,13 @@
 @property (nonatomic, strong)           NSArray                *colors;
 @property (nonatomic, strong)           NSArray                *styles;
 @property (nonatomic, strong)           NSArray                *palettes;
+@property (nonatomic, readonly, strong) NSCalendar             *currentCalendar;
 
 + (WDWordDiary *) sharedWordDiary;
+
+- (void)          loadAll;
+
+- (NSCalendar *)  currentCalendar;
 
 - (WDWord *)      createWord:(NSString *)word inTimeInterval:(double)timeInterval;
 - (void)          removeWord:(WDWord *)word;

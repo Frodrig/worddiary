@@ -7,6 +7,7 @@
 //
 
 #import "WDDayChecker.h"
+#import "WDWordDiary.h"
 
 @interface WDDayChecker()
 
@@ -67,8 +68,8 @@
 - (void)update:(NSTimer *)timer
 {
     if (self.delegate) {
-        NSDateComponents *actualDateComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:[NSDate date]];
-        NSDateComponents *previousDateComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:self.date];
+        NSDateComponents *actualDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSDayCalendarUnit fromDate:[NSDate date]];
+        NSDateComponents *previousDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSDayCalendarUnit fromDate:self.date];
         if (actualDateComponents.day != previousDateComponents.day) {
             if ([self.delegate respondsToSelector:@selector(dayCheckerOnNewDay:)]) {
                 [self.delegate dayCheckerOnNewDay:self];

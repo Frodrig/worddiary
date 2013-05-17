@@ -10,6 +10,7 @@
 #import "WDPalette.h"
 #import "WDStyle.h"
 #import "WDUtils.h"
+#import "WDWordDiary.h"
 
 @interface WDWord()
 
@@ -26,16 +27,18 @@
 @dynamic style;
 @dynamic palette;
 
-#pragma mark - Init
+@synthesize dateComponents  = dateComponents_;
 
-@synthesize dateComponents = dateComponents_;
+#pragma mark - Properties
+
+#pragma mark - Init
 
 - (NSDateComponents *)dateComponents
 {
     if (nil == dateComponents_) {
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-        dateComponents_ = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
-        dateComponents_.calendar = [NSCalendar currentCalendar];
+        dateComponents_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
+        //dateComponents_.calendar = [WDWordDiary sharedWordDiary].currentCalendar;
     }
     
     return dateComponents_;
@@ -87,8 +90,8 @@
 - (BOOL)isTodayWord
 {
     NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-    NSDateComponents *dateComponentsFromToday = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];
-    NSDateComponents *dateComponentsFromWordDate = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:wordDate];
+    NSDateComponents *dateComponentsFromToday = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *dateComponentsFromWordDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:wordDate];
     
     return dateComponentsFromToday.year == dateComponentsFromWordDate.year &&
     dateComponentsFromToday.month == dateComponentsFromWordDate.month &&
@@ -101,17 +104,10 @@
     NSDate *todayDate = [NSDate date];
     //Falla la linea de abajo, no da siempre cambio de dia, usaremos los componentes sin el timeinterval
     //NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-    NSDate *wordDate = [[NSCalendar currentCalendar] dateFromComponents:self.dateComponents];
-    NSDateComponents *dateComponents = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
+    NSDate *wordDate = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:self.dateComponents];
+    NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
     
     return dateComponents.day;
-    
-    /*
-    NSDateComponents *todayDateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
-    NSDateComponents *wordDateComponents = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit  fromDate:[NSDate dateWithTimeIntervalSince1970:self.timeInterval]];
-    
-    [NSCalendar currentCalendar] day
-    */
 }
 
 #pragma mark - Obtencion
