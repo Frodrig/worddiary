@@ -168,7 +168,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];
         
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -275,10 +274,8 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                                              attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:[WDUtils is568Screen] ? 34 : 24],
                                              NSForegroundColorAttributeName:[UIColor lightGrayColor],
                                              NSKernAttributeName: [NSNumber numberWithInteger:5.0]}];
-    
-    
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView animateWithDuration:inmediate ? 0.0 : 2.0 animations:^{
+    [UIView animateWithDuration:inmediate ? 0.0 : 2 animations:^{
         self.wordsOfMonthLabel.alpha = numberOfWords == 0 ? 0.2 : 1.0;
     }];
 }
@@ -311,23 +308,13 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     for (NSUInteger rowIt = 0; rowIt < WEEKS_MONTHS; rowIt++) {
         for (NSUInteger dayOfTheWeekIt = 0; dayOfTheWeekIt < DAYS_OF_WEEK; dayOfTheWeekIt++) {
             const NSUInteger indexMonthView = (rowIt * DAYS_OF_WEEK) + dayOfTheWeekIt + 1;
-            CGRect monthViewFrame = CGRectMake(dayOfTheWeekIt == 0 ? 0 : 44.0 * dayOfTheWeekIt + 6.0,
+            CGRect monthViewFrame = CGRectMake(dayOfTheWeekIt == 0 ? 0 : 50 + 44.0 * (dayOfTheWeekIt - 1),
                                                rowIt * 44.0,
-                                               dayOfTheWeekIt == 0 || dayOfTheWeekIt == DAYS_OF_WEEK - 1 ? 50.0 : 44.0,
+                                               (dayOfTheWeekIt == 0 || dayOfTheWeekIt == DAYS_OF_WEEK - 1) ? 50.0 : 44.0,
                                                44.0);
             WDDayMonthView *monthViewIt = [[WDDayMonthView alloc] initWithIndex:indexMonthView andFrame:monthViewFrame];
             monthViewIt.tag = indexMonthView;
-            monthViewIt.layer.cornerRadius = 0.0;
-            /*
-            CALayer *rectLayer = [CALayer layer];
-            rectLayer.bounds = CGRectMake(0.0, 0.0, monthViewIt.frame.size.width - 2.0, monthViewIt.frame.size.height - 2.0);
-            rectLayer.frame = CGRectMake(1.0, 1.0, rectLayer.frame.size.width, rectLayer.frame.size.height);
-            rectLayer.borderColor = [UIColor blackColor].CGColor;
-            rectLayer.borderWidth = 0.5;
-            [monthViewIt.layer addSublayer:rectLayer];
-            */
             [self.daysOfTheMonthContainerView insertSubview:monthViewIt belowSubview:self.daysOfTheMonthGridView];
-
         }
     }
 }
@@ -370,6 +357,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                 [self addGradientLayerToDayMonthView:dayMonthViewIt withWord:wordOfCalendarDay inmediate:inmediate];
                 [dayMonthViewIt.dayOfMonthLabel setTextColor:[wordOfCalendarDay.palette makeWordColorObject]];
             }
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
             [UIView animateWithDuration:inmediate ? 0.0 : 0.75 animations:^{
                 dayMonthViewIt.dayOfMonthLabel.alpha = 1;
             }];
@@ -811,10 +799,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
             WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
             //CGFloat duration = (float)rand()/(float)RAND_MAX;
-            CGFloat duration = (float)rand()/((float)RAND_MAX/1.35);
-            if (duration < 0.4) {
-                duration = 0.4;
-            }
+            CGFloat duration = 0.7 + (float)rand()/((float)RAND_MAX/0.65);
             if (dayMonthViewIt.layer.sublayers > 0) {
                 dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
             }

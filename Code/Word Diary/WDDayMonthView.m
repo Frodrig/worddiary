@@ -63,6 +63,7 @@
         dayOfTheMonthLabel_.backgroundColor = [UIColor clearColor];
         dayOfTheMonthLabel_.opaque = YES;
         [self addSubview:dayOfTheMonthLabel_];
+        
     }
     return self;
 }

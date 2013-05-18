@@ -28,9 +28,35 @@
     
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     
-    CGContextSetAllowsAntialiasing(contextRef, true);
+    
+    // Rejilla
     
     CGContextSaveGState(contextRef);
+    CGContextSetAllowsAntialiasing(contextRef, true);
+    CGContextSetLineWidth(contextRef, 0.5);
+    CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithWhite:0.0 alpha:0.6].CGColor);
+    for (NSUInteger rowIt = 0; rowIt < 4; rowIt++) {
+        CGContextSaveGState(contextRef);
+        const NSUInteger yPosition = 44 + 44 * rowIt;
+        CGContextMoveToPoint(contextRef, 0, yPosition);
+        CGContextAddLineToPoint(contextRef, self.bounds.size.width, yPosition);
+        CGContextStrokePath(contextRef);
+        CGContextRestoreGState(contextRef);
+    }
+    for (NSUInteger columnIt = 0; columnIt < 6; columnIt++) {
+        CGContextSaveGState(contextRef);
+        const NSUInteger xPosition = 50 + 44 * columnIt;
+        CGContextMoveToPoint(contextRef, xPosition, 0.0);
+        CGContextAddLineToPoint(contextRef, xPosition, self.bounds.size.height);
+        CGContextStrokePath(contextRef);
+        CGContextRestoreGState(contextRef);
+    }
+    CGContextRestoreGState(contextRef);
+    
+    
+    // Sombras
+    CGContextSaveGState(contextRef);
+    CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetStrokeColorWithColor(contextRef, [UIColor blackColor].CGColor);
     CGContextSetShadowWithColor(contextRef, CGSizeMake(0.0, 0.5), 15.0, [UIColor colorWithWhite:1.0 alpha:1].CGColor);
     CGContextSetLineWidth(contextRef, 1.0);
