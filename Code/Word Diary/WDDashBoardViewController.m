@@ -52,6 +52,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (nonatomic) NSUInteger                                        pendingMonthNavigationRequest;
 @property (nonatomic, strong) NSTimer                                   *minimumTimeNavigationPressTimer;
 @property (weak, nonatomic) IBOutlet WDChangeDateButtonContainerView    *bottomContainerView;
+@property (nonatomic) BOOL                                              canProcessNavigationUpdate;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -133,6 +134,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @synthesize pendingMonthNavigationRequest    = pendingMonthNavigationRequest_;
 @synthesize minimumTimeNavigationPressTimer  = minimumTimeNavigationPressTimer_;
 @synthesize bottomContainerView              = bottomContainerView_;
+@synthesize canProcessNavigationUpdate       = canProcessNavigationUpdate_;
 
 #pragma mar - Properties
 
@@ -164,6 +166,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     if (self) {
         // Custom initialization
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+        canProcessNavigationUpdate_ = YES;
         
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         longPresureGestureRecognizer_ = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPresureGestureRecognizerHandle:)];
@@ -193,6 +196,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     // Do any additional setup after loading the view from its nib.
     
     self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
+    self.daysOfTheMonthGridView.gridAlpha = 0.5;
     
     [self createDayOfTheMonthsViews];
     
@@ -358,12 +362,13 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                 [dayMonthViewIt.dayOfMonthLabel setTextColor:[wordOfCalendarDay.palette makeWordColorObject]];
             }
             [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-            [UIView animateWithDuration:inmediate ? 0.0 : 0.75 animations:^{
+            [UIView animateWithDuration:inmediate ? 0.0 : 0.5 + (float)rand()/((float)RAND_MAX/0.75) animations:^{
                 dayMonthViewIt.dayOfMonthLabel.alpha = 1;
             }];
         }
     }
     
+    [self performSelector:@selector(setCanProcessNavigationUpdate:) withObject:[NSNumber numberWithBool:YES] afterDelay:0.25];
     [self setNumberOfWordsOfTheMonth:inmediate];
 }
 
@@ -794,18 +799,22 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     [self setNumberOfWordsOfTheMonth:YES];
 
     if (self.pendingMonthNavigationRequest < MAX_PENDING_REQUEST_TO_ATTEND) {
+        self.canProcessNavigationUpdate = NO;
+
         const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
         for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
             const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
             WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
-            //CGFloat duration = (float)rand()/(float)RAND_MAX;
-            CGFloat duration = 0.7 + (float)rand()/((float)RAND_MAX/0.65);
-            if (dayMonthViewIt.layer.sublayers > 0) {
-                dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
+            if (!dayMonthViewIt.hidden) {
+                //CGFloat duration = (float)rand()/(float)RAND_MAX;
+                CGFloat duration = 0.7 + (float)rand()/((float)RAND_MAX/0.65);
+                if (dayMonthViewIt.layer.sublayers > 0) {
+                    dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
+                }
+                dayMonthViewIt.dayOfMonthLabel.alpha = 1;
+                [WDUtils destroyViewGosthEffect:dayMonthViewIt.dayOfMonthLabel withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
+                dayMonthViewIt.dayOfMonthLabel.alpha = 0;
             }
-            dayMonthViewIt.dayOfMonthLabel.alpha = 1;
-            [WDUtils destroyViewGosthEffect:dayMonthViewIt.dayOfMonthLabel withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
-            dayMonthViewIt.dayOfMonthLabel.alpha = 0;
         }
         
         [self configureDayOfTheMonths:NO];
@@ -816,41 +825,45 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (IBAction)leftButtonPressed:(id)sender
 {
-    BOOL updateDate = YES;
-    if (self.actualDate.month > 1) {
-        self.actualDate.month = self.actualDate.month - 1;
-    } else if (self.actualDate.year > 0) {
-        self.actualDate.year = self.actualDate.year - 1;
-        self.actualDate.month = 12;
-    } else {
-        updateDate = NO;
-    }
-    
-    if (updateDate) {
-        ++self.pendingMonthNavigationRequest;
-        [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+    if (self.canProcessNavigationUpdate) {
+        BOOL updateDate = YES;
+        if (self.actualDate.month > 1) {
+            self.actualDate.month = self.actualDate.month - 1;
+        } else if (self.actualDate.year > 0) {
+            self.actualDate.year = self.actualDate.year - 1;
+            self.actualDate.month = 12;
+        } else {
+            updateDate = NO;
+        }
+        
+        if (updateDate) {
+            ++self.pendingMonthNavigationRequest;
+            [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+        }
     }
 }
 
 - (IBAction)rightButtonPressed:(id)sender
 {
-    BOOL updateDate = YES;
-    if (self.actualDate.year < self.todayDate.year) {
-        if (self.actualDate.month < 12) {
+    if (self.canProcessNavigationUpdate) {
+        BOOL updateDate = YES;
+        if (self.actualDate.year < self.todayDate.year) {
+            if (self.actualDate.month < 12) {
+                self.actualDate.month = self.actualDate.month + 1;
+            } else {
+                self.actualDate.year = self.actualDate.year + 1;
+                self.actualDate.month = 1;
+            }
+        } else if (self.actualDate.month < self.todayDate.month) {
             self.actualDate.month = self.actualDate.month + 1;
         } else {
-            self.actualDate.year = self.actualDate.year + 1;
-            self.actualDate.month = 1;
+            updateDate = NO;
         }
-    } else if (self.actualDate.month < self.todayDate.month) {
-        self.actualDate.month = self.actualDate.month + 1;
-    } else {
-        updateDate = NO;
-    }
-    
-    if (updateDate) {
-        ++self.pendingMonthNavigationRequest;
-        [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:YES] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+        
+        if (updateDate) {
+            ++self.pendingMonthNavigationRequest;
+            [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:YES] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+        }
     }
 }
 
@@ -955,7 +968,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     // ¿ToDo: Comprobar si hemos cambiado de idioma?
-    
+    self.canProcessNavigationUpdate = YES;
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     [UIView animateWithDuration:1.5 animations:^{
         self.view.alpha = 1.0;

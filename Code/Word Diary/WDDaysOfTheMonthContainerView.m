@@ -10,11 +10,14 @@
 
 @implementation WDDaysOfTheMonthContainerView
 
+@synthesize gridAlpha = gridAlpha_;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        gridAlpha_ = 0.5;
     }
     return self;
 }
@@ -34,7 +37,7 @@
     CGContextSaveGState(contextRef);
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineWidth(contextRef, 0.5);
-    CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithWhite:0.0 alpha:0.6].CGColor);
+    CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithWhite:0.0 alpha:self.gridAlpha].CGColor);
     for (NSUInteger rowIt = 0; rowIt < 4; rowIt++) {
         CGContextSaveGState(contextRef);
         const NSUInteger yPosition = 44 + 44 * rowIt;

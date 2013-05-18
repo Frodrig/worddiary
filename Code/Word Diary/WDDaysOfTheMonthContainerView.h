@@ -10,4 +10,6 @@
 
 @interface WDDaysOfTheMonthContainerView : UIView
 
+@property(nonatomic) CGFloat gridAlpha;
+
 @end
