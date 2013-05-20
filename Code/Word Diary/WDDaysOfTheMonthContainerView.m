@@ -10,16 +10,29 @@
 
 @implementation WDDaysOfTheMonthContainerView
 
-@synthesize gridAlpha = gridAlpha_;
+@synthesize gridView = gridView_;
 
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
+    return nil;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Initialization code
-        gridAlpha_ = 0.5;
+        self.autoresizesSubviews = YES;
+        gridView_ = [[WDDaysOfTheMonthContainerGridView alloc] initWithFrame:self.frame];
+        [self addSubview:gridView_];
     }
+    
     return self;
+}
+
+- (void) setNeedsDisplay
+{
+    [self.subviews makeObjectsPerformSelector:@selector(setNeedsDisplay)];
+    [super setNeedsDisplay];
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -30,33 +43,7 @@
     [super drawRect:rect];
     
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    
-    
-    // Rejilla
-    
-    CGContextSaveGState(contextRef);
-    CGContextSetAllowsAntialiasing(contextRef, true);
-    CGContextSetLineWidth(contextRef, 0.5);
-    CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithWhite:0.0 alpha:self.gridAlpha].CGColor);
-    for (NSUInteger rowIt = 0; rowIt < 4; rowIt++) {
-        CGContextSaveGState(contextRef);
-        const NSUInteger yPosition = 44 + 44 * rowIt;
-        CGContextMoveToPoint(contextRef, 0, yPosition);
-        CGContextAddLineToPoint(contextRef, self.bounds.size.width, yPosition);
-        CGContextStrokePath(contextRef);
-        CGContextRestoreGState(contextRef);
-    }
-    for (NSUInteger columnIt = 0; columnIt < 6; columnIt++) {
-        CGContextSaveGState(contextRef);
-        const NSUInteger xPosition = 50 + 44 * columnIt;
-        CGContextMoveToPoint(contextRef, xPosition, 0.0);
-        CGContextAddLineToPoint(contextRef, xPosition, self.bounds.size.height);
-        CGContextStrokePath(contextRef);
-        CGContextRestoreGState(contextRef);
-    }
-    CGContextRestoreGState(contextRef);
-    
-    
+
     // Sombras
     CGContextSaveGState(contextRef);
     CGContextSetAllowsAntialiasing(contextRef, true);

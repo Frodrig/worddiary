@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WDDaysOfTheMonthContainerGridView.h"
 
 @interface WDDaysOfTheMonthContainerView : UIView
 
-@property(nonatomic) CGFloat gridAlpha;
+@property(nonatomic, strong, readonly) WDDaysOfTheMonthContainerGridView *gridView;
 
 @end
