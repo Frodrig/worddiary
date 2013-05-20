@@ -68,7 +68,7 @@
 
 "TAG_HELP_INFOTEXT_PAGE_0"                         = "Welcome to Word Diary\nA day in a word";
 "TAG_HELP_INFOTEXT_PAGE_1"                         = "Click on the line to write something";
-"TAG_HELP_INFOTEXT_PAGE_2"                         = "Slide your finger up and down to change the color";
+"TAG_HELP_INFOTEXT_PAGE_2"                         = "Slide your finger up and down to change the colour";
 "TAG_HELP_INFOTEXT_PAGE_3"                         = "Slide your finger to the left/right to read your diary";
 "TAG_HELP_INFOTEXT_PAGE_4"                         = "Click twice to go to calendar and see other options";
 "TAG_HELP_INFOTEXT_PAGE_5"                         = "";

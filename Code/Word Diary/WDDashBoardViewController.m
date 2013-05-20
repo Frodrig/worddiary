@@ -370,6 +370,10 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     
     [self performSelector:@selector(setCanProcessNavigationUpdate:) withObject:[NSNumber numberWithBool:YES] afterDelay:0.25];
     [self setNumberOfWordsOfTheMonth:inmediate];
+    if (![WDUtils is:0.5 equalsTo:self.daysOfTheMonthGridView.gridAlpha]) {
+        self.daysOfTheMonthGridView.gridAlpha = 0.5;
+        [self.daysOfTheMonthGridView performSelector:@selector(setNeedsDisplay) withObject:nil afterDelay:0.25];
+    }
 }
 
 - (NSUInteger)findFirstWeekdayOfTheMonth
@@ -795,6 +799,11 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (void)updateYearMonthData:(NSNumber *)rightDirection
 {
+    if (![WDUtils is:0.3 equalsTo:self.daysOfTheMonthGridView.gridAlpha]) {
+        self.daysOfTheMonthGridView.gridAlpha = 0.3;
+        [self.daysOfTheMonthGridView setNeedsDisplay];
+    }
+
     [self configureMonthAndYearLabel];
     [self setNumberOfWordsOfTheMonth:YES];
 
