@@ -53,6 +53,9 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (nonatomic, strong) NSTimer                                   *minimumTimeNavigationPressTimer;
 @property (weak, nonatomic) IBOutlet WDChangeDateButtonContainerView    *bottomContainerView;
 @property (nonatomic) BOOL                                              canProcessNavigationUpdate;
+@property (nonatomic, strong) UIView                                    *calendarModeViewContainer;
+@property (nonatomic) NSNumber                                          *originalHeightOfDaysOfTheMonthContainerView;
+@property (nonatomic) NSDateComponents                                  *backupDateBeforeChangeDateCalendarMode;
 
 - (void)                createDayOfTheMonthsViews;
 
@@ -107,34 +110,37 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 #pragma mark - Synthesize
 
-@synthesize datePannelViewContainer          = datePannelViewContainer_;
-@synthesize actualDate                       = actualDate_;
-@synthesize yearMonthLabel                   = yearMonthLabel_;
-@synthesize wordsOfMonthLabel                = wordsOfMonthLabel_;
-@synthesize daysOfTheWeekTitlesContainerView = daysOfTheWeekContainerView_;
-@synthesize daysOfTheMonthContainerView      = daysOfTheMonthContainerView_;
-@synthesize tapGestureRecognizer             = tapGestureRecognizer_;
-@synthesize longPresureGestureRecognizer     = longPresureGestureRecognizer_;
-@synthesize delegate                         = delegate_;
-@synthesize dataSource                       = dataSource_;
-@synthesize normalizedRealTodayDate          = normalizedRealTodayDate_;
-@synthesize dateSelectorModeActive           = dateSelectorModeActive_;
-@synthesize todayDate                        = todayDate_;
-@synthesize changeYearMonthButton            = changeYearMonthButton_;
-@synthesize gradientLayer                    = gradientLayer_;
-@synthesize daysOfTheMonthGridView           = daysOfTheMonthGridView_;
-@synthesize acceptButton                     = acceptButton_;
-@synthesize cancelButton                     = cancelButton_;
-@synthesize pickerView                       = pickerView_;
-@synthesize infoButton                       = infoButton_;
-@synthesize wordSlateContainerView           = wordSlateContainerView_;
-@synthesize leftNavigationButton             = leftNavigationButton_;
-@synthesize rightNavigationButton            = rightNavigationButton_;
-@synthesize removeStateImage                 = removeStateImage_;
-@synthesize pendingMonthNavigationRequest    = pendingMonthNavigationRequest_;
-@synthesize minimumTimeNavigationPressTimer  = minimumTimeNavigationPressTimer_;
-@synthesize bottomContainerView              = bottomContainerView_;
-@synthesize canProcessNavigationUpdate       = canProcessNavigationUpdate_;
+@synthesize datePannelViewContainer                     = datePannelViewContainer_;
+@synthesize actualDate                                  = actualDate_;
+@synthesize yearMonthLabel                              = yearMonthLabel_;
+@synthesize wordsOfMonthLabel                           = wordsOfMonthLabel_;
+@synthesize daysOfTheWeekTitlesContainerView            = daysOfTheWeekContainerView_;
+@synthesize daysOfTheMonthContainerView                 = daysOfTheMonthContainerView_;
+@synthesize tapGestureRecognizer                        = tapGestureRecognizer_;
+@synthesize longPresureGestureRecognizer                = longPresureGestureRecognizer_;
+@synthesize delegate                                    = delegate_;
+@synthesize dataSource                                  = dataSource_;
+@synthesize normalizedRealTodayDate                     = normalizedRealTodayDate_;
+@synthesize dateSelectorModeActive                      = dateSelectorModeActive_;
+@synthesize todayDate                                   = todayDate_;
+@synthesize changeYearMonthButton                       = changeYearMonthButton_;
+@synthesize gradientLayer                               = gradientLayer_;
+@synthesize daysOfTheMonthGridView                      = daysOfTheMonthGridView_;
+@synthesize acceptButton                                = acceptButton_;
+@synthesize cancelButton                                = cancelButton_;
+@synthesize pickerView                                  = pickerView_;
+@synthesize infoButton                                  = infoButton_;
+@synthesize wordSlateContainerView                      = wordSlateContainerView_;
+@synthesize leftNavigationButton                        = leftNavigationButton_;
+@synthesize rightNavigationButton                       = rightNavigationButton_;
+@synthesize removeStateImage                            = removeStateImage_;
+@synthesize pendingMonthNavigationRequest               = pendingMonthNavigationRequest_;
+@synthesize minimumTimeNavigationPressTimer             = minimumTimeNavigationPressTimer_;
+@synthesize bottomContainerView                         = bottomContainerView_;
+@synthesize canProcessNavigationUpdate                  = canProcessNavigationUpdate_;
+@synthesize calendarModeViewContainer                   = calendarModeViewContainer_;
+@synthesize originalHeightOfDaysOfTheMonthContainerView = originalHeightOfDaysOfTheMonthContainerView_;
+@synthesize backupDateBeforeChangeDateCalendarMode      = backupDateBeforeChangeDateCalendarMode_;
 
 #pragma mar - Properties
 
@@ -218,6 +224,10 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    if (nil == self.originalHeightOfDaysOfTheMonthContainerView) {
+        self.originalHeightOfDaysOfTheMonthContainerView = [NSNumber numberWithFloat:self.daysOfTheMonthContainerView.frame.size.height];
+    }
 
     if (self.wordsOfMonthLabel == nil) {
         CGRect wordSlateBounds = CGRectMake(0.0, 0.0, self.wordSlateContainerView.bounds.size.width, self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height));
@@ -340,7 +350,11 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (void)configureMonthAndYearLabel
 {
-    self.yearMonthLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL", @""), [WDUtils monthString:self.actualDate.month abreviateMode:NO], self.actualDate.year];
+    if (self.dateSelectorModeActive) {
+        self.yearMonthLabel.text = [NSString stringWithFormat:@"%d", self.actualDate.year];
+    } else {
+        self.yearMonthLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL", @""), [WDUtils monthString:self.actualDate.month abreviateMode:NO], self.actualDate.year];
+    }
 }
 
 - (void)vinculeGradientsToDaysWithWords:(BOOL)inmediate
@@ -719,8 +733,53 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (IBAction)changeMonthYearButtonPressed:(id)sender
 {
-    NSAssert(!self.dateSelectorModeActive, @"No deberia de estar activo el modo de cambio de fecha");
+    self.dateSelectorModeActive = !self.dateSelectorModeActive;
     
+    if (self.dateSelectorModeActive) {
+        self.backupDateBeforeChangeDateCalendarMode = [[self actualDate] copy];
+    } else {
+        self.actualDate = self.backupDateBeforeChangeDateCalendarMode;
+        self.backupDateBeforeChangeDateCalendarMode = nil;
+    }
+
+    self.infoButton.enabled = self.dateSelectorModeActive ? NO : YES;
+    [self.changeYearMonthButton setImage:[UIImage imageNamed:self.dateSelectorModeActive ? @"298-circlex.png" : @"83-calendar.png"] forState:UIControlStateNormal];
+    self.daysOfTheMonthGridView.gridAlpha = self.dateSelectorModeActive ? 0.0 : 0.5;
+    [self.daysOfTheMonthGridView setNeedsDisplay];
+    [UIView animateWithDuration:0.5 animations:^{
+        self.daysOfTheMonthGridView.frame = CGRectMake(self.daysOfTheMonthGridView.frame.origin.x,
+                                                       self.daysOfTheMonthGridView.frame.origin.y,
+                                                       self.daysOfTheMonthGridView.frame.size.width,
+                                                       self.dateSelectorModeActive ? self.daysOfTheMonthGridView.frame.size.height + self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height) : [self.originalHeightOfDaysOfTheMonthContainerView floatValue]);
+        for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
+            if ([viewIt isKindOfClass:[UILabel class]]) {
+                viewIt.alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
+            }
+        }
+        for (UIView *viewIt in self.daysOfTheMonthContainerView.subviews) {
+            if ([viewIt isKindOfClass:[WDDayMonthView class]]) {
+                viewIt.alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
+            }
+        }
+     if (self.dateSelectorModeActive) {
+         self.wordsOfMonthLabel.alpha = 0.0;
+     }
+    } completion:^(BOOL finished) {
+        if (!self.dateSelectorModeActive) {
+            [self configureDayOfTheMonths:NO];
+        }
+    }];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.yearMonthLabel.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [self configureMonthAndYearLabel];
+       [UIView animateWithDuration:0.25 animations:^{
+           self.yearMonthLabel.alpha = 1.0;
+       }];
+    }];
+    
+
+    /*
     self.dateSelectorModeActive = YES;
     
     self.infoButton.enabled = NO;
@@ -766,6 +825,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             self.pickerView.alpha = 1.0;
         }];
     }];
+    */
 }
 
 - (IBAction)cancelRemoveDayMode:(id)sender
@@ -836,18 +896,24 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 {
     if (self.canProcessNavigationUpdate) {
         BOOL updateDate = YES;
-        if (self.actualDate.month > 1) {
+        if (self.actualDate.month > 1 && !self.dateSelectorModeActive) {
             self.actualDate.month = self.actualDate.month - 1;
         } else if (self.actualDate.year > 0) {
             self.actualDate.year = self.actualDate.year - 1;
-            self.actualDate.month = 12;
+            if (!self.dateSelectorModeActive) {
+                self.actualDate.month = 12;
+            }
         } else {
             updateDate = NO;
         }
         
         if (updateDate) {
             ++self.pendingMonthNavigationRequest;
-            [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+            if (self.dateSelectorModeActive) {
+                [self configureMonthAndYearLabel];
+            } else {
+                [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+            }
         }
     }
 }
@@ -857,13 +923,15 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     if (self.canProcessNavigationUpdate) {
         BOOL updateDate = YES;
         if (self.actualDate.year < self.todayDate.year) {
-            if (self.actualDate.month < 12) {
+            if (self.actualDate.month < 12 && !self.dateSelectorModeActive) {
                 self.actualDate.month = self.actualDate.month + 1;
             } else {
                 self.actualDate.year = self.actualDate.year + 1;
-                self.actualDate.month = 1;
+                if (!self.dateSelectorModeActive) {
+                    self.actualDate.month = 1;
+                }
             }
-        } else if (self.actualDate.month < self.todayDate.month) {
+        } else if (self.actualDate.month < self.todayDate.month && !self.dateSelectorModeActive) {
             self.actualDate.month = self.actualDate.month + 1;
         } else {
             updateDate = NO;
@@ -871,7 +939,12 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         
         if (updateDate) {
             ++self.pendingMonthNavigationRequest;
-            [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:YES] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+            if (self.dateSelectorModeActive) {
+                [self configureMonthAndYearLabel];
+            } else {
+                [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+            }
+
         }
     }
 }
