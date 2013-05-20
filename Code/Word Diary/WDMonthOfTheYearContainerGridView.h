@@ -1,5 +1,5 @@
 //
-//  WDDaysOfTheMonthContainerGridView.h
+//  WDMonthOfTheYearContainerGridView.h
 //  Word Diary
 //
 //  Created by Fernando Rodríguez Martínez on 20/05/13.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WDDaysOfTheMonthContainerGridView : UIView
+@interface WDMonthOfTheYearContainerGridView : UIView
 
 @end
