@@ -91,7 +91,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)                applicationDidBecomeActive:(NSNotification *)notification;
 - (void)                applicationWillTerminate:(NSNotification *)notification;
 
-- (void)                significatTimeChange:(NSNotification *)notification;
+- (void)                significantTimeChange:(NSNotification *)notification;
 
 - (void)                updateYearMonthData:(NSNumber *)rightDirection;
 
@@ -177,7 +177,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significatTimeChange:) name:UIApplicationSignificantTimeChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significantTimeChange:) name:UIApplicationSignificantTimeChangeNotification object:nil];
         
         pendingMonthNavigationRequest_ = 0;
     }
@@ -557,7 +557,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 - (BOOL)logicChangeYearMonthWithSelectedDateComponents:(NSDateComponents *)dateComponents
 {
-    const BOOL logicChange = dateComponents != nil && (self.actualDate.year != dateComponents.year || self.actualDate.month != dateComponents.month);
+    const BOOL logicChange = dateComponents != nil && (self.actualDate.year != dateComponents.year || self.actualDate.month != dateComponents.month || self.actualDate.day != dateComponents.day);
     if (logicChange) {
         self.actualDate.year = dateComponents.year;
         self.actualDate.month = dateComponents.month;
@@ -985,7 +985,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 #pragma mark - TimeSignificantChangeNotification
 
-- (void)significatTimeChange:(NSNotification *)notification
+- (void)significantTimeChange:(NSNotification *)notification
 {
     todayDate_ = nil;
     normalizedRealTodayDate_ = nil;
