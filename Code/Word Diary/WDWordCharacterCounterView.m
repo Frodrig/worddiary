@@ -88,7 +88,6 @@
     UIColor *dotsColor = freeCharacters == 0 ? [UIColor redColor] : [self.dataSource colorForWordCharacterCounterView:self];
 
     CGContextSaveGState(contextRef);
-    
     const CGFloat twoPiRadians = 6.28318531;
     const CGFloat decoratorRadius = 2.0;
     const CGFloat decoratorMargin = 20.0;
@@ -101,7 +100,6 @@
     CGContextFillPath(contextRef);
     CGContextAddArc(contextRef, self.bounds.size.width - decoratorMargin, self.bounds.size.height / 2, decoratorRadius, 0.0, twoPiRadians, 0);
     CGContextFillPath(contextRef);
-  
     CGContextRestoreGState(contextRef);
 }
 

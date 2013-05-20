@@ -30,6 +30,7 @@
 		5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
 		5B261870174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B26186F174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m */; };
+		5B261874174A63A2002C36D6 /* WDMonthYearView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B261873174A63A2002C36D6 /* WDMonthYearView.m */; };
 		5B3555F1172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */; };
 		5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B446F7616F22A48005A432D /* CoreText.framework */; };
 		5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D18AF172A95110002F300 /* WDDayMonthView.m */; };
@@ -139,6 +140,8 @@
 		5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIViewNibLoad.m"; sourceTree = "<group>"; };
 		5B26186E174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheMonthContainerGridView.h; sourceTree = "<group>"; };
 		5B26186F174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDaysOfTheMonthContainerGridView.m; sourceTree = "<group>"; };
+		5B261872174A63A2002C36D6 /* WDMonthYearView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDMonthYearView.h; sourceTree = "<group>"; };
+		5B261873174A63A2002C36D6 /* WDMonthYearView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDMonthYearView.m; sourceTree = "<group>"; };
 		5B3555EF172EBB5F0033705C /* WDDaysOfTheWeekContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheWeekContainerView.h; sourceTree = "<group>"; };
 		5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDaysOfTheWeekContainerView.m; sourceTree = "<group>"; };
 		5B446F7616F22A48005A432D /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -383,6 +386,15 @@
 			name = Grid;
 			sourceTree = "<group>";
 		};
+		5B261871174A638F002C36D6 /* MonthYearView */ = {
+			isa = PBXGroup;
+			children = (
+				5B261872174A63A2002C36D6 /* WDMonthYearView.h */,
+				5B261873174A63A2002C36D6 /* WDMonthYearView.m */,
+			);
+			name = MonthYearView;
+			sourceTree = "<group>";
+		};
 		5B3555EE172EBB390033705C /* DaysWeekContainerView */ = {
 			isa = PBXGroup;
 			children = (
@@ -545,6 +557,7 @@
 				5B8B2DA1172EE32C00EF25FA /* DaysOfTheMonthContainerView */,
 				5B8B2D99172EE09C00EF25FA /* DateContainerView */,
 				5B3555EE172EBB390033705C /* DaysWeekContainerView */,
+				5B261871174A638F002C36D6 /* MonthYearView */,
 				5B773410172D7000006ADE35 /* DayMonthView */,
 			);
 			name = Views;
@@ -847,6 +860,7 @@
 				5B8B2DA8172F002E00EF25FA /* WDChangeDateButtonContainerView.m in Sources */,
 				5BE5DDBB17390E050078B855 /* UIColor+HSL.m in Sources */,
 				5B261870174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m in Sources */,
+				5B261874174A63A2002C36D6 /* WDMonthYearView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

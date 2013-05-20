@@ -18,8 +18,8 @@
     if (self) {
         mode_ = GM_MONTH_CALENDAR;
         self.alpha = 0.5;
+        self.opaque = NO;
         self.backgroundColor = [UIColor clearColor];
-        self.contentMode = UIViewContentModeScaleToFill;
         self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     

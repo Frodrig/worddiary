@@ -17,6 +17,7 @@
 #import "WDDaysOfTheMonthContainerView.h"
 #import "WDDaysOfTheWeekContainerView.h"
 #import "WDChangeDateButtonContainerView.h"
+#import "WDMonthYearView.h"
 #import <QuartzCore/QuartzCore.h>
 
 const NSUInteger DAYS_OF_WEEK                             = 7;
@@ -56,11 +57,13 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (nonatomic, strong) UIView                                    *calendarModeViewContainer;
 @property (nonatomic) NSNumber                                          *originalHeightOfDaysOfTheMonthContainerView;
 @property (nonatomic) NSDateComponents                                  *backupDateBeforeChangeDateCalendarMode;
+@property (nonatomic, strong) NSArray                                   *monthYearViews;
+
+- (void)                createMonthsOfTheYearViews;
+- (void)                configureMonthOfTheYearViews;
 
 - (void)                createDayOfTheMonthsViews;
-
 - (void)                removeEmptyWordsDays;
-
 - (void)                configureDaysOfTheWeekTitles;
 - (void)                configureMonthAndYearLabel;
 - (void)                configureDayOfTheMonths:(BOOL)inmediate;
@@ -141,6 +144,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @synthesize calendarModeViewContainer                   = calendarModeViewContainer_;
 @synthesize originalHeightOfDaysOfTheMonthContainerView = originalHeightOfDaysOfTheMonthContainerView_;
 @synthesize backupDateBeforeChangeDateCalendarMode      = backupDateBeforeChangeDateCalendarMode_;
+@synthesize monthYearViews                              = monthYearViews_;
 
 
 #pragma mar - Properties
@@ -629,6 +633,38 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     }];
 }
 
+- (void)createMonthsOfTheYearViews
+{
+    const NSUInteger maxRows = 4;
+    const NSUInteger maxColumns = 3;
+    const CGFloat monthYearViewWidth = self.daysOfTheMonthContainerView.bounds.size.width / maxColumns;
+    const CGFloat monthYearViewHeight = self.daysOfTheMonthContainerView.bounds.size.height / maxRows;
+    NSMutableArray *monthsOfTheYearViews = [[NSMutableArray alloc] initWithCapacity:12];
+    for (NSUInteger rowIt = 0; rowIt < maxRows; rowIt++) {
+        for (NSUInteger columnIt = 0; columnIt < maxColumns; columnIt++) {
+            WDMonthYearView *monthOfTheYearView = [[WDMonthYearView alloc]
+                                                 initWithFrame:CGRectMake(columnIt * monthYearViewWidth, rowIt * monthYearViewHeight, monthYearViewWidth, monthYearViewHeight)
+                                                 andLabel:[WDUtils monthString:rowIt * maxColumns + columnIt abreviateMode:YES]];
+            monthOfTheYearView.alpha = 1.0;
+           // [self.daysOfTheMonthContainerView insertSubview:monthOfTheYearView belowSubview:self.daysOfTheMonthGridView];
+            [self.daysOfTheMonthContainerView addSubview:monthOfTheYearView];
+            [monthsOfTheYearViews addObject:monthOfTheYearView];
+        }
+    }
+    
+    self.monthYearViews = [[NSArray alloc] initWithArray:monthsOfTheYearViews];
+}
+
+- (void)configureMonthOfTheYearViews
+{
+    NSUInteger indexMonth = 1;
+    for (WDMonthYearView *monthYearViewIt in self.monthYearViews) {
+        monthYearViewIt.accesible = self.actualDate.year < self.todayDate.year ? YES : indexMonth <= self.todayDate.month;
+        monthYearViewIt.drawContentDot = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:indexMonth ofYear:self.actualDate.year];
+        indexMonth++;
+    }
+}
+
 #pragma mark - UITapGestureRecognizer
 
 - (void)tapGestureRecognizerHandle:(UITapGestureRecognizer *)gestureRecognizer
@@ -747,13 +783,14 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     self.infoButton.enabled = self.dateSelectorModeActive ? NO : YES;
     [self.changeYearMonthButton setImage:[UIImage imageNamed:self.dateSelectorModeActive ? @"298-circlex.png" : @"83-calendar.png"] forState:UIControlStateNormal];
     self.daysOfTheMonthGridView.gridView.alpha = 0.1;
+    CGRect newDaysMonthCalendarContainerDimensionRect = CGRectMake(self.daysOfTheMonthContainerView.frame.origin.x,
+                                                                   self.daysOfTheMonthContainerView.frame.origin.y,
+                                                                   self.daysOfTheMonthContainerView.frame.size.width,
+                                                                   self.dateSelectorModeActive ? self.daysOfTheMonthContainerView.frame.size.height + self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height - 1) : [self.originalHeightOfDaysOfTheMonthContainerView floatValue]);;
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     [UIView animateWithDuration:0.6 animations:^{
         self.daysOfTheMonthGridView.gridView.alpha = 0;
-        self.daysOfTheMonthGridView.frame = CGRectMake(self.daysOfTheMonthGridView.frame.origin.x,
-                                                       self.daysOfTheMonthGridView.frame.origin.y,
-                                                       self.daysOfTheMonthGridView.frame.size.width,
-                                                       self.dateSelectorModeActive ? self.daysOfTheMonthGridView.frame.size.height + self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height - 1) : [self.originalHeightOfDaysOfTheMonthContainerView floatValue]);
+        self.daysOfTheMonthContainerView.frame = newDaysMonthCalendarContainerDimensionRect;
         for (NSUInteger weekDayIt = 1; weekDayIt < 8; weekDayIt++) {
             [self.daysOfTheWeekTitlesContainerView viewWithTag:weekDayIt].alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
         }
@@ -762,28 +799,42 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                 viewIt.alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
             }
         }
+        if (!self.dateSelectorModeActive) {
+            [self.monthYearViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                ((WDMonthYearView *) obj).alpha = 0.0;
+            }];
+        }
+        
         if (self.dateSelectorModeActive) {
             self.wordsOfMonthLabel.alpha = 0.0;
         }
     } completion:^(BOOL finished) {
+        self.daysOfTheMonthGridView.frame = CGRectMake(0.0, 0.0, newDaysMonthCalendarContainerDimensionRect.size.width, newDaysMonthCalendarContainerDimensionRect.size.height);
         self.daysOfTheMonthGridView.gridView.mode = self.dateSelectorModeActive ? GM_YEAR_CALENDAR : GM_MONTH_CALENDAR;
         [self.daysOfTheMonthGridView.gridView setNeedsDisplay];
         if (!self.dateSelectorModeActive) {
             [self configureDayOfTheMonths:NO];
             self.wordsOfMonthLabel.alpha = 0.0;
         }
+        if (self.dateSelectorModeActive) {
+            [self createMonthsOfTheYearViews];
+        }
         [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
         [UIView animateWithDuration:0.5 animations:^{
             if (self.dateSelectorModeActive) {
-                // creamos las views de los meses
-            } else {
-                // escondemos las views de los meses
+                [self.monthYearViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    ((WDMonthYearView *) obj).alpha = 1.0;              
+                }];
             }
             
             self.daysOfTheMonthGridView.gridView.alpha = 0.5;
         } completion:^(BOOL finished) {
             if (!self.dateSelectorModeActive) {
                 // borramos las views de los meses
+                [self.monthYearViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    [((UIView *) obj) removeFromSuperview];
+                }];
+                self.monthYearViews = nil;
             }
         }];
     }];
