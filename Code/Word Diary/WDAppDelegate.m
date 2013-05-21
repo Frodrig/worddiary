@@ -140,7 +140,6 @@
                 word.style = [[WDWordDiary sharedWordDiary].styles objectAtIndex:rand() % [WDWordDiary sharedWordDiary].styles.count];
             }
         }
-        NSLog(@"year %d completed", dateComponents.year);
     }
     
     [[WDWordDiary sharedWordDiary] saveAll];

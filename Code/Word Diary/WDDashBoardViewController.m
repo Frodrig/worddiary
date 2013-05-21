@@ -24,8 +24,6 @@
 
 const NSUInteger DAYS_OF_WEEK                             = 7;
 const NSUInteger WEEKS_MONTHS                             = 5;
-const CGFloat    DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT = 0;
-const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
 @interface WDDashBoardViewController ()
 
@@ -52,7 +50,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @property (weak, nonatomic) IBOutlet UIButton                           *leftNavigationButton;
 @property (weak, nonatomic) IBOutlet UIButton                           *rightNavigationButton;
 @property (weak, nonatomic) IBOutlet UIImageView                        *removeStateImage;
-@property (nonatomic) NSUInteger                                        pendingMonthNavigationRequest;
 @property (nonatomic, strong) NSTimer                                   *minimumTimeNavigationPressTimer;
 @property (weak, nonatomic) IBOutlet WDChangeDateButtonContainerView    *bottomContainerView;
 @property (nonatomic) BOOL                                              canProcessNavigationUpdate;
@@ -139,7 +136,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 @synthesize leftNavigationButton                        = leftNavigationButton_;
 @synthesize rightNavigationButton                       = rightNavigationButton_;
 @synthesize removeStateImage                            = removeStateImage_;
-@synthesize pendingMonthNavigationRequest               = pendingMonthNavigationRequest_;
 @synthesize minimumTimeNavigationPressTimer             = minimumTimeNavigationPressTimer_;
 @synthesize bottomContainerView                         = bottomContainerView_;
 @synthesize canProcessNavigationUpdate                  = canProcessNavigationUpdate_;
@@ -191,8 +187,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significantTimeChange:) name:UIApplicationSignificantTimeChangeNotification object:nil];
-        
-        pendingMonthNavigationRequest_ = 0;
     }
     return self;
 }
@@ -794,7 +788,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         [self createMonthsOfTheYearViews];
         [self configureMonthOfTheYearViews];
     } else {
-        self.actualDate = self.backupDateBeforeChangeDateCalendarMode;
+        self.actualDate = [self.backupDateBeforeChangeDateCalendarMode copy];
         self.backupDateBeforeChangeDateCalendarMode = nil;
     }
 
@@ -918,30 +912,27 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
     [self configureMonthAndYearLabel];
     [self setNumberOfWordsOfTheMonth:YES];
-
-    if (self.pendingMonthNavigationRequest < MAX_PENDING_REQUEST_TO_ATTEND) {
-        self.canProcessNavigationUpdate = NO;
-
-        const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
-        for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
-            const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
-            WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
-            if (!dayMonthViewIt.hidden) {
-                //CGFloat duration = (float)rand()/(float)RAND_MAX;
-                CGFloat duration = 0.7 + (float)rand()/((float)RAND_MAX/0.65);
-                if (dayMonthViewIt.layer.sublayers > 0) {
-                    dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
-                }
-                dayMonthViewIt.dayOfMonthLabel.alpha = 1;
-                [WDUtils destroyViewGosthEffect:dayMonthViewIt.dayOfMonthLabel withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
-                dayMonthViewIt.dayOfMonthLabel.alpha = 0;
+    
+    self.canProcessNavigationUpdate = NO;
+    
+    const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
+    for (NSUInteger dayMontViewIt = 0; dayMontViewIt < maxDayMonthViews; dayMontViewIt++) {
+        const NSUInteger dayMonthViewIndex = dayMontViewIt + 1;
+        WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
+        if (!dayMonthViewIt.hidden) {
+            //CGFloat duration = (float)rand()/(float)RAND_MAX;
+            CGFloat duration = 0.7 + (float)rand()/((float)RAND_MAX/0.65);
+            if (dayMonthViewIt.layer.sublayers > 0) {
+                dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
             }
+            dayMonthViewIt.dayOfMonthLabel.alpha = 1;
+            [WDUtils destroyViewGosthEffect:dayMonthViewIt.dayOfMonthLabel withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
+            dayMonthViewIt.dayOfMonthLabel.alpha = 0;
         }
-        
-        [self configureDayOfTheMonths:NO];
     }
     
-    self.pendingMonthNavigationRequest--;
+    [self configureDayOfTheMonths:NO];
+
 }
 
 - (IBAction)leftButtonPressed:(id)sender
@@ -960,12 +951,11 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         }
         
         if (updateDate) {
-            ++self.pendingMonthNavigationRequest;
             if (self.dateSelectorModeActive) {
                 [self configureMonthAndYearLabel];
                 [self configureMonthOfTheYearViews];
             } else {
-                [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+                [self updateYearMonthData:NO];
             }
         }
     }
@@ -991,14 +981,12 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
         }
         
         if (updateDate) {
-            ++self.pendingMonthNavigationRequest;
             if (self.dateSelectorModeActive) {
                 [self configureMonthAndYearLabel];
                 [self configureMonthOfTheYearViews];
             } else {
-                [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
+                [self updateYearMonthData:NO];
             }
-
         }
     }
 }
