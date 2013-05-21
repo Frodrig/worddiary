@@ -808,7 +808,6 @@ const NSUInteger WEEKS_MONTHS                             = 5;
         }
     } completion:^(BOOL finished) {
         if (!self.dateSelectorModeActive) {
-            [self configureDayOfTheMonths:NO];
             self.wordsOfMonthLabel.alpha = 0.0;
             [self.monthOfTheYearContainerView removeFromSuperview];
         }
