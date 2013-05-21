@@ -11,7 +11,8 @@
 
 @interface WDMonthYearView()
 
-@property (nonatomic, strong) UILabel *monthTitleLabel;
+@property (nonatomic, strong)  UILabel  *monthTitleLabel;
+@property (nonatomic, strong)  NSString *monthString;
 
 @end
 
@@ -20,6 +21,7 @@
 @synthesize monthTitleLabel     = monthTitleLabel_;
 @synthesize drawContentDot      = drawContentDot_;
 @synthesize accesible           = accesible_;
+@synthesize monthString         = monthString_;
 
 #pragma mark - Properties
 
@@ -27,7 +29,6 @@
 {
     if (drawContentDot != drawContentDot_) {
         drawContentDot_ = drawContentDot;
-        [self setNeedsDisplay];
     }
 }
 
@@ -35,7 +36,7 @@
 {
     if (accesible != accesible_) {
         accesible_ = accesible;
-        self.monthTitleLabel.textColor = accesible ? [UIColor lightGrayColor] : [UIColor darkGrayColor];
+        [self updateAttributedText];
     }
 }
 
@@ -53,10 +54,11 @@
         // MUY IMPORTANTE: Evita que DrawRect dibuje todo negro
         self.opaque = NO;
         
+        monthString_ = label;
         drawContentDot_ = NO;
     
         monthTitleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height * 0.85)];
-        monthTitleLabel_.attributedText = [[NSAttributedString alloc] initWithString:label attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:21.0], NSForegroundColorAttributeName: [UIColor lightGrayColor], NSBackgroundColorAttributeName: [UIColor clearColor], NSKernAttributeName: [NSNumber numberWithFloat:5.0]}];
+        [self updateAttributedText];
         monthTitleLabel_.textAlignment = NSTextAlignmentCenter;
         monthTitleLabel_.backgroundColor = [UIColor clearColor];
         [self addSubview:monthTitleLabel_];
@@ -64,6 +66,15 @@
     
     return self;
 }
+
+#pragma mark - Auxiliary
+
+- (void)updateAttributedText
+{
+    monthTitleLabel_.attributedText = [[NSAttributedString alloc] initWithString:monthString_ attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:21.0], NSForegroundColorAttributeName: accesible_ ? [UIColor lightGrayColor] : [UIColor darkGrayColor], NSBackgroundColorAttributeName: [UIColor clearColor], NSKernAttributeName: [NSNumber numberWithFloat:5.0]}];
+}
+
+#pragma mark - Drawrect
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

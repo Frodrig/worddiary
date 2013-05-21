@@ -675,6 +675,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             WDMonthYearView *monthYearView = (WDMonthYearView *)monthYearViewIt;
             monthYearView.accesible = self.actualDate.year < self.todayDate.year ? YES : indexMonth <= self.todayDate.month;
             monthYearView.drawContentDot = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:indexMonth ofYear:self.actualDate.year];
+            [monthYearView setNeedsDisplay];
             indexMonth++;
         }
     }
@@ -962,6 +963,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             ++self.pendingMonthNavigationRequest;
             if (self.dateSelectorModeActive) {
                 [self configureMonthAndYearLabel];
+                [self configureMonthOfTheYearViews];
             } else {
                 [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
             }
@@ -992,6 +994,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
             ++self.pendingMonthNavigationRequest;
             if (self.dateSelectorModeActive) {
                 [self configureMonthAndYearLabel];
+                [self configureMonthOfTheYearViews];
             } else {
                 [self performSelector:@selector(updateYearMonthData:) withObject:[NSNumber numberWithBool:NO] afterDelay:DELAY_UPDATE_DAYMONTHS_NAVIGATION_EFFECT];
             }
