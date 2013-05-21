@@ -638,10 +638,11 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 - (void)createMonthsOfTheYearViews
 {
     if (nil == self.monthOfTheYearContainerView) {
-        self.monthOfTheYearContainerView = [[WDMonthsOfTheYearContainerView alloc] initWithFrame:CGRectMake(self.daysOfTheMonthContainerView.frame.origin.x,
-                                                                                                            self.daysOfTheMonthContainerView.frame.origin.y,
-                                                                                                            self.daysOfTheMonthContainerView.frame.size.width,
-                                                                                                            self.daysOfTheMonthContainerView.frame.size.height + (self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height)))];
+        self.monthOfTheYearContainerView = [[WDMonthsOfTheYearContainerView alloc]
+                                            initWithFrame:CGRectMake(self.daysOfTheMonthContainerView.frame.origin.x,
+                                                                     self.daysOfTheMonthContainerView.frame.origin.y,
+                                                                    self.daysOfTheMonthContainerView.frame.size.width,
+                                                                    self.daysOfTheMonthContainerView.frame.size.height + (self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height)))];
         /*
         const NSUInteger maxRows = 4;
         const NSUInteger maxColumns = 3;
@@ -660,7 +661,7 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
     
     [self.datePannelViewContainer addSubview:self.monthOfTheYearContainerView];
     self.monthOfTheYearContainerView.alpha = 0.0;
-    self.monthOfTheYearContainerView.backgroundColor = [UIColor blueColor];
+    self.monthOfTheYearContainerView.backgroundColor = [UIColor clearColor];
     NSLog(@"%@", NSStringFromCGRect(self.monthOfTheYearContainerView.frame));
 }
 

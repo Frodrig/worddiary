@@ -26,7 +26,7 @@
 {
     // Drawing code
     [super drawRect:rect];
-    /*
+    
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     
     CGContextSaveGState(contextRef);
@@ -54,8 +54,6 @@
         CGContextRestoreGState(contextRef);
     }
     CGContextRestoreGState(contextRef);
-     */
-
 }
 
 
