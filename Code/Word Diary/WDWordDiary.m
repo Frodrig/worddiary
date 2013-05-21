@@ -253,7 +253,7 @@
     NSArray *result = [self fetchAllEntitiesOfType:@"WDWord"];
     
     words_ = result.count > 0 ? [NSMutableArray arrayWithArray:result] : [NSMutableArray array];
-    [self cutWordsArrayAtPresentDay];
+    [self adjustWordsArrayAtPresentDay];
     [self sortWords];
     [self createFastWordSearchDictionary];
     
@@ -264,8 +264,9 @@
 
 #pragma mark - Actions
 
-- (BOOL)cutWordsArrayAtPresentDay
+- (BOOL)adjustWordsArrayAtPresentDay
 {
+    /*
     NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     todayDateComponents.hour = 23;
     todayDateComponents.minute = 59;
@@ -275,16 +276,25 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
     
     NSArray *newWordsCollection = [NSMutableArray arrayWithArray:[words_ filteredArrayUsingPredicate:predicate]];
-    const BOOL wordsCutted = self.words.count != newWordsCollection.count;
-    if (wordsCutted) {
-        for (NSUInteger wordToRemoveIndexIt = newWordsCollection.count; wordToRemoveIndexIt < self.words.count; wordToRemoveIndexIt++) {
-            WDWord *wordToRemove = [self.words objectAtIndex:wordToRemoveIndexIt];
-            [self removeWordFromFastWordSearchDictionary:wordToRemove];
-        }
+    */
+    NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    todayDateComponents.hour = 23;
+    todayDateComponents.minute = 59;
+    todayDateComponents.second = 59;
+    NSTimeInterval todayLimitTimeInterval = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:todayDateComponents].timeIntervalSince1970;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
+    NSArray *newWordsCollection = [NSMutableArray arrayWithArray:[[self fetchAllEntitiesOfType:@"WDWord"] filteredArrayUsingPredicate:predicate]];
+    
+    const BOOL needAdjust = self.words.count != newWordsCollection.count;
+    if (needAdjust) {
+        self.fastWordSearchByDateComponentsDictionary = nil;
         words_ = [NSMutableArray arrayWithArray:newWordsCollection];
+        for (WDWord *wordIt in newWordsCollection) {
+            [self addWordToFastWordSearchDictionary:wordIt];
+        }
     }
 
-    return wordsCutted;
+    return needAdjust;
 }
 
 - (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval

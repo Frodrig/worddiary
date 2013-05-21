@@ -207,7 +207,7 @@
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    [[WDWordDiary sharedWordDiary] cutWordsArrayAtPresentDay];
+    [[WDWordDiary sharedWordDiary] adjustWordsArrayAtPresentDay];
     
     BOOL createTodayWord = [WDWordDiary sharedWordDiary].words.count == 0;
     if (!createTodayWord) {

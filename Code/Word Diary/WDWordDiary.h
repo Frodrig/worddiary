@@ -59,6 +59,6 @@
 
 - (WDPalette *)   findPaletteWithIdName:(NSString *)idName;
 
-- (BOOL)          cutWordsArrayAtPresentDay;
+- (BOOL)          adjustWordsArrayAtPresentDay;
 
 @end
