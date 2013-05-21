@@ -7,6 +7,7 @@
 //
 
 #import "WDMonthYearView.h"
+#import "WDUtils.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface WDMonthYearView()
@@ -57,7 +58,7 @@
         monthString_ = label;
         drawContentDot_ = NO;
     
-        monthTitleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height * 0.85)];
+        monthTitleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height * 0.8)];
         [self updateAttributedText];
         monthTitleLabel_.textAlignment = NSTextAlignmentCenter;
         monthTitleLabel_.backgroundColor = [UIColor clearColor];
@@ -84,7 +85,8 @@
     [super drawRect:rect];
     
     if (self.drawContentDot) {
-        CGPoint drawStartPoint = CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height * 0.85);    CGContextRef contextRef = UIGraphicsGetCurrentContext();
+        CGPoint drawStartPoint = CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height * 0.7);
+        CGContextRef contextRef = UIGraphicsGetCurrentContext();
         CGContextSaveGState(contextRef);
         const CGFloat twoPiRadians = 6.28318531;
         CGContextSetAllowsAntialiasing(contextRef, true);

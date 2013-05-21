@@ -55,11 +55,17 @@
         tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
         tapGestureRecognizer_.numberOfTapsRequired = 1;
         tapGestureRecognizer_.numberOfTouchesRequired = 1;
+        [self addGestureRecognizer:tapGestureRecognizer_];
 
         gridView_ = [[WDMonthOfTheYearContainerGridView alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)];
         [self addSubview:gridView_];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [self removeGestureRecognizer:self.tapGestureRecognizer];
 }
 
 #pragma mark - Draw
@@ -105,6 +111,9 @@
         if ([viewIt isKindOfClass:[WDMonthYearView class]]) {
             if (CGRectContainsPoint(viewIt.frame, location)) {
                 monthYearSelected = (WDMonthYearView *)viewIt;
+                if (!monthYearSelected.accesible) {
+                    monthYearSelected = nil;
+                }
                 break;
             }
         }

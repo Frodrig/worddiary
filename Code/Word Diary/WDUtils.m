@@ -439,6 +439,32 @@
     return viewToApplyGosthEffect;
 }
 
++ (UIView *)destroyViewGosthEffect:(UIView *)srcView withDuration:(CGFloat)duration andVerticalDisplacement:(CGFloat)displacement
+{
+    static const NSUInteger MAX_GOSTH_COUNTER = 256;
+    static NSUInteger gosthCounter = 0;
+    
+    __block UIView *viewToApplyGosthEffect = nil;
+    if (gosthCounter < MAX_GOSTH_COUNTER) {
+        NSData *tempArchive = [NSKeyedArchiver archivedDataWithRootObject:srcView];
+        viewToApplyGosthEffect = (UIView *)[NSKeyedUnarchiver unarchiveObjectWithData:tempArchive];
+        [srcView.superview addSubview:viewToApplyGosthEffect];
+        gosthCounter++;
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+        [UIView animateWithDuration:duration animations:^{
+            viewToApplyGosthEffect.frame = CGRectMake(viewToApplyGosthEffect.frame.origin.x, viewToApplyGosthEffect.frame.origin.y + displacement, viewToApplyGosthEffect.frame.size.width, viewToApplyGosthEffect.frame.size.height);
+            viewToApplyGosthEffect.alpha = 0.0;
+        } completion:^(BOOL finished) {
+            [viewToApplyGosthEffect removeFromSuperview];
+            viewToApplyGosthEffect = nil;
+            NSAssert(gosthCounter > 0, @"Incongruencia");
+            gosthCounter--;
+        }];
+    }
+    
+    return viewToApplyGosthEffect;
+}
+
 + (void)pauseLayer:(CALayer*)layer
 {
     CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];

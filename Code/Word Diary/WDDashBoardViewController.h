@@ -11,9 +11,7 @@
 #import "WDDashBoardViewControllerDataSource.h"
 #import "WDMonthOfTheYearContainerViewDelegate.h"
 
-@interface WDDashBoardViewController : UIViewController<UIPickerViewDataSource,
-                                                        UIPickerViewDelegate,
-                                                        WDMonthOfTheYearContainerViewDelegate>
+@interface WDDashBoardViewController : UIViewController<WDMonthOfTheYearContainerViewDelegate>
 
 @property(nonatomic, weak) id<WDDashBoardViewControllerDelegate>   delegate;
 @property(nonatomic, weak) id<WDDashBoardViewControllerDataSource> dataSource;

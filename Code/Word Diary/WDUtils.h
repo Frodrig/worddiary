@@ -53,6 +53,7 @@ typedef enum {
 + (BOOL)                 isIPhone5Screen;
 
 + (UIView *)             destroyViewGosthEffect:(UIView *)srcView withDuration:(CGFloat)duration andDisplacement:(CGFloat)displacement;
++ (UIView *)             destroyViewGosthEffect:(UIView *)srcView withDuration:(CGFloat)duration andVerticalDisplacement:(CGFloat)displacement;
 
 + (void)                 pauseLayer:(CALayer*)layer;
 + (void)                 resumeLayer:(CALayer*)layer;

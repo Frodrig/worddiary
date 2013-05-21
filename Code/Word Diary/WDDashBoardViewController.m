@@ -45,7 +45,6 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 @property (weak, nonatomic) IBOutlet WDDaysOfTheMonthContainerView      *daysOfTheMonthGridView;
 @property (weak, nonatomic) IBOutlet UIButton                           *acceptButton;
 @property (weak, nonatomic) IBOutlet UIButton                           *cancelButton;
-@property (nonatomic, strong) UIPickerView                              *pickerView;
 @property (weak, nonatomic) IBOutlet UIView                             *wordSlateContainerView;
 @property (weak, nonatomic) IBOutlet UIButton                           *leftNavigationButton;
 @property (weak, nonatomic) IBOutlet UIButton                           *rightNavigationButton;
@@ -57,6 +56,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 @property (nonatomic) NSNumber                                          *originalHeightOfDaysOfTheMonthContainerView;
 @property (nonatomic) NSDateComponents                                  *backupDateBeforeChangeDateCalendarMode;
 @property (nonatomic, strong) WDMonthsOfTheYearContainerView            *monthOfTheYearContainerView;
+@property (weak, nonatomic) IBOutlet UILabel                            *wordCounterInYearCalendar;
 
 - (void)                createMonthsOfTheYearViews;
 - (void)                configureMonthOfTheYearViews;
@@ -106,6 +106,8 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 - (void)                setNumberOfWordsOfTheMonth:(BOOL)inmediate;
 - (NSUInteger)          findNumberOfWordsOfActualMonth;
 
+- (void)                showMonthsOfTheYearCalendarMode:(BOOL)show;
+
 @end
 
 @implementation WDDashBoardViewController
@@ -130,7 +132,6 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 @synthesize daysOfTheMonthGridView                      = daysOfTheMonthGridView_;
 @synthesize acceptButton                                = acceptButton_;
 @synthesize cancelButton                                = cancelButton_;
-@synthesize pickerView                                  = pickerView_;
 @synthesize infoButton                                  = infoButton_;
 @synthesize wordSlateContainerView                      = wordSlateContainerView_;
 @synthesize leftNavigationButton                        = leftNavigationButton_;
@@ -143,6 +144,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 @synthesize originalHeightOfDaysOfTheMonthContainerView = originalHeightOfDaysOfTheMonthContainerView_;
 @synthesize backupDateBeforeChangeDateCalendarMode      = backupDateBeforeChangeDateCalendarMode_;
 @synthesize monthOfTheYearContainerView                 = monthOfTheYearContainerView_;
+@synthesize wordCounterInYearCalendar                   = wordCounterInYearCalendar_;
 
 
 #pragma mar - Properties
@@ -285,7 +287,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 {
     const NSUInteger numberOfWords = [self findNumberOfWordsOfActualMonth];
     self.wordsOfMonthLabel.attributedText = [[NSAttributedString alloc]
-                                             initWithString:[NSString stringWithFormat:@"%@\n%@",NSLocalizedString(numberOfWords == 1 ? @"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_SINGULAR" : @"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL", @""), [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:numberOfWords]]]
+                                             initWithString:[NSString stringWithFormat:@"%@\n%@",NSLocalizedString(@"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL", @""), [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithInteger:numberOfWords]]]
                                              attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:[WDUtils is568Screen] ? 34 : 24],
                                              NSForegroundColorAttributeName:[UIColor lightGrayColor],
                                              NSKernAttributeName: [NSNumber numberWithInteger:5.0]}];
@@ -353,6 +355,8 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 {
     if (self.dateSelectorModeActive) {
         self.yearMonthLabel.text = [NSString stringWithFormat:@"%d", self.actualDate.year];
+        const NSUInteger numWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInYear:self.actualDate.year];
+        self.wordCounterInYearCalendar.text = [NSString stringWithFormat:@"%@ %@", [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:numWords]], NSLocalizedString(@"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL", @"")];
     } else {
         self.yearMonthLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL", @""), [WDUtils monthString:self.actualDate.month abreviateMode:NO], self.actualDate.year];
     }
@@ -594,41 +598,10 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     
     self.dateSelectorModeActive = NO;
     
-    const BOOL logicChange = [self logicChangeYearMonthWithSelectedDateComponents:dateComponents];
-    if (logicChange) {
-        [self configureDayOfTheMonths:YES];
-    }
-    
-    /*
-    [UIView animateWithDuration:0.55 animations:^{
-        self.cancelButton.alpha = self.acceptButton.alpha = 0.0;
-        self.yearMonthLabel.alpha = 0.0;
-        self.pickerView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [self configureMonthAndYearLabel];
-        self.acceptButton.hidden = self.cancelButton.hidden = YES;
-        [self.pickerView removeFromSuperview];
-        self.pickerView = nil;
-        [UIView animateWithDuration:0.5 animations:^{
-            self.yearMonthLabel.alpha = 1.0;
-            for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
-                if ([viewIt isKindOfClass:[UILabel class]]) {
-                    viewIt.alpha = 1.0;
-                }
-            }
-            for (UIView *viewIt in self.daysOfTheMonthContainerView.subviews) {
-                if ([viewIt isKindOfClass:[WDDayMonthView class]]) {
-                    viewIt.alpha = 1.0;
-                }
-            }
-            self.leftNavigationButton.alpha = self.rightNavigationButton.alpha = 1.0;
-            [self setNumberOfWordsOfTheMonth:NO];
-        } completion:^(BOOL finished) {
-            self.changeYearMonthButton.enabled = YES;
-            self.infoButton.enabled = YES;
-        }];
-    }];
-     */
+    // Para hacer efectivo el cambio, volvemos a asignar el valor original y procedemos a realizar la actualizacion
+    self.actualDate = [self.backupDateBeforeChangeDateCalendarMode copy];
+    [self logicChangeYearMonthWithSelectedDateComponents:dateComponents];
+    [self showMonthsOfTheYearCalendarMode:NO];
 }
 
 - (void)createMonthsOfTheYearViews
@@ -652,13 +625,76 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     for (UIView *monthYearViewIt in self.monthOfTheYearContainerView.subviews) {
         if ([monthYearViewIt isKindOfClass:[WDMonthYearView class]]) {
             WDMonthYearView *monthYearView = (WDMonthYearView *)monthYearViewIt;
+            const BOOL beforeDrawContentDot = monthYearView.drawContentDot;
             monthYearView.accesible = self.actualDate.year < self.todayDate.year ? YES : indexMonth <= self.todayDate.month;
             monthYearView.drawContentDot = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:indexMonth ofYear:self.actualDate.year];
-            [monthYearView setNeedsDisplay];
+            if (beforeDrawContentDot != monthYearView.drawContentDot) {
+                [monthYearView setNeedsDisplay];
+            }
+            
             indexMonth++;
         }
     }
 }
+
+- (void)showMonthsOfTheYearCalendarMode:(BOOL)show
+{
+    self.canProcessNavigationUpdate = NO;
+    
+    if (!show) {
+        // Nota: Como queremos que el numero de palabras tenga un fade siempre una vez que se muestra el calendario normal,
+        // volveremos a ocultar el valor y haremos que aparezca de nuevo
+        [self configureDayOfTheMonths:YES];
+        self.wordsOfMonthLabel.alpha = 0;
+    }
+    self.infoButton.enabled = show ? NO : YES;
+    [self.changeYearMonthButton setImage:[UIImage imageNamed:show ? @"298-circlex.png" : @"83-calendar.png"] forState:UIControlStateNormal];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:0.6 animations:^{
+        if (show) {
+            for (NSUInteger weekDayIt = 1; weekDayIt < 8; weekDayIt++) {
+                [self.daysOfTheWeekTitlesContainerView viewWithTag:weekDayIt].alpha = 0.0;
+            }
+        }
+        self.daysOfTheMonthContainerView.alpha = show ? 0.0 : 1.0;
+        self.monthOfTheYearContainerView.alpha = show ? 1.0 : 0.0;
+        self.wordSlateContainerView.alpha = show ? 0.0 : 1.0;
+    } completion:^(BOOL finished) {
+        if (!show) {
+            [self setNumberOfWordsOfTheMonth:NO];
+            [self.monthOfTheYearContainerView removeFromSuperview];
+        }
+    }];
+    if (show) {
+        self.wordCounterInYearCalendar.hidden = NO;
+        self.wordCounterInYearCalendar.alpha = 0.0;
+    }
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    [UIView animateWithDuration:0.6 animations:^{
+        self.yearMonthLabel.alpha = 0.0;
+        if (!show) {
+            self.wordCounterInYearCalendar.alpha = 0.0;
+        }
+    } completion:^(BOOL finished) {
+        [self configureMonthAndYearLabel];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+        [UIView animateWithDuration:0.5 animations:^{
+            self.yearMonthLabel.alpha = 1.0;
+            if (show) {
+                self.wordCounterInYearCalendar.alpha = 1.0;
+            } else {
+                self.wordCounterInYearCalendar.hidden = YES;
+                for (NSUInteger weekDayIt = 1; weekDayIt < 8; weekDayIt++) {
+                    [self.daysOfTheWeekTitlesContainerView viewWithTag:weekDayIt].alpha = 1.0;
+                }
+            }
+        } completion:^(BOOL finished) {
+            self.canProcessNavigationUpdate = YES;
+        }];
+    }];
+
+}
+
 
 #pragma mark - UITapGestureRecognizer
 
@@ -773,89 +809,12 @@ const NSUInteger WEEKS_MONTHS                             = 5;
         [self createMonthsOfTheYearViews];
         [self configureMonthOfTheYearViews];
     } else {
+        // cancel
         self.actualDate = [self.backupDateBeforeChangeDateCalendarMode copy];
         self.backupDateBeforeChangeDateCalendarMode = nil;
     }
-
-    self.infoButton.enabled = self.dateSelectorModeActive ? NO : YES;
-    [self.changeYearMonthButton setImage:[UIImage imageNamed:self.dateSelectorModeActive ? @"298-circlex.png" : @"83-calendar.png"] forState:UIControlStateNormal];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView animateWithDuration:0.6 animations:^{
-        for (NSUInteger weekDayIt = 1; weekDayIt < 8; weekDayIt++) {
-            [self.daysOfTheWeekTitlesContainerView viewWithTag:weekDayIt].alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
-        }
-        self.daysOfTheMonthContainerView.alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
-        self.monthOfTheYearContainerView.alpha = self.dateSelectorModeActive ? 1.0 : 0.0;
-        self.wordSlateContainerView.alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
-        
-        if (self.dateSelectorModeActive) {
-            self.wordsOfMonthLabel.alpha = 0.0;
-        }
-    } completion:^(BOOL finished) {
-        if (!self.dateSelectorModeActive) {
-            self.wordsOfMonthLabel.alpha = 0.0;
-            [self.monthOfTheYearContainerView removeFromSuperview];
-        }
-    }];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView animateWithDuration:0.6 animations:^{
-        self.yearMonthLabel.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        [self configureMonthAndYearLabel];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-        [UIView animateWithDuration:0.5 animations:^{
-            self.yearMonthLabel.alpha = 1.0;
-        }];
-    }];
     
-
-    /*
-    self.dateSelectorModeActive = YES;
-    
-    self.infoButton.enabled = NO;
-    
-    NSAssert(nil == self.pickerView, @"no deberia de existir otro picker view");
-    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0.0, (self.daysOfTheMonthContainerView.bounds.size.height - 180.0) / 2.0, self.daysOfTheMonthContainerView.bounds.size.width, 180.0)];
-    self.pickerView.showsSelectionIndicator = YES;
-    self.pickerView.delegate = self;
-    self.pickerView.dataSource = self;
-    self.pickerView.alpha = 0.0;
-    [self.pickerView selectRow:self.todayDate.year - self.actualDate.year inComponent:0 animated:NO];
-    [self.pickerView selectRow:self.actualDate.month - 1 inComponent:1 animated:NO];
-    CAGradientLayer *pickerViewLayer = [CAGradientLayer layer];
-    pickerViewLayer.frame = self.pickerView.bounds;
-    pickerViewLayer.colors = [NSArray arrayWithObjects:(id)[UIColor colorWithWhite:0.0 alpha:0.75].CGColor, (id)[UIColor colorWithWhite:0 alpha:0.5].CGColor, (id)[UIColor colorWithWhite:1 alpha:0].CGColor, (id)[UIColor colorWithWhite:0 alpha:0.5].CGColor, [UIColor colorWithWhite:0.0 alpha:0.75].CGColor, nil];
-    [self.pickerView.layer addSublayer:pickerViewLayer];
-    [self.daysOfTheMonthContainerView addSubview:self.pickerView];
-       
-    self.changeYearMonthButton.enabled = NO;
-    [UIView animateWithDuration:0.55 animations:^{
-        for (UIView *viewIt in self.daysOfTheWeekTitlesContainerView.subviews) {
-            if ([viewIt isKindOfClass:[UILabel class]]) {
-                viewIt.alpha = 0.0;
-            }
-        }
-        for (UIView *viewIt in self.daysOfTheMonthContainerView.subviews) {
-            if ([viewIt isKindOfClass:[WDDayMonthView class]]) {
-                viewIt.alpha = 0.0;
-            }
-        }
-        self.leftNavigationButton.alpha = self.rightNavigationButton.alpha = 0.0;
-        self.wordsOfMonthLabel.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        self.yearMonthLabel.text = NSLocalizedString(@"TAG_DATESELECTOR_TITLE", "");
-        self.cancelButton.hidden = self.acceptButton.hidden = NO;
-        [self.acceptButton setTitle:NSLocalizedString(@"TAG_DASHBOARDSCREEN_ACCEPT_GO", @"") forState:UIControlStateNormal];
-        [self.cancelButton setTitle:NSLocalizedString(@"TAG_DASHBOARDSCREEN_CANCEL", @"") forState:UIControlStateNormal];
-        self.cancelButton.alpha = self.acceptButton.alpha = 0.0;
-        [UIView animateWithDuration:0.5 animations:^{
-            self.yearMonthLabel.alpha = 1.0;
-            self.cancelButton.alpha = 1.0;
-            self.acceptButton.alpha = 1.0;
-            self.pickerView.alpha = 1.0;
-        }];
-    }];
-    */
+    [self showMonthsOfTheYearCalendarMode:self.dateSelectorModeActive];
 }
 
 - (IBAction)cancelRemoveDayMode:(id)sender
@@ -865,12 +824,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (IBAction)acceptButtonPressed:(id)sender
 {
-    if (self.dateSelectorModeActive) {
-        NSDateComponents *newDateSelected = [[NSDateComponents alloc] init];
-        newDateSelected.year = self.todayDate.year - [self.pickerView selectedRowInComponent:0];
-        newDateSelected.month = [self.pickerView selectedRowInComponent:1] + 1;
-        [self exitChangeYearMonthModeWithSelectedDateComponents:newDateSelected];
-    } else if (self.dayMonthPendingToRemove != nil) {
+    if (self.dayMonthPendingToRemove != nil) {
         WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
         [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
         [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
@@ -975,65 +929,6 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     }
 }
 
-#pragma mark - UIPickerViewDelegate
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    if (component == 0) {
-        [pickerView reloadComponent:1];
-    }
-}
-
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    return nil;
-}
-
-- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSUInteger numberOfWordsForDate = 0;
-    BOOL available = YES;
-    NSString *strTitle = nil;
-    if (0 == component) {
-        const NSUInteger year = self.todayDate.year - row;
-        numberOfWordsForDate = [[WDWordDiary sharedWordDiary] findNumberOfWordsInYear:year];
-        strTitle = numberOfWordsForDate > 0 ? [NSString stringWithFormat:@"%d (%d)", year,  numberOfWordsForDate] : [NSString stringWithFormat:@"%d", year];
-
-    } else {
-        if (self.todayDate.year == self.todayDate.year - [pickerView selectedRowInComponent:0]) {
-            available = self.todayDate.month > row;
-        }
-        numberOfWordsForDate = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:row + 1 ofYear:self.todayDate.year - [pickerView selectedRowInComponent:0]];
-        strTitle = numberOfWordsForDate > 0 ? [NSString stringWithFormat:@"%@ (%d)", [WDUtils monthString:row + 1 abreviateMode:NO], numberOfWordsForDate]: [WDUtils monthString:row + 1 abreviateMode:NO];
-    }
-    
-    NSShadow *textShadow = [[NSShadow alloc] init];
-    textShadow.shadowOffset = CGSizeMake(0, -2.0);
-    textShadow.shadowBlurRadius = 4.0;
-    textShadow.shadowColor = [UIColor colorWithWhite:0.9 alpha:0.5];
-    
-    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:strTitle
-                                                                     attributes:@{
-                                                          NSShadowAttributeName: textShadow,
-                                                            NSFontAttributeName: [UIFont fontWithName:component == 0 ?  @"Helvetica" : @"Helvetica" size: component == 0 ? 18.0 : 18.0],
-                                                 NSForegroundColorAttributeName: available ? [UIColor blackColor] : [UIColor lightGrayColor],
-                                                            }];
-    
-    return attrString;
-}
-
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
-{
-    CGFloat retWidth = 0.0f;
-    if (component == 0) {
-        retWidth = pickerView.frame.size.width * 0.35;
-    } else if (component == 1) {
-        retWidth = pickerView.frame.size.width * 0.65;
-    }
-    
-    return retWidth;
-}
-
 #pragma mark - WDMonthOfTheYearContainerViewDelegate
 
 - (void) monthOfTheYearContainerViewIndexMonthSelected:(NSUInteger)indexMonth
@@ -1044,25 +939,6 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     newDateSelected.year = self.actualDate.year;
     newDateSelected.month = indexMonth;
     [self exitChangeYearMonthModeWithSelectedDateComponents:newDateSelected];
-}
-
-#pragma mark - UIPickerViewDataSource
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 2.0;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    NSInteger retComponents = 0;
-    if (component == 0) {
-        retComponents = self.todayDate.year;
-    } else if (component == 1) {
-        retComponents = 12.0;
-    }
-    
-    return retComponents;
 }
 
 #pragma mark - Application Notifications
