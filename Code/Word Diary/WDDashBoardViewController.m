@@ -653,11 +653,6 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                                                        rowIt * monthYearViewHeight,
                                                        monthYearViewWidth,
                                                        monthYearViewHeight);
-                /*
-                UIView *v = [[UIView alloc] initWithFrame:monthOfTheYearRect];
-                v.backgroundColor = (rowIt * maxColumns + columnIt + 1) % 2 == 0 ? [UIColor greenColor] : [UIColor yellowColor];
-                [self.monthOfTheYearContainerView addSubview:v];
-                 */
                 WDMonthYearView *monthOfTheYearView = [[WDMonthYearView alloc]
                                                        initWithFrame:monthOfTheYearRect
                                                        andLabel:[WDUtils monthString:rowIt * maxColumns + columnIt + 1 abreviateMode:YES]];

@@ -57,6 +57,7 @@
         dayOfTheActualMonthIndex_ = 0;
         
         dayOfTheMonthLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 10.0, frame.size.width, frame.size.height * 0.45)];
+        dayOfTheMonthLabel_.font = [UIFont fontWithName:@"Helvetica" size:16];
         dayOfTheMonthLabel_.textAlignment = NSTextAlignmentCenter;
         dayOfTheMonthLabel_.text = [[NSNumber numberWithUnsignedInteger:index] stringValue];
         dayOfTheMonthLabel_.textColor = [UIColor whiteColor];

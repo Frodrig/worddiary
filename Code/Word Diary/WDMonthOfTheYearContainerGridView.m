@@ -39,13 +39,13 @@
     const CGFloat rowsDimension = self.bounds.size.height / numRows;
     for (NSUInteger rowIt = 0; rowIt < numRows; rowIt++) {
         CGContextSaveGState(contextRef);
-        const NSUInteger yPosition = rowsDimension + rowsDimension * rowIt;
+        const NSUInteger yPosition = rowsDimension * rowIt;
         CGContextMoveToPoint(contextRef, 0, yPosition);
         CGContextAddLineToPoint(contextRef, self.bounds.size.width, yPosition);
         CGContextStrokePath(contextRef);
         CGContextRestoreGState(contextRef);
     }
-    for (NSUInteger columnIt = 0; columnIt < numColumns; columnIt++) {
+    for (NSUInteger columnIt = 0; columnIt < numColumns - 1; columnIt++) {
         CGContextSaveGState(contextRef);
         const NSUInteger xPosition = columnsDimension + columnsDimension * columnIt;
         CGContextMoveToPoint(contextRef, xPosition, 0.0);

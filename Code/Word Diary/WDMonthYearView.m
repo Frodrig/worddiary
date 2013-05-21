@@ -7,6 +7,7 @@
 //
 
 #import "WDMonthYearView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface WDMonthYearView()
 
@@ -49,13 +50,15 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        // MUY IMPORTANTE: Evita que DrawRect dibuje todo negro
+        self.opaque = NO;
+        
         drawContentDot_ = NO;
     
-        monthTitleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)];
-        monthTitleLabel_.backgroundColor = [UIColor clearColor];
+        monthTitleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height * 0.85)];
+        monthTitleLabel_.attributedText = [[NSAttributedString alloc] initWithString:label attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:21.0], NSForegroundColorAttributeName: [UIColor lightGrayColor], NSBackgroundColorAttributeName: [UIColor clearColor], NSKernAttributeName: [NSNumber numberWithFloat:5.0]}];
         monthTitleLabel_.textAlignment = NSTextAlignmentCenter;
-        monthTitleLabel_.textColor = [UIColor lightGrayColor];
-        monthTitleLabel_.text = label;
+        monthTitleLabel_.backgroundColor = [UIColor clearColor];
         [self addSubview:monthTitleLabel_];
     }
     
@@ -64,27 +67,24 @@
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-/*
- - (void)drawRect:(CGRect)rect
+  - (void)drawRect:(CGRect)rect
 {
     // Drawing code
     [super drawRect:rect];
     
     if (self.drawContentDot) {
-        CGPoint drawStartPoint = CGPointMake(self.frame.size.width / 2.0, self.frame.origin.y + (self.frame.size.height - self.frame.size.height * 0.25));
-        CGContextRef contextRef = UIGraphicsGetCurrentContext();
+        CGPoint drawStartPoint = CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height * 0.85);    CGContextRef contextRef = UIGraphicsGetCurrentContext();
         CGContextSaveGState(contextRef);
         const CGFloat twoPiRadians = 6.28318531;
-        const CGFloat decoratorRadius = 2.0;
         CGContextSetAllowsAntialiasing(contextRef, true);
         CGContextSetLineWidth(contextRef, 1.0);
-        CGContextSetFillColor(contextRef, CGColorGetComponents([UIColor lightGrayColor].CGColor));
-        CGContextAddArc(contextRef, drawStartPoint.x, drawStartPoint.y, decoratorRadius, 0.0, twoPiRadians, 0);
+        CGContextSetFillColorWithColor(contextRef, [UIColor lightGrayColor].CGColor);
+        CGContextAddArc(contextRef, drawStartPoint.x, drawStartPoint.y, 5.0, 0.0, twoPiRadians, 0);
         CGContextFillPath(contextRef);
         CGContextRestoreGState(contextRef);
     }
 }
-*/
+
 - (NSString *)description
 {
     return self.monthTitleLabel.text;
