@@ -220,7 +220,8 @@
     NSMutableDictionary *monthsDictionary = [self.fastWordSearchByDateComponentsDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.year]];
     NSAssert(monthsDictionary, @"deberia de existir");
     NSAssert([monthsDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.month]], @"deberia de existir");
-    [monthsDictionary removeObjectForKey:[NSNumber numberWithInteger:word.dateComponents.day]];
+    NSMutableDictionary *monthWithDaysDictionary = [monthsDictionary objectForKey:[NSNumber numberWithUnsignedInteger:word.dateComponents.month]];
+    [monthWithDaysDictionary removeObjectForKey:[NSNumber numberWithInteger:word.dateComponents.day]];
 }
 
 - (void)addWordToFastWordSearchDictionary:(WDWord *)word
@@ -265,8 +266,6 @@
 
 - (BOOL)cutWordsArrayAtPresentDay
 {
-    const NSUInteger previousWordCount = words_.count;
-    
     NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     todayDateComponents.hour = 23;
     todayDateComponents.minute = 59;
@@ -275,9 +274,17 @@
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
     
-    words_ = [NSMutableArray arrayWithArray:[words_ filteredArrayUsingPredicate:predicate]];
-    
-    return words_.count != previousWordCount;
+    NSArray *newWordsCollection = [NSMutableArray arrayWithArray:[words_ filteredArrayUsingPredicate:predicate]];
+    const BOOL wordsCutted = self.words.count != newWordsCollection.count;
+    if (wordsCutted) {
+        for (NSUInteger wordToRemoveIndexIt = newWordsCollection.count; wordToRemoveIndexIt < self.words.count; wordToRemoveIndexIt++) {
+            WDWord *wordToRemove = [self.words objectAtIndex:wordToRemoveIndexIt];
+            [self removeWordFromFastWordSearchDictionary:wordToRemove];
+        }
+        words_ = [NSMutableArray arrayWithArray:newWordsCollection];
+    }
+
+    return wordsCutted;
 }
 
 - (WDWord *)createWord:(NSString *)word inTimeInterval:(double)timeInterval

@@ -41,7 +41,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 @property (nonatomic, strong) NSDate                                    *normalizedRealTodayDate;
 @property (nonatomic) BOOL                                              dateSelectorModeActive;
 @property (weak, nonatomic) IBOutlet UIButton                           *changeYearMonthButton;
-@property (nonatomic, strong) CAGradientLayer                           *gradientLayer;
+//@property (nonatomic, strong) CAGradientLayer                           *gradientLayer;
 @property (weak, nonatomic) IBOutlet WDDaysOfTheMonthContainerView      *daysOfTheMonthGridView;
 @property (weak, nonatomic) IBOutlet UIButton                           *acceptButton;
 @property (weak, nonatomic) IBOutlet UIButton                           *cancelButton;
@@ -128,7 +128,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 @synthesize dateSelectorModeActive                      = dateSelectorModeActive_;
 @synthesize todayDate                                   = todayDate_;
 @synthesize changeYearMonthButton                       = changeYearMonthButton_;
-@synthesize gradientLayer                               = gradientLayer_;
+//@synthesize gradientLayer                               = gradientLayer_;
 @synthesize daysOfTheMonthGridView                      = daysOfTheMonthGridView_;
 @synthesize acceptButton                                = acceptButton_;
 @synthesize cancelButton                                = cancelButton_;
@@ -196,6 +196,9 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.minimumTimeNavigationPressTimer invalidate];
+    self.minimumTimeNavigationPressTimer = nil;
+    NSLog(@"dealloc");
 }
 
 - (void)viewDidLoad
@@ -416,10 +419,12 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (void)removeGradientLayerOfDayMonthView:(WDDayMonthView *)dayMonthView
 {
-    for (CALayer *layerIt in dayMonthView.layer.sublayers) {
+    NSArray *sublayers = [dayMonthView.layer.sublayers copy];
+    for (CALayer *layerIt in sublayers) {
         if ([layerIt isKindOfClass:[CAGradientLayer class]]) {
-            [layerIt removeFromSuperlayer];
-            break;
+            CAGradientLayer *gradientLayer = (CAGradientLayer *)layerIt;
+            [gradientLayer removeAllAnimations];
+            [gradientLayer removeFromSuperlayer];
         }
     }
 }
@@ -986,10 +991,23 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     todayDate_ = nil;
     normalizedRealTodayDate_ = nil;
     
-    NSDateComponents *newActualDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
-    if ([self logicChangeYearMonthWithSelectedDateComponents:newActualDate]) {
-        [self configureDayOfTheMonths:YES];
-        [self configureMonthAndYearLabel];
+    if (self.dateSelectorModeActive) {
+        [self configureMonthOfTheYearViews];
+
+    } else {
+        NSDateComponents *newActualDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
+        if (newActualDate.year != self.actualDate.year ||
+            (newActualDate.year == self.actualDate.year && newActualDate.month != self.actualDate.month) ||
+            (newActualDate.year == self.actualDate.year && newActualDate.month == self.actualDate.month && newActualDate.day != self.actualDate.day)) {
+            // Se ha retrocedido la fecha (solo podra ocurrir al volver desde el exterior)
+            if ([self logicChangeYearMonthWithSelectedDateComponents:newActualDate]) {
+                [self configureDayOfTheMonths:YES];
+                [self configureMonthAndYearLabel];
+            }
+        } else {
+            // Solo actualizamos los dias del mes en el que estamos o estabamos. NO cambiamos automaticamente de mes
+            [self configureDayOfTheMonths:YES];
+        }
     }
 }
 
