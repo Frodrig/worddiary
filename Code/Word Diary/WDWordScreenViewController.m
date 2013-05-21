@@ -22,6 +22,7 @@
 @property(nonatomic, strong) UIImageView                          *launchTransitionImageView;
 @property(nonatomic, strong) WDHelpScreenViewController           *helpScreenViewController;
 @property(nonatomic, strong) WDWordScreenCollectionViewController *wordScreenCollectionViewController;
+@property(nonatomic, strong) NSDateComponents                     *todayDate;
 
 - (WDWord *)            createFirstWord;
 
@@ -45,6 +46,7 @@
 @synthesize launchTransitionImageView          = launchTransitionImageView_;
 @synthesize helpScreenViewController           = helpScreenViewController_;
 @synthesize wordScreenCollectionViewController = wordScreenCollectionViewController_;
+@synthesize todayDate                          = todayDate_;
 
 #pragma mark - Init
 
@@ -53,6 +55,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        todayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -207,7 +211,11 @@
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    [[WDWordDiary sharedWordDiary] adjustWordsArrayAtPresentDay];
+    NSDateComponents *todayDateAfterEnterForeground = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    if (self.todayDate.year != todayDateAfterEnterForeground.year || self.todayDate.month != todayDateAfterEnterForeground.month || self.todayDate.day != todayDateAfterEnterForeground.day) {
+        self.todayDate = todayDateAfterEnterForeground;
+        [[WDWordDiary sharedWordDiary] adjustWordsArrayAtPresentDay];
+    }
     
     BOOL createTodayWord = [WDWordDiary sharedWordDiary].words.count == 0;
     if (!createTodayWord) {

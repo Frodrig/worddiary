@@ -266,25 +266,14 @@
 
 - (BOOL)adjustWordsArrayAtPresentDay
 {
-    /*
-    NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
-    todayDateComponents.hour = 23;
-    todayDateComponents.minute = 59;
-    todayDateComponents.second = 59;
-    NSTimeInterval todayLimitTimeInterval = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:todayDateComponents].timeIntervalSince1970;
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
-    
-    NSArray *newWordsCollection = [NSMutableArray arrayWithArray:[words_ filteredArrayUsingPredicate:predicate]];
-    */
-    NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar
+                                             components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     todayDateComponents.hour = 23;
     todayDateComponents.minute = 59;
     todayDateComponents.second = 59;
     NSTimeInterval todayLimitTimeInterval = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:todayDateComponents].timeIntervalSince1970;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.timeInterval <= %f", todayLimitTimeInterval];
     NSArray *newWordsCollection = [NSMutableArray arrayWithArray:[[self fetchAllEntitiesOfType:@"WDWord"] filteredArrayUsingPredicate:predicate]];
-    
     const BOOL needAdjust = self.words.count != newWordsCollection.count;
     if (needAdjust) {
         self.fastWordSearchByDateComponentsDictionary = nil;
