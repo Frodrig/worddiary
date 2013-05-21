@@ -22,7 +22,7 @@
 
 #pragma mark - Properties
 
-- (void) setDrawContentDot:(BOOL)drawContentDot
+- (void)setDrawContentDot:(BOOL)drawContentDot
 {
     if (drawContentDot != drawContentDot_) {
         drawContentDot_ = drawContentDot;
@@ -30,7 +30,7 @@
     }
 }
 
-- (void) setAccesible:(BOOL)accesible
+- (void)setAccesible:(BOOL)accesible
 {
     if (accesible != accesible_) {
         accesible_ = accesible;
@@ -50,9 +50,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         drawContentDot_ = NO;
-        
-        monthTitleLabel_ = [[UILabel alloc] initWithFrame:frame];
-        monthTitleLabel_.backgroundColor = [UIColor redColor];
+    
+        monthTitleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)];
+        monthTitleLabel_.backgroundColor = [UIColor clearColor];
         monthTitleLabel_.textAlignment = NSTextAlignmentCenter;
         monthTitleLabel_.textColor = [UIColor lightGrayColor];
         monthTitleLabel_.text = label;
@@ -64,7 +64,8 @@
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+/*
+ - (void)drawRect:(CGRect)rect
 {
     // Drawing code
     [super drawRect:rect];
@@ -83,7 +84,7 @@
         CGContextRestoreGState(contextRef);
     }
 }
-
+*/
 - (NSString *)description
 {
     return self.monthTitleLabel.text;

@@ -643,26 +643,33 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
                                                                      self.daysOfTheMonthContainerView.frame.origin.y,
                                                                     self.daysOfTheMonthContainerView.frame.size.width,
                                                                     self.daysOfTheMonthContainerView.frame.size.height + (self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height)))];
-        /*
         const NSUInteger maxRows = 4;
         const NSUInteger maxColumns = 3;
-        const CGFloat monthYearViewWidth = self.daysOfTheMonthContainerView.bounds.size.width / maxColumns;
-        const CGFloat monthYearViewHeight = self.daysOfTheMonthContainerView.bounds.size.height / maxRows;
+        const CGFloat monthYearViewWidth = self.monthOfTheYearContainerView.bounds.size.width / maxColumns;
+        const CGFloat monthYearViewHeight = self.monthOfTheYearContainerView.bounds.size.height / maxRows;
         for (NSUInteger rowIt = 0; rowIt < maxRows; rowIt++) {
             for (NSUInteger columnIt = 0; columnIt < maxColumns; columnIt++) {
+                CGRect monthOfTheYearRect = CGRectMake(columnIt * monthYearViewWidth,
+                                                       rowIt * monthYearViewHeight,
+                                                       monthYearViewWidth,
+                                                       monthYearViewHeight);
+                /*
+                UIView *v = [[UIView alloc] initWithFrame:monthOfTheYearRect];
+                v.backgroundColor = (rowIt * maxColumns + columnIt + 1) % 2 == 0 ? [UIColor greenColor] : [UIColor yellowColor];
+                [self.monthOfTheYearContainerView addSubview:v];
+                 */
                 WDMonthYearView *monthOfTheYearView = [[WDMonthYearView alloc]
-                                                       initWithFrame:CGRectMake(columnIt * monthYearViewWidth, rowIt * monthYearViewHeight, monthYearViewWidth, monthYearViewHeight)
-                                                       andLabel:[WDUtils monthString:rowIt * maxColumns + columnIt abreviateMode:YES]];
+                                                       initWithFrame:monthOfTheYearRect
+                                                       andLabel:[WDUtils monthString:rowIt * maxColumns + columnIt + 1 abreviateMode:YES]];
+                NSLog(@"%@ %d", NSStringFromCGRect(monthOfTheYearRect), rowIt * maxColumns + columnIt + 1);
                 [self.monthOfTheYearContainerView addSubview:monthOfTheYearView];
             }
         }
-         */
     }
     
     [self.datePannelViewContainer addSubview:self.monthOfTheYearContainerView];
     self.monthOfTheYearContainerView.alpha = 0.0;
-    self.monthOfTheYearContainerView.backgroundColor = [UIColor clearColor];
-    NSLog(@"%@", NSStringFromCGRect(self.monthOfTheYearContainerView.frame));
+   // self.monthOfTheYearContainerView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)configureMonthOfTheYearViews
@@ -797,10 +804,8 @@ const NSUInteger MAX_PENDING_REQUEST_TO_ATTEND            = 2;
 
     self.infoButton.enabled = self.dateSelectorModeActive ? NO : YES;
     [self.changeYearMonthButton setImage:[UIImage imageNamed:self.dateSelectorModeActive ? @"298-circlex.png" : @"83-calendar.png"] forState:UIControlStateNormal];
-    self.daysOfTheMonthGridView.gridView.alpha = 0.1;
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     [UIView animateWithDuration:0.6 animations:^{
-        self.daysOfTheMonthGridView.gridView.alpha = 0;
         for (NSUInteger weekDayIt = 1; weekDayIt < 8; weekDayIt++) {
             [self.daysOfTheWeekTitlesContainerView viewWithTag:weekDayIt].alpha = self.dateSelectorModeActive ? 0.0 : 1.0;
         }
