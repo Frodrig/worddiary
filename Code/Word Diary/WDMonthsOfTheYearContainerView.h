@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "WDMonthOfTheYearContainerGridView.h"
+#import "WDMonthOfTheYearContainerViewDelegate.h"
 
 @interface WDMonthsOfTheYearContainerView : UIView
+
+@property (nonatomic)id<WDMonthOfTheYearContainerViewDelegate> delegate;
 
 @property(nonatomic, strong) WDMonthOfTheYearContainerGridView *gridView;
 

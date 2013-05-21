@@ -150,6 +150,7 @@
 		5B26187B174A8A73002C36D6 /* WDMonthOfTheYearContainerGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDMonthOfTheYearContainerGridView.m; sourceTree = "<group>"; };
 		5B3555EF172EBB5F0033705C /* WDDaysOfTheWeekContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheWeekContainerView.h; sourceTree = "<group>"; };
 		5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDaysOfTheWeekContainerView.m; sourceTree = "<group>"; };
+		5B3CA3FE174B8EED00F00F98 /* WDMonthOfTheYearContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDMonthOfTheYearContainerViewDelegate.h; sourceTree = "<group>"; };
 		5B446F7616F22A48005A432D /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		5B4D18AE172A95110002F300 /* WDDayMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayMonthView.h; sourceTree = "<group>"; };
 		5B4D18AF172A95110002F300 /* WDDayMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDayMonthView.m; sourceTree = "<group>"; };
@@ -399,6 +400,7 @@
 				5B261875174A8A19002C36D6 /* MonthYearView */,
 				5B261876174A8A36002C36D6 /* WDMonthsOfTheYearContainerView.h */,
 				5B261877174A8A36002C36D6 /* WDMonthsOfTheYearContainerView.m */,
+				5B3CA3FE174B8EED00F00F98 /* WDMonthOfTheYearContainerViewDelegate.h */,
 			);
 			name = MonthsOfTheYearContainerView;
 			sourceTree = "<group>";

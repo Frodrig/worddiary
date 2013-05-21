@@ -7,10 +7,24 @@
 //
 
 #import "WDMonthsOfTheYearContainerView.h"
+#import "WDMonthYearView.h"
+#import "WDUtils.h"
+
+@interface WDMonthsOfTheYearContainerView()
+
+@property (nonatomic, strong) UITapGestureRecognizer    *tapGestureRecognizer;
+
+- (void)tapGestureRecognizerHandle:(UIGestureRecognizer *)gesture;
+
+@end
 
 @implementation WDMonthsOfTheYearContainerView
 
-@synthesize gridView = gridView_;
+@synthesize gridView             = gridView_;
+@synthesize delegate             = delegate_;
+@synthesize tapGestureRecognizer = tapGestureRecognizer_;
+
+#pragma mark - Init
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -18,11 +32,37 @@
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
+        
+        const NSUInteger maxRows = 4;
+        const NSUInteger maxColumns = 3;
+        const CGFloat monthYearViewWidth = frame.size.width / maxColumns;
+        const CGFloat monthYearViewHeight = frame.size.height / maxRows;
+        for (NSUInteger rowIt = 0; rowIt < maxRows; rowIt++) {
+            for (NSUInteger columnIt = 0; columnIt < maxColumns; columnIt++) {
+                const NSUInteger monthIndex = rowIt * maxColumns + columnIt + 1;
+                CGRect monthOfTheYearRect = CGRectMake(columnIt * monthYearViewWidth,
+                                                       rowIt * monthYearViewHeight,
+                                                       monthYearViewWidth,
+                                                       monthYearViewHeight);
+                WDMonthYearView *monthOfTheYearView = [[WDMonthYearView alloc]
+                                                       initWithFrame:monthOfTheYearRect
+                                                       andLabel:[WDUtils monthString:monthIndex abreviateMode:YES]];
+                monthOfTheYearView.tag = monthIndex;
+                [self addSubview:monthOfTheYearView];
+            }
+        }
+        
+        tapGestureRecognizer_ = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureRecognizerHandle:)];
+        tapGestureRecognizer_.numberOfTapsRequired = 1;
+        tapGestureRecognizer_.numberOfTouchesRequired = 1;
+
         gridView_ = [[WDMonthOfTheYearContainerGridView alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)];
         [self addSubview:gridView_];
     }
     return self;
 }
+
+#pragma mark - Draw
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -53,6 +93,26 @@
     CGContextStrokePath(contextRef);
     CGContextRestoreGState(contextRef);
 
+}
+
+#pragma mark - Gestures
+
+- (void)tapGestureRecognizerHandle:(UIGestureRecognizer *)gesture
+{
+    CGPoint location = [gesture locationInView:self];
+    WDMonthYearView *monthYearSelected = nil;
+    for (UIView *viewIt in self.subviews) {
+        if ([viewIt isKindOfClass:[WDMonthYearView class]]) {
+            if (CGRectContainsPoint(viewIt.frame, location)) {
+                monthYearSelected = (WDMonthYearView *)viewIt;
+                break;
+            }
+        }
+    }
+    
+    if (monthYearSelected) {
+        [self.delegate monthOfTheYearContainerViewIndexMonthSelected:monthYearSelected.tag];
+    }
 }
 
 @end

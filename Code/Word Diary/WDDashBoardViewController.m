@@ -599,6 +599,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
         [self configureDayOfTheMonths:YES];
     }
     
+    /*
     [UIView animateWithDuration:0.55 animations:^{
         self.cancelButton.alpha = self.acceptButton.alpha = 0.0;
         self.yearMonthLabel.alpha = 0.0;
@@ -627,6 +628,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
             self.infoButton.enabled = YES;
         }];
     }];
+     */
 }
 
 - (void)createMonthsOfTheYearViews
@@ -637,28 +639,11 @@ const NSUInteger WEEKS_MONTHS                             = 5;
                                                                      self.daysOfTheMonthContainerView.frame.origin.y,
                                                                     self.daysOfTheMonthContainerView.frame.size.width,
                                                                     self.daysOfTheMonthContainerView.frame.size.height + (self.bottomContainerView.frame.origin.y - (self.daysOfTheMonthContainerView.frame.origin.y + self.daysOfTheMonthContainerView.frame.size.height)))];
-        const NSUInteger maxRows = 4;
-        const NSUInteger maxColumns = 3;
-        const CGFloat monthYearViewWidth = self.monthOfTheYearContainerView.bounds.size.width / maxColumns;
-        const CGFloat monthYearViewHeight = self.monthOfTheYearContainerView.bounds.size.height / maxRows;
-        for (NSUInteger rowIt = 0; rowIt < maxRows; rowIt++) {
-            for (NSUInteger columnIt = 0; columnIt < maxColumns; columnIt++) {
-                CGRect monthOfTheYearRect = CGRectMake(columnIt * monthYearViewWidth,
-                                                       rowIt * monthYearViewHeight,
-                                                       monthYearViewWidth,
-                                                       monthYearViewHeight);
-                WDMonthYearView *monthOfTheYearView = [[WDMonthYearView alloc]
-                                                       initWithFrame:monthOfTheYearRect
-                                                       andLabel:[WDUtils monthString:rowIt * maxColumns + columnIt + 1 abreviateMode:YES]];
-                NSLog(@"%@ %d", NSStringFromCGRect(monthOfTheYearRect), rowIt * maxColumns + columnIt + 1);
-                [self.monthOfTheYearContainerView addSubview:monthOfTheYearView];
-            }
-        }
+        self.monthOfTheYearContainerView.delegate = self;
     }
     
     [self.datePannelViewContainer addSubview:self.monthOfTheYearContainerView];
     self.monthOfTheYearContainerView.alpha = 0.0;
-   // self.monthOfTheYearContainerView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)configureMonthOfTheYearViews
@@ -1047,6 +1032,18 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     }
     
     return retWidth;
+}
+
+#pragma mark - WDMonthOfTheYearContainerViewDelegate
+
+- (void) monthOfTheYearContainerViewIndexMonthSelected:(NSUInteger)indexMonth
+{
+    NSAssert(self.dateSelectorModeActive, @"deberiamos de estar en este modo");
+    
+    NSDateComponents *newDateSelected = [[NSDateComponents alloc] init];
+    newDateSelected.year = self.actualDate.year;
+    newDateSelected.month = indexMonth;
+    [self exitChangeYearMonthModeWithSelectedDateComponents:newDateSelected];
 }
 
 #pragma mark - UIPickerViewDataSource
