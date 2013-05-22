@@ -155,7 +155,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         // Siempe aparece por un presentViewController
         otherWordViewControllerInDismissMode_ = YES;
         wordContentUpdatedInEditMode_ = YES;
-
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHideNotification:) name:UIKeyboardDidHideNotification object:nil];
@@ -815,6 +815,26 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     } else {
         [self showSpaceTip];
     }
+}
+
+- (UITextAutocapitalizationType)autocapitalizationType
+{
+    return UITextAutocapitalizationTypeAllCharacters;
+}
+
+- (UIKeyboardType)keyboardType
+{
+    return UIKeyboardTypeDefault;
+}
+
+- (UIReturnKeyType)returnKeyType
+{
+    return UIReturnKeyDefault;
+}
+
+- (UIKeyboardAppearance)keyboardAppearance
+{
+    return UIKeyboardAppearanceDefault;
 }
 
 #pragma mark KeyboardNotification
