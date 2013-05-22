@@ -821,7 +821,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (UITextAutocapitalizationType)autocapitalizationType
 {
-    return UITextAutocapitalizationTypeAllCharacters;
+    return UITextAutocapitalizationTypeWords;
+}
+
+- (UITextSpellCheckingType)spellCheckingType
+{
+    return UITextSpellCheckingTypeNo;
 }
 
 - (UIKeyboardType)keyboardType
@@ -837,6 +842,21 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (UIKeyboardAppearance)keyboardAppearance
 {
     return UIKeyboardAppearanceDefault;
+}
+
+- (UITextAutocorrectionType)autocorrectionType
+{
+    return UITextAutocorrectionTypeYes;
+}
+
+- (BOOL)enablesReturnKeyAutomatically
+{
+    return NO;
+}
+
+- (BOOL)secureTextEntry
+{
+    return NO;
 }
 
 #pragma mark KeyboardNotification
