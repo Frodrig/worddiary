@@ -378,7 +378,7 @@
 
 - (NSArray *)findWordsInYear:(NSUInteger)year
 {
-    NSArray *words = nil;
+    NSArray *words = [[NSArray alloc] init];
     for (NSUInteger monthIndex = 1; monthIndex < 13; monthIndex++) {
         NSArray *wordsOfMonth = [self findWordsInfMonth:monthIndex ofYear:year];
         words = [words arrayByAddingObjectsFromArray:wordsOfMonth];

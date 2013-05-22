@@ -366,6 +366,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
         self.yearMonthLabel.text = [NSString stringWithFormat:@"%d", self.actualDate.year];
         const NSUInteger numWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInYear:self.actualDate.year];
         self.wordCounterInYearCalendar.text = [NSString stringWithFormat:@"%@ %@", [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:numWords]], NSLocalizedString(@"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL", @"")];
+        self.wordCounterInYearCalendar.textColor = numWords > 0 ? [UIColor whiteColor] : [UIColor darkGrayColor];
     } else {
         self.yearMonthLabel.text = [NSString stringWithFormat:NSLocalizedString(@"TAG_DASHBOARDSCREEN_YEARMONTH_FORMATLABEL", @""), [WDUtils monthString:self.actualDate.month abreviateMode:NO], self.actualDate.year];
     }
