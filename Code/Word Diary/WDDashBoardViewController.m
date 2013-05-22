@@ -98,7 +98,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (void)                significantTimeChange:(NSNotification *)notification;
 
-- (void)                updateYearMonthData:(NSNumber *)rightDirection;
+- (void)                updateYearMonthData:(BOOL)rightDirection;
 
 - (void)                launchAddGradientToWordDaysTimer;
 - (void)                minimumTimeNavigationPressTimerHandle:(NSTimer *)timer;
@@ -855,7 +855,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     }
 }
 
-- (void)updateYearMonthData:(NSNumber *)rightDirection
+- (void)updateYearMonthData:(BOOL)rightDirection
 {
     if (![WDUtils is:0.3 equalsTo:self.daysOfTheMonthGridView.gridView.alpha]) {
         self.daysOfTheMonthGridView.gridView.alpha = 0.3;
@@ -878,7 +878,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
                 dayMonthViewIt.dayOfMonthLabel.textColor = [UIColor lightGrayColor];
             }
             dayMonthViewIt.dayOfMonthLabel.alpha = 1;
-            [WDUtils destroyViewGosthEffect:dayMonthViewIt.dayOfMonthLabel withDuration:duration andDisplacement:[rightDirection boolValue] ? -1 * (44 + duration) : (44 + duration)];
+            [WDUtils destroyViewGosthEffect:dayMonthViewIt.dayOfMonthLabel withDuration:duration andDisplacement:rightDirection ? -1 * (44 + duration) : (44 + duration)];
             dayMonthViewIt.dayOfMonthLabel.alpha = 0;
         }
     }
@@ -937,7 +937,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
                 [self configureMonthAndYearLabel];
                 [self configureMonthOfTheYearViews];
             } else {
-                [self updateYearMonthData:NO];
+                [self updateYearMonthData:YES];
             }
         }
     }
