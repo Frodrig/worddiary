@@ -306,10 +306,17 @@
     NSMutableArray *indexWordToRemove = [[NSMutableArray alloc] init];
     for (NSUInteger indexIt = 0; indexIt < self.words.count; indexIt++) {
         WDWord *word = [self.words objectAtIndex:indexIt];
-        if (![word isTodayWord]) {
-            if (word.word.length == 0) {
-                [indexWordToRemove addObject:[NSNumber numberWithUnsignedInteger:indexIt]];
-            }
+        if (word.word.length == 0) {
+            [indexWordToRemove addObject:[NSNumber numberWithUnsignedInteger:indexIt]];
+        }
+    }
+    
+    // No queremos que figure el dia actual
+    if (indexWordToRemove.count > 0) {
+        NSNumber *indexToLastWord = [indexWordToRemove objectAtIndex:indexWordToRemove.count - 1];
+        WDWord *lastWord = [self.words objectAtIndex:indexToLastWord.unsignedIntegerValue];
+        if ([lastWord isTodayWord]) {
+            [indexWordToRemove removeObject:lastWord];
         }
     }
     
@@ -372,7 +379,7 @@
 - (NSArray *)findWordsInYear:(NSUInteger)year
 {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.dateComponents.year == %d && self.word.length > 0", year];
-    NSArray *words = [NSMutableArray arrayWithArray:[self.words filteredArrayUsingPredicate:predicate]];
+    NSArray *words = [self.words filteredArrayUsingPredicate:predicate];
     
     return words;
 }
@@ -387,7 +394,7 @@
 - (NSArray *)findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year
 {
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.dateComponents.month == %d && self.dateComponents.year == %d && self.word.length > 0", month, year];
-    NSArray *words = [NSMutableArray arrayWithArray:[self.words filteredArrayUsingPredicate:predicate]];
+    NSArray *words = [self.words filteredArrayUsingPredicate:predicate];
     
     return words;
 }

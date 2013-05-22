@@ -211,10 +211,13 @@
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
+    BOOL adjustWordsAtPresentDay = NO;
     NSDateComponents *todayDateAfterEnterForeground = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     if (self.todayDate.year != todayDateAfterEnterForeground.year || self.todayDate.month != todayDateAfterEnterForeground.month || self.todayDate.day != todayDateAfterEnterForeground.day) {
         self.todayDate = todayDateAfterEnterForeground;
+        [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
         [[WDWordDiary sharedWordDiary] adjustWordsArrayAtPresentDay];
+        adjustWordsAtPresentDay = YES;
     }
     
     BOOL createTodayWord = [WDWordDiary sharedWordDiary].words.count == 0;
@@ -222,8 +225,9 @@
         createTodayWord = self.wordScreenCollectionViewController && self.wordScreenCollectionViewController.presentedViewController == nil;
     }
     if (createTodayWord) {
-        // AQUI
-        [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
+        if (!adjustWordsAtPresentDay) {
+            [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
+        }
         [self createFirstWord];
     }
     
