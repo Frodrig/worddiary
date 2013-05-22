@@ -38,6 +38,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @property (nonatomic) BOOL                                  editWordModeActive;
 @property (nonatomic) BOOL                                  inPanModeForChangeBackgroundColor;
 @property (nonatomic) BOOL                                  wordContentUpdatedInEditMode;
+@property (nonatomic) BOOL                                  keyboardInTransitionMode;
 @property (nonatomic, strong) UILabel                       *spaceTipInEditModeLabel;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
@@ -112,6 +113,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @synthesize inPanModeForChangeBackgroundColor  = inPanModeForChangeBackgroundColor_;
 @synthesize wordContentUpdatedInEditMode       = wordContentUpdatedInEditMode_;
 @synthesize spaceTipInEditModeLabel            = spaceTipInEditModeLabel_;
+@synthesize keyboardInTransitionMode           = keyboardInTransitionMode_;
 
 #pragma mark - Properties
 
@@ -768,7 +770,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (BOOL)canResignFirstResponder
 {
-    return YES;
+    return !self.keyboardInTransitionMode;
 }
 
 - (BOOL)canBecomeFirstResponder
@@ -841,6 +843,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)keyboardWillShowNotification:(NSNotification *)notification
 {
+    self.keyboardInTransitionMode = YES;
+    
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
  
     // Efecto fantasma
@@ -870,6 +874,10 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
                     if (styleIt != selectedIndexOfWordStyle) {
                         [UIView animateWithDuration:0.55 animations:^{
                             [self.styleMenuView viewWithTag:styleIt + 1].alpha = 0.55;
+                        } completion:^(BOOL finished) {
+                            if (styleIt == [WDWordDiary sharedWordDiary].styles.count - 1) {
+                                self.keyboardInTransitionMode = NO;
+                            }
                         }];
                     }
                 }
@@ -880,6 +888,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)keyboardWillHideNotification:(NSNotification *)notification
 {
+    self.keyboardInTransitionMode = YES;
+    
     [[WDWordDiary sharedWordDiary] saveAll];
     
     WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
@@ -932,6 +942,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 {
     self.collectionView.scrollEnabled = YES;
     self.editWordModeActive = NO;
+    self.keyboardInTransitionMode = NO;
 }
 
 #pragma mark - Application Notifications
