@@ -378,10 +378,20 @@
 
 - (NSArray *)findWordsInYear:(NSUInteger)year
 {
+    NSArray *words = nil;
+    for (NSUInteger monthIndex = 1; monthIndex < 13; monthIndex++) {
+        NSArray *wordsOfMonth = [self findWordsInfMonth:monthIndex ofYear:year];
+        words = [words arrayByAddingObjectsFromArray:wordsOfMonth];
+    }
+    
+    return words;
+    
+    /*
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.dateComponents.year == %d && self.word.length > 0", year];
     NSArray *words = [self.words filteredArrayUsingPredicate:predicate];
     
     return words;
+     */
 }
 
 - (NSUInteger)findNumberOfWordsInYear:(NSUInteger)year
@@ -393,10 +403,29 @@
 
 - (NSArray *)findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year
 {
+    NSDictionary *dictionaryOfMonths = [self.fastWordSearchByDateComponentsDictionary objectForKey:[NSNumber numberWithUnsignedInteger:year]];
+    NSArray *words = nil;
+    if (dictionaryOfMonths) {
+        NSDictionary *daysOfMonth = [dictionaryOfMonths objectForKey:[NSNumber numberWithUnsignedInteger:month]];
+        if (daysOfMonth) {
+            words = [daysOfMonth allValues];
+        }
+    }
+    
+    if (words) {
+        words = [words filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.word.length > 0"]];
+    } else {
+        words = [[NSArray alloc] init];
+    }
+    
+    return words;
+    
+    /*
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.dateComponents.month == %d && self.dateComponents.year == %d && self.word.length > 0", month, year];
     NSArray *words = [self.words filteredArrayUsingPredicate:predicate];
     
     return words;
+     */
 }
 
 - (NSUInteger)findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year
