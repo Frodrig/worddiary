@@ -483,90 +483,14 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    //WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
-    //cell.alpha = 1.0;
+    WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
+    actualCell.alpha = 1.0;
+    
     [self launchFadeDateAndDayTextTimer];
 }
 
-/*
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    NSLog(@"ops");
-    if (self.pendingDeleteIndexPath) {
-        [[WDWordDiary sharedWordDiary] removeWord:[self findSelectedWordAtSectionIndex:self.pendingDeleteIndexPath.section]];
-        [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:self.pendingDeleteIndexPath.section]];
-        
-        // Debemos de recalcular el tag para todas las celdas que se hallaran a la derecha de la que hemos borrado
-        // Trabajaremos con las celdas de la cache que tengan su tag incorrecto, lo sabremos al ir pidiendo celdas de forma
-        // secuencial y ver que su tag no corresponde con la seccion a la que pertenecen. En el momento en que casen los valores
-        // todo se habra ajustado (pues se estarán creando de nuevo celdas)
-        NSIndexPath *indexPathFixTagIt = [NSIndexPath indexPathForRow:0 inSection:self.pendingDeleteIndexPath.section > 0 ? self.pendingDeleteIndexPath.section - 1 : 0];
-        BOOL fixTagEnd = NO;
-        while (!fixTagEnd) {
-            WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:indexPathFixTagIt];
-            if (cell.wordRepresentationView.tag != indexPathFixTagIt.section) {
-                cell.wordRepresentationView.tag = indexPathFixTagIt.section;
-                indexPathFixTagIt = [NSIndexPath indexPathForRow:indexPathFixTagIt.row inSection:self.pendingDeleteIndexPath.section + 1];
-            } else {
-                fixTagEnd = YES;
-            }
-        }
-
-        self.pendingDeleteIndexPath = nil;
-    }
-}
-*/
 #pragma mark - UICollectionViewDelegate
-/*
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"REMOVE_DAYS_WITHOUT_WORDS"]) {
-        NSUInteger wordIndexPathToCheck = [self convertIndexPathToWordIndexContainer:indexPath];
-        WDWord *wordToCheck = [[WDWordDiary sharedWordDiary].words objectAtIndex:wordIndexPathToCheck];
-        if (![wordToCheck isTodayWord] && wordToCheck.word.length == 0) {
-            self.pendingDeleteIndexPath = indexPath;
-        }
-    }
-}
-*/
-/*
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"REMOVE_DAYS_WITHOUT_WORDS"]) {
-        NSUInteger wordIndexPathToCheck = [self convertIndexPathToWordIndexContainer:indexPath];
-        WDWord *wordToCheck = [[WDWordDiary sharedWordDiary].words objectAtIndex:wordIndexPathToCheck];
-        if (![wordToCheck isTodayWord] && wordToCheck.word.length == 0) {
-            self.pendingDeleteIndexPath = indexPath;
-            BOOL scrollCollectionView = NO;
-            NSIndexPath *newIndexPathForSelectedCell = [self.collectionView indexPathForCell:[self findSelectedCell]];
-            if (newIndexPathForSelectedCell.section > indexPath.section) {
-                newIndexPathForSelectedCell = [NSIndexPath indexPathForRow:0.0 inSection:newIndexPathForSelectedCell.section - 1];
-                scrollCollectionView = YES;
-            }
-            [[WDWordDiary sharedWordDiary] removeWord:wordToCheck];
-            [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section]];
-            if (scrollCollectionView) {
-                [self.collectionView scrollToItemAtIndexPath:newIndexPathForSelectedCell atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-            }
-            
-            // Debemos de recalcular el tag para todas las celdas que se hallaran a la derecha de la que hemos borrado
-            // Trabajaremos con las celdas de la cache que tengan su tag incorrecto, lo sabremos al ir pidiendo celdas de forma
-            // secuencial y ver que su tag no corresponde con la seccion a la que pertenecen. En el momento en que casen los valores
-            // todo se habra ajustado (pues se estarán creando de nuevo celdas)
-            BOOL fixTagEnd = NO;
-            while (!fixTagEnd) {
-                WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:newIndexPathForSelectedCell];
-                if (cell.wordRepresentationView.tag != newIndexPathForSelectedCell.section) {
-                    cell.wordRepresentationView.tag = newIndexPathForSelectedCell.section;
-                    newIndexPathForSelectedCell = [NSIndexPath indexPathForRow:newIndexPathForSelectedCell.row inSection:newIndexPathForSelectedCell.section + 1];
-                } else {
-                    fixTagEnd = YES;
-                }
-            }
-        }
-    }
-}
-*/
+
 #pragma mark - UICollectionViewDataSource
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -783,24 +707,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     }
 
 }
-
-/*
-- (void)longPressGestureRecognizerHandle:(UILongPressGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-        if (self.mainMenuViewController.view.superview == nil) {
-            [self.view addSubview:self.pannelBackgroundView];
-            [self.view addSubview:self.mainMenuViewController.view];
-            self.mainMenuViewController.view.center = CGPointMake(self.view.bounds.size.width / 2, self.view.bounds.size.height / 2);
-            self.pannelBackgroundView.alpha = self.mainMenuViewController.view.alpha = 0.0;
-            [UIView animateWithDuration:0.25 animations:^{
-                self.pannelBackgroundView.alpha = 0.8;
-                self.mainMenuViewController.view.alpha = 1.0;
-            }];
-        }
-    }
-}
-*/
 
 - (void)dobleTapGestureRecognizerHandle:(UITapGestureRecognizer *)gesture
 {
