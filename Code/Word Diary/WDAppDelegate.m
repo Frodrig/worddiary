@@ -77,6 +77,8 @@
     // Defaults del registration domain
     NSDictionary *defaults = @{@"HELP_SCREEN_HAVE_LAUCH_AT_INIT": [NSNumber numberWithBool:NO],
                                @"SPACE_TIP_SHOWED": [NSNumber numberWithBool:NO],
+                               @"DASHBOARD_VISITED" : [NSNumber numberWithBool:NO],
+                               @"TIMES_DASHBOARDTIP_SHOWED": [NSNumber numberWithInteger:0],
                                @"FIRST_BACKGROUND_SETTING": [NSNumber numberWithBool:YES]};
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
   
