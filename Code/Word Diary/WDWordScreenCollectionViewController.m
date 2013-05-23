@@ -1004,20 +1004,23 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    [self resumeAll];
-    [self.collectionView reloadData];
-  
-    self.indexPathForWordWhenAppear = nil;
-    [self performScrollToIndexPathForWordWhenAppear];
-    
-    [self doSoftAndLogicEntrance];
+    if (nil == self.presentedViewController) {
+        [self resumeAll];
+        [self.collectionView reloadData];
+        
+        self.indexPathForWordWhenAppear = nil;
+        [self performScrollToIndexPathForWordWhenAppear];
+        
+        [self doSoftAndLogicEntrance];
+    }
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-    [self resumeAll];
-    
-    [self updateDateInfoOfSensibleCells];
+    if (nil == self.presentedViewController) {
+        [self resumeAll];
+        [self updateDateInfoOfSensibleCells];
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification
