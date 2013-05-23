@@ -1064,14 +1064,17 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController selectRemoveWord:(WDWord *)word
 {
-    NSIndexPath *selectedWordIndexPath = [self indexPathForWord:word];
+    NSAssert(word, @"");
+    //NSIndexPath *selectedWordIndexPath = [self indexPathForWord:word];
     [[WDWordDiary sharedWordDiary] removeWord:word];
-    [self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
-    [self fixCellWithTagsStartingAt:selectedWordIndexPath];
+    // Esto produce bug extraño de autolayout, vamos a hacer un reloadata cuando vayamos a volver del dashboard
+    //[self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
+    //[self fixCellWithTagsStartingAt:selectedWordIndexPath];
 }
 
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController willDismissWithSelectedWord:(WDWord *)word
 {
+    [self.collectionView reloadData];
     self.indexPathForWordWhenAppear = [self indexPathForWord:word];
     self.otherViewControllerInDismissMode = YES;
 }

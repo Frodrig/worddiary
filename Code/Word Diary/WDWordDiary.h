@@ -43,10 +43,10 @@
 - (NSUInteger)    findIndexPositionForWord:(WDWord *)word;
 - (NSArray *)     findAllDaysIndexWithoutWord;
 
-- (NSArray *)     findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year;
-- (NSArray *)     findWordsInYear:(NSUInteger)year;
-- (NSUInteger)    findNumberOfWordsInYear:(NSUInteger)year;
-- (NSUInteger)    findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year;
+- (NSArray *)     findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year filterEmptyWords:(BOOL)filter;
+- (NSArray *)     findWordsInYear:(NSUInteger)year filterEmptyWords:(BOOL)filter;
+- (NSUInteger)    findNumberOfWordsInYear:(NSUInteger)year filterEmptyWords:(BOOL)filter;
+- (NSUInteger)    findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year filterEmptyWords:(BOOL)filter;
 
 - (WDPalette *)   findNextPaletteOfPalette:(WDPalette *)palette;
 - (WDPalette *)   findPrevPaletteOfPalette:(WDPalette *)palette;

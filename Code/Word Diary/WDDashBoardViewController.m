@@ -265,7 +265,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (NSUInteger)findNumberOfWordsOfActualMonth
 {
-    const NSUInteger numberOfWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:self.actualDate.month ofYear:self.actualDate.year];
+    const NSUInteger numberOfWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:self.actualDate.month ofYear:self.actualDate.year filterEmptyWords:YES];
     return  numberOfWords;
     
     /*
@@ -366,7 +366,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 {
     if (self.dateSelectorModeActive) {
         self.yearMonthLabel.text = [NSString stringWithFormat:@"%d", self.actualDate.year];
-        const NSUInteger numWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInYear:self.actualDate.year];
+        const NSUInteger numWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInYear:self.actualDate.year filterEmptyWords:YES];
         self.wordCounterInYearCalendar.text = [NSString stringWithFormat:@"%@ %@", [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:numWords]], NSLocalizedString(@"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL", @"")];
         self.wordCounterInYearCalendar.textColor = numWords > 0 ? [UIColor whiteColor] : [UIColor darkGrayColor];
     } else {
@@ -643,7 +643,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
             WDMonthYearView *monthYearView = (WDMonthYearView *)monthYearViewIt;
             const BOOL beforeDrawContentDot = monthYearView.drawContentDot;
             monthYearView.accesible = self.actualDate.year < self.todayDate.year ? YES : indexMonth <= self.todayDate.month;
-            monthYearView.drawContentDot = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:indexMonth ofYear:self.actualDate.year];
+            monthYearView.drawContentDot = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:indexMonth ofYear:self.actualDate.year filterEmptyWords:YES];
             if (beforeDrawContentDot != monthYearView.drawContentDot) {
                 [monthYearView setNeedsDisplay];
             }
@@ -842,6 +842,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 {
     if (self.dayMonthPendingToRemove) {
         WDWord *wordOfDayPendingToRemove = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
+        NSAssert(wordOfDayPendingToRemove, @"");
         [self.delegate dashBoardViewController:self selectRemoveWord:wordOfDayPendingToRemove];
         [self configureDayMonthViewWithoutWordMode:self.dayMonthPendingToRemove];
         [self exitRemoveDayMode];

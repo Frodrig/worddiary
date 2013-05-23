@@ -220,6 +220,7 @@
     NSAssert(monthsDictionary, @"deberia de existir");
     NSAssert([monthsDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.month]], @"deberia de existir");
     NSMutableDictionary *monthWithDaysDictionary = [monthsDictionary objectForKey:[NSNumber numberWithUnsignedInteger:word.dateComponents.month]];
+    NSAssert([monthWithDaysDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.day]], @"");
     [monthWithDaysDictionary removeObjectForKey:[NSNumber numberWithInteger:word.dateComponents.day]];
 }
 
@@ -235,9 +236,19 @@
         if (daysOfMonthDictionary == nil) {
             daysOfMonthDictionary = [[NSMutableDictionary alloc] initWithObjects:[NSArray arrayWithObject:word] forKeys:[NSArray arrayWithObject:[NSNumber numberWithInteger:word.dateComponents.day]]];
             [monthsOfYearDictionary setObject:daysOfMonthDictionary forKey:[NSNumber numberWithInteger:word.dateComponents.month]];
+        } else {
+            [daysOfMonthDictionary setObject:word forKey:[NSNumber numberWithInteger:word.dateComponents.day]];
         }
-        [daysOfMonthDictionary setObject:word forKey:[NSNumber numberWithInteger:word.dateComponents.day]];        
     }
+    
+#ifdef DEBUG
+NSArray *words = [self findWordsInfMonth:word.dateComponents.month ofYear:word.dateComponents.year filterEmptyWords:NO];
+NSUInteger indexOfWord = [words indexOfObject:word];
+if (indexOfWord == NSNotFound) {
+    NSLog(@"%@", [words description]);
+    NSAssert(0, @"Ha fallado la insercion en el diccionario rapido");
+}
+#endif
 }
 
 - (void)createFastWordSearchDictionary
@@ -376,14 +387,14 @@
 
 #pragma mark - Find
 
-- (NSArray *)findWordsInYear:(NSUInteger)year
+- (NSArray *)findWordsInYear:(NSUInteger)year filterEmptyWords:(BOOL)filter
 {
     NSArray *words = [[NSArray alloc] init];
     for (NSUInteger monthIndex = 1; monthIndex < 13; monthIndex++) {
-        NSArray *wordsOfMonth = [self findWordsInfMonth:monthIndex ofYear:year];
+        NSArray *wordsOfMonth = [self findWordsInfMonth:monthIndex ofYear:year filterEmptyWords:filter];
         words = [words arrayByAddingObjectsFromArray:wordsOfMonth];
     }
-    
+   
     return words;
     
     /*
@@ -394,14 +405,14 @@
      */
 }
 
-- (NSUInteger)findNumberOfWordsInYear:(NSUInteger)year
+- (NSUInteger)findNumberOfWordsInYear:(NSUInteger)year filterEmptyWords:(BOOL)filter
 {
-    NSArray *words = [self findWordsInYear:year];
+    NSArray *words = [self findWordsInYear:year filterEmptyWords:filter];
     
     return words.count;
 }
 
-- (NSArray *)findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year
+- (NSArray *)findWordsInfMonth:(NSUInteger)month ofYear:(NSUInteger)year filterEmptyWords:(BOOL)filter
 {
     NSDictionary *dictionaryOfMonths = [self.fastWordSearchByDateComponentsDictionary objectForKey:[NSNumber numberWithUnsignedInteger:year]];
     NSArray *words = nil;
@@ -413,7 +424,9 @@
     }
     
     if (words) {
-        words = [words filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.word.length > 0"]];
+        if (filter) {
+            words = [words filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.word.length > 0"]];
+        }
     } else {
         words = [[NSArray alloc] init];
     }
@@ -428,9 +441,9 @@
      */
 }
 
-- (NSUInteger)findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year
+- (NSUInteger)findNumberOfWordsInMonth:(NSUInteger)month ofYear:(NSUInteger)year filterEmptyWords:(BOOL)filter
 {
-    NSArray *words = [self findWordsInfMonth:month ofYear:year];
+    NSArray *words = [self findWordsInfMonth:month ofYear:year filterEmptyWords:filter];
    
     return words.count;
 }
