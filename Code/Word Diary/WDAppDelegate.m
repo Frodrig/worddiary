@@ -74,7 +74,7 @@
 
 - (void)prepareRootViewController
 {
-    // Defaults del registration domain
+    // Defaults del registration  domain
     NSDictionary *defaults = @{@"HELP_SCREEN_HAVE_LAUCH_AT_INIT": [NSNumber numberWithBool:NO],
                                @"SPACE_TIP_SHOWED": [NSNumber numberWithBool:NO],
                                @"FIRST_BACKGROUND_SETTING": [NSNumber numberWithBool:YES]};
