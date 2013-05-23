@@ -189,6 +189,9 @@ const NSUInteger WEEKS_MONTHS                             = 5;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate:) name:UIApplicationWillTerminateNotification object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(significantTimeChange:) name:UIApplicationSignificantTimeChangeNotification object:nil];
+        
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"DASHBOARD_VISITED"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     return self;
 }

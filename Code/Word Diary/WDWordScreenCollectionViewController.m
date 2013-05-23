@@ -40,6 +40,9 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @property (nonatomic) BOOL                                  wordContentUpdatedInEditMode;
 @property (nonatomic) BOOL                                  keyboardInTransitionMode;
 @property (nonatomic, strong) UILabel                       *spaceTipInEditModeLabel;
+@property (nonatomic, weak) UILabel                         *helpTipDashboard;
+@property (nonatomic, strong) NSTimer                       *helpTipDashboardTimer;
+@property (nonatomic, strong) BOOL                          showingDashboardTip;
 
 - (NSUInteger)                       convertIndexPathToWordIndexContainer:(NSIndexPath *)indexPath;
 - (NSIndexPath *)                    convertWordIndexContainerToIndexPath:(NSUInteger)index;
@@ -92,6 +95,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (void)                             hideSpaceTip;
 - (void)                             inmediateHideSpaceTipAfterInsertText;
 
+- (void)                             launchHelpTipDashboardIfProceed;
+- (void)                             endHelpTipDashboard;
+- (void)                             helpTipDashboardHandle:(NSTimer *)timer;
+
+- (void)                             doSoftAndLogicEntrance;
+
 @end
 
 @implementation WDWordScreenCollectionViewController
@@ -114,6 +123,9 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 @synthesize wordContentUpdatedInEditMode       = wordContentUpdatedInEditMode_;
 @synthesize spaceTipInEditModeLabel            = spaceTipInEditModeLabel_;
 @synthesize keyboardInTransitionMode           = keyboardInTransitionMode_;
+@synthesize helpTipDashboard                   = helpTipDashboard_;
+@synthesize helpTipDashboardTimer              = helpTipDashboardTimer_;
+@synthesize showingDashboardTip                = showingDashboardTip_;
 
 #pragma mark - Properties
 
@@ -280,9 +292,16 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     
     self.otherViewControllerInDismissMode = NO;
     
+    [self doSoftAndLogicEntrance];
+}
+
+- (void)doSoftAndLogicEntrance
+{
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     [UIView animateWithDuration:1.0 animations:^{
         self.view.alpha = 1.0;
+    } completion:^(BOOL finished) {
+        [self launchHelpTipDashboardIfProceed];
     }];
 }
 
@@ -293,6 +312,47 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 }
 
 #pragma mark - Auxiliary
+
+- (void)launchHelpTipDashboardIfProceed:(BOOL)retry
+{
+    [self endHelpTipDashboard];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DASHBOARD_VISITED"]) {
+        CGFloat timerDuration = retry ? 60.0 : 60.0 * ([[NSUserDefaults standardUserDefaults] floatForKey:@"TIMES_DASHBOARDTIP_SHOWED"] / 2.0);
+        NSLog(@"timerDuration");
+        self.helpTipDashboardTimer = [NSTimer scheduledTimerWithTimeInterval:timerDuration target:self selector:@selector(helpTipDashboardHandle:) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)endHelpTipDashboard
+{
+    [self.helpTipDashboardTimer invalidate];
+    self.helpTipDashboardTimer = nil;
+}
+
+- (void)helpTipDashboardHandle:(NSTimer *)timer
+{
+    [self endHelpTipDashboard];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"DASHBOARD_VISITED"]) {
+        if (!self.editing) {
+            self.showingDashboardTip = YES;
+            NSLog(@"TIP");
+            NSUInteger timesDashboardShowed = [[NSUserDefaults standardUserDefaults] integerForKey:@"TIMES_DASHBOARDTIP_SHOWED"];
+            [[NSUserDefaults standardUserDefaults] setInteger:timesDashboardShowed + 1 forKey:@"TIMES_DASHBOARDTIP_SHOWED"];
+            
+            /*
+            UILabel *tip = [[UILabel alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height * 0.7, self.view.bounds.size.width, self.view.bounds.size.height)];
+            tip.text = @"tip";
+            tip.backgroundColor = [UIColor clearColor];
+            tip.textAlignment = NSTextAlignmentCenter;
+            tip.textColor = [UIColor blackColor];
+            [self.view addSubview:tip];
+            [self performSelector:@selector(removeFromSuperview) withObject:tip afterDelay:4];
+             */
+        } else {
+            [self launchHelpTipDashboardIfProceed:YES];
+        }
+    }
+}
 
 - (void)showSpaceTip
 {
@@ -998,31 +1058,11 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 {
     [self resumeAll];
     [self.collectionView reloadData];
-    /*
-    NSInteger lastWordYearBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_YEAR_BEFORE_ENTER_BACKGROUND"];
-    NSInteger lastWordMontBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_MONTH_BEFORE_ENTER_BACKGROUND"];
-    NSInteger lastWordDayBeforeEnterBackground = [[NSUserDefaults standardUserDefaults] integerForKey:@"LAST_WORD_DAY_BEFORE_ENTER_BACKGROUND"];
-    WDWord *newPosibleLastWord = [[WDWordDiary sharedWordDiary] findLastCreatedWord];
-    
-    BOOL goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordYearBeforeEnterBackground != newPosibleLastWord.dateComponents.year;
-    if (!goToLastPositionBecouseOneOrMoreDaysHavePassed) {
-        goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordMontBeforeEnterBackground != newPosibleLastWord.dateComponents.month;
-    }
-    if (!goToLastPositionBecouseOneOrMoreDaysHavePassed) {
-        goToLastPositionBecouseOneOrMoreDaysHavePassed = lastWordDayBeforeEnterBackground != newPosibleLastWord.dateComponents.day;
-    }
-    
-    if (goToLastPositionBecouseOneOrMoreDaysHavePassed) {
-        self.indexPathForWordWhenAppear = nil;
-    }
-    */
+  
     self.indexPathForWordWhenAppear = nil;
     [self performScrollToIndexPathForWordWhenAppear];
     
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [UIView animateWithDuration:1.0 animations:^{
-        self.view.alpha = 1.0;
-    }];
+    [self doSoftAndLogicEntrance];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
