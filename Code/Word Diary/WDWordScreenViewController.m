@@ -169,6 +169,7 @@
     }
     
     if (nil == selectedWordCandidate) {
+        NSLog(@"Creando la primera palabra. Numero de palabras actualmente %d", [WDWordDiary sharedWordDiary].words.count);
         selectedWordCandidate = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[todayDate timeIntervalSince1970]];
     }
     
@@ -211,21 +212,20 @@
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    BOOL adjustWordsAtPresentDay = NO;
+    BOOL wordsWereAdjustedToPresentDay = NO;
     NSDateComponents *todayDateAfterEnterForeground = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
     if (self.todayDate.year != todayDateAfterEnterForeground.year || self.todayDate.month != todayDateAfterEnterForeground.month || self.todayDate.day != todayDateAfterEnterForeground.day) {
         self.todayDate = todayDateAfterEnterForeground;
         [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
         [[WDWordDiary sharedWordDiary] adjustWordsArrayAtPresentDay];
-        adjustWordsAtPresentDay = YES;
+        wordsWereAdjustedToPresentDay = YES;
     }
     
-    BOOL createTodayWord = [WDWordDiary sharedWordDiary].words.count == 0;
-    if (!createTodayWord) {
-        createTodayWord = self.wordScreenCollectionViewController && self.wordScreenCollectionViewController.presentedViewController == nil;
-    }
+    BOOL createTodayWord = self.wordScreenCollectionViewController &&
+                           self.wordScreenCollectionViewController.presentedViewController == nil &&
+                          ([WDWordDiary sharedWordDiary].words.count == 0 || ![[[WDWordDiary sharedWordDiary] findLastCreatedWord] isTodayWord]);
     if (createTodayWord) {
-        if (!adjustWordsAtPresentDay) {
+        if (!wordsWereAdjustedToPresentDay) {
             [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
         }
         [self createFirstWord];

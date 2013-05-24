@@ -216,12 +216,16 @@
 
 - (void)removeWordFromFastWordSearchDictionary:(WDWord *)word
 {
+    //NSLog(@"word to remove %@", [word description]);
+    //NSLog(@"index in self.words %d", [self.words indexOfObject:word]);
+    //NSLog(@"BEFORE words in fast dictionary %@", [self.fastWordSearchByDateComponentsDictionary description]);
     NSMutableDictionary *monthsDictionary = [self.fastWordSearchByDateComponentsDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.year]];
     NSAssert(monthsDictionary, @"deberia de existir");
     NSAssert([monthsDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.month]], @"deberia de existir");
     NSMutableDictionary *monthWithDaysDictionary = [monthsDictionary objectForKey:[NSNumber numberWithUnsignedInteger:word.dateComponents.month]];
     NSAssert([monthWithDaysDictionary objectForKey:[NSNumber numberWithInteger:word.dateComponents.day]], @"");
     [monthWithDaysDictionary removeObjectForKey:[NSNumber numberWithInteger:word.dateComponents.day]];
+    //NSLog(@"AFTER words in fast dictionary %@", [self.fastWordSearchByDateComponentsDictionary description]);
 }
 
 - (void)addWordToFastWordSearchDictionary:(WDWord *)word
@@ -245,7 +249,7 @@
 NSArray *words = [self findWordsInfMonth:word.dateComponents.month ofYear:word.dateComponents.year filterEmptyWords:NO];
 NSUInteger indexOfWord = [words indexOfObject:word];
 if (indexOfWord == NSNotFound) {
-    NSLog(@"%@", [words description]);
+    //NSLog(@"%@", [words description]);
     NSAssert(0, @"Ha fallado la insercion en el diccionario rapido");
 }
 #endif
@@ -312,44 +316,63 @@ if (indexOfWord == NSNotFound) {
     return wordObject;
 }
 
-- (NSArray *)findAllDaysIndexWithoutWord
+- (NSArray *)findAllDaysWordsWithEmptyWords
 {
-    NSMutableArray *indexWordToRemove = [[NSMutableArray alloc] init];
-    for (NSUInteger indexIt = 0; indexIt < self.words.count; indexIt++) {
-        WDWord *word = [self.words objectAtIndex:indexIt];
-        if (word.word.length == 0) {
-            [indexWordToRemove addObject:[NSNumber numberWithUnsignedInteger:indexIt]];
+    NSMutableArray *wordsToRemove = [[NSMutableArray alloc] init];
+    for (WDWord *wordIt in self.words) {
+        if (wordIt.word.length == 0) {
+            [wordsToRemove addObject:wordIt];
         }
     }
     
     // No queremos que figure el dia actual
+    /*
     if (indexWordToRemove.count > 0) {
-        NSNumber *indexToLastWord = [indexWordToRemove objectAtIndex:indexWordToRemove.count - 1];
-        WDWord *lastWord = [self.words objectAtIndex:indexToLastWord.unsignedIntegerValue];
+        NSNumber *indexOfPosibleTodayWord = [indexWordToRemove objectAtIndex:indexWordToRemove.count - 1];
+        WDWord *lastWord = [self.words objectAtIndex:indexOfPosibleTodayWord.unsignedIntegerValue];
+        NSAssert(lastWord, @"");
         if ([lastWord isTodayWord]) {
-            [indexWordToRemove removeObject:lastWord];
+            [indexWordToRemove removeObjectAtIndex:indexWordToRemove.count - 1];
         }
     }
-    
-    return [NSArray arrayWithArray:indexWordToRemove];
+    */
+    return [NSArray arrayWithArray:wordsToRemove];
 }
 
-
-- (NSArray *)removeAllDaysWithoutWord
+- (BOOL)removeAllDaysWithoutWord
 {
-    NSArray *indexWordToRemove = [self findAllDaysIndexWithoutWord];
-    for (NSNumber *indexWordIt in indexWordToRemove) {
-        NSAssert(indexWordIt.unsignedIntegerValue < self.words.count, @"");
-        // TODO: Bug conocido cuando empezamos a saltar entre fechas, protegemos con assert e if
-        if (indexWordIt.unsignedCharValue < self.words.count) {
-            WDWord *wordToRemove = [self.words objectAtIndex:indexWordIt.unsignedIntegerValue];
-            [self removeWord:wordToRemove];
+    NSArray *wordsToRemove = [self findAllDaysWordsWithEmptyWords];
+    
+    /*
+    const BOOL log = wordsToRemove.count > 1;
+    if (log) {
+        NSLog(@"----");
+        NSLog(@"Numero de indices %d", wordsToRemove.count);
+        NSLog(@"Numero de palabras %d", self.words.count);
+    }
+    */
+    const BOOL wordsRemoved = wordsToRemove.count > 0;
+    while (wordsToRemove.count > 0) {
+        WDWord *word = [wordsToRemove objectAtIndex:0];
+        NSAssert([self.words indexOfObject:word] != NSNotFound, @"");
+        /*
+        if (log) {
+            NSLog(@"Vamos a borrar, numero de palabras antes de borrar: %d", self.words.count);
+            NSLog(@"Indice de palabra a borrar %d", [self.words indexOfObject:word]);
+            NSLog(@"fecha %@", [word.dateComponents description]);
         }
+         */
+        [self removeWord:word];
+        wordsToRemove = wordsToRemove > 0 ? [wordsToRemove subarrayWithRange:NSMakeRange(1, wordsToRemove.count - 1)] : [NSArray array];
+        /*if (log) {
+            NSLog(@"Numero de palabras ahora %d", self.words.count);
+        }
+         */
     }
     
     [self saveAll];
     
-    return indexWordToRemove;
+    return wordsRemoved;
 }
 
 - (void)removeWord:(WDWord *)word

@@ -325,8 +325,8 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (void)removeEmptyWordsDays
 {
-    NSArray *indexWords = [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
-    if (indexWords.count > 0) {
+   const BOOL wordsRemoved = [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
+    if (wordsRemoved) {
         [self.delegate removeSectionsWithEmptyWordsFromDashBoardViewController:self];
     }
 }
