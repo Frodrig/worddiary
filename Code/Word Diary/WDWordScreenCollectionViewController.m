@@ -903,7 +903,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
                         [UIView animateWithDuration:0.55 animations:^{
                             [self.styleMenuView viewWithTag:styleIt + 1].alpha = 0.55;
                         } completion:^(BOOL finished) {
-                            if (styleIt == [WDWordDiary sharedWordDiary].styles.count - 1) {
+                            if (self.keyboardInTransitionMode) {
                                 self.keyboardInTransitionMode = NO;
                             }
                         }];
