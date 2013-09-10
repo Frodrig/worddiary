@@ -506,7 +506,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // Nota IMPORTANTE: En el tag del wordRepresentation guardamos la seccion del indexPath
-    WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"WordScreenCell" forIndexPath:indexPath];
+    WDWordScreenCollectionViewCell *cell = (WDWordScreenCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"WordScreenCell"
+                                                                                                                       forIndexPath:indexPath];
     cell.wordRepresentationView.dataSource = self;
     cell.wordRepresentationView.delegate = self;
     cell.wordRepresentationView.clearsContextBeforeDrawing = YES;
