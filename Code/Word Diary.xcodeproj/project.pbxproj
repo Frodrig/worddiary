@@ -35,6 +35,7 @@
 		5B26187C174A8A73002C36D6 /* WDMonthOfTheYearContainerGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B26187B174A8A73002C36D6 /* WDMonthOfTheYearContainerGridView.m */; };
 		5B3555F1172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */; };
 		5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B446F7616F22A48005A432D /* CoreText.framework */; };
+		5B4618BB17DEF971007360E3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618BA17DEF971007360E3 /* Images.xcassets */; };
 		5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D18AF172A95110002F300 /* WDDayMonthView.m */; };
 		5B6987E7171816D100046FE0 /* UIView+RoundedCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B6987E6171816D100046FE0 /* UIView+RoundedCorners.m */; };
 		5B7B0668173B96D40009E5C1 /* 39-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7B0664173B96D40009E5C1 /* 39-back.png */; };
@@ -152,6 +153,7 @@
 		5B3555F0172EBB5F0033705C /* WDDaysOfTheWeekContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDaysOfTheWeekContainerView.m; sourceTree = "<group>"; };
 		5B3CA3FE174B8EED00F00F98 /* WDMonthOfTheYearContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDMonthOfTheYearContainerViewDelegate.h; sourceTree = "<group>"; };
 		5B446F7616F22A48005A432D /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		5B4618BA17DEF971007360E3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5B4D18AE172A95110002F300 /* WDDayMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayMonthView.h; sourceTree = "<group>"; };
 		5B4D18AF172A95110002F300 /* WDDayMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDayMonthView.m; sourceTree = "<group>"; };
 		5B6987E5171816D100046FE0 /* UIView+RoundedCorners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RoundedCorners.h"; sourceTree = "<group>"; };
@@ -659,6 +661,7 @@
 				5B1AC4B516EA0A4100950206 /* Categories */,
 				5BB840D316DCB6210005AF21 /* Model */,
 				5BEC305317154E0300EE8D72 /* Controller with Views */,
+				5B4618BA17DEF971007360E3 /* Images.xcassets */,
 				5BB6B30A16DBE13900394113 /* Supporting Files */,
 			);
 			path = "Word Diary";
@@ -766,6 +769,11 @@
 				CLASSPREFIX = WD;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Fernando Rodríguez Martínez";
+				TargetAttributes = {
+					5BB6B2FD16DBE13900394113 = {
+						DevelopmentTeam = JXDB6K5QLK;
+					};
+				};
 			};
 			buildConfigurationList = 5BB6B2F916DBE13900394113 /* Build configuration list for PBXProject "Word Diary" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -811,6 +819,7 @@
 				5BA4D580172A75500042CFF1 /* 83-calendar.png in Resources */,
 				5BA4D581172A75500042CFF1 /* 83-calendar@2x.png in Resources */,
 				5BA4D584172A766C0042CFF1 /* 426-calendar.png in Resources */,
+				5B4618BB17DEF971007360E3 /* Images.xcassets in Resources */,
 				5BA4D585172A766C0042CFF1 /* 426-calendar@2x.png in Resources */,
 				5B7B0668173B96D40009E5C1 /* 39-back.png in Resources */,
 				5B7B0669173B96D40009E5C1 /* 39-back@2x.png in Resources */,
@@ -985,10 +994,16 @@
 		5BB6B32116DBE13900394113 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -997,10 +1012,16 @@
 		5BB6B32216DBE13900394113 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1038,10 +1059,16 @@
 		5BFBF345174E185D008B6150 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
