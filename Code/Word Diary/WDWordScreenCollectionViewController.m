@@ -472,9 +472,11 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     [actualCell resumeBackgroundColorAnimation];
 }
 
+#pragma mark - UIScrollViewDelegate
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView.contentSize.width > 0) {        
+    if (scrollView.contentSize.width > 0) {
         [self endFadeDateAndDayTextTimer];
         WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
         [actualCell fadeInDataAndDayTextInmediate];
@@ -512,7 +514,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     cell.wordRepresentationView.delegate = self;
     cell.wordRepresentationView.clearsContextBeforeDrawing = YES;
     cell.wordRepresentationView.tag = indexPath.section;
-    cell.alpha = MIN_HIDDEN_CELL_ALPHA_VALUE;
+    cell.alpha = 1.0;
     
     WDWord *word = [[WDWordDiary sharedWordDiary].words objectAtIndex:[self convertIndexPathToWordIndexContainer:indexPath]];
     [cell setWord:word];
