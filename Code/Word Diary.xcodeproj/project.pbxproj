@@ -103,7 +103,6 @@
 		5BBDED98174CAB0D00F8FFF3 /* help_screen5_en.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BBDED96174CAB0D00F8FFF3 /* help_screen5_en.png */; };
 		5BBDED99174CAB0D00F8FFF3 /* help_screen5_es.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BBDED97174CAB0D00F8FFF3 /* help_screen5_es.png */; };
 		5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */; };
-		5BD6B5E11744428B0050A6A7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BD6B5E01744428B0050A6A7 /* Default-568h@2x.png */; };
 		5BE5DDBB17390E050078B855 /* UIColor+HSL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE5DDBA17390E050078B855 /* UIColor+HSL.m */; };
 		5BE67E6F172873FD00D01633 /* WDInfoScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE67E6D172873FD00D01633 /* WDInfoScreenViewController.m */; };
 		5BE67E70172873FD00D01633 /* WDInfoScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */; };
@@ -258,7 +257,6 @@
 		5BBDED97174CAB0D00F8FFF3 /* help_screen5_es.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help_screen5_es.png; sourceTree = "<group>"; };
 		5BCCE325172E9161001F4C52 /* WDDashBoardViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDashBoardViewControllerDataSource.h; sourceTree = "<group>"; };
 		5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		5BD6B5E01744428B0050A6A7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5BE5DDB917390E050078B855 /* UIColor+HSL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HSL.h"; sourceTree = "<group>"; };
 		5BE5DDBA17390E050078B855 /* UIColor+HSL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HSL.m"; sourceTree = "<group>"; };
 		5BE67E6C172873FD00D01633 /* WDInfoScreenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDInfoScreenViewController.h; sourceTree = "<group>"; };
@@ -649,7 +647,6 @@
 		5BB6B2F516DBE13900394113 = {
 			isa = PBXGroup;
 			children = (
-				5BD6B5E01744428B0050A6A7 /* Default-568h@2x.png */,
 				5BF7B0441720809400E5B8A9 /* CoreImage.framework */,
 				5B119359170489D200CAF765 /* CoreMotion.framework */,
 				5BB6B30916DBE13900394113 /* Word Diary */,
@@ -869,7 +866,6 @@
 				5B4618CC17DF0055007360E3 /* icon_60.png in Resources */,
 				5BEBAC061744426100342235 /* default.png in Resources */,
 				5BEBAC071744426100342235 /* default@2x.png in Resources */,
-				5BD6B5E11744428B0050A6A7 /* Default-568h@2x.png in Resources */,
 				5B60FD2D17E09F03004DB04D /* 709-plus-rotate.png in Resources */,
 				5BB0CA601744D19F00600407 /* help_screen1_en.png in Resources */,
 				5BB0CA611744D19F00600407 /* help_screen2_en.png in Resources */,
