@@ -155,7 +155,6 @@
     }
     
     if (nil == selectedWordCandidate) {
-        NSLog(@"Creando la primera palabra. Numero de palabras actualmente %d", [WDWordDiary sharedWordDiary].words.count);
         selectedWordCandidate = [[WDWordDiary sharedWordDiary] createWord:@"" inTimeInterval:[todayDate timeIntervalSince1970]];
     }
     
