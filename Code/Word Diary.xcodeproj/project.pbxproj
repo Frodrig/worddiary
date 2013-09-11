@@ -111,6 +111,7 @@
 		5BEBAC02174440C200342235 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B8D595617437DCC00B395D2 /* icon.png */; };
 		5BEBAC061744426100342235 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEBAC031744426100342235 /* default.png */; };
 		5BEBAC071744426100342235 /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEBAC041744426100342235 /* default@2x.png */; };
+		5BED41CD17E02DE100FBE39A /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BED41CC17E02DE100FBE39A /* Crashlytics.framework */; };
 		5BFEEA69170C1BCB0048482B /* WDStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA68170C1BCB0048482B /* WDStyle.m */; };
 		5BFEEA75170C1DDD0048482B /* UIColor+hexColorCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */; };
 /* End PBXBuildFile section */
@@ -262,6 +263,7 @@
 		5BEB4C7E1725A5F7005BC2D9 /* 298-circlex@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "298-circlex@2x.png"; sourceTree = "<group>"; };
 		5BEBAC031744426100342235 /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
 		5BEBAC041744426100342235 /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
+		5BED41CC17E02DE100FBE39A /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		5BF7B0441720809400E5B8A9 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		5BFEEA67170C1BCB0048482B /* WDStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDStyle.h; sourceTree = "<group>"; };
 		5BFEEA68170C1BCB0048482B /* WDStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDStyle.m; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5BED41CD17E02DE100FBE39A /* Crashlytics.framework in Frameworks */,
 				5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */,
 				5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */,
 				5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */,
@@ -657,6 +660,7 @@
 		5BB6B30016DBE13900394113 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5BED41CC17E02DE100FBE39A /* Crashlytics.framework */,
 				5B1193571704752B00CAF765 /* MessageUI.framework */,
 				5B446F7616F22A48005A432D /* CoreText.framework */,
 				5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */,
@@ -768,6 +772,7 @@
 				5BB6B2FA16DBE13900394113 /* Sources */,
 				5BB6B2FB16DBE13900394113 /* Frameworks */,
 				5BB6B2FC16DBE13900394113 /* Resources */,
+				5BED41CB17E02CC500FBE39A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -886,6 +891,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5BED41CB17E02CC500FBE39A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run ed113bdf0c248b243b565ef1fdac0f966317a7b8";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5BB6B2FA16DBE13900394113 /* Sources */ = {
@@ -1022,6 +1043,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word\\ Diary/Code",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
@@ -1040,6 +1065,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word\\ Diary/Code",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
@@ -1087,6 +1116,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word\\ Diary/Code",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";

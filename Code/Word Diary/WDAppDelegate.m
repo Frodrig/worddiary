@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
+#import <Crashlytics/Crashlytics.h>
 #import "WDAppDelegate.h"
 #import "WDWordDiary.h"
 #import "WDWord.h"
@@ -35,6 +36,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Crashlytics startWithAPIKey:@"ed113bdf0c248b243b565ef1fdac0f966317a7b8"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   
     [[WDWordDiary sharedWordDiary] loadAll];
