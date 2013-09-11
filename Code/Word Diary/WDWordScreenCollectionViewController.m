@@ -465,7 +465,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 {
     WDWordScreenCollectionViewCell *actualCell = [self findSelectedCell];
     if (!self.editWordModeActive) {
-        [actualCell fadeInDataAndDayTextInmediate];
+        //[actualCell fadeInDataAndDayTextInmediate];
         [self launchFadeDateAndDayTextTimer];
     }
     [self launchCursorColorTimer];
@@ -1001,20 +1001,14 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     [[NSUserDefaults standardUserDefaults] setInteger:lastDayDateComponents.year forKey:@"LAST_WORD_YEAR_BEFORE_ENTER_BACKGROUND"];
     [[NSUserDefaults standardUserDefaults] setInteger:lastDayDateComponents.month forKey:@"LAST_WORD_MONTH_BEFORE_ENTER_BACKGROUND"];
     [[NSUserDefaults standardUserDefaults] setInteger:lastDayDateComponents.day forKey:@"LAST_WORD_DAY_BEFORE_ENTER_BACKGROUND"];
-    
-    self.view.alpha = 0.0;
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     if (nil == self.presentedViewController) {
         [self resumeAll];
-        [self.collectionView reloadData];
-        
-        self.indexPathForWordWhenAppear = nil;
         [self performScrollToIndexPathForWordWhenAppear];
-        
-        [self doSoftAndLogicEntrance];
+        //[self doSoftAndLogicEntrance];
     }
 }
 
@@ -1068,11 +1062,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController selectRemoveWord:(WDWord *)word
 {
     NSAssert(word, @"");
-    //NSIndexPath *selectedWordIndexPath = [self indexPathForWord:word];
     [[WDWordDiary sharedWordDiary] removeWord:word];
-    // Esto produce bug extraño de autolayout, vamos a hacer un reloadata cuando vayamos a volver del dashboard
-    //[self.collectionView deleteSections:[NSIndexSet indexSetWithIndex:selectedWordIndexPath.section]];
-    //[self fixCellWithTagsStartingAt:selectedWordIndexPath];
 }
 
 - (void)dashBoardViewController:(WDDashBoardViewController *)dashBoardViewController willDismissWithSelectedWord:(WDWord *)word

@@ -967,15 +967,11 @@ const NSUInteger WEEKS_MONTHS                             = 5;
             self.dayMonthPendingToRemove.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0);
             self.dayMonthPendingToRemove.alpha = 1.0;
         }
-        [self cancelButtonPressed:self.cancelButton];
-    } else {
-        [self cancelButtonPressed:self.cancelButton];
     }
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    self.view.alpha = 0.0;
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification

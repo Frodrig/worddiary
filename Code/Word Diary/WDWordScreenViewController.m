@@ -101,7 +101,6 @@
 {
     [super viewDidAppear:animated];
     
-   // [self showApropiateViewController];
     [self performSelector:@selector(showApropiateViewController) withObject:nil afterDelay:0];
 }
 
@@ -119,22 +118,9 @@
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     [UIView animateWithDuration:helpScreenHaveLaunchAtInit ? 2.0 : 2.0 animations:^{
         self.launchTransitionImageView.alpha = 0.0;
-        if (helpScreenHaveLaunchAtInit) {
-            if (self.wordScreenCollectionViewController.presentedViewController != nil) {
-                if (self.wordScreenCollectionViewController.presentedViewController.presentedViewController == nil) {
-                    //self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x, self.launchTransitionImageView.center.y * - 1);
-                }
-            } else {
-                //self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
-            }
-        } else {
-            //self.launchTransitionImageView.center = CGPointMake(self.launchTransitionImageView.center.x * -1, self.launchTransitionImageView.center.y);
-        }
     } completion:^(BOOL finished) {
         [self.launchTransitionImageView removeFromSuperview];
         self.launchTransitionImageView = nil;
-        //[self.blinkCursorTimer invalidate];
-        //self.blinkCursorTimer = nil;
     }];
 }
 
@@ -229,12 +215,6 @@
             [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];
         }
         [self createFirstWord];
-    }
-    
-    if (!self.launchTransitionImageView) {
-        self.launchTransitionImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[WDUtils is568Screen] ? @"Default-568h" : @"Default"]];
-        [self.view insertSubview:self.launchTransitionImageView aboveSubview:self.helpScreenViewController ? self.helpScreenViewController.view : self.wordScreenCollectionViewController.view];
-        [self performSelector:@selector(fadeOutLaunchImage) withObject:nil afterDelay:0.5];
     }
 }
 

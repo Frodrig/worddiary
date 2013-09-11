@@ -59,6 +59,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];        
     }
+    
     return self;
 }
 
@@ -114,7 +115,6 @@
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {    
-    self.view.alpha = 0.0;
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification

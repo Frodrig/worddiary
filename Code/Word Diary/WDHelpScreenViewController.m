@@ -185,8 +185,6 @@
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    [self releaseScreens];
-    [self prepareAlphasForAlphaAnimateInitTransition];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
