@@ -403,11 +403,6 @@
     for (NSUInteger i = 0; i < 255; i += 6) {
         UIColor *color = [UIColor colorWithHue:i/255.0 saturation:1.0 lightness:0.88 alpha:1.0];
         [array addObject:color];
-        /*
-        float components[4];
-        [color getRed:&components[0] green:&components[1] blue:&components[2] alpha:&components[3]];
-        NSLog(@"%f %f %f", components[0], components[1], components[2]);
-         */
     }
   
     return array;

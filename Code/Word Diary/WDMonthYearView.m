@@ -59,9 +59,8 @@
         drawContentDot_ = NO;
     
         monthTitleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height * 0.8)];
-        [self updateAttributedText];
         monthTitleLabel_.textAlignment = NSTextAlignmentCenter;
-        monthTitleLabel_.backgroundColor = [UIColor clearColor];
+        [self updateAttributedText];
         [self addSubview:monthTitleLabel_];
     }
     
@@ -72,7 +71,10 @@
 
 - (void)updateAttributedText
 {
-    monthTitleLabel_.attributedText = [[NSAttributedString alloc] initWithString:monthString_ attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:21.0], NSForegroundColorAttributeName: accesible_ ? [UIColor lightGrayColor] : [UIColor darkGrayColor], NSBackgroundColorAttributeName: [UIColor clearColor], NSKernAttributeName: [NSNumber numberWithFloat:5.0]}];
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"Helvetica" size:21.0],
+                                 NSForegroundColorAttributeName: accesible_ ? [UIColor lightGrayColor] : [UIColor darkGrayColor],
+                                 NSKernAttributeName: [NSNumber numberWithFloat:5.0]};
+    monthTitleLabel_.attributedText = [[NSAttributedString alloc] initWithString:monthString_ attributes:attributes];
 }
 
 #pragma mark - Drawrect

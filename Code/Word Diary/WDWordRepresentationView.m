@@ -145,7 +145,7 @@
     // Vbles y constantes generales
     const CGFloat dashPattern[] = {1.0, 9.0};
     const UIColor *wordColor = [self.dataSource selectedWordColorForWordRepresentationView:self];
-    float wordColorRGBComponents[4];
+    CGFloat wordColorRGBComponents[4];
     [wordColor getRed:&wordColorRGBComponents[0] green:&wordColorRGBComponents[1] blue:&wordColorRGBComponents[2] alpha:&wordColorRGBComponents[3]];
     NSString *wordText = [self.dataSource selectedWordTextForWordRepresentationView:self];
     const CGPoint startPointDraw = CGPointMake(0.0, self.frame.size.height * ([WDUtils is568Screen] ? 0.6 : 0.6));

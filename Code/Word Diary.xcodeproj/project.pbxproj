@@ -112,6 +112,9 @@
 		5BEBAC061744426100342235 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEBAC031744426100342235 /* default.png */; };
 		5BEBAC071744426100342235 /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEBAC041744426100342235 /* default@2x.png */; };
 		5BED41CD17E02DE100FBE39A /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BED41CC17E02DE100FBE39A /* Crashlytics.framework */; };
+		5BF7C26317E04CC500DD0287 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF7C26217E04CC500DD0287 /* Default-568h@2x.png */; };
+		5BF7C26617E04DF000DD0287 /* icon_57.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF7C26417E04DF000DD0287 /* icon_57.png */; };
+		5BF7C26717E04DF000DD0287 /* icon_57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF7C26517E04DF000DD0287 /* icon_57@2x.png */; };
 		5BFEEA69170C1BCB0048482B /* WDStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA68170C1BCB0048482B /* WDStyle.m */; };
 		5BFEEA75170C1DDD0048482B /* UIColor+hexColorCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */; };
 /* End PBXBuildFile section */
@@ -265,6 +268,9 @@
 		5BEBAC041744426100342235 /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
 		5BED41CC17E02DE100FBE39A /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		5BF7B0441720809400E5B8A9 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		5BF7C26217E04CC500DD0287 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Word Diary/Images.xcassets/LaunchImage.launchimage/Default-568h@2x.png"; sourceTree = "<group>"; };
+		5BF7C26417E04DF000DD0287 /* icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57.png; sourceTree = "<group>"; };
+		5BF7C26517E04DF000DD0287 /* icon_57@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_57@2x.png"; sourceTree = "<group>"; };
 		5BFEEA67170C1BCB0048482B /* WDStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDStyle.h; sourceTree = "<group>"; };
 		5BFEEA68170C1BCB0048482B /* WDStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDStyle.m; sourceTree = "<group>"; };
 		5BFEEA73170C1DDD0048482B /* UIColor+hexColorCreation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+hexColorCreation.h"; sourceTree = "<group>"; };
@@ -463,6 +469,8 @@
 			children = (
 				5B4618C217DF0055007360E3 /* icon_29.png */,
 				5B4618C317DF0055007360E3 /* icon_29@2x.png */,
+				5BF7C26417E04DF000DD0287 /* icon_57.png */,
+				5BF7C26517E04DF000DD0287 /* icon_57@2x.png */,
 				5B4618C417DF0055007360E3 /* icon_40.png */,
 				5B4618C517DF0055007360E3 /* icon_40@2x.png */,
 				5B4618C617DF0055007360E3 /* icon_60.png */,
@@ -631,6 +639,7 @@
 			isa = PBXGroup;
 			children = (
 				5BEBAC031744426100342235 /* default.png */,
+				5BF7C26217E04CC500DD0287 /* Default-568h@2x.png */,
 				5BEBAC041744426100342235 /* default@2x.png */,
 			);
 			name = Launch;
@@ -843,6 +852,7 @@
 				5B4618CD17DF0055007360E3 /* icon_60@2x.png in Resources */,
 				5BA4D581172A75500042CFF1 /* 83-calendar@2x.png in Resources */,
 				5BA4D584172A766C0042CFF1 /* 426-calendar.png in Resources */,
+				5BF7C26717E04DF000DD0287 /* icon_57@2x.png in Resources */,
 				5B4618BB17DEF971007360E3 /* Images.xcassets in Resources */,
 				5BA4D585172A766C0042CFF1 /* 426-calendar@2x.png in Resources */,
 				5B4618CB17DF0055007360E3 /* icon_40@2x.png in Resources */,
@@ -867,6 +877,7 @@
 				5BB0CA601744D19F00600407 /* help_screen1_en.png in Resources */,
 				5BB0CA611744D19F00600407 /* help_screen2_en.png in Resources */,
 				5B4618C917DF0055007360E3 /* icon_29@2x.png in Resources */,
+				5BF7C26617E04DF000DD0287 /* icon_57.png in Resources */,
 				5BB0CA621744D19F00600407 /* help_screen3_en.png in Resources */,
 				5BB0CA631744D19F00600407 /* help_screen4_en.png in Resources */,
 				5BB0CA651744D19F00600407 /* help_screen1_es.png in Resources */,
@@ -881,6 +892,7 @@
 				5BB0CA711744D19F00600407 /* help_screen3_es@2x.png in Resources */,
 				5BB0CA721744D19F00600407 /* help_screen4_es@2x.png in Resources */,
 				5BBDED94174CAB0D00F8FFF3 /* help_screen5_en@2x.png in Resources */,
+				5BF7C26317E04CC500DD0287 /* Default-568h@2x.png in Resources */,
 				5BBDED95174CAB0D00F8FFF3 /* help_screen5_es@2x.png in Resources */,
 				5B4618CA17DF0055007360E3 /* icon_40.png in Resources */,
 				5BBDED98174CAB0D00F8FFF3 /* help_screen5_en.png in Resources */,
@@ -1050,7 +1062,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1072,7 +1084,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1123,7 +1135,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
