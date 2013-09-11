@@ -664,7 +664,7 @@ const NSUInteger WEEKS_MONTHS                             = 5;
         self.wordsOfMonthLabel.alpha = 0;
     }
     self.infoButton.enabled = show ? NO : YES;
-    [self.changeYearMonthButton setImage:[UIImage imageNamed:show ? @"298-circlex.png" : @"83-calendar.png"] forState:UIControlStateNormal];
+    [self.changeYearMonthButton setImage:[UIImage imageNamed:show ? @"746-plus-circle-rotate.png" : @"851-calendar.png"] forState:UIControlStateNormal];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     [UIView animateWithDuration:0.6 animations:^{
         if (show) {
