@@ -40,7 +40,6 @@
 		5B4618C917DF0055007360E3 /* icon_29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618C317DF0055007360E3 /* icon_29@2x.png */; };
 		5B4618CA17DF0055007360E3 /* icon_40.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618C417DF0055007360E3 /* icon_40.png */; };
 		5B4618CB17DF0055007360E3 /* icon_40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618C517DF0055007360E3 /* icon_40@2x.png */; };
-		5B4618CC17DF0055007360E3 /* icon_60.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618C617DF0055007360E3 /* icon_60.png */; };
 		5B4618CD17DF0055007360E3 /* icon_60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618C717DF0055007360E3 /* icon_60@2x.png */; };
 		5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D18AF172A95110002F300 /* WDDayMonthView.m */; };
 		5B60FD1817E09763004DB04D /* 765-arrow-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B60FD1617E09763004DB04D /* 765-arrow-left.png */; };
@@ -167,7 +166,6 @@
 		5B4618C317DF0055007360E3 /* icon_29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_29@2x.png"; sourceTree = "<group>"; };
 		5B4618C417DF0055007360E3 /* icon_40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_40.png; sourceTree = "<group>"; };
 		5B4618C517DF0055007360E3 /* icon_40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_40@2x.png"; sourceTree = "<group>"; };
-		5B4618C617DF0055007360E3 /* icon_60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_60.png; sourceTree = "<group>"; };
 		5B4618C717DF0055007360E3 /* icon_60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_60@2x.png"; sourceTree = "<group>"; };
 		5B4D18AE172A95110002F300 /* WDDayMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayMonthView.h; sourceTree = "<group>"; };
 		5B4D18AF172A95110002F300 /* WDDayMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDayMonthView.m; sourceTree = "<group>"; };
@@ -471,7 +469,6 @@
 				5BF7C26517E04DF000DD0287 /* icon_57@2x.png */,
 				5B4618C417DF0055007360E3 /* icon_40.png */,
 				5B4618C517DF0055007360E3 /* icon_40@2x.png */,
-				5B4618C617DF0055007360E3 /* icon_60.png */,
 				5B4618C717DF0055007360E3 /* icon_60@2x.png */,
 				5B5D60FE17454B74007E13B1 /* App */,
 				5B01B83E17298831007CB8B8 /* Style Icons */,
@@ -863,7 +860,6 @@
 				5BEBAC01174440BB00342235 /* icon@2x.png in Resources */,
 				5BEBAC02174440C200342235 /* icon.png in Resources */,
 				5B60FD2517E09852004DB04D /* 724-info@2x.png in Resources */,
-				5B4618CC17DF0055007360E3 /* icon_60.png in Resources */,
 				5BEBAC061744426100342235 /* default.png in Resources */,
 				5BEBAC071744426100342235 /* default@2x.png in Resources */,
 				5B60FD2D17E09F03004DB04D /* 709-plus-rotate.png in Resources */,
@@ -1047,7 +1043,6 @@
 		5BB6B32116DBE13900394113 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1069,7 +1064,6 @@
 		5BB6B32216DBE13900394113 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1120,7 +1114,6 @@
 		5BFBF345174E185D008B6150 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
