@@ -23,7 +23,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 const NSUInteger DAYS_OF_WEEK                             = 7;
-const NSUInteger WEEKS_MONTHS                             = 5;
+const NSUInteger WEEKS_MONTHS                             = 6;
 
 @interface WDDashBoardViewController ()
 
@@ -211,8 +211,6 @@ const NSUInteger WEEKS_MONTHS                             = 5;
     self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
     self.daysOfTheMonthGridView.gridView.alpha = 0.5;
     
-    [self createDayOfTheMonthsViews];
-    
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.tapGestureRecognizer];
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.longPresureGestureRecognizer];
     
@@ -222,6 +220,8 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
+    [self createDayOfTheMonthsViews];
 
     [self configureMonthAndYearLabel];
     [self configureDaysOfTheWeekTitles];
@@ -266,32 +266,8 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 - (NSUInteger)findNumberOfWordsOfActualMonth
 {
     const NSUInteger numberOfWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInMonth:self.actualDate.month ofYear:self.actualDate.year filterEmptyWords:YES];
-    return  numberOfWords;
-    
-    /*
-     NSArray *wordsOfMonth = [[WDWordDiary sharedWordDiary] findWordsInfMonth:self.actualDate.month ofYear:self.actualDate.year];
 
-    const NSUInteger maxDayMonthViews = DAYS_OF_WEEK * WEEKS_MONTHS;
-    const NSUInteger firstWeekdayOfTheMonth = [self findFirstWeekdayOfTheMonth];
-    NSUInteger numberOfWords = 0;
-    for (NSUInteger dayMontViewIterator = 0; dayMontViewIterator < maxDayMonthViews; dayMontViewIterator++) {
-        const NSUInteger dayMonthViewIndex = dayMontViewIterator + 1;
-        WDDayMonthView *dayMonthViewIt = (WDDayMonthView *)[self.daysOfTheMonthContainerView viewWithTag:dayMonthViewIndex];
-        if (!dayMonthViewIt.hidden) {
-            dayMonthViewIt.dayOfTheActualMonthIndex = dayMonthViewIndex - firstWeekdayOfTheMonth + 1;
-            NSDateComponents *dateComponentOfDay = [[NSDateComponents alloc] init];
-            dateComponentOfDay.year = self.actualDate.year;
-            dateComponentOfDay.month = self.actualDate.month;
-            dateComponentOfDay.day = dayMonthViewIt.dayOfTheActualMonthIndex;
-            WDWord *word = [[WDWordDiary sharedWordDiary] findWordWithDateComponents:dateComponentOfDay];
-            if (word.word.length > 0) {
-                ++numberOfWords;
-            }
-        }
-    }
-    
-    return numberOfWords;
-     */
+    return  numberOfWords;
 }
 
 - (void)setNumberOfWordsOfTheMonth:(BOOL)inmediate
@@ -333,13 +309,16 @@ const NSUInteger WEEKS_MONTHS                             = 5;
 
 - (void)createDayOfTheMonthsViews
 {
+    const CGFloat dayEntryWidth = 50.0;
+    const CGFloat dayEntryHeight = self.daysOfTheMonthGridView.bounds.size.height / WEEKS_MONTHS;
+    
     for (NSUInteger rowIt = 0; rowIt < WEEKS_MONTHS; rowIt++) {
         for (NSUInteger dayOfTheWeekIt = 0; dayOfTheWeekIt < DAYS_OF_WEEK; dayOfTheWeekIt++) {
             const NSUInteger indexMonthView = (rowIt * DAYS_OF_WEEK) + dayOfTheWeekIt + 1;
-            CGRect monthViewFrame = CGRectMake(dayOfTheWeekIt == 0 ? 0 : 50 + 44.0 * (dayOfTheWeekIt - 1),
-                                               rowIt * 44.0,
-                                               (dayOfTheWeekIt == 0 || dayOfTheWeekIt == DAYS_OF_WEEK - 1) ? 50.0 : 44.0,
-                                               44.0);
+            CGRect monthViewFrame = CGRectMake(dayOfTheWeekIt == 0 ? 0 : dayEntryWidth + dayEntryHeight * (dayOfTheWeekIt - 1),
+                                               rowIt * dayEntryHeight,
+                                               (dayOfTheWeekIt == 0 || dayOfTheWeekIt == DAYS_OF_WEEK - 1) ? dayEntryWidth : dayEntryHeight,
+                                               dayEntryHeight);
             WDDayMonthView *monthViewIt = [[WDDayMonthView alloc] initWithIndex:indexMonthView andFrame:monthViewFrame];
             monthViewIt.tag = indexMonthView;
             [self.daysOfTheMonthContainerView insertSubview:monthViewIt belowSubview:self.daysOfTheMonthGridView];
@@ -780,17 +759,21 @@ const NSUInteger WEEKS_MONTHS                             = 5;
                 } else {
                     WDWord *selectedWordDay = [self findWordForDayMonthView:self.dayMonthPendingToRemove];
                     UILabel *wordSelectedLabel = [[UILabel alloc] initWithFrame:self.wordSlateContainerView.bounds];
+                    wordSelectedLabel.attributedText = [[NSAttributedString alloc]
+                                                             initWithString:selectedWordDay.word
+                                                             attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica-Light" size:[WDUtils is568Screen] ? 34 : 24],
+                                                                          NSForegroundColorAttributeName:[UIColor whiteColor],
+                                                                          NSKernAttributeName: [NSNumber numberWithInteger:1.0]}];
                     wordSelectedLabel.backgroundColor = [UIColor clearColor];
-                    wordSelectedLabel.attributedText = [[NSAttributedString alloc] initWithString:selectedWordDay.word
-                                                                                       attributes:@{
-                                                                              NSFontAttributeName:[UIFont fontWithName:selectedWordDay.style.familyFont size:[selectedWordDay.style.familyFont compare:@"Zapfino"] == NSOrderedSame ? 21 : 40 ],
-                                                                   NSForegroundColorAttributeName: [UIColor whiteColor]}];
                     wordSelectedLabel.textAlignment = NSTextAlignmentCenter;
                     wordSelectedLabel.adjustsFontSizeToFitWidth = YES;
                     wordSelectedLabel.adjustsLetterSpacingToFitWidth = NO;
-                    wordSelectedLabel.minimumScaleFactor = 0.1;
+                    wordSelectedLabel.textAlignment = NSTextAlignmentCenter;
+                    wordSelectedLabel.minimumScaleFactor = 0.5;
+                    wordSelectedLabel.numberOfLines = 1;
                     wordSelectedLabel.alpha = 0.0;
                     wordSelectedLabel.tag = 100;
+                    
                     [self.wordSlateContainerView addSubview:wordSelectedLabel];
                     self.dayMonthPendingToRemove.removeMode = YES;
                     self.infoButton.enabled = NO;

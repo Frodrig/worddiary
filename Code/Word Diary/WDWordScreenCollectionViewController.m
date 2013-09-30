@@ -344,7 +344,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (void)performScrollToIndexPathForWordWhenAppear
 {
-    [self.collectionView scrollToItemAtIndexPath:self.indexPathForWordWhenAppear == nil ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    NSIndexPath *indexPathToScroll = !self.indexPathForWordWhenAppear ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear;
+    [self.collectionView scrollToItemAtIndexPath:indexPathToScroll atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     self.indexPathForWordWhenAppear = nil;
 }
 
@@ -797,7 +798,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     WDWord *selectedWord = [self findSelectedWord];
     if (selectedWord.word.length > 0) {
         self.wordContentUpdatedInEditMode = YES;
-        selectedWord.word = [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
+        NSString *newWord = [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
+        selectedWord.word = newWord;
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
         [cell.wordRepresentationView setNeedsDisplay];
         [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordInEditModeRemoveLastCharacter" object:nil]];

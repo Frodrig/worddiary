@@ -36,7 +36,7 @@
     CGContextSetAllowsAntialiasing(contextRef, true);
     CGContextSetLineWidth(contextRef, 0.5);
     CGContextSetStrokeColorWithColor(contextRef, [UIColor colorWithWhite:0.0 alpha:1.0].CGColor);
-    const NSUInteger numRows = 5;
+    const NSUInteger numRows = 6;
     const NSUInteger numColumns = 6;
     const CGFloat rowsDimension = self.bounds.size.height / numRows;
     for (NSUInteger rowIt = 0; rowIt < numRows; rowIt++) {
