@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
+#import <Crashlytics/Crashlytics.h>
+
 #import "WDWordScreenCollectionViewController.h"
 #import "WDWordDiary.h"
 #import "WDWord.h"
@@ -439,7 +441,11 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (NSIndexPath *)indexPathForWord:(WDWord *)word
 {
     NSUInteger indexOfWord = [[WDWordDiary sharedWordDiary].words indexOfObject:word];
-    NSIndexPath *indexPathOfWord = [self convertWordIndexContainerToIndexPath:indexOfWord];
+    CLS_LOG(@"indexPathForWord encontrado %d longitud maxima %d", indexOfWord, [WDWordDiary sharedWordDiary].words.count);
+    NSIndexPath *indexPathOfWord = nil;
+    if (indexOfWord != NSNotFound) {
+        indexPathOfWord = [self convertWordIndexContainerToIndexPath:indexOfWord];
+    }
     
     return indexPathOfWord;
 }
@@ -798,7 +804,9 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     WDWord *selectedWord = [self findSelectedWord];
     if (selectedWord.word.length > 0) {
         self.wordContentUpdatedInEditMode = YES;
-        NSString *newWord = [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
+        CLS_LOG(@"string sobre el que borrar un caracter %@", selectedWord.word);
+        NSString *newWord = selectedWord.word.length == 1 ? @"" : [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
+        CLS_LOG(@"string resultante de borrar caracter %@", newWord);
         selectedWord.word = newWord;
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
         [cell.wordRepresentationView setNeedsDisplay];
