@@ -211,6 +211,8 @@ const NSUInteger WEEKS_MONTHS                             = 6;
     self.actualDate = [self.dataSource dateComponentsFromWordDaySelectedForDashBoardViewController:self];
     self.daysOfTheMonthGridView.gridView.alpha = 0.5;
     
+    [self createDayOfTheMonthsViews];
+
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.tapGestureRecognizer];
     [self.daysOfTheMonthContainerView addGestureRecognizer:self.longPresureGestureRecognizer];
     
@@ -220,8 +222,6 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    [self createDayOfTheMonthsViews];
 
     [self configureMonthAndYearLabel];
     [self configureDaysOfTheWeekTitles];
@@ -310,7 +310,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 - (void)createDayOfTheMonthsViews
 {
     const CGFloat dayEntryWidth = 50.0;
-    const CGFloat dayEntryHeight = self.daysOfTheMonthGridView.bounds.size.height / WEEKS_MONTHS;
+    const CGFloat dayEntryHeight = 44.0;
     
     for (NSUInteger rowIt = 0; rowIt < WEEKS_MONTHS; rowIt++) {
         for (NSUInteger dayOfTheWeekIt = 0; dayOfTheWeekIt < DAYS_OF_WEEK; dayOfTheWeekIt++) {
