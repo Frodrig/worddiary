@@ -812,15 +812,35 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     WDWord *selectedWord = [self findSelectedWord];
     if (selectedWord.word.length > 0) {
         self.wordContentUpdatedInEditMode = YES;
-        CLS_LOG(@"string sobre el que borrar un caracter %@", selectedWord.word);
-        NSString *newWord = selectedWord.word.length == 1 ? @"" : [selectedWord.word substringWithRange:NSMakeRange(0, selectedWord.word.length - 1)];
-        CLS_LOG(@"string resultante de borrar caracter %@", newWord);
-        selectedWord.word = newWord;
+        
+        CLS_LOG(@"string sobre el que borrar un caracter %@ longitud: %d", selectedWord.word, selectedWord.word.length);
+        NSRange rangeOfLastCharacter = [self rangeOfLastCharacter:selectedWord.word];
+        NSAssert(rangeOfLastCharacter.location != NSNotFound, @"");
+        NSString *lastCharacter = [selectedWord.word substringWithRange:rangeOfLastCharacter];
+        const NSUInteger newWordLenght = selectedWord.word.length - lastCharacter.length;
+        selectedWord.word = newWordLenght == 0 ? @"" : [selectedWord.word substringWithRange:NSMakeRange(0, newWordLenght)];
+        
         WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
         [cell.wordRepresentationView setNeedsDisplay];
         [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"WDSelectedWordInEditModeRemoveLastCharacter" object:nil]];
         [self inmediateHideSpaceTipAfterInsertText];
     }
+}
+
+- (NSRange)rangeOfLastCharacter:(NSString *)wordString
+{
+    __block NSRange rangeLastCharacter = NSMakeRange(NSNotFound, 0);
+    
+    if (wordString.length > 0) {
+        [wordString enumerateSubstringsInRange:NSMakeRange(0, [wordString length])
+                                   options:NSStringEnumerationByComposedCharacterSequences | NSStringEnumerationReverse
+                                usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                                    rangeLastCharacter = substringRange;
+                                    *stop = TRUE;
+                                }];
+    }
+        
+    return rangeLastCharacter;
 }
 
 - (BOOL)hasText
