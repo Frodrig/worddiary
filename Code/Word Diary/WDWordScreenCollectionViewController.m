@@ -855,7 +855,8 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     if ([text stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]].length == 0) {
         [self resignFirstResponder];
     } else if ([text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length > 0) {
-        if (selectedWord.word.length < MAX_WORD_LENGHT) {
+        const NSUInteger numberOfComposedCharactersInSelectedWord = [self numberOfComposedCharactersInSelectedWord];
+        if (numberOfComposedCharactersInSelectedWord < MAX_WORD_LENGHT) {
             self.wordContentUpdatedInEditMode = YES;
             selectedWord.word = [selectedWord.word stringByAppendingString:text];
             WDWordScreenCollectionViewCell *cell = [self findSelectedCell];
@@ -1073,8 +1074,24 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (NSUInteger)numberOfFreeCharactersOfEditWordForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
 {
+    const NSUInteger numberOfComposedCharactersInSelectedWord = [self numberOfComposedCharactersInSelectedWord];
+    NSInteger value = MAX_WORD_LENGHT - numberOfComposedCharactersInSelectedWord;
+    value = value < 0 ? 0 : value;
+    
+    return value;
+}
+
+- (NSUInteger)numberOfComposedCharactersInSelectedWord
+{
     WDWord *selectedWord = [self findSelectedWord];
-    return MAX_WORD_LENGHT - selectedWord.word.length;
+    __block NSUInteger numberOfComposedCharacters = 0;
+    [selectedWord.word enumerateSubstringsInRange:NSMakeRange(0, [selectedWord.word length])
+                                          options:NSStringEnumerationByComposedCharacterSequences
+                                       usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                                           numberOfComposedCharacters++;
+                                       }];
+
+    return numberOfComposedCharacters;
 }
 
 - (UIColor *)colorForWordCharacterCounterView:(WDWordCharacterCounterView *)wordCharacterCounterView
