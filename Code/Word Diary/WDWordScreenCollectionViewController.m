@@ -347,6 +347,11 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (void)performScrollToIndexPathForWordWhenAppear
 {
     NSIndexPath *indexPathToScroll = !self.indexPathForWordWhenAppear ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear;
+    CLSLog(@"performScrollToIndexPathForWordWhenAppear ¿valid indexPathToScroll? %@", indexPathToScroll ? @"YES" : @"NO");
+    NSAssert(indexPathToScroll, @"");
+    if (!indexPathToScroll) {
+        indexPathToScroll = [NSIndexPath indexPathForRow:0 inSection:0];
+    }
     [self.collectionView scrollToItemAtIndexPath:indexPathToScroll atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     self.indexPathForWordWhenAppear = nil;
 }
@@ -433,9 +438,12 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     return selectedWord;
 }
 
-- (NSIndexPath *) indexPathForLastWord
+- (NSIndexPath *)indexPathForLastWord
 {
-    return [NSIndexPath indexPathForRow:0 inSection:[WDWordDiary sharedWordDiary].words.count - 1];
+    const NSUInteger numberOfWords = [WDWordDiary sharedWordDiary].words.count;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:numberOfWords > 0 ? numberOfWords - 1 : 0];
+    
+    return indexPath;
 }
 
 - (NSIndexPath *)indexPathForWord:(WDWord *)word
