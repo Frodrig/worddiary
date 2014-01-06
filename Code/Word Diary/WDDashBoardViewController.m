@@ -389,7 +389,6 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 - (NSUInteger)findFirstWeekdayOfTheMonth
 {
     NSDateComponents *firstDayDateComponents = [self.actualDate copy];
-    firstDayDateComponents.year = 2013;
     firstDayDateComponents.day = 1;
     firstDayDateComponents.week = 1;
     NSDate *date = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:firstDayDateComponents];
