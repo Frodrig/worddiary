@@ -29,6 +29,9 @@
 		5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B119359170489D200CAF765 /* CoreMotion.framework */; };
 		5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
+		5B1F4536195174CD0029F698 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1F4535195174CD0029F698 /* Crashlytics.framework */; };
+		5B1F4539195175690029F698 /* 765-arrow-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B1F4537195175690029F698 /* 765-arrow-left.png */; };
+		5B1F453A195175690029F698 /* 765-arrow-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B1F4538195175690029F698 /* 765-arrow-left@2x.png */; };
 		5B261870174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B26186F174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m */; };
 		5B261874174A63A2002C36D6 /* WDMonthYearView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B261873174A63A2002C36D6 /* WDMonthYearView.m */; };
 		5B261878174A8A36002C36D6 /* WDMonthsOfTheYearContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B261877174A8A36002C36D6 /* WDMonthsOfTheYearContainerView.m */; };
@@ -42,7 +45,6 @@
 		5B4618CB17DF0055007360E3 /* icon_40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618C517DF0055007360E3 /* icon_40@2x.png */; };
 		5B4618CD17DF0055007360E3 /* icon_60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B4618C717DF0055007360E3 /* icon_60@2x.png */; };
 		5B4D18B0172A95110002F300 /* WDDayMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B4D18AF172A95110002F300 /* WDDayMonthView.m */; };
-		5B60FD1817E09763004DB04D /* 765-arrow-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B60FD1617E09763004DB04D /* 765-arrow-left.png */; };
 		5B60FD1C17E0976D004DB04D /* 766-arrow-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B60FD1A17E0976D004DB04D /* 766-arrow-right.png */; };
 		5B60FD1D17E0976D004DB04D /* 766-arrow-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B60FD1B17E0976D004DB04D /* 766-arrow-right@2x.png */; };
 		5B60FD2017E097E8004DB04D /* 851-calendar.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B60FD1E17E097E8004DB04D /* 851-calendar.png */; };
@@ -109,7 +111,6 @@
 		5BEBAC02174440C200342235 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B8D595617437DCC00B395D2 /* icon.png */; };
 		5BEBAC061744426100342235 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEBAC031744426100342235 /* default.png */; };
 		5BEBAC071744426100342235 /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BEBAC041744426100342235 /* default@2x.png */; };
-		5BED41CD17E02DE100FBE39A /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BED41CC17E02DE100FBE39A /* Crashlytics.framework */; };
 		5BF7C26317E04CC500DD0287 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF7C26217E04CC500DD0287 /* Default-568h@2x.png */; };
 		5BF7C26617E04DF000DD0287 /* icon_57.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF7C26417E04DF000DD0287 /* icon_57.png */; };
 		5BF7C26717E04DF000DD0287 /* icon_57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF7C26517E04DF000DD0287 /* icon_57@2x.png */; };
@@ -149,6 +150,9 @@
 		5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+TopAlign.m"; sourceTree = "<group>"; };
 		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
 		5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIViewNibLoad.m"; sourceTree = "<group>"; };
+		5B1F4535195174CD0029F698 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		5B1F4537195175690029F698 /* 765-arrow-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "765-arrow-left.png"; sourceTree = "<group>"; };
+		5B1F4538195175690029F698 /* 765-arrow-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "765-arrow-left@2x.png"; sourceTree = "<group>"; };
 		5B26186E174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheMonthContainerGridView.h; sourceTree = "<group>"; };
 		5B26186F174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDaysOfTheMonthContainerGridView.m; sourceTree = "<group>"; };
 		5B261872174A63A2002C36D6 /* WDMonthYearView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDMonthYearView.h; sourceTree = "<group>"; };
@@ -169,7 +173,6 @@
 		5B4618C717DF0055007360E3 /* icon_60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_60@2x.png"; sourceTree = "<group>"; };
 		5B4D18AE172A95110002F300 /* WDDayMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDayMonthView.h; sourceTree = "<group>"; };
 		5B4D18AF172A95110002F300 /* WDDayMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDDayMonthView.m; sourceTree = "<group>"; };
-		5B60FD1617E09763004DB04D /* 765-arrow-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "765-arrow-left.png"; path = "../../../../Recursos/Terceros/Glyphs/GlyphishPro 6/Glyphish 6/Glyphish 6 Icons (PNG)/White/765-arrow-left.png"; sourceTree = "<group>"; };
 		5B60FD1A17E0976D004DB04D /* 766-arrow-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "766-arrow-right.png"; sourceTree = "<group>"; };
 		5B60FD1B17E0976D004DB04D /* 766-arrow-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "766-arrow-right@2x.png"; sourceTree = "<group>"; };
 		5B60FD1E17E097E8004DB04D /* 851-calendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "851-calendar.png"; sourceTree = "<group>"; };
@@ -262,7 +265,6 @@
 		5BE67E6E172873FD00D01633 /* WDInfoScreenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WDInfoScreenViewController.xib; sourceTree = "<group>"; };
 		5BEBAC031744426100342235 /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
 		5BEBAC041744426100342235 /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
-		5BED41CC17E02DE100FBE39A /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		5BF7B0441720809400E5B8A9 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		5BF7C26217E04CC500DD0287 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Word Diary/Images.xcassets/LaunchImage.launchimage/Default-568h@2x.png"; sourceTree = "<group>"; };
 		5BF7C26417E04DF000DD0287 /* icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57.png; sourceTree = "<group>"; };
@@ -278,13 +280,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5BED41CD17E02DE100FBE39A /* Crashlytics.framework in Frameworks */,
+				5B1F4536195174CD0029F698 /* Crashlytics.framework in Frameworks */,
+				5BB6B30416DBE13900394113 /* Foundation.framework in Frameworks */,
 				5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */,
 				5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */,
 				5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */,
 				5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */,
 				5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */,
-				5BB6B30416DBE13900394113 /* Foundation.framework in Frameworks */,
 				5BB6B30616DBE13900394113 /* CoreGraphics.framework in Frameworks */,
 				5BB6B30816DBE13900394113 /* CoreData.framework in Frameworks */,
 			);
@@ -307,9 +309,10 @@
 		5B01B839172987FD007CB8B8 /* General */ = {
 			isa = PBXGroup;
 			children = (
+				5B1F4537195175690029F698 /* 765-arrow-left.png */,
+				5B1F4538195175690029F698 /* 765-arrow-left@2x.png */,
 				5B60FD1A17E0976D004DB04D /* 766-arrow-right.png */,
 				5B60FD1B17E0976D004DB04D /* 766-arrow-right@2x.png */,
-				5B60FD1617E09763004DB04D /* 765-arrow-left.png */,
 				5B60FD2217E09852004DB04D /* 724-info.png */,
 				5B60FD2317E09852004DB04D /* 724-info@2x.png */,
 				5B7B0666173B96D40009E5C1 /* 40-forward.png */,
@@ -663,7 +666,7 @@
 		5BB6B30016DBE13900394113 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5BED41CC17E02DE100FBE39A /* Crashlytics.framework */,
+				5B1F4535195174CD0029F698 /* Crashlytics.framework */,
 				5B1193571704752B00CAF765 /* MessageUI.framework */,
 				5B446F7616F22A48005A432D /* CoreText.framework */,
 				5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */,
@@ -851,7 +854,6 @@
 				5B60FD2917E0992C004DB04D /* 746-plus-circle-rotate.png in Resources */,
 				5B7B066A173B96D40009E5C1 /* 40-forward.png in Resources */,
 				5B0C5E59174622A200222225 /* leftrightcoach.png in Resources */,
-				5B60FD1817E09763004DB04D /* 765-arrow-left.png in Resources */,
 				5B0C5E5A174622A200222225 /* leftrightcoach@2x.png in Resources */,
 				5B0C5E5B174622A200222225 /* pointocoach.png in Resources */,
 				5B0C5E5C174622A200222225 /* pointocoach@2x.png in Resources */,
@@ -863,6 +865,7 @@
 				5BEBAC061744426100342235 /* default.png in Resources */,
 				5BEBAC071744426100342235 /* default@2x.png in Resources */,
 				5B60FD2D17E09F03004DB04D /* 709-plus-rotate.png in Resources */,
+				5B1F4539195175690029F698 /* 765-arrow-left.png in Resources */,
 				5BB0CA601744D19F00600407 /* help_screen1_en.png in Resources */,
 				5BB0CA611744D19F00600407 /* help_screen2_en.png in Resources */,
 				5B4618C917DF0055007360E3 /* icon_29@2x.png in Resources */,
@@ -891,6 +894,7 @@
 				5BBDED99174CAB0D00F8FFF3 /* help_screen5_es.png in Resources */,
 				5B982BBE1744C4EA00DDF4CB /* help_screen3_es.png in Resources */,
 				5B982BBF1744C4EA00DDF4CB /* help_screen4_es.png in Resources */,
+				5B1F453A195175690029F698 /* 765-arrow-left@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1048,7 +1052,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word\\ Diary/Code",
+					/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word,
+					Diary/Code,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
@@ -1069,7 +1075,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word\\ Diary/Code",
+					/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word,
+					Diary/Code,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
@@ -1119,7 +1127,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word\\ Diary/Code",
+					/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word,
+					Diary/Code,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
