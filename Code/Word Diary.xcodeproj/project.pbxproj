@@ -29,7 +29,6 @@
 		5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B119359170489D200CAF765 /* CoreMotion.framework */; };
 		5B1193691704B61C00CAF765 /* UILabel+TopAlign.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */; };
 		5B1AC4B816EA0A5600950206 /* UIView+UIViewNibLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */; };
-		5B1F4536195174CD0029F698 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1F4535195174CD0029F698 /* Crashlytics.framework */; };
 		5B1F4539195175690029F698 /* 765-arrow-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B1F4537195175690029F698 /* 765-arrow-left.png */; };
 		5B1F453A195175690029F698 /* 765-arrow-left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B1F4538195175690029F698 /* 765-arrow-left@2x.png */; };
 		5B261870174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B26186F174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.m */; };
@@ -116,6 +115,10 @@
 		5BF7C26717E04DF000DD0287 /* icon_57@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BF7C26517E04DF000DD0287 /* icon_57@2x.png */; };
 		5BFEEA69170C1BCB0048482B /* WDStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA68170C1BCB0048482B /* WDStyle.m */; };
 		5BFEEA75170C1DDD0048482B /* UIColor+hexColorCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */; };
+		C1F96F881E096911003131C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F96F851E096911003131C4 /* SystemConfiguration.framework */; };
+		C1F96F891E096911003131C4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F96F861E096911003131C4 /* Security.framework */; };
+		C1F96F8E1E096952003131C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F96F8B1E096952003131C4 /* SystemConfiguration.framework */; };
+		C1F96F8F1E096952003131C4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F96F8C1E096952003131C4 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,7 +153,6 @@
 		5B1193681704B61C00CAF765 /* UILabel+TopAlign.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+TopAlign.m"; sourceTree = "<group>"; };
 		5B1AC4B616EA0A5600950206 /* UIView+UIViewNibLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+UIViewNibLoad.h"; sourceTree = "<group>"; };
 		5B1AC4B716EA0A5600950206 /* UIView+UIViewNibLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIViewNibLoad.m"; sourceTree = "<group>"; };
-		5B1F4535195174CD0029F698 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		5B1F4537195175690029F698 /* 765-arrow-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "765-arrow-left.png"; sourceTree = "<group>"; };
 		5B1F4538195175690029F698 /* 765-arrow-left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "765-arrow-left@2x.png"; sourceTree = "<group>"; };
 		5B26186E174A5935002C36D6 /* WDDaysOfTheMonthContainerGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WDDaysOfTheMonthContainerGridView.h; sourceTree = "<group>"; };
@@ -273,6 +275,10 @@
 		5BFEEA68170C1BCB0048482B /* WDStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WDStyle.m; sourceTree = "<group>"; };
 		5BFEEA73170C1DDD0048482B /* UIColor+hexColorCreation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+hexColorCreation.h"; sourceTree = "<group>"; };
 		5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+hexColorCreation.m"; sourceTree = "<group>"; };
+		C1F96F851E096911003131C4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C1F96F861E096911003131C4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C1F96F8B1E096952003131C4 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C1F96F8C1E096952003131C4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,12 +286,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B1F4536195174CD0029F698 /* Crashlytics.framework in Frameworks */,
 				5BB6B30416DBE13900394113 /* Foundation.framework in Frameworks */,
 				5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */,
+				C1F96F891E096911003131C4 /* Security.framework in Frameworks */,
+				C1F96F8F1E096952003131C4 /* Security.framework in Frameworks */,
 				5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */,
+				C1F96F8E1E096952003131C4 /* SystemConfiguration.framework in Frameworks */,
 				5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */,
 				5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */,
+				C1F96F881E096911003131C4 /* SystemConfiguration.framework in Frameworks */,
 				5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */,
 				5BB6B30616DBE13900394113 /* CoreGraphics.framework in Frameworks */,
 				5BB6B30816DBE13900394113 /* CoreData.framework in Frameworks */,
@@ -666,7 +675,10 @@
 		5BB6B30016DBE13900394113 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5B1F4535195174CD0029F698 /* Crashlytics.framework */,
+				C1F96F8B1E096952003131C4 /* SystemConfiguration.framework */,
+				C1F96F8C1E096952003131C4 /* Security.framework */,
+				C1F96F851E096911003131C4 /* SystemConfiguration.framework */,
+				C1F96F861E096911003131C4 /* Security.framework */,
 				5B1193571704752B00CAF765 /* MessageUI.framework */,
 				5B446F7616F22A48005A432D /* CoreText.framework */,
 				5BD34C9B16E73ACB007B46A2 /* QuartzCore.framework */,
@@ -912,7 +924,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Crashlytics.framework/run ed113bdf0c248b243b565ef1fdac0f966317a7b8";
+			shellScript = "";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1052,8 +1064,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word,
-					Diary/Code,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1075,8 +1085,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word,
-					Diary/Code,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1127,8 +1135,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/fernandorodriguezmartinez/Trabajo/Freelance/Git/Word,
-					Diary/Code,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

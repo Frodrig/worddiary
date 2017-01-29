@@ -6,8 +6,6 @@
 //  Copyright (c) 2013 Fernando Rodríguez Martínez. All rights reserved.
 //
 
-#import <Crashlytics/Crashlytics.h>
-
 #import "WDWordScreenCollectionViewController.h"
 #import "WDWordDiary.h"
 #import "WDWord.h"
@@ -347,7 +345,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (void)performScrollToIndexPathForWordWhenAppear
 {
     NSIndexPath *indexPathToScroll = !self.indexPathForWordWhenAppear ? [self indexPathForLastWord] : self.indexPathForWordWhenAppear;
-    CLSLog(@"performScrollToIndexPathForWordWhenAppear ¿valid indexPathToScroll? %@", indexPathToScroll ? @"YES" : @"NO");
     NSAssert(indexPathToScroll, @"");
     if (!indexPathToScroll) {
         indexPathToScroll = [NSIndexPath indexPathForRow:0 inSection:0];
@@ -449,7 +446,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (NSIndexPath *)indexPathForWord:(WDWord *)word
 {
     NSUInteger indexOfWord = [[WDWordDiary sharedWordDiary].words indexOfObject:word];
-    CLS_LOG(@"indexPathForWord encontrado %d longitud maxima %d", indexOfWord, [WDWordDiary sharedWordDiary].words.count);
     NSIndexPath *indexPathOfWord = nil;
     if (indexOfWord != NSNotFound) {
         indexPathOfWord = [self convertWordIndexContainerToIndexPath:indexOfWord];
@@ -813,7 +809,6 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
     if (selectedWord.word.length > 0) {
         self.wordContentUpdatedInEditMode = YES;
         
-        CLS_LOG(@"string sobre el que borrar un caracter %@ longitud: %d", selectedWord.word, selectedWord.word.length);
         NSRange rangeOfLastCharacter = [self rangeOfLastCharacter:selectedWord.word];
         NSAssert(rangeOfLastCharacter.location != NSNotFound, @"");
         NSString *lastCharacter = [selectedWord.word substringWithRange:rangeOfLastCharacter];

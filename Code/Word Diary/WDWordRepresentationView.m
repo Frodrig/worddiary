@@ -211,17 +211,23 @@
     CGContextSetTextPosition(contextRef, fontDrawPoint.x, fontDrawPoint.y);
     
     CFArrayRef lineGlyphRuns = CTLineGetGlyphRuns(line);
-    CFIndex glyphRunsCount = CFArrayGetCount(lineGlyphRuns);
-    CTRunRef glyphRunRef = CFArrayGetValueAtIndex(lineGlyphRuns, glyphRunsCount - 1);
-    CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(glyphRunRef).location + CTRunGetStringRange(glyphRunRef).length, NULL);
-    CGFloat width = CTRunGetTypographicBounds(glyphRunRef, CFRangeMake(0, 0), NULL, NULL, NULL);
-    self.lastCursorBounds = CGRectMake(fontDrawPoint.x + xOffset, self.lastCursorBounds.origin.y, width, self.lastCursorBounds.size.height);
     
-    // Palabra
-    CTLineDraw(line, contextRef);
-    CFRelease(line);
-    [self.delegate wordContentUpdatedFlagCheckedByWordRepresentationView:self];
-    CGContextRestoreGState(contextRef);
+    if (CFArrayGetCount(lineGlyphRuns) != 0)
+    {
+        CFIndex glyphRunsCount = CFArrayGetCount(lineGlyphRuns);
+        CFIndex glypRunsCountIndex = MIN(glyphRunsCount, glyphRunsCount - 1);
+        CTRunRef glyphRunRef = CFArrayGetValueAtIndex(lineGlyphRuns, glypRunsCountIndex);
+        CGFloat xOffset = CTLineGetOffsetForStringIndex(line, CTRunGetStringRange(glyphRunRef).location + CTRunGetStringRange(glyphRunRef).length, NULL);
+        CGFloat width = CTRunGetTypographicBounds(glyphRunRef, CFRangeMake(0, 0), NULL, NULL, NULL);
+        self.lastCursorBounds = CGRectMake(fontDrawPoint.x + xOffset, self.lastCursorBounds.origin.y, width, self.lastCursorBounds.size.height);
+        
+        // Palabra
+        CTLineDraw(line, contextRef);
+        CFRelease(line);
+        [self.delegate wordContentUpdatedFlagCheckedByWordRepresentationView:self];
+        CGContextRestoreGState(contextRef);
+    }
+    
     
     // Cursor
     if (showCursor && !self.forceCursorHide) {
