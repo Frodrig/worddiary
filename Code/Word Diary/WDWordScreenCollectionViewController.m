@@ -672,10 +672,10 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         if (checkForUpdateGesture) {
             CGPoint translation = [gesture translationInView:self.view];
             if (![WDUtils is:translation.y equalsTo:0.0]) {
-                if (abs(translation.y) > abs(translation.x)) {
+                if (abs(translation.y) > fabs(translation.x)) {
                     const CGFloat minimumDistance = 15.0;
                     WDWord *word = [self findSelectedWord];
-                    if (translation.y < 0.0 && abs(translation.y) > minimumDistance) {
+                    if (translation.y < 0.0 && fabs(translation.y) > minimumDistance) {
                         newPalette = [[WDWordDiary sharedWordDiary] findNextPaletteOfPalette:word.palette];
                     } else if (translation.y > 0.0 && translation.y > minimumDistance) {
                         newPalette = [[WDWordDiary sharedWordDiary] findPrevPaletteOfPalette:word.palette];
@@ -1142,7 +1142,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (NSDateComponents *)dateComponentsFromWordDaySelectedForDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController
 {
     WDWord *selectedWord = [self findSelectedWord];
-    NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit fromDate:[NSDate dateWithTimeIntervalSince1970:selectedWord.timeInterval]];
+    NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSCalendarUnitMonth | NSCalendarUnitDay | NSWeekCalendarUnit fromDate:[NSDate dateWithTimeIntervalSince1970:selectedWord.timeInterval]];
 
     return dateComponents;
 }

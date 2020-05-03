@@ -111,7 +111,7 @@
 - (void)createDebugWords2
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitDay | NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];
     
     NSArray *words = [NSArray arrayWithObjects:@"Triste", @"Aburrido", @"Vacaciones", @"Exámen", @"Papás", @"Lluvia", @"Catarro", @"Feliz", nil];
     for (NSUInteger index = 0; index < words.count; ++index) {
@@ -129,7 +129,7 @@
 - (void)createDebugWords3
 {
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *dateComponents = [calendar components:NSDayCalendarUnit | NSYearCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];    
+    NSDateComponents *dateComponents = [calendar components:NSCalendarUnitDay | NSCalendarUnitYear | NSCalendarUnitMonth fromDate:[NSDate date]];    
     for (dateComponents.year = 2009; dateComponents.year < 2013; dateComponents.year = dateComponents.year + 1) {
         for (dateComponents.month = 1; dateComponents.month < 13; dateComponents.month = dateComponents.month + 1) {
             for (dateComponents.day = 1; dateComponents.day < 29; dateComponents.day = dateComponents.day + 1) {

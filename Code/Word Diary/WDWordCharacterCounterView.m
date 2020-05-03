@@ -60,7 +60,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WDSelectedWordWillEnterInEditMode:) name:@"WDSelectedWordWillEnterInEditMode" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WDSelectedWordInEditModeAddedNewCharacter:) name:@"WDSelectedWordInEditModeAddedNewCharacter" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WDSelectedWordInEditModeRemoveLastCharacter:) name:@"WDSelectedWordInEditModeRemoveLastCharacter" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WDSelectedWordInEditModerRemoveAllCharacters:) name:@"WDSelectedWordInEditModeRemoveAllCharacters" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WDSelectedWordInEditModeRemoveAllCharacters:) name:@"WDSelectedWordInEditModeRemoveAllCharacters" object:nil];
     }
     
     return self;

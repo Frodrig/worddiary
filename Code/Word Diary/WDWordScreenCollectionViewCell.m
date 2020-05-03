@@ -212,7 +212,7 @@
         dayOfTheWeekText = [NSString stringWithFormat:@"%@", NSLocalizedString(@"TAG_YESTERDAY", @"")];
     } else {
         NSDate *dateFromWordTimeInterval = [NSDate dateWithTimeIntervalSince1970:word.timeInterval];
-        NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSWeekdayCalendarUnit fromDate:dateFromWordTimeInterval];
+        NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitWeekday fromDate:dateFromWordTimeInterval];
         dayOfTheWeekText = [WDUtils stringFromWeekday:dateComponents.weekday];
     }
     self.dateDayOfTheWeekLabel.attributedText = [[NSAttributedString alloc] initWithString:dayOfTheWeekText attributes:attributedTextProperties];

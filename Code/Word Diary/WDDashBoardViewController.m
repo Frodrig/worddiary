@@ -152,7 +152,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 - (NSDateComponents *)todayDate
 {
     if (todayDate_ == nil) {
-        todayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+        todayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
     }
     
     return todayDate_;
@@ -162,7 +162,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 {
     if (nil == normalizedRealTodayDate_) {
         NSDate *realTodayDate = [NSDate date];
-        NSDateComponents *realTodayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:realTodayDate];
+        NSDateComponents *realTodayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:realTodayDate];
         normalizedRealTodayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:realTodayDateComponents];
     }
     
@@ -392,7 +392,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
     firstDayDateComponents.day = 1;
     firstDayDateComponents.week = 1;
     NSDate *date = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:firstDayDateComponents];
-    NSUInteger firstWeekDay = [[WDWordDiary sharedWordDiary].currentCalendar ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:date];
+    NSUInteger firstWeekDay = [[WDWordDiary sharedWordDiary].currentCalendar ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSWeekCalendarUnit forDate:date];
     
     return firstWeekDay;
 }
@@ -400,7 +400,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 - (NSUInteger)findMaxDaysOfTheMonth
 {
     NSDate *date = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:self.actualDate];
-    NSRange rangeDaysOfMonth = [[WDWordDiary sharedWordDiary].currentCalendar rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:date];
+    NSRange rangeDaysOfMonth = [[WDWordDiary sharedWordDiary].currentCalendar rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:date];
     return rangeDaysOfMonth.length;
 }
 
@@ -477,7 +477,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
             WDWord *wordOfCalendarDay = [wordDiary findWordWithDateComponents:dateComponentOfDay];
             dayMonthViewIt.backgroundColor = [UIColor clearColor];
             dayMonthViewIt.dayOfMonthLabel.textColor = [wordOfCalendarDay.palette makeWordColorObject];
-            dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%d", dayMonthViewIt.dayOfTheActualMonthIndex];
+            dayMonthViewIt.dayOfMonthLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)dayMonthViewIt.dayOfTheActualMonthIndex];
             [self configureDayMonthViewWithoutWordMode:dayMonthViewIt];
             [NSObject cancelPreviousPerformRequestsWithTarget:dayMonthViewIt.dayOfMonthLabel];
         }
@@ -987,7 +987,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
         [self configureMonthOfTheYearViews];
 
     } else {
-        NSDateComponents *newActualDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit  fromDate:[NSDate date]];
+        NSDateComponents *newActualDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitMonth | NSCalendarUnitDay | NSWeekCalendarUnit  fromDate:[NSDate date]];
         if (newActualDate.year != self.actualDate.year ||
             (newActualDate.year == self.actualDate.year && newActualDate.month != self.actualDate.month) ||
             (newActualDate.year == self.actualDate.year && newActualDate.month == self.actualDate.month && newActualDate.day != self.actualDate.day)) {

@@ -55,7 +55,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        todayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+        todayDate_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -198,7 +198,7 @@
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
     BOOL wordsWereAdjustedToPresentDay = NO;
-    NSDateComponents *todayDateAfterEnterForeground = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    NSDateComponents *todayDateAfterEnterForeground = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
     if (self.todayDate.year != todayDateAfterEnterForeground.year || self.todayDate.month != todayDateAfterEnterForeground.month || self.todayDate.day != todayDateAfterEnterForeground.day) {
         self.todayDate = todayDateAfterEnterForeground;
         [[WDWordDiary sharedWordDiary] removeAllDaysWithoutWord];

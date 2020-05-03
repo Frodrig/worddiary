@@ -101,7 +101,7 @@
 - (void)setInfolabelTextForCurrentPage
 {
     NSString *tagInfoHelp = @"TAG_HELP_INFOTEXT_PAGE_";
-    tagInfoHelp = [tagInfoHelp stringByAppendingFormat:@"%d", self.pageControl.currentPage];
+    tagInfoHelp = [tagInfoHelp stringByAppendingFormat:@"%ld", (long)self.pageControl.currentPage];
     self.infoLabel.text = NSLocalizedString(tagInfoHelp, @"");
 }
 
@@ -109,7 +109,7 @@
 {    
     const NSUInteger maxScreens = 5;
     for (NSUInteger screenIt = 0; screenIt < maxScreens; screenIt++) {
-        NSString *screenName = [NSString stringWithFormat:@"help_screen%d_%@", screenIt+1, NSLocalizedString(@"TAG_LANG", @"")];
+        NSString *screenName = [NSString stringWithFormat:@"help_screen%lu_%@", screenIt+1, NSLocalizedString(@"TAG_LANG", @"")];
         UIImageView *screen = [[UIImageView alloc] initWithFrame:self.scrollView.frame];
         screen.contentMode = UIViewContentModeScaleAspectFit;
         screen.image = [UIImage imageNamed:screenName];

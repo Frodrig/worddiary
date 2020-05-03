@@ -37,7 +37,7 @@
 {
     if (nil == dateComponents_) {
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-        dateComponents_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:date];
+        dateComponents_ = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
         //dateComponents_.calendar = [WDWordDiary sharedWordDiary].currentCalendar;
     }
     
@@ -90,8 +90,8 @@
 - (BOOL)isTodayWord
 {
     NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
-    NSDateComponents *dateComponentsFromToday = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:[NSDate date]];
-    NSDateComponents *dateComponentsFromWordDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit fromDate:wordDate];
+    NSDateComponents *dateComponentsFromToday = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitDay | NSCalendarUnitMonth fromDate:[NSDate date]];
+    NSDateComponents *dateComponentsFromWordDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitDay | NSCalendarUnitMonth fromDate:wordDate];
     
     return dateComponentsFromToday.year == dateComponentsFromWordDate.year &&
     dateComponentsFromToday.month == dateComponentsFromWordDate.month &&
@@ -105,7 +105,7 @@
     //Falla la linea de abajo, no da siempre cambio de dia, usaremos los componentes sin el timeinterval
     //NSDate *wordDate = [NSDate dateWithTimeIntervalSince1970:self.timeInterval];
     NSDate *wordDate = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:self.dateComponents];
-    NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSDayCalendarUnit fromDate:wordDate toDate:todayDate options:0];
+    NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitDay fromDate:wordDate toDate:todayDate options:0];
     
     return dateComponents.day;
 }
@@ -121,9 +121,9 @@
 {
     NSString *dayMonthDateText = nil;
     if ([WDUtils englishIsTheCurrentAppLanguage]) {
-        dayMonthDateText = [NSString stringWithFormat:@"%@ %d", [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate], self.dateComponents.day];
+        dayMonthDateText = [NSString stringWithFormat:@"%@ %ld", [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate], (long)self.dateComponents.day];
     } else {
-        dayMonthDateText = [NSString stringWithFormat:@"%d %@ %@", self.dateComponents.day, NSLocalizedString(@"TAG_DATE_MONTHDAY_SEPARATOR", @""), [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate]];
+        dayMonthDateText = [NSString stringWithFormat:@"%ld %@ %@", (long)self.dateComponents.day, NSLocalizedString(@"TAG_DATE_MONTHDAY_SEPARATOR", @""), [WDUtils monthString:self.dateComponents.month abreviateMode:abreviate]];
     }
     
     return dayMonthDateText;

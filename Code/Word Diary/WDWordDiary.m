@@ -202,7 +202,7 @@
         */
         NSArray *palette = [WDUtils makeColorGradientWithHSL];
         for (NSUInteger paletteIndex = 0; paletteIndex < palette.count; ++paletteIndex) {
-            NSString *paletteId = [NSString stringWithFormat:@"%d", paletteIndex];
+            NSString *paletteId = [NSString stringWithFormat:@"%lu", (unsigned long)paletteIndex];
             NSString *lightBackgroundColorString = [WDUtils convertColorToString:[palette objectAtIndex:paletteIndex]];
             NSString *wordColorString = [WDUtils convertColorToString:[UIColor colorWithRed:46.0/256 green:46.0/256 blue:51.0/256.0 alpha:1.0]];//[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]];
             
@@ -281,7 +281,7 @@ if (indexOfWord == NSNotFound) {
 - (BOOL)adjustWordsArrayAtPresentDay
 {
     NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar
-                                             components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+                                             components:NSYearCalendarUnit | NSMonthCalendarUnit | NSCalendarUnitDay fromDate:[NSDate date]];
     todayDateComponents.hour = 23;
     todayDateComponents.minute = 59;
     todayDateComponents.second = 59;
