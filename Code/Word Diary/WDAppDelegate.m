@@ -14,8 +14,6 @@
 //#import "WDAllWordsScreenViewController.h"
 //#import "WDSelectedWordScreenViewController.h"
 #import "WDWordScreenViewController.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
 
 @interface WDAppDelegate()
 
@@ -36,9 +34,7 @@
 */
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    [Fabric with:@[[Crashlytics class]]];
-    
+{    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   
     [[WDWordDiary sharedWordDiary] loadAll];

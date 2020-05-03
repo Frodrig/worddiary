@@ -117,8 +117,6 @@
 		5BFEEA75170C1DDD0048482B /* UIColor+hexColorCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFEEA74170C1DDD0048482B /* UIColor+hexColorCreation.m */; };
 		C1A7FE4F1E3DFED500C61C93 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A7FE4E1E3DFED500C61C93 /* libc++.tbd */; };
 		C1A7FE511E3DFF2C00C61C93 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A7FE501E3DFF2C00C61C93 /* libz.tbd */; };
-		C1A7FE541E3DFF3E00C61C93 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A7FE521E3DFF3E00C61C93 /* Crashlytics.framework */; };
-		C1A7FE551E3DFF3E00C61C93 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1A7FE531E3DFF3E00C61C93 /* Fabric.framework */; };
 		C1F96F881E096911003131C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F96F851E096911003131C4 /* SystemConfiguration.framework */; };
 		C1F96F8E1E096952003131C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F96F8B1E096952003131C4 /* SystemConfiguration.framework */; };
 		C1F96F8F1E096952003131C4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1F96F8C1E096952003131C4 /* Security.framework */; };
@@ -299,12 +297,10 @@
 				5B11935A170489D300CAF765 /* CoreMotion.framework in Frameworks */,
 				C1F96F8F1E096952003131C4 /* Security.framework in Frameworks */,
 				5B1193581704752B00CAF765 /* MessageUI.framework in Frameworks */,
-				C1A7FE541E3DFF3E00C61C93 /* Crashlytics.framework in Frameworks */,
 				C1F96F8E1E096952003131C4 /* SystemConfiguration.framework in Frameworks */,
 				5B446F7716F22A48005A432D /* CoreText.framework in Frameworks */,
 				5BD34C9C16E73ACB007B46A2 /* QuartzCore.framework in Frameworks */,
 				C1F96F881E096911003131C4 /* SystemConfiguration.framework in Frameworks */,
-				C1A7FE551E3DFF3E00C61C93 /* Fabric.framework in Frameworks */,
 				5BB6B30216DBE13900394113 /* UIKit.framework in Frameworks */,
 				5BB6B30616DBE13900394113 /* CoreGraphics.framework in Frameworks */,
 				5BB6B30816DBE13900394113 /* CoreData.framework in Frameworks */,
@@ -804,9 +800,6 @@
 				5BB6B2FA16DBE13900394113 /* Sources */,
 				5BB6B2FB16DBE13900394113 /* Frameworks */,
 				5BB6B2FC16DBE13900394113 /* Resources */,
-				5BED41CB17E02CC500FBE39A /* ShellScript */,
-				C1A7FE561E3DFF9D00C61C93 /* ShellScript */,
-				C1A7FE581E3E000200C61C93 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -837,6 +830,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				es,
 			);
@@ -927,48 +921,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		5BED41CB17E02CC500FBE39A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "";
-		};
-		C1A7FE561E3DFF9D00C61C93 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/Fabric.framework/run\" ed113bdf0c248b243b565ef1fdac0f966317a7b8 5b77fb835e7f364686ee2eb031fac2f3c0e22e9011e4746f1300c0113bd3878d";
-		};
-		C1A7FE581E3E000200C61C93 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run ed113bdf0c248b243b565ef1fdac0f966317a7b8 5b77fb835e7f364686ee2eb031fac2f3c0e22e9011e4746f1300c0113bd3878d";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5BB6B2FA16DBE13900394113 /* Sources */ = {
@@ -1104,6 +1056,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1.0;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1111,7 +1064,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1125,6 +1079,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1.0;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1132,7 +1087,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1175,6 +1131,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1.0;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1182,7 +1139,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Word Diary/Word Diary-Prefix.pch";
 				INFOPLIST_FILE = "Word Diary/Word Diary-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
