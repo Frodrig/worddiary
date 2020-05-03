@@ -19,7 +19,7 @@
         scanner.scanLocation = 1;
     }
     
-    NSUInteger hexResult = 0;
+    unsigned int hexResult = 0;
     if ([scanner scanHexInt:&hexResult]) {
         CGFloat alphaComponent = 1.0;
         if (withAlpha) {

@@ -243,11 +243,19 @@ const NSUInteger WEEKS_MONTHS                             = 6;
         self.wordsOfMonthLabel.minimumScaleFactor = 0.5;
         self.wordsOfMonthLabel.numberOfLines = 2;
         self.wordsOfMonthLabel.adjustsFontSizeToFitWidth = YES;
-        self.wordsOfMonthLabel.adjustsLetterSpacingToFitWidth = NO;
         self.wordsOfMonthLabel.textAlignment = NSTextAlignmentCenter;
         self.wordsOfMonthLabel.backgroundColor = [UIColor clearColor];
         [self.wordSlateContainerView addSubview:self.wordsOfMonthLabel];
         self.wordsOfMonthLabel.alpha = 0.0;
+        
+        // To resolve deprecation of self.adjustsLetterSpacingToFitWidth
+        NSMutableAttributedString *s;
+        s = [[NSMutableAttributedString alloc] initWithString:self.wordsOfMonthLabel.text];
+        [s addAttribute:NSKernAttributeName
+                  value:[NSNull null]
+                  range:NSMakeRange(0, s.length)];
+        self.wordsOfMonthLabel.attributedText = s;
+
     }
 
     [self setNumberOfWordsOfTheMonth:NO];
@@ -344,7 +352,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 - (void)configureMonthAndYearLabel
 {
     if (self.dateSelectorModeActive) {
-        self.yearMonthLabel.text = [NSString stringWithFormat:@"%d", self.actualDate.year];
+        self.yearMonthLabel.text = [NSString stringWithFormat:@"%ld", (long)self.actualDate.year];
         const NSUInteger numWords = [[WDWordDiary sharedWordDiary] findNumberOfWordsInYear:self.actualDate.year filterEmptyWords:YES];
         self.wordCounterInYearCalendar.text = [NSString stringWithFormat:@"%@ %@", [WDUtils convertNumberToStringWithTwoDigitsMin:[NSNumber numberWithUnsignedInteger:numWords]], NSLocalizedString(@"TAG_DASHBOARDSCREEN_WORDCOUNTNAME_PLURAL", @"")];
         self.wordCounterInYearCalendar.textColor = numWords > 0 ? [UIColor whiteColor] : [UIColor darkGrayColor];
@@ -390,9 +398,9 @@ const NSUInteger WEEKS_MONTHS                             = 6;
 {
     NSDateComponents *firstDayDateComponents = [self.actualDate copy];
     firstDayDateComponents.day = 1;
-    firstDayDateComponents.week = 1;
+    firstDayDateComponents.weekOfMonth = 1;
     NSDate *date = [[WDWordDiary sharedWordDiary].currentCalendar dateFromComponents:firstDayDateComponents];
-    NSUInteger firstWeekDay = [[WDWordDiary sharedWordDiary].currentCalendar ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSWeekCalendarUnit forDate:date];
+    NSUInteger firstWeekDay = [[WDWordDiary sharedWordDiary].currentCalendar ordinalityOfUnit:NSCalendarUnitWeekday inUnit:NSCalendarUnitWeekOfMonth forDate:date];
     
     return firstWeekDay;
 }
@@ -580,7 +588,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
         self.actualDate.year = dateComponents.year;
         self.actualDate.month = dateComponents.month;
         self.actualDate.day = dateComponents.day;
-        self.actualDate.week = dateComponents.week;
+        self.actualDate.weekOfMonth = dateComponents.weekOfMonth;
     }
     
     return logicChange;
@@ -766,12 +774,20 @@ const NSUInteger WEEKS_MONTHS                             = 6;
                     wordSelectedLabel.backgroundColor = [UIColor clearColor];
                     wordSelectedLabel.textAlignment = NSTextAlignmentCenter;
                     wordSelectedLabel.adjustsFontSizeToFitWidth = YES;
-                    wordSelectedLabel.adjustsLetterSpacingToFitWidth = NO;
                     wordSelectedLabel.textAlignment = NSTextAlignmentCenter;
                     wordSelectedLabel.minimumScaleFactor = 0.5;
                     wordSelectedLabel.numberOfLines = 1;
                     wordSelectedLabel.alpha = 0.0;
                     wordSelectedLabel.tag = 100;
+                    
+                    // To resolve deprecation of self.adjustsLetterSpacingToFitWidth
+                    NSMutableAttributedString *s;
+                    s = [[NSMutableAttributedString alloc] initWithString:wordSelectedLabel.text];
+                    [s addAttribute:NSKernAttributeName
+                              value:[NSNull null]
+                              range:NSMakeRange(0, s.length)];
+                    wordSelectedLabel.attributedText = s;
+
                     
                     [self.wordSlateContainerView addSubview:wordSelectedLabel];
                     self.dayMonthPendingToRemove.removeMode = YES;
@@ -987,7 +1003,7 @@ const NSUInteger WEEKS_MONTHS                             = 6;
         [self configureMonthOfTheYearViews];
 
     } else {
-        NSDateComponents *newActualDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitMonth | NSCalendarUnitDay | NSWeekCalendarUnit  fromDate:[NSDate date]];
+        NSDateComponents *newActualDate = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitWeekOfMonth  fromDate:[NSDate date]];
         if (newActualDate.year != self.actualDate.year ||
             (newActualDate.year == self.actualDate.year && newActualDate.month != self.actualDate.month) ||
             (newActualDate.year == self.actualDate.year && newActualDate.month == self.actualDate.month && newActualDate.day != self.actualDate.day)) {

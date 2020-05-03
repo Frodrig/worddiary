@@ -281,7 +281,7 @@ if (indexOfWord == NSNotFound) {
 - (BOOL)adjustWordsArrayAtPresentDay
 {
     NSDateComponents *todayDateComponents = [[WDWordDiary sharedWordDiary].currentCalendar
-                                             components:NSYearCalendarUnit | NSMonthCalendarUnit | NSCalendarUnitDay fromDate:[NSDate date]];
+                                             components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:[NSDate date]];
     todayDateComponents.hour = 23;
     todayDateComponents.minute = 59;
     todayDateComponents.second = 59;

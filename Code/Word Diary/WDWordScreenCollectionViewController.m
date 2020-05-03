@@ -177,12 +177,14 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 
 - (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout
 {
-    return [self init];
+    self = [super initWithCollectionViewLayout: layout];
+    return self;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    return [self init];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    return self;
 }
 
 - (void) dealloc
@@ -672,7 +674,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
         if (checkForUpdateGesture) {
             CGPoint translation = [gesture translationInView:self.view];
             if (![WDUtils is:translation.y equalsTo:0.0]) {
-                if (abs(translation.y) > fabs(translation.x)) {
+                if (fabs(translation.y) > fabs(translation.x)) {
                     const CGFloat minimumDistance = 15.0;
                     WDWord *word = [self findSelectedWord];
                     if (translation.y < 0.0 && fabs(translation.y) > minimumDistance) {
@@ -1142,7 +1144,7 @@ static const NSUInteger MAX_WORD_LENGHT             = 20;
 - (NSDateComponents *)dateComponentsFromWordDaySelectedForDashBoardViewController:(WDDashBoardViewController *)dashBoardViewController
 {
     WDWord *selectedWord = [self findSelectedWord];
-    NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSYearCalendarUnit | NSCalendarUnitMonth | NSCalendarUnitDay | NSWeekCalendarUnit fromDate:[NSDate dateWithTimeIntervalSince1970:selectedWord.timeInterval]];
+    NSDateComponents *dateComponents = [[WDWordDiary sharedWordDiary].currentCalendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitWeekOfMonth | NSCalendarUnitWeekOfMonth fromDate:[NSDate dateWithTimeIntervalSince1970:selectedWord.timeInterval]];
 
     return dateComponents;
 }
