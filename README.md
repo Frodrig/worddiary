@@ -1,6 +1,6 @@
 # Word Diary
 
-A day in a word.
+A day in a word. https://frodrig.github.io/worddiary/
 
 Word Diary is a minimalist iOS diary where you write a single word to describe your day. One word. That is it. A word that will take you back in time when you read it again.
 
