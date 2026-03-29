@@ -1,5 +1,7 @@
 # Word Diary
 
+> This project is archived and no longer maintained. It was built in 2013 for iOS 5.
+
 A day in a word. https://frodrig.github.io/worddiary/
 
 Word Diary is a minimalist iOS diary where you write a single word to describe your day. One word. That is it. A word that will take you back in time when you read it again.
